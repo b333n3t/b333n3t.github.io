@@ -189,3 +189,36 @@ footer{
 .brand:hover {
   text-decoration: underline;
 }
+
+
+/* === Plattformen: Icons auf Schriftgröße reduzieren === */
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.social a {
+  display: inline-block;
+  font-size: 1rem;          /* normale Textgröße */
+  line-height: 1.6;
+  padding: 4px 6px;
+  background: none;         /* kein Hintergrundfeld */
+  box-shadow: none;
+  border-radius: 0;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.social a:hover {
+  text-decoration: underline;
+}
+
+/* Alle Bilder oder SVGs innerhalb der Links ausblenden */
+.social a img,
+.social a svg {
+  display: none !important;
+}
