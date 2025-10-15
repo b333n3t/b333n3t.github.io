@@ -172,3 +172,9 @@ body::before{content:"";position: fixed;inset: 0;z-index:-1;background-image:lin
 @media (min-width: 1024px) and (max-height: 768px) {
   :root{ --bg-y: 18%; }
 }
+
+
+/* 16:10 and 1920x1200 notebook tuning */
+@media (min-width: 1600px) and (max-height: 1300px) {
+  :root{ --bg-y: 22%; }
+}
