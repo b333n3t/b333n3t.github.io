@@ -182,3 +182,13 @@ footer{
 @media (max-height: 820px){
   body{ background-position: center 18% !important; }
 }
+
+
+/* === Logo-Icon (z. B. favicon.svg) im Header auf allen Seiten ausblenden === */
+.header img,
+.brand img,
+header img[alt=""],
+header img[src*="favicon"],
+header img[src*="logo"] {
+  display: none !important;
+}
