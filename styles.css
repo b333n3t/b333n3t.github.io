@@ -30,23 +30,22 @@ a{ color: var(--accent); text-decoration: none; }
 a:hover{ text-decoration: underline; }
 
 /* Top bar */
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: 10px 14px;
-  position:sticky;
-  top:0;
+
+/* === Fixierter Header mit Branding === */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  background: transparent;
+  padding: 10px 0;
 }
 
-.brand{
-  font-weight:700;
-  letter-spacing:.04em;
-  background: rgba(255,255,255,.7);
-  padding:6px 10px;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0,0,0,.05);
-}
+
+
 
 /* navigation arrows */
 .nav-arrow{
@@ -166,5 +165,152 @@ footer{
       url('assets/b3nn3t-mobile.jpg');
     filter: none;                 /* sharper on phones */
     transform: none;
+  }
+}
+
+
+
+
+
+/* === Einheitliches Branding für alle Seiten === */
+.brand {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #000 !important;      /* Schwarze Schrift */
+  background: none !important; /* Kein Hintergrundfeld */
+  box-shadow: none !important;
+  padding: 0;
+  text-decoration: none;       /* Kein Unterstrich */
+}
+
+.brand:hover {
+  text-decoration: underline;
+}
+
+
+/* === Plattformen: Icons auf Schriftgröße reduzieren === */
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.social a {
+  display: inline-block;
+  font-size: 1rem;          /* normale Textgröße */
+  line-height: 1.6;
+  padding: 4px 6px;
+  background: none;         /* kein Hintergrundfeld */
+  box-shadow: none;
+  border-radius: 0;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.social a:hover {
+  text-decoration: underline;
+}
+
+/* Alle Bilder oder SVGs innerhalb der Links ausblenden */
+.social a img,
+.social a svg {
+  display: none !important;
+}
+
+
+/* === Plattformen: Social Links zentriert und vertikal angeordnet === */
+.social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.social a {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 4px 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  text-decoration: none;
+  color: var(--text);
+  text-align: center;
+}
+
+.social a:hover {
+  text-decoration: underline;
+}
+
+.social a img,
+.social a svg {
+  display: none !important;
+}
+
+
+/* === Restore clear background with light overlay (Variant B) === */
+/* Hide the DOM image layer everywhere (we keep the node but don't show it) */
+#bg-layer img { display: none !important; }
+
+/* Use a single crisp cover backdrop without blur/scale */
+#bg-layer::before {
+  filter: none !important;
+  transform: none !important;
+  background-image:
+    linear-gradient(var(--bg-tint), var(--bg-tint)),
+    url('assets/b3nn3t.jpg') !important;
+  background-position: center var(--bg-y, 50%) !important;
+  background-size: cover !important;
+}
+
+/* Ensure pseudo foreground is off */
+body::after { display: none !important; }
+
+/* Keep body::before (if present) crisp as well */
+body::before,
+body::before {
+  filter: none !important;
+  transform: none !important;
+  background-size: cover !important;
+}
+
+
+/* === Force single-layer background (Bild 1 look) across all orientations === */
+:root{
+  --bg-tint: rgba(255,255,255,.22); /* lighter overlay for clarity */
+}
+
+/* Hide any injected/background helper layers */
+#bg-layer{ display: none !important; }
+body::before, body::after{ display: none !important; filter: none !important; transform: none !important; }
+
+/* Use the body background consistently */
+body{
+  background-image:
+    linear-gradient(var(--bg-tint), var(--bg-tint)),
+    url('assets/b3nn3t.jpg') !important;
+  background-repeat: no-repeat !important;
+  background-position: center var(--bg-y, 50%) !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+}
+
+/* Ensure same look in landscape explicitly */
+@media (orientation: landscape){
+  body{
+    background-image:
+      linear-gradient(var(--bg-tint), var(--bg-tint)),
+      url('assets/b3nn3t.jpg') !important;
+    background-size: cover !important;
+    background-position: center var(--bg-y, 50%) !important;
   }
 }
