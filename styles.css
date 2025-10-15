@@ -15,16 +15,12 @@ html,body{
   color: var(--text);
 }
 
-/* === Responsive, full-bleed background ===
-   - Uses cover + center for all devices
-   - Avoids background-attachment: fixed on mobile (performance/compat)
-   - Enables fixed parallax only for larger screens that support hover (most desktops)
-*/
+/* === Responsive, full-bleed background for ALL pages === */
 body{
   /* Fallback color while image loads */
   background-color: #000;
 
-  /* Overlay tint + image (adjust the path if your image is elsewhere) */
+  /* Overlay tint + default image */
   background-image:
     linear-gradient(var(--bg-tint), var(--bg-tint)),
     url('assets/b3nn3t.jpg');
@@ -32,6 +28,8 @@ body{
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+
+  /* Mobile-friendly default */
   background-attachment: scroll;
 
   /* Ensure viewport coverage */
@@ -39,6 +37,17 @@ body{
   min-height: 100svh;
   display:flex;
   flex-direction:column;
+}
+
+/* OPTIONAL: If you add a lighter mobile image at assets/b3nn3t-mobile.jpg,
+   it will be used automatically on small screens. If you don't add it,
+   this block can stay — browsers will simply keep the default image. */
+@media (max-width: 768px) {
+  body{
+    background-image:
+      linear-gradient(var(--bg-tint), var(--bg-tint)),
+      url('assets/b3nn3t-mobile.jpg');
+  }
 }
 
 /* Enable parallax-like fixed background on larger/desktop screens */
