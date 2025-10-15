@@ -1,12 +1,12 @@
 
 :root{
-  --bg-tint: rgba(255,255,255,.68);
+  --bg-tint: rgba(255,255,255,.12); /* light overlay for readability */
   --text: #0e0e0e;
   --text-dim: #2d2d2d;
   --accent: #0b84ff;
 }
 
-*{box-sizing:border-box;}
+*{ box-sizing:border-box; }
 
 html,body{
   height:100%;
@@ -35,8 +35,16 @@ body{
   /* Ensure viewport coverage */
   min-height: 100vh;
   min-height: 100svh;
+
   display:flex;
   flex-direction:column;
+}
+
+/* Enable parallax-like fixed background on larger/desktop screens */
+@media (min-width: 1024px) and (hover: hover) {
+  body{
+    background-attachment: fixed;
+  }
 }
 
 /* OPTIONAL: If you add a lighter mobile image at assets/b3nn3t-mobile.jpg,
@@ -50,13 +58,6 @@ body{
   }
 }
 
-/* Enable parallax-like fixed background on larger/desktop screens */
-@media (min-width: 1024px) and (hover: hover) {
-  body{
-    background-attachment: fixed;
-  }
-}
-
 a{ color: var(--accent); text-decoration: none; }
 a:hover{ text-decoration: underline; }
 
@@ -66,17 +67,21 @@ a:hover{ text-decoration: underline; }
   align-items:center;
   justify-content:center;
   padding: 10px 14px;
-  position:sticky;
-  top:0;
+  position: sticky;
+  top: 0;
 }
 
 .brand{
   font-weight:700;
   letter-spacing:.04em;
-  background: rgba(255,255,255,.7);
-  padding:6px 10px;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0,0,0,.05);
+  color:#000;
+  background:none;
+  padding:0;
+  box-shadow:none;
+  position:absolute;
+  left:18px;
+  top:18px;
+  text-decoration:none;
 }
 
 /* navigation arrows */
@@ -92,7 +97,6 @@ a:hover{ text-decoration: underline; }
   font-weight:600;
 }
 .nav-arrow:hover{ background: rgba(255,255,255,.95); }
-
 .nav-arrow.left{ left:12px; }
 .nav-arrow.right{ right:12px; }
 
