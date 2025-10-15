@@ -1,5 +1,4 @@
 :root{
-  --bg-y: 50%;
   --bg-tint: rgba(255,255,255,.68);
   --text: #0e0e0e;
   --text-dim: #2d2d2d;
@@ -127,54 +126,45 @@ footer{
 }
 
 
-/* === Robust full-screen background layer for uniform rendering across all pages === */
-body{
-  background: none; /* use the pseudo-element as the visual background */
-  min-height: 100vh;
-  min-height: 100svh;
-  display:flex;
-  flex-direction:column;
-  color: var(--text);
+/* === Fixed hero background implemented via DOM (works across engines) === */
+#bg-layer{
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+}
+#bg-layer::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--bg-tint), var(--bg-tint)),
+    url('assets/b3nn3t.jpg');
+  background-repeat: no-repeat;
+  background-position: center var(--bg-y, 50%);
+  background-size: cover;
+  filter: blur(18px);
+  transform: scale(1.06);
+}
+#bg-layer img{
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;            /* shows full figure on desktop/notebook */
+  object-position: center var(--bg-y, 50%);
+  z-index: -1;
+  pointer-events: none;
 }
 
-body::before{content:"";position: fixed;inset: 0;z-index:-1;background-image:linear-gradient(var(--bg-tint), var(--bg-tint)),url('assets/b3nn3t.jpg');background-repeat:no-repeat;background-position: center var(--bg-y);background-size:cover;pointer-events:none;}
-
-/* Mobile-specific optional image */
-@media (max-width: 768px) {body::before{background-image:linear-gradient(var(--bg-tint), var(--bg-tint)),url('assets/b3nn3t-mobile.jpg');}}
-
-/* Fixed background effect for desktops */
-
-
-
-/* Composition tuning: move focal point up on larger/wider screens to avoid cropping head/knees */
-@media (min-width: 1024px) {
-  :root{ --bg-y: 32%; }
-}
-@media (min-aspect-ratio: 16/9) and (min-width: 1200px) {
-  :root{ --bg-y: 28%; }
-}
-@media (min-aspect-ratio: 21/9) and (min-width: 1400px) {
-  :root{ --bg-y: 24%; }
-}
-/* Keep portrait/tall screens centered */
-@media (max-aspect-ratio: 3/4) {
-  :root{ --bg-y: 50%; }
-}
-
-
-/* Notebook fine-tuning: short viewport heights need higher focal point */
-@media (min-width: 1024px) and (max-height: 900px) {
-  :root{ --bg-y: 24%; }
-}
-@media (min-width: 1024px) and (max-height: 800px) {
-  :root{ --bg-y: 20%; }
-}
-@media (min-width: 1024px) and (max-height: 768px) {
-  :root{ --bg-y: 18%; }
-}
-
-
-/* 16:10 and 1920x1200 notebook tuning */
-@media (min-width: 1600px) and (max-height: 1300px) {
-  :root{ --bg-y: 22%; }
+/* Mobile: keep the proven 'cover' look; hide the contain image */
+@media (max-width: 768px){
+  #bg-layer img{ display: none; }
+  #bg-layer::before{
+    background-image:
+      linear-gradient(var(--bg-tint), var(--bg-tint)),
+      url('assets/b3nn3t-mobile.jpg');
+    filter: none;                 /* sharper on phones */
+    transform: none;
+  }
 }
