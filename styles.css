@@ -160,3 +160,9 @@ footer{
   padding: 24px 12px 36px;
   color:#333;
 }
+
+
+/* Notebook 1920x1200 (16:10) – shift focus higher so the head is visible */
+@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
+  body{ background-position: center 30%; }
+}
