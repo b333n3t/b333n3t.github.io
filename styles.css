@@ -136,32 +136,10 @@ body{
   color: var(--text);
 }
 
-body::before{
-  content: "";
-  position: absolute; /* scrolls with content on mobile for better compat */
-  inset: 0;
-  z-index: -1;
-  background-image:
-    linear-gradient(var(--bg-tint), var(--bg-tint)),
-    url('assets/b3nn3t.jpg');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  pointer-events: none;
-}
+body::before{content:"";position: fixed;inset: 0;z-index:-1;background-image:linear-gradient(var(--bg-tint), var(--bg-tint)),url('assets/b3nn3t.jpg');background-repeat:no-repeat;background-position:center center;background-size:cover;pointer-events:none;}
 
 /* Mobile-specific optional image */
-@media (max-width: 768px) {
-  body::before{
-    background-image:
-      linear-gradient(var(--bg-tint), var(--bg-tint)),
-      url('assets/b3nn3t-mobile.jpg');
-  }
-}
+@media (max-width: 768px) {body::before{background-image:linear-gradient(var(--bg-tint), var(--bg-tint)),url('assets/b3nn3t-mobile.jpg');}}
 
 /* Fixed background effect for desktops */
-@media (min-width: 1024px) and (hover: hover) {
-  body::before{
-    position: fixed; /* parallax-like effect on larger screens */
-  }
-}
+
