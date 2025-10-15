@@ -4,10 +4,9 @@
   --text: #0e0e0e;
   --text-dim: #2d2d2d;
   --accent: #0b84ff;
-  /* Vertikale Bildausrichtung (0% oben, 50% Mitte) */
-  --bg-y: 42%;
 }
 
+/* Base reset */
 *{ box-sizing:border-box; }
 
 html,body{
@@ -18,37 +17,39 @@ html,body{
   color: var(--text);
 }
 
-/* === Einheitlicher Hintergrund auf allen Seiten === */
-/* Ruhiges Scrolling (kein Parallax), immer cover, mit Overlay */
+/* === Einheitlicher Hintergrund: ruhiges Scrolling + dynamischer Fokus === */
 body{
   background-color: #000;
   background-image:
     linear-gradient(var(--bg-tint), var(--bg-tint)),
     url('assets/b3nn3t.jpg');
   background-repeat: no-repeat;
-  background-position: center var(--bg-y);
-  background-size: cover;
-  background-attachment: scroll;
+  background-position: center 45%;   /* Grundfokus etwas höher */
+  background-size: cover;            /* keine Balken links/rechts */
+  background-attachment: scroll;     /* ruhiges Scrolling */
+  transition: background-position .35s ease;
   min-height: 100vh;
   min-height: 100svh;
   display:flex;
   flex-direction:column;
 }
 
-/* Landscape: Fokus etwas weiter nach oben, damit mehr vom unteren Bereich sichtbar ist */
+/* Querformat (Landscape): mehr vom unteren Bereich sichtbar machen */
 @media (orientation: landscape){
-  :root{ --bg-y: 38%; }
+  body{ background-position: center 40%; }
 }
 
-/* Sehr flache Viewports (z. B. 1366×768, 1920×1200 in fensterfüllend) – noch etwas höherer Fokus */
-@media (min-width: 1024px) and (max-height: 900px){
-  :root{ --bg-y: 36%; }
-}
-@media (min-width: 1280px) and (max-height: 800px){
-  :root{ --bg-y: 34%; }
+/* Sehr flache Viewports (z.B. 1366×768, 1920×800): Fokus noch etwas höher */
+@media (max-height: 850px){
+  body{ background-position: center 38%; }
 }
 
-/* Optional: schlankeres Bild für Smartphones, falls vorhanden */
+/* Extrem flache Viewports (sehr schmale Höhe) */
+@media (max-height: 760px){
+  body{ background-position: center 36%; }
+}
+
+/* Optional: mobiles, leichteres Bild falls vorhanden */
 @media (max-width: 768px){
   body{
     background-image:
@@ -57,6 +58,7 @@ body{
   }
 }
 
+/* Links */
 a{ color: var(--accent); text-decoration: none; }
 a:hover{ text-decoration: underline; }
 
@@ -69,7 +71,6 @@ a:hover{ text-decoration: underline; }
   position: sticky;
   top: 0;
 }
-
 .brand{
   font-weight:700;
   letter-spacing:.04em;
