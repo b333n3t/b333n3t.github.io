@@ -1,11 +1,9 @@
 
 :root{
-  --bg-tint: rgba(255,255,255,.35); /* blasser Hintergrund */
+  --bg-tint: rgba(255,255,255,.12); /* light overlay for readability */
   --text: #0e0e0e;
   --text-dim: #2d2d2d;
   --accent: #0b84ff;
-  /* Vertikale Bildausrichtung: 0%=oben, 50%=Mitte */
-  --bg-y: 46%;
 }
 
 *{ box-sizing:border-box; }
@@ -13,37 +11,46 @@
 html,body{
   height:100%;
   margin:0;
-  font-family: 'Press Start 2P', Arial, sans-serif;
-  letter-spacing: .03em;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   color: var(--text);
 }
 
-/* === Einheitlicher Hintergrund auf allen Seiten === */
+/* === Responsive, full-bleed background for ALL pages === */
 body{
+  /* Fallback color while image loads */
   background-color: #000;
+
+  /* Overlay tint + default image */
   background-image:
     linear-gradient(var(--bg-tint), var(--bg-tint)),
     url('assets/b3nn3t.jpg');
+
   background-repeat: no-repeat;
-  background-position: center var(--bg-y);
-  background-size: cover;          /* Portrait-Default */
-  background-attachment: scroll;   /* bewegt sich mit dem Inhalt */
+  background-position: center center;
+  background-size: cover;
+
+  /* Mobile-friendly default */
+  background-attachment: scroll;
+
+  /* Ensure viewport coverage */
   min-height: 100vh;
   min-height: 100svh;
+
   display:flex;
   flex-direction:column;
 }
 
-/* Querformat/Landscape: Ganze Figur sichtbar, kein Beschnitt */
-@media (orientation: landscape){
+/* Enable parallax-like fixed background on larger/desktop screens */
+@media (min-width: 1024px) and (hover: hover) {
   body{
-    background-size: contain;      /* volle Figur */
-    background-color: #0b0b0b;     /* sanfte Füllfarbe für evtl. Ränder */
+    background-attachment: fixed;
   }
 }
 
-/* Optional: schlankeres Bild für Smartphones, falls vorhanden */
-@media (max-width: 768px){
+/* OPTIONAL: If you add a lighter mobile image at assets/b3nn3t-mobile.jpg,
+   it will be used automatically on small screens. If you don't add it,
+   this block can stay — browsers will simply keep the default image. */
+@media (max-width: 768px) {
   body{
     background-image:
       linear-gradient(var(--bg-tint), var(--bg-tint)),
@@ -51,18 +58,10 @@ body{
   }
 }
 
-/* Feintuning für flache Notebooks/Monitore */
-@media (min-width:1024px) and (max-height:900px){
-  :root{ --bg-y: 42%; }
-}
-@media (min-width:1200px) and (min-aspect-ratio:16/10){
-  :root{ --bg-y: 40%; }
-}
-
 a{ color: var(--accent); text-decoration: none; }
 a:hover{ text-decoration: underline; }
 
-/* Header/Brand */
+/* Top bar */
 .header{
   display:flex;
   align-items:center;
@@ -84,8 +83,6 @@ a:hover{ text-decoration: underline; }
   top:18px;
   text-decoration:none;
 }
-
-.brand:hover{ text-decoration: underline; }
 
 /* navigation arrows */
 .nav-arrow{
