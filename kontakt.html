@@ -4,27 +4,66 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>kontakt — b3nn3t</title>
-  <meta name="description" content="kontakt — b3nn3t" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="header"><div class="brand">b3nn3t</div></header>
+<header class="header">
+  <a class="brand" href="index.html" aria-label="b3nn3t Home">
+    <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
+  </a>
+</header>
 
-    <a class="nav-arrow left" aria-label="Vorherige Seite" href="#">&larr;</a>
-    <a class="nav-arrow right" aria-label="Nächste Seite" href="#">&rarr;</a>
+<a class="nav-arrow left" aria-label="Vorherige Seite" href="diskografie.html">&larr;</a>
+<a class="nav-arrow right" aria-label="Nächste Seite" href="aktuell.html">&rarr;</a>
 
-  <main class="main">
-
+<main class="main">
   <h1>kontakt</h1>
-  <p>Für Booking/Anfragen:</p>
-  <ul>
-    <li>E‑Mail: <a href="mailto:hello@example.com">hello@example.com</a></li>
-    <li>Instagram: <a href="https://instagram.com/" target="_blank" rel="noopener">DM</a></li>
-  </ul>
+  <p>Schreib mir – das Formular sendet deine Nachricht direkt per E‑Mail. Betrieben durch <a href="https://formsubmit.co/" target="_blank" rel="noopener">FormSubmit</a> (kein eigenes Backend notwendig).</p>
 
-  </main>
-  <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
-  <footer>© kontakt · b3nn3t</footer>
-  <script src="script.js"></script>
+  <form action="https://formsubmit.co/kohnke.bjoern@yahoo.com" method="POST">
+    <!-- Anti-Spam (Honeypot) -->
+    <input type="text" name="_honey" style="display:none">
+    <!-- Kein Captcha (auf Wunsch aktivierbar, Zeile entfernen) -->
+    <input type="hidden" name="_captcha" value="false">
+    <!-- Betreff + Tabellenlayout -->
+    <input type="hidden" name="_subject" value="Neue Nachricht über b3nn3t Website">
+    <input type="hidden" name="_template" value="table">
+    <!-- Weiterleitung nach Erfolg: Bitte URL zu GitHub Pages einsetzen -->
+    <input type="hidden" name="_next" value="https://DEINNAME.github.io/REPO-NAME/danke.html">
+
+    <div class="form-grid">
+      <div class="form-row">
+        <label for="name">Name</label><br>
+        <input id="name" name="name" autocomplete="name" required placeholder="Dein Name">
+      </div>
+      <div class="form-row">
+        <label for="email">E‑Mail</label><br>
+        <input id="email" type="email" name="email" autocomplete="email" required placeholder="dein@mail.ch">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label for="subject">Betreff</label><br>
+      <input id="subject" name="subject" placeholder="Worum geht’s?">
+    </div>
+
+    <div class="form-row">
+      <label for="message">Nachricht</label><br>
+      <textarea id="message" name="message" required placeholder="Hi b3nn3t, ..."></textarea>
+    </div>
+
+    <div class="form-row consent">
+      <label><input type="checkbox" required> Ich stimme zu, dass meine Angaben zur Beantwortung der Anfrage gespeichert werden.</label>
+    </div>
+
+    <button type="submit">Nachricht senden</button>
+  </form>
+</main>
+
+<a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
+
+<footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+<script src="script.js"></script>
 </body>
 </html>
