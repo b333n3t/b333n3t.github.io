@@ -30,27 +30,22 @@ a{ color: var(--accent); text-decoration: none; }
 a:hover{ text-decoration: underline; }
 
 /* Top bar */
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: 10px 14px;
-  position:sticky;
-  top:0;
+
+/* === Fixierter Header mit Branding === */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  background: transparent;
+  padding: 10px 0;
 }
 
-.brand {
-  color: #000;
-  background: none;
-  padding: 4px 0;
-  box-shadow: none;
-  position: absolute;
-  left: 18px;
-  top: 18px;
-  transform: none;
-  font-weight: 700;
-  letter-spacing: .04em;
-}
+
+
 
 /* navigation arrows */
 .nav-arrow{
@@ -175,3 +170,22 @@ footer{
 
 
 
+
+
+/* === Einheitliches Branding für alle Seiten === */
+.brand {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #000 !important;      /* Schwarze Schrift */
+  background: none !important; /* Kein Hintergrundfeld */
+  box-shadow: none !important;
+  padding: 0;
+  text-decoration: none;       /* Kein Unterstrich */
+}
+
+.brand:hover {
+  text-decoration: underline;
+}
