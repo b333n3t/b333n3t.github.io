@@ -166,3 +166,19 @@ footer{
 @media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
   body{ background-position: center 30%; }
 }
+
+
+/* === Stronger upward focus so the head is visible in landscape (mobile + desktop) === */
+@media (orientation: landscape){
+  body{ background-position: center 24% !important; }
+}
+
+/* 1920x1200 (16:10) notebooks: even higher focus */
+@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
+  body{ background-position: center 20% !important; }
+}
+
+/* Very flat viewports (ultra-wide or browser UI taking height): push higher */
+@media (max-height: 820px){
+  body{ background-position: center 18% !important; }
+}
