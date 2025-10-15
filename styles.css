@@ -1,4 +1,3 @@
-
 :root{
   --bg-tint: rgba(255,255,255,.68);
   --text: #0e0e0e;
@@ -15,46 +14,16 @@ html,body{
   color: var(--text);
 }
 
-/* === Responsive, full-bleed background for ALL pages === */
 body{
-  /* Fallback color while image loads */
-  background-color: #000;
-
-  /* Overlay tint + default image */
   background-image:
     linear-gradient(var(--bg-tint), var(--bg-tint)),
     url('assets/b3nn3t.jpg');
-
-  background-repeat: no-repeat;
-  background-position: center center;
   background-size: cover;
-
-  /* Mobile-friendly default */
-  background-attachment: scroll;
-
-  /* Ensure viewport coverage */
-  min-height: 100vh;
-  min-height: 100svh;
+  background-position: center;
+  background-attachment: fixed;
   display:flex;
   flex-direction:column;
-}
-
-/* OPTIONAL: If you add a lighter mobile image at assets/b3nn3t-mobile.jpg,
-   it will be used automatically on small screens. If you don't add it,
-   this block can stay — browsers will simply keep the default image. */
-@media (max-width: 768px) {
-  body{
-    background-image:
-      linear-gradient(var(--bg-tint), var(--bg-tint)),
-      url('assets/b3nn3t-mobile.jpg');
-  }
-}
-
-/* Enable parallax-like fixed background on larger/desktop screens */
-@media (min-width: 1024px) and (hover: hover) {
-  body{
-    background-attachment: fixed;
-  }
+  min-height:100dvh;
 }
 
 a{ color: var(--accent); text-decoration: none; }
@@ -154,4 +123,46 @@ footer{
   text-align:center;
   padding: 24px 12px 36px;
   color:#333;
+}
+
+
+/* === Social icons grid (Plattformen) === */
+.social{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+  align-items: center;
+  justify-items: stretch;
+}
+
+.social a{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,.9);
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.social a:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,.12);
+}
+
+.social a svg,
+.social a img{
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+}
+
+@media (max-width: 480px){
+  .social{
+    grid-template-columns: 1fr 1fr;
+  }
 }
