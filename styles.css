@@ -233,3 +233,9 @@ footer {
   left: 25%;                /* Position etwa auf 1/4 der Seitenbreite */
   transform: translateX(-50%);
 }
+
+
+/* === Startseite-Link vollständig ausblenden (global) === */
+.home-btn {
+  display: none !important;
+}
