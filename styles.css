@@ -39,17 +39,13 @@ a:hover{ text-decoration: underline; }
   top:0;
 }
 
-.brand {
-  color: #000;
-  background: none;
-  padding: 4px 0;
-  box-shadow: none;
-  position: absolute;
-  left: 18px;
-  top: 18px;
-  transform: none;
-  font-weight: 700;
-  letter-spacing: .04em;
+.brand{
+  font-weight:700;
+  letter-spacing:.04em;
+  background: rgba(255,255,255,.7);
+  padding:6px 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.05);
 }
 
 /* navigation arrows */
@@ -172,6 +168,3 @@ footer{
     transform: none;
   }
 }
-
-
-
