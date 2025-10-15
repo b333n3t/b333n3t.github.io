@@ -209,3 +209,9 @@ header img[src*="logo"] {
   color: #333 !important;             /* leicht dunkler beim Hover */
   background: none !important;
 }
+
+
+/* === Startseite-Link vollständig ausblenden === */
+.home-btn {
+  display: none !important;
+}
