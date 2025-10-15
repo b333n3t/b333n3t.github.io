@@ -160,3 +160,15 @@ body::before{content:"";position: fixed;inset: 0;z-index:-1;background-image:lin
 @media (max-aspect-ratio: 3/4) {
   :root{ --bg-y: 50%; }
 }
+
+
+/* Notebook fine-tuning: short viewport heights need higher focal point */
+@media (min-width: 1024px) and (max-height: 900px) {
+  :root{ --bg-y: 24%; }
+}
+@media (min-width: 1024px) and (max-height: 800px) {
+  :root{ --bg-y: 20%; }
+}
+@media (min-width: 1024px) and (max-height: 768px) {
+  :root{ --bg-y: 18%; }
+}
