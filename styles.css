@@ -192,3 +192,20 @@ header img[src*="favicon"],
 header img[src*="logo"] {
   display: none !important;
 }
+
+
+/* === Navigationpfeile: Schwarz, ohne Hintergrund === */
+.nav-arrow {
+  color: #000 !important;             /* schwarze Pfeile */
+  background: none !important;        /* kein Hintergrundfeld */
+  box-shadow: none !important;        /* keine Schatten */
+  border: none;
+  font-weight: 700;
+  padding: 8px;
+  text-decoration: none;
+}
+
+.nav-arrow:hover {
+  color: #333 !important;             /* leicht dunkler beim Hover */
+  background: none !important;
+}
