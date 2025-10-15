@@ -314,3 +314,13 @@ body{
     background-position: center var(--bg-y, 50%) !important;
   }
 }
+
+
+/* Ensure full figure visible in landscape: use contain with same overlay */
+@media (orientation: landscape){
+  body{
+    background-size: contain !important;      /* show entire image */
+    background-position: center var(--bg-y, 50%) !important;
+    background-color: #f5f5f5;                /* subtle neutral fill around image, if any */
+  }
+}
