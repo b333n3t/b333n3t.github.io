@@ -126,43 +126,42 @@ footer{
 }
 
 
-/* === Social icons grid (Plattformen) === */
-.social{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  margin-top: 12px;
-  align-items: center;
-  justify-items: stretch;
-}
-
-.social a{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  background: rgba(255,255,255,.9);
-  border-radius: 14px;
-  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+/* === Robust full-screen background layer for uniform rendering across all pages === */
+body{
+  background: none; /* use the pseudo-element as the visual background */
+  min-height: 100vh;
+  min-height: 100svh;
+  display:flex;
+  flex-direction:column;
   color: var(--text);
-  font-weight: 600;
-  text-decoration: none;
 }
 
-.social a:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0,0,0,.12);
+body::before{
+  content: "";
+  position: absolute; /* scrolls with content on mobile for better compat */
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--bg-tint), var(--bg-tint)),
+    url('assets/b3nn3t.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  pointer-events: none;
 }
 
-.social a svg,
-.social a img{
-  width: 26px;
-  height: 26px;
-  flex: 0 0 26px;
+/* Mobile-specific optional image */
+@media (max-width: 768px) {
+  body::before{
+    background-image:
+      linear-gradient(var(--bg-tint), var(--bg-tint)),
+      url('assets/b3nn3t-mobile.jpg');
+  }
 }
 
-@media (max-width: 480px){
-  .social{
-    grid-template-columns: 1fr 1fr;
+/* Fixed background effect for desktops */
+@media (min-width: 1024px) and (hover: hover) {
+  body::before{
+    position: fixed; /* parallax-like effect on larger screens */
   }
 }
