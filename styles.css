@@ -1,6 +1,6 @@
 
 :root{
-  --bg-tint: rgba(255,255,255,.12); /* light overlay for readability */
+  --bg-tint: rgba(255,255,255,.12);
   --text: #0e0e0e;
   --text-dim: #2d2d2d;
   --accent: #0b84ff;
@@ -11,31 +11,23 @@
 html,body{
   height:100%;
   margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Press Start 2P', Arial, sans-serif;
+  letter-spacing: .03em;
   color: var(--text);
 }
 
 /* === Responsive, full-bleed background for ALL pages === */
 body{
-  /* Fallback color while image loads */
   background-color: #000;
-
-  /* Overlay tint + default image */
   background-image:
     linear-gradient(var(--bg-tint), var(--bg-tint)),
     url('assets/b3nn3t.jpg');
-
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-
-  /* Mobile-friendly default */
   background-attachment: scroll;
-
-  /* Ensure viewport coverage */
   min-height: 100vh;
   min-height: 100svh;
-
   display:flex;
   flex-direction:column;
 }
@@ -47,9 +39,7 @@ body{
   }
 }
 
-/* OPTIONAL: If you add a lighter mobile image at assets/b3nn3t-mobile.jpg,
-   it will be used automatically on small screens. If you don't add it,
-   this block can stay — browsers will simply keep the default image. */
+/* OPTIONAL: Mobile image swap */
 @media (max-width: 768px) {
   body{
     background-image:
