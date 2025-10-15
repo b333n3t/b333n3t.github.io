@@ -211,7 +211,18 @@ header img[src*="logo"] {
 }
 
 
-/* === Startseite-Link vollständig ausblenden === */
-.home-btn {
-  display: none !important;
+/* === Footer: leicht transparent für harmonischen Look === */
+footer {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 4px 8px;
+  text-align: center;
+  color: rgba(51, 51, 51, 0.85);
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  backdrop-filter: blur(6px);
+  font-weight: 500;
 }
