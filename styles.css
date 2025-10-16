@@ -192,3 +192,50 @@ header img[src*="favicon"],
 header img[src*="logo"] {
   display: none !important;
 }
+
+
+/* === Navigationpfeile: Schwarz, ohne Hintergrund === */
+.nav-arrow {
+  color: #000 !important;             /* schwarze Pfeile */
+  background: none !important;        /* kein Hintergrundfeld */
+  box-shadow: none !important;        /* keine Schatten */
+  border: none;
+  font-weight: 700;
+  padding: 8px;
+  text-decoration: none;
+}
+
+.nav-arrow:hover {
+  color: #333 !important;             /* leicht dunkler beim Hover */
+  background: none !important;
+}
+
+
+/* === Footer: leicht transparent für harmonischen Look === */
+footer {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 4px 8px;
+  text-align: center;
+  color: rgba(51, 51, 51, 0.85);
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  backdrop-filter: blur(6px);
+  font-weight: 500;
+}
+
+
+/* === b3nn3t-Link leicht nach rechts verschoben === */
+.brand {
+  left: 25%;                /* Position etwa auf 1/4 der Seitenbreite */
+  transform: translateX(-50%);
+}
+
+
+/* === Startseite-Link vollständig ausblenden (global) === */
+.home-btn {
+  display: none !important;
+}
