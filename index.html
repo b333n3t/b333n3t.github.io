@@ -5,25 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Start — b3nn3t</title>
   <meta name="description" content="Start — b3nn3t" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css" />
+  <style>
+  /* hide old start grid (only on start page) */
+  .main .grid{ display:none !important; }
+  </style>
 </head>
 <body>
-  <header class="header">
-    <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg">
-      <strong>b3nn3t</strong>
-    </a>
-  </header>
+  <header class="header"><div class="brand">b3nn3t</div></header>
 
   <!-- ===== Retro Panel (5 Dials) ===== -->
-  <div class="retro-panel" role="complementary" aria-label="Panel Navigation" style="margin-top: 20px;">
+  <div class="retro-panel" role="complementary" aria-label="Panel Navigation">
     <div class="rp-left">
-      <a class="dial" href="ueber-mich.html" aria-label="über mich"     data-title="über mich" data-desc="Bio & Einblicke"><span>1</span></a>
+      <a class="dial" href="ueber-mich.html" aria-label="über mich"     data-title="über mich"  data-desc="Bio & Einblicke"><span>1</span></a>
       <a class="dial" href="diskografie.html" aria-label="diskografie"  data-title="diskografie" data-desc="Releases & Projekte"><span>2</span></a>
-      <a class="dial" href="kontakt.html"     aria-label="kontakt"      data-title="kontakt" data-desc="Booking & Mail"><span>3</span></a>
-      <a class="dial" href="aktuell.html"     aria-label="aktuell"      data-title="aktuell" data-desc="News & Termine"><span>4</span></a>
-      <a class="dial" href="gesehen.html"     aria-label="gesehen"      data-title="gesehen" data-desc="Inspiration & Notizen"><span>5</span></a>
+      <a class="dial" href="kontakt.html"     aria-label="kontakt"      data-title="kontakt"     data-desc="Booking & Mail"><span>3</span></a>
+      <a class="dial" href="aktuell.html"     aria-label="aktuell"      data-title="aktuell"     data-desc="News & Termine"><span>4</span></a>
+      <a class="dial" href="gesehen.html"     aria-label="gesehen"      data-title="gesehen"     data-desc="Inspiration & Notizen"><span>5</span></a>
     </div>
     <div class="rp-display" aria-live="polite">
       <div class="rp-glass">
@@ -50,8 +48,7 @@
 
   </main>
 
-  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
-
+  <footer>© Start · b3nn3t</footer>
   <script src="script.js"></script>
 </body>
 </html>

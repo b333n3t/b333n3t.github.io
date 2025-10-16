@@ -211,31 +211,7 @@ header img[src*="logo"] {
 }
 
 
-/* === Footer: leicht transparent für harmonischen Look === */
-footer {
-  position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-  padding: 4px 8px;
-  text-align: center;
-  color: rgba(51, 51, 51, 0.85);
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
-  backdrop-filter: blur(6px);
-  font-weight: 500;
-}
-
-
-/* === b3nn3t-Link leicht nach rechts verschoben === */
-.brand {
-  left: 25%;                /* Position etwa auf 1/4 der Seitenbreite */
-  transform: translateX(-50%);
-}
-
-
-/* === Startseite-Link vollständig ausblenden (global) === */
+/* === Startseite-Link vollständig ausblenden === */
 .home-btn {
   display: none !important;
 }
@@ -245,9 +221,9 @@ footer {
 .retro-panel{
   position: fixed;
   left: clamp(10px, 2vw, 26px);
-  top: clamp(120px, 12vh, 160px);
+  top: clamp(100px, 14vh, 160px);
   display: grid;
-  grid-template-columns: 54px 220px; /* narrow dial strip + slim display */
+  grid-template-columns: 54px 220px;
   gap: 12px;
   align-items: center;
   padding: 10px 12px 10px 10px;
@@ -263,7 +239,6 @@ footer {
   position: absolute; inset: 0;
   border-radius: 14px;
   background:
-    /* fine hairline scratches & smudges */
     linear-gradient(115deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 100%),
     linear-gradient(65deg, transparent 0 90%, rgba(0,0,0,0.06) 100%);
   mix-blend-mode: multiply;
@@ -297,7 +272,6 @@ footer {
   transition: transform .1s ease, box-shadow .2s ease, filter .2s ease;
   overflow: hidden;
 }
-/* Patina on dials */
 .dial::before{
   content:"";
   position:absolute; inset:0;
@@ -330,9 +304,8 @@ footer {
   outline:none;
   filter: contrast(1.04) brightness(1.02);
 }
-
 .rp-display{
-  width: 220px; /* slightly slimmer display */
+  width: 220px;
   height: 310px;
   border-radius: 12px;
   background: #d9dde1;
@@ -363,14 +336,5 @@ footer {
 .rp-title{ font: 700 20px 'Press Start 2P', Arial, sans-serif; margin-bottom: 12px; }
 .rp-desc { font: 400 15px 'Press Start 2P', Arial, sans-serif; opacity:.95; }
 
-/* hide panel on small phones */
+/* Tablet breakpoint: show panel; hide only on very small phones */
 @media (max-width: 560px){ .retro-panel{ display:none; } }
-
-
-/* === Retro panel position tuning for tablets & desktops === */
-@media (min-width: 768px) and (max-width: 1024px){
-  .retro-panel{ top: clamp(10vh, 14vh, 18vh); }  /* slightly lower on tablets */
-}
-@media (min-width: 1200px){
-  .retro-panel{ top: clamp(8vh, 12vh, 14vh); }   /* a touch higher on large desktops */
-}
