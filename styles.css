@@ -1,8 +1,8 @@
 
 :root{
   --bg-tint: rgba(255,255,255,.35);
-  --text: #ffffff;
-  --text-dim: #e0e0e0;
+  --text: #000000;
+  --text-dim: #222222;
   --accent: #0b84ff;
 }
 
@@ -17,9 +17,9 @@ html,body{
   color: var(--text);
 }
 
-/* === Einheitlicher Hintergrund === */
+/* === Hintergrund === */
 body{
-  background-color: #000;
+  background-color: #fff;
   background-image:
     linear-gradient(var(--bg-tint), var(--bg-tint)),
     url('assets/b3nn3t.jpg');
@@ -60,7 +60,7 @@ a:hover{ text-decoration: underline; }
 .brand{
   font-weight:700;
   letter-spacing:.04em;
-  color:#fff;
+  color:#000;
   background:none;
   padding:0;
   position:absolute;
@@ -76,15 +76,15 @@ a:hover{ text-decoration: underline; }
   top:12px;
   z-index:10;
   padding:8px;
-  color: #fff !important;
+  color: #000 !important;
   background: none !important;
   border: none;
   box-shadow: none;
   font-weight:700;
 }
-.nav-arrow:hover{ color: #ccc !important; }
+.nav-arrow:hover{ color: #333 !important; }
 
-/* === Hauptinhalt: ohne Hintergrundbox === */
+/* === Hauptinhalt === */
 .main{
   width: min(1100px, 92vw);
   margin: clamp(24px, 5vh, 60px) auto;
@@ -93,18 +93,18 @@ a:hover{ text-decoration: underline; }
   box-shadow: none !important;
   border-radius: 0 !important;
   padding: clamp(18px, 2vw, 28px);
-  color: #fff !important;
+  color: #000 !important;
 }
 
 /* Textstil */
 h1, h2, h3, h4, h5, h6 {
-  color: #fff !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  color: #000 !important;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.6);
 }
 p{
   line-height:1.6;
-  color: #eee !important;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  color: #111 !important;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.5);
 }
 
 /* Grid / Karten */
@@ -119,17 +119,17 @@ p{
   padding: 16px;
   background: none !important;
   box-shadow: none !important;
-  color: #fff !important;
+  color: #000 !important;
   text-align:center;
 }
-.card small{ display:block; font-weight:400; color: #ccc !important; margin-top:6px; }
+.card small{ display:block; font-weight:400; color: #333 !important; margin-top:6px; }
 .card:hover{ transform: translateY(-2px); transition: transform .12s ease; }
 
 /* Hinweistext */
 .note{
   margin-top: 18px;
   font-size:.95rem;
-  color:#ddd !important;
+  color:#222 !important;
 }
 
 /* Startseiten-Button ausblenden */
@@ -142,7 +142,7 @@ footer{
   left: 50%;
   transform: translateX(-50%);
   text-align:center;
-  color: #ccc !important;
+  color: #222 !important;
   background: none !important;
   border: none !important;
   box-shadow: none !important;
