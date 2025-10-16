@@ -1,8 +1,8 @@
 
 :root{
-  --bg-tint: rgba(255,255,255,.35); /* blasser Hintergrund */
-  --text: #0e0e0e;
-  --text-dim: #2d2d2d;
+  --bg-tint: rgba(255,255,255,.35);
+  --text: #ffffff;
+  --text-dim: #e0e0e0;
   --accent: #0b84ff;
 }
 
@@ -17,52 +17,38 @@ html,body{
   color: var(--text);
 }
 
-/* === Einheitlicher Hintergrund: ruhiges Scrolling + dynamischer Fokus === */
+/* === Einheitlicher Hintergrund === */
 body{
   background-color: #000;
   background-image:
     linear-gradient(var(--bg-tint), var(--bg-tint)),
     url('assets/b3nn3t.jpg');
   background-repeat: no-repeat;
-  background-position: center 45%;   /* Grundfokus etwas höher */
-  background-size: cover;            /* keine Balken links/rechts */
-  background-attachment: scroll;     /* ruhiges Scrolling */
+  background-position: center 45%;
+  background-size: cover;
+  background-attachment: scroll;
   transition: background-position .35s ease;
   min-height: 100vh;
-  min-height: 100svh;
   display:flex;
   flex-direction:column;
 }
 
-/* Querformat (Landscape): mehr vom unteren Bereich sichtbar machen */
+/* Responsives Fokus-Tuning */
 @media (orientation: landscape){
-  body{ background-position: center 40%; }
+  body{ background-position: center 24% !important; }
 }
-
-/* Sehr flache Viewports (z.B. 1366×768, 1920×800): Fokus noch etwas höher */
-@media (max-height: 850px){
-  body{ background-position: center 38%; }
+@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
+  body{ background-position: center 20% !important; }
 }
-
-/* Extrem flache Viewports (sehr schmale Höhe) */
-@media (max-height: 760px){
-  body{ background-position: center 36%; }
-}
-
-/* Optional: mobiles, leichteres Bild falls vorhanden */
-@media (max-width: 768px){
-  body{
-    background-image:
-      linear-gradient(var(--bg-tint), var(--bg-tint)),
-      url('assets/b3nn3t-mobile.jpg');
-  }
+@media (max-height: 820px){
+  body{ background-position: center 18% !important; }
 }
 
 /* Links */
 a{ color: var(--accent); text-decoration: none; }
 a:hover{ text-decoration: underline; }
 
-/* Header/Brand */
+/* Header / Brand */
 .header{
   display:flex;
   align-items:center;
@@ -74,168 +60,100 @@ a:hover{ text-decoration: underline; }
 .brand{
   font-weight:700;
   letter-spacing:.04em;
-  color:#000;
+  color:#fff;
   background:none;
   padding:0;
-  box-shadow:none;
   position:absolute;
-  left:18px;
-  top:18px;
+  left:25%;
+  transform: translateX(-50%);
   text-decoration:none;
 }
 .brand:hover{ text-decoration: underline; }
 
-/* navigation arrows */
+/* Navigation arrows */
 .nav-arrow{
   position:fixed;
   top:12px;
   z-index:10;
-  padding:10px 12px;
-  background: rgba(255,255,255,.8);
-  border-radius: 14px;
-  backdrop-filter: blur(3px);
-  box-shadow: 0 10px 24px rgba(0,0,0,.08);
-  font-weight:600;
+  padding:8px;
+  color: #fff !important;
+  background: none !important;
+  border: none;
+  box-shadow: none;
+  font-weight:700;
 }
-.nav-arrow:hover{ background: rgba(255,255,255,.95); }
-.nav-arrow.left{ left:12px; }
-.nav-arrow.right{ right:12px; }
+.nav-arrow:hover{ color: #ccc !important; }
 
-/* main container */
+/* === Hauptinhalt: ohne Hintergrundbox === */
 .main{
   width: min(1100px, 92vw);
   margin: clamp(24px, 5vh, 60px) auto;
-  background: rgba(255,255,255,.75);
-  border-radius: 18px;
-  box-shadow: 0 30px 60px rgba(0,0,0,.12);
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
   padding: clamp(18px, 2vw, 28px);
+  color: #fff !important;
 }
 
-h1, h2{ margin: .2em 0 .4em; letter-spacing:.02em; }
-p{ line-height:1.6; color: var(--text-dim); }
+/* Textstil */
+h1, h2, h3, h4, h5, h6 {
+  color: #fff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+p{
+  line-height:1.6;
+  color: #eee !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
 
-/* home grid */
+/* Grid / Karten */
 .grid{
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px;
   margin-top: 10px;
 }
-
 .card{
   display:block;
   padding: 16px;
-  background: rgba(255,255,255,.9);
-  border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0,0,0,.08);
-  font-weight: 600;
-  color: var(--text);
+  background: none !important;
+  box-shadow: none !important;
+  color: #fff !important;
   text-align:center;
 }
-.card small{ display:block; font-weight:400; color: #444; margin-top:6px; }
+.card small{ display:block; font-weight:400; color: #ccc !important; margin-top:6px; }
 .card:hover{ transform: translateY(-2px); transition: transform .12s ease; }
 
-/* home only footer note */
+/* Hinweistext */
 .note{
   margin-top: 18px;
   font-size:.95rem;
-  color:#333;
+  color:#ddd !important;
 }
 
-/* home button on inner pages */
-.home-btn{
-  position:fixed;
-  bottom:16px;
-  left:50%;
-  transform: translateX(-50%);
-  padding:12px 16px;
-  background: rgba(255,255,255,.88);
-  border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0,0,0,.1);
-  font-weight:700;
-}
+/* Startseiten-Button ausblenden */
+.home-btn{ display: none !important; }
 
+/* Footer */
 footer{
-  text-align:center;
-  padding: 24px 12px 36px;
-  color:#333;
-}
-
-
-/* Notebook 1920x1200 (16:10) – shift focus higher so the head is visible */
-@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
-  body{ background-position: center 30%; }
-}
-
-
-/* === Stronger upward focus so the head is visible in landscape (mobile + desktop) === */
-@media (orientation: landscape){
-  body{ background-position: center 24% !important; }
-}
-
-/* 1920x1200 (16:10) notebooks: even higher focus */
-@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
-  body{ background-position: center 20% !important; }
-}
-
-/* Very flat viewports (ultra-wide or browser UI taking height): push higher */
-@media (max-height: 820px){
-  body{ background-position: center 18% !important; }
-}
-
-
-/* === Logo-Icon (z. B. favicon.svg) im Header auf allen Seiten ausblenden === */
-.header img,
-.brand img,
-header img[alt=""],
-header img[src*="favicon"],
-header img[src*="logo"] {
-  display: none !important;
-}
-
-
-/* === Navigationpfeile: Schwarz, ohne Hintergrund === */
-.nav-arrow {
-  color: #000 !important;             /* schwarze Pfeile */
-  background: none !important;        /* kein Hintergrundfeld */
-  box-shadow: none !important;        /* keine Schatten */
-  border: none;
-  font-weight: 700;
-  padding: 8px;
-  text-decoration: none;
-}
-
-.nav-arrow:hover {
-  color: #333 !important;             /* leicht dunkler beim Hover */
-  background: none !important;
-}
-
-
-/* === Footer: leicht transparent für harmonischen Look === */
-footer {
   position: fixed;
   bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
-  margin: 0;
-  padding: 4px 8px;
-  text-align: center;
-  color: rgba(51, 51, 51, 0.85);
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
-  backdrop-filter: blur(6px);
-  font-weight: 500;
+  text-align:center;
+  color: #ccc !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  font-weight:500;
 }
 
-
-/* === b3nn3t-Link leicht nach rechts verschoben === */
-.brand {
-  left: 25%;                /* Position etwa auf 1/4 der Seitenbreite */
-  transform: translateX(-50%);
-}
-
-
-/* === Startseite-Link vollständig ausblenden (global) === */
-.home-btn {
+/* Bilder-Logos im Header ausblenden */
+.header img,
+.brand img,
+header img[src*="favicon"],
+header img[src*="logo"] {
   display: none !important;
 }
