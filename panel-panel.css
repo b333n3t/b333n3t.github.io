@@ -14,7 +14,7 @@
   box-shadow: 0 20px 40px rgba(0,0,0,.18);
   z-index: 30;
   backdrop-filter: blur(2px);
-  overflow: visible;
+  overflow: hidden;
 }
 
 .retro-panel::before{

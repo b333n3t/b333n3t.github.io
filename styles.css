@@ -297,3 +297,15 @@ header img[src*="logo"] {
   opacity:.25;
   pointer-events:none;
 }
+
+
+@supports selector(body:has(.retro-panel)){
+  body:has(.retro-panel) .main{
+    margin-left: clamp(280px, 28vw, 380px);
+  }
+  @media (max-width: 700px){
+    body:has(.retro-panel) .main{
+      margin-left: 0;
+    }
+  }
+}
