@@ -1,10 +1,67 @@
 
-/* === b3nn3t: remove glass card on main content (text only) ============ */
+/* === Core + Background (reinstated) ==================================== */
+:root{
+  --bg-tint: rgba(255,255,255,.35);
+  --text: #0e0e0e;
+  --text-dim: #2d2d2d;
+  --accent: #0b84ff;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; font-family: 'Press Start 2P', Arial, sans-serif; letter-spacing:.03em; color:var(--text); }
+
+/* Background image back in */
+body{
+  background-color:#000;
+  background-image:
+    linear-gradient(var(--bg-tint), var(--bg-tint)),
+    url('assets/b3nn3t.jpg');
+  background-repeat:no-repeat;
+  background-position:center 45%;
+  background-size:cover;
+  background-attachment:scroll;
+  min-height:100svh;
+  display:flex; flex-direction:column;
+}
+
+@media (orientation: landscape){ body{ background-position:center 40%; } }
+@media (max-height: 850px){ body{ background-position:center 38%; } }
+@media (max-height: 760px){ body{ background-position:center 36%; } }
+@media (max-width: 768px){
+  body{
+    background-image:
+      linear-gradient(var(--bg-tint), var(--bg-tint)),
+      url('assets/b3nn3t-mobile.jpg');
+  }
+}
+
+/* Main text without glass card */
 .main{
   width: min(1100px, 92vw);
   margin: clamp(24px, 5vh, 60px) auto;
-  /* remove glass card background & shadow */
-  background: transparent !important;
-  box-shadow: none !important;
+  background: transparent;
+  box-shadow: none;
   padding: clamp(18px, 2vw, 28px);
 }
+
+/* Reserve space for the (smaller) panel – smaller left margin */
+@supports selector(body:has(.retro-panel)){
+  body:has(.retro-panel) .main{
+    margin-left: clamp(280px, 25vw, 360px);
+  }
+  @media (max-width: 900px){
+    body:has(.retro-panel) .main{
+      margin-left: clamp(240px, 40vw, 320px);
+    }
+  }
+  @media (max-width: 700px){
+    body:has(.retro-panel) .main{
+      margin-left: clamp(14px, 4vw, 20px);
+      margin-top: 8px;
+    }
+  }
+}
+
+a{ color:var(--accent); text-decoration:none; }
+a:hover{ text-decoration:underline; }
+h1,h2{ margin:.2em 0 .4em; letter-spacing:.02em; }
+p{ line-height:1.6; color:var(--text-dim); }

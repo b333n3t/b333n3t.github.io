@@ -1,17 +1,17 @@
 
-/* === Retro Panel (Papiervergilbt v2) =================================== */
+/* === Retro Panel (Papiervergilbt) – tuned to 340px width ============== */
 .retro-panel{
   position: fixed;
-  left: clamp(10px, 2vw, 26px);
-  top: clamp(120px, 12vh, 160px);
+  left: clamp(6px, 1.6vw, 14px);  /* kleiner linker Abstand */
+  top: clamp(96px, 11vh, 140px);
+  width: 340px;                   /* Zielbreite */
   display: grid;
-  grid-template-columns: 62px 250px;
-  gap: 14px;
+  grid-template-columns: 62px 1fr;
+  gap: 12px;
   align-items: center;
-  padding: 14px 16px 14px 14px;
+  padding: 12px 14px 12px 12px;
   border-radius: 16px;
-  background:
-    linear-gradient(180deg,#f3ead8,#e6dcc8 70%,#ddd2bf);
+  background: linear-gradient(180deg,#f3ead8,#e6dcc8 70%,#ddd2bf);
   box-shadow: 0 26px 54px rgba(0,0,0,.22);
   z-index: 30;
   overflow: hidden;
@@ -36,9 +36,7 @@
   content:"";
   position:absolute; inset:0;
   border-radius:16px;
-  box-shadow:
-    inset 0 2px 10px rgba(0,0,0,.18),
-    inset 0 -4px 16px rgba(0,0,0,.2);
+  box-shadow: inset 0 2px 10px rgba(0,0,0,.18), inset 0 -4px 16px rgba(0,0,0,.2);
   opacity:.95;
   pointer-events:none;
 }
@@ -46,18 +44,16 @@
 .rp-left{
   display:flex;
   flex-direction:column;
-  gap: 16px;
-  padding-right: 10px;
+  gap: 14px;
+  padding-right: 8px;
   border-right: 1px solid rgba(0,0,0,.1);
 }
 
-/* dials: same look, slightly richer highlight */
 .dial{
-  --s: 48px;
+  --s: 46px;
   width: var(--s);
   height: var(--s);
-  display:grid;
-  place-items:center;
+  display:grid; place-items:center;
   border-radius:50%;
   text-decoration:none;
   position:relative;
@@ -95,68 +91,40 @@
   font: 700 16px 'Press Start 2P', Arial, sans-serif;
   color:#fff;
   text-shadow: 0 1px 1px rgba(0,0,0,.6);
-  position: relative;
-  z-index: 1;
+  position: relative; z-index: 1;
 }
 .dial:hover,
-.dial:focus-visible{
-  transform: translateY(-1px) scale(1.05);
-  outline:none;
-  filter: contrast(1.04) brightness(1.02);
-}
+.dial:focus-visible{ transform: translateY(-1px) scale(1.05); outline:none; filter: contrast(1.04) brightness(1.02); }
 
 /* display: warm grey + soft inner frame + subtle stripes */
 .rp-display{
-  width: 250px;
-  height: 340px;
+  height: 320px;
   border-radius: 14px;
   background: #e6e2d8;
-  box-shadow:
-    inset 0 0 0 2px rgba(0,0,0,.09),
-    inset 0 0 30px rgba(0,0,0,.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: 12px;
-  position: relative;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.09), inset 0 0 30px rgba(0,0,0,.18);
+  display:flex; align-items:center; justify-content:center;
+  padding: 12px; position: relative;
 }
 .rp-glass{
-  width: 92%;
-  height: 88%;
-  border-radius: 14px;
+  width: 92%; height: 88%; border-radius: 14px;
   background:
     linear-gradient(180deg, #eeeae1, #d9d4ca),
     repeating-linear-gradient(130deg, rgba(255,255,255,.16) 0 1px, transparent 1px 9px),
     repeating-linear-gradient(50deg, rgba(0,0,0,.06) 0 1px, transparent 1px 10px);
   background-blend-mode: screen, multiply, normal;
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.62),
-    inset 0 0 20px rgba(0,0,0,.14);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding: 16px;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.62), inset 0 0 20px rgba(0,0,0,.14);
+  display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding: 16px;
 }
-.rp-title{
-  font: 700 20px 'Press Start 2P', Arial, sans-serif;
-  margin-bottom: 12px;
-  color:#1f1f1f;
-}
-.rp-desc{
-  font: 400 15px 'Press Start 2P', Arial, sans-serif;
-  opacity:.95;
-  color:#333;
-}
+.rp-title{ font: 700 19px 'Press Start 2P', Arial, sans-serif; margin-bottom: 10px; color:#1f1f1f; }
+.rp-desc { font: 400 15px 'Press Start 2P', Arial, sans-serif; color:#333; opacity:.95; }
 
-/* keep panel visible on small screens */
+/* keep panel left-fixed on small screens */
 @media (max-width: 700px){
   .retro-panel{
-    left: 50%;
-    transform: translateX(-50%);
-    top: 84px;
-    grid-template-columns: 62px 1fr;
-    width: min(92vw, 520px);
+    left: clamp(6px, 2vw, 12px);
+    transform: none;
+    top: 70px;
+    width: min(94vw, 360px);
+    grid-template-columns: 56px 1fr;
   }
 }
