@@ -1,36 +1,56 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>b3nn3t – Retro-Panel FINAL</title>
-  <link rel="stylesheet" href="panel-panel_final.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Start — b3nn3t</title>
+  <meta name="description" content="Start — b3nn3t" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="panel-panel.css" />
+  <style>
+  /* hide old start grid (only on start page) */
+  .main .grid{ display:none !important; }
+  </style>
 </head>
 <body>
-  <aside class="retro-panel">
-    <div class="retro-panel-inner">
-      <div class="patina-dials">
-        <button class="dial">1</button>
-        <button class="dial">2</button>
-        <button class="dial">3</button>
-        <button class="dial">4</button>
-        <button class="dial">5</button>
-      </div>
-      <div class="panel-screen">
-        <h3>Über mich</h3>
-        <p>Bio & Einblicke</p>
+  <header class="header"><div class="brand">b3nn3t</div></header>
+
+  <!-- ===== Retro Panel (5 Dials) ===== -->
+  <div class="retro-panel" role="complementary" aria-label="Panel Navigation">
+    <div class="rp-left">
+      <a class="dial" href="ueber-mich.html" aria-label="über mich"     data-title="über mich"  data-desc="Bio & Einblicke"><span>1</span></a>
+      <a class="dial" href="diskografie.html" aria-label="diskografie"  data-title="diskografie" data-desc="Releases & Projekte"><span>2</span></a>
+      <a class="dial" href="kontakt.html"     aria-label="kontakt"      data-title="kontakt"     data-desc="Booking & Mail"><span>3</span></a>
+      <a class="dial" href="aktuell.html"     aria-label="aktuell"      data-title="aktuell"     data-desc="News & Termine"><span>4</span></a>
+      <a class="dial" href="gesehen.html"     aria-label="gesehen"      data-title="gesehen"     data-desc="Inspiration & Notizen"><span>5</span></a>
+    </div>
+    <div class="rp-display" aria-live="polite">
+      <div class="rp-glass">
+        <div class="rp-title" id="rpTitle">über mich</div>
+        <div class="rp-desc"  id="rpDesc">Bio & Einblicke</div>
       </div>
     </div>
-  </aside>
+  </div>
+
 
   <main class="main">
-    <h1>Willkommen</h1>
-    <p>Hier findest du alles rund um <strong>b3nn3t</strong> – kurz, klar, ohne Schnickschnack.</p>
-    <p><em>Tipp:</em> Auf den Unterseiten kannst du mit den Pfeiltasten ← → wechseln. Drücke „H“ für die Startseite.</p>
-    <p>© b3nn3t · <a href="#">Impressum</a> / <a href="#">Datenschutz</a></p>
+
+  <h1>Willkommen</h1>
+  <p>Hier findest du alles rund um <strong>b3nn3t</strong> – kurz, klar, ohne Schnickschnack.</p>
+  <section class="grid" aria-label="Seitenübersicht">
+    <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
+    <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
+    <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
+    <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
+    <a class="card" href="gesehen.html">gesehen<small>Inspiration & Notizen</small></a>
+    <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
+  </section>
+  <p class="note">Tipp: Auf den Unterseiten kannst du mit den Pfeiltasten ← → wechseln. Drücke „H“ für die Startseite.</p>
+
   </main>
 
-  <script src="panel-panel_final.js"></script>
+  <footer>© Start · b3nn3t</footer>
+  <script src="script.js"></script>
+  <script src="panel-panel.js" defer></script>
 </body>
 </html>
