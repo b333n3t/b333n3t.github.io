@@ -1,130 +1,129 @@
 
-/* === Retro Panel (Papiervergilbt) – tuned to 340px width ============== */
+/* ===== Retro Panel (5 Dials) – compact + patina ===== */
 .retro-panel{
   position: fixed;
-  left: clamp(6px, 1.6vw, 14px);  /* kleiner linker Abstand */
-  top: clamp(96px, 11vh, 140px);
-  width: 340px;                   /* Zielbreite */
+  left: clamp(10px, 2vw, 26px);
+  top: clamp(120px, 12vh, 160px);
   display: grid;
-  grid-template-columns: 62px 1fr;
+  grid-template-columns: 54px 230px;
   gap: 12px;
   align-items: center;
-  padding: 12px 14px 12px 12px;
-  border-radius: 16px;
-  background: linear-gradient(180deg,#f3ead8,#e6dcc8 70%,#ddd2bf);
-  box-shadow: 0 26px 54px rgba(0,0,0,.22);
+  padding: 10px 12px 10px 10px;
+  border-radius: 14px;
+  background: linear-gradient(180deg,#eeede8,#dedcd5 70%,#d7d5ce);
+  box-shadow: 0 20px 40px rgba(0,0,0,.18);
   z-index: 30;
+  backdrop-filter: blur(2px);
   overflow: hidden;
 }
 
-/* warm paper grain + diagonal micro-lines */
 .retro-panel::before{
-  content:"";
-  position:absolute; inset:0;
-  border-radius:16px;
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 14px;
   background:
-    repeating-linear-gradient(122deg, rgba(255,255,255,.08) 0 1px, transparent 1px 7px),
-    repeating-linear-gradient(62deg, rgba(0,0,0,.05) 0 1px, transparent 1px 6px),
-    radial-gradient(120% 70% at 20% 0%, rgba(255,255,255,.18), transparent 50%);
-  mix-blend-mode:multiply;
-  opacity:.35;
-  pointer-events:none;
-}
-
-/* edge wear + inner vignette */
-.retro-panel::after{
-  content:"";
-  position:absolute; inset:0;
-  border-radius:16px;
-  box-shadow: inset 0 2px 10px rgba(0,0,0,.18), inset 0 -4px 16px rgba(0,0,0,.2);
-  opacity:.95;
-  pointer-events:none;
+    linear-gradient(115deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 100%),
+    linear-gradient(65deg, transparent 0 90%, rgba(0,0,0,0.06) 100%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  opacity: .25;
 }
 
 .rp-left{
   display:flex;
   flex-direction:column;
-  gap: 14px;
+  gap: 16px;
   padding-right: 8px;
   border-right: 1px solid rgba(0,0,0,.1);
 }
 
 .dial{
-  --s: 46px;
+  --s: 44px;
   width: var(--s);
   height: var(--s);
-  display:grid; place-items:center;
+  display:grid;
+  place-items:center;
   border-radius:50%;
   text-decoration:none;
   position:relative;
   background:
-    radial-gradient(circle at 30% 30%, #3a3a3a 0 18px, #0e0e0e 19px 100%),
-    conic-gradient(from 210deg, #bdbdbd, #9a9a9a 40%, #d2d2d2 60%, #a8a8a8 80%, #c9c9c9);
+    radial-gradient(circle at 30% 30%, #444 0 18px, #111 19px 100%),
+    conic-gradient(from 210deg, #bfbfbf, #9e9e9e 40%, #d8d8d8 60%, #b0b0b0 80%, #cfcfcf);
   box-shadow:
     inset -2px -2px 4px rgba(255,255,255,.15),
     inset 2px 2px 6px rgba(0,0,0,.45),
     0 2px 0 rgba(0,0,0,.18),
     0 10px 18px rgba(0,0,0,.18);
-  transition: transform .12s ease, box-shadow .2s ease, filter .2s ease;
+  transition: transform .1s ease, box-shadow .2s ease, filter .2s ease;
   overflow: hidden;
 }
 .dial::before{
   content:"";
   position:absolute; inset:0;
   background:
-    radial-gradient(transparent 60%, rgba(0,0,0,.16)),
-    linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.12)),
-    repeating-linear-gradient(115deg, rgba(0,0,0,.045) 0 2px, transparent 2px 6px);
+    radial-gradient(transparent 60%, rgba(0,0,0,.15)),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.12)),
+    repeating-linear-gradient(115deg, rgba(0,0,0,.04) 0 2px, transparent 2px 6px);
   pointer-events:none;
-  mix-blend-mode:multiply;
+  mix-blend-mode: multiply;
   opacity:.55;
 }
 .dial::after{
   content:"";
   position:absolute; inset:0;
   border-radius:50%;
-  box-shadow: inset 0 0 12px rgba(0,0,0,.36);
-  opacity:.72;
+  box-shadow: inset 0 0 12px rgba(0,0,0,.35);
+  opacity:.7;
   pointer-events:none;
 }
 .dial span{
   font: 700 16px 'Press Start 2P', Arial, sans-serif;
   color:#fff;
   text-shadow: 0 1px 1px rgba(0,0,0,.6);
-  position: relative; z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 .dial:hover,
-.dial:focus-visible{ transform: translateY(-1px) scale(1.05); outline:none; filter: contrast(1.04) brightness(1.02); }
+.dial:focus-visible{
+  transform: scale(1.06);
+  outline:none;
+  filter: contrast(1.04) brightness(1.02);
+}
 
-/* display: warm grey + soft inner frame + subtle stripes */
 .rp-display{
+  width: 230px;
   height: 320px;
-  border-radius: 14px;
-  background: #e6e2d8;
-  box-shadow: inset 0 0 0 2px rgba(0,0,0,.09), inset 0 0 30px rgba(0,0,0,.18);
-  display:flex; align-items:center; justify-content:center;
-  padding: 12px; position: relative;
+  border-radius: 12px;
+  background: #d9dde1;
+  box-shadow:
+    inset 0 0 0 2px rgba(0,0,0,.08),
+    inset 0 0 24px rgba(0,0,0,.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 10px;
+  position: relative;
 }
-.rp-glass{
-  width: 92%; height: 88%; border-radius: 14px;
-  background:
-    linear-gradient(180deg, #eeeae1, #d9d4ca),
-    repeating-linear-gradient(130deg, rgba(255,255,255,.16) 0 1px, transparent 1px 9px),
-    repeating-linear-gradient(50deg, rgba(0,0,0,.06) 0 1px, transparent 1px 10px);
-  background-blend-mode: screen, multiply, normal;
-  box-shadow: inset 0 0 0 2px rgba(255,255,255,.62), inset 0 0 20px rgba(0,0,0,.14);
-  display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding: 16px;
-}
-.rp-title{ font: 700 19px 'Press Start 2P', Arial, sans-serif; margin-bottom: 10px; color:#1f1f1f; }
-.rp-desc { font: 400 15px 'Press Start 2P', Arial, sans-serif; color:#333; opacity:.95; }
 
-/* keep panel left-fixed on small screens */
+.rp-glass{
+  width: 92%;
+  height: 88%;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #e7eaee, #ccd3d9);
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.65),
+    inset 0 0 18px rgba(0,0,0,.15);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding: 14px;
+}
+
+.rp-title{ font: 700 20px 'Press Start 2P', Arial, sans-serif; margin-bottom: 12px; }
+.rp-desc { font: 400 15px 'Press Start 2P', Arial, sans-serif; opacity:.95; }
+
 @media (max-width: 700px){
-  .retro-panel{
-    left: clamp(6px, 2vw, 12px);
-    transform: none;
-    top: 70px;
-    width: min(94vw, 360px);
-    grid-template-columns: 56px 1fr;
-  }
+  .retro-panel{ display:none; }
 }
