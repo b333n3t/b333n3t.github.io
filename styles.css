@@ -1,13 +1,21 @@
 
 /* —— Linkslastiges Layout: näher an den linken Rand —— */
-.main{
-  margin: clamp(24px, 5vh, 60px) auto clamp(24px, 5vh, 60px) clamp(12px, 4vw, 24px);
-  width: min(1100px, 92vw);
+.main {
+  /* Abstand oben/unten bleibt angenehm, links näher am Rand */
+  margin-top: clamp(16px, 4vh, 48px);
+  margin-bottom: clamp(16px, 4vh, 48px);
+  margin-left: clamp(12px, 3vw, 40px);
+  margin-right: auto;
+
+  /* Breite dynamisch: standardmäßig linkslastig, nicht zentriert */
+  width: clamp(640px, 90vw, 1200px);
+  max-width: none !important;
+  box-sizing: border-box;
 }
 
-/* —— In Landscape darf die Box breiter werden —— */
-@media (orientation: landscape){
-  .main{
-    width: min(1400px, 96vw);
+/* —— Im Landscape darf die Box breiter werden —— */
+@media (orientation: landscape) {
+  .main {
+    width: clamp(800px, 95vw, 1400px);
   }
 }
