@@ -1,48 +1,56 @@
 
 :root{
-  --bg-tint: rgba(255,255,255,.68);
+  --bg-tint: rgba(255,255,255,.35); /* blasser Hintergrund */
   --text: #0e0e0e;
   --text-dim: #2d2d2d;
   --accent: #0b84ff;
 }
 
-*{box-sizing:border-box;}
+/* Base reset */
+*{ box-sizing:border-box; }
 
 html,body{
   height:100%;
   margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Press Start 2P', Arial, sans-serif;
+  letter-spacing: .03em;
   color: var(--text);
 }
 
-/* === Responsive, full-bleed background for ALL pages === */
+/* === Einheitlicher Hintergrund: ruhiges Scrolling + dynamischer Fokus === */
 body{
-  /* Fallback color while image loads */
   background-color: #000;
-
-  /* Overlay tint + default image */
   background-image:
     linear-gradient(var(--bg-tint), var(--bg-tint)),
     url('assets/b3nn3t.jpg');
-
   background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-
-  /* Mobile-friendly default */
-  background-attachment: scroll;
-
-  /* Ensure viewport coverage */
+  background-position: center 45%;   /* Grundfokus etwas höher */
+  background-size: cover;            /* keine Balken links/rechts */
+  background-attachment: scroll;     /* ruhiges Scrolling */
+  transition: background-position .35s ease;
   min-height: 100vh;
   min-height: 100svh;
   display:flex;
   flex-direction:column;
 }
 
-/* OPTIONAL: If you add a lighter mobile image at assets/b3nn3t-mobile.jpg,
-   it will be used automatically on small screens. If you don't add it,
-   this block can stay — browsers will simply keep the default image. */
-@media (max-width: 768px) {
+/* Querformat (Landscape): mehr vom unteren Bereich sichtbar machen */
+@media (orientation: landscape){
+  body{ background-position: center 40%; }
+}
+
+/* Sehr flache Viewports (z.B. 1366×768, 1920×800): Fokus noch etwas höher */
+@media (max-height: 850px){
+  body{ background-position: center 38%; }
+}
+
+/* Extrem flache Viewports (sehr schmale Höhe) */
+@media (max-height: 760px){
+  body{ background-position: center 36%; }
+}
+
+/* Optional: mobiles, leichteres Bild falls vorhanden */
+@media (max-width: 768px){
   body{
     background-image:
       linear-gradient(var(--bg-tint), var(--bg-tint)),
@@ -50,34 +58,32 @@ body{
   }
 }
 
-/* Enable parallax-like fixed background on larger/desktop screens */
-@media (min-width: 1024px) and (hover: hover) {
-  body{
-    background-attachment: fixed;
-  }
-}
-
+/* Links */
 a{ color: var(--accent); text-decoration: none; }
 a:hover{ text-decoration: underline; }
 
-/* Top bar */
+/* Header/Brand */
 .header{
   display:flex;
   align-items:center;
   justify-content:center;
   padding: 10px 14px;
-  position:sticky;
-  top:0;
+  position: sticky;
+  top: 0;
 }
-
 .brand{
   font-weight:700;
   letter-spacing:.04em;
-  background: rgba(255,255,255,.7);
-  padding:6px 10px;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0,0,0,.05);
+  color:#000;
+  background:none;
+  padding:0;
+  box-shadow:none;
+  position:absolute;
+  left:18px;
+  top:18px;
+  text-decoration:none;
 }
+.brand:hover{ text-decoration: underline; }
 
 /* navigation arrows */
 .nav-arrow{
@@ -92,7 +98,6 @@ a:hover{ text-decoration: underline; }
   font-weight:600;
 }
 .nav-arrow:hover{ background: rgba(255,255,255,.95); }
-
 .nav-arrow.left{ left:12px; }
 .nav-arrow.right{ right:12px; }
 
@@ -154,4 +159,36 @@ footer{
   text-align:center;
   padding: 24px 12px 36px;
   color:#333;
+}
+
+
+/* Notebook 1920x1200 (16:10) – shift focus higher so the head is visible */
+@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
+  body{ background-position: center 30%; }
+}
+
+
+/* === Stronger upward focus so the head is visible in landscape (mobile + desktop) === */
+@media (orientation: landscape){
+  body{ background-position: center 24% !important; }
+}
+
+/* 1920x1200 (16:10) notebooks: even higher focus */
+@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
+  body{ background-position: center 20% !important; }
+}
+
+/* Very flat viewports (ultra-wide or browser UI taking height): push higher */
+@media (max-height: 820px){
+  body{ background-position: center 18% !important; }
+}
+
+
+/* === Logo-Icon (z. B. favicon.svg) im Header auf allen Seiten ausblenden === */
+.header img,
+.brand img,
+header img[alt=""],
+header img[src*="favicon"],
+header img[src*="logo"] {
+  display: none !important;
 }
