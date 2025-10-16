@@ -1,35 +1,20 @@
 
-// ===== Retro Panel behavior
-(function(){
-  function setup(){
-    var panel = document.querySelector('.retro-panel');
-    if(!panel) return;
-    var title = panel.querySelector('#rpTitle');
-    var desc  = panel.querySelector('#rpDesc');
-    var buttons = panel.querySelectorAll('.dial');
-    function showDefault(){
-      if(title && desc){
-        title.textContent = 'über mich';
-        desc.textContent  = 'Bio & Einblicke';
-      }
-    }
-    showDefault();
-    buttons.forEach(function(btn){
-      var t = btn.getAttribute('data-title') || '';
-      var d = btn.getAttribute('data-desc') || '';
-      function show(){
-        if(title) title.textContent = t;
-        if(desc)  desc.textContent  = d;
-      }
-      btn.addEventListener('mouseenter', show);
-      btn.addEventListener('focus', show);
-      btn.addEventListener('mouseleave', showDefault);
-      btn.addEventListener('blur', showDefault);
+document.addEventListener('DOMContentLoaded', () => {
+  const dials = document.querySelectorAll('.dial');
+  const screen = document.querySelector('.panel-screen');
+
+  const labels = [
+    { title: 'Über mich', text: 'Bio & Einblicke' },
+    { title: 'Projekte', text: 'Arbeiten & Ideen' },
+    { title: 'Galerie', text: 'Bilder & Eindrücke' },
+    { title: 'Kontakt', text: 'Erreichbarkeit' },
+    { title: 'Credits', text: '© b3nn3t' }
+  ];
+
+  dials.forEach((dial, idx) => {
+    dial.addEventListener('click', () => {
+      const { title, text } = labels[idx] || {};
+      screen.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
     });
-  }
-  if(document.readyState === 'complete' || document.readyState === 'interactive'){
-    setup();
-  }else{
-    document.addEventListener('DOMContentLoaded', setup);
-  }
-})();
+  });
+});
