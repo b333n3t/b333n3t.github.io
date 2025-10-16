@@ -1,6 +1,6 @@
 
-/* ===== Retro Panel (5 Dials) – compact + patina ===== */
-.retro-panel{
+/* === Retro Panel (Papiervergilbt, warmgrau) ============================= */
+.retro-panel {
   position: fixed;
   left: clamp(10px, 2vw, 26px);
   top: clamp(120px, 12vh, 160px);
@@ -10,25 +10,38 @@
   align-items: center;
   padding: 10px 12px 10px 10px;
   border-radius: 14px;
-  background: linear-gradient(180deg,#eeede8,#dedcd5 70%,#d7d5ce);
-  box-shadow: 0 20px 40px rgba(0,0,0,.18);
+  background:
+    linear-gradient(180deg,#f2e9d9,#e2d9c8 70%,#dcd2c1);
+  box-shadow: 0 22px 45px rgba(0,0,0,.2);
   z-index: 30;
-  backdrop-filter: blur(2px);
   overflow: hidden;
 }
 
+/* feine Patina-Struktur */
 .retro-panel::before{
-  content: "";
-  position: absolute; inset: 0;
-  border-radius: 14px;
+  content:"";
+  position:absolute; inset:0;
+  border-radius:14px;
   background:
-    linear-gradient(115deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 100%),
-    linear-gradient(65deg, transparent 0 90%, rgba(0,0,0,0.06) 100%);
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  opacity: .25;
+    repeating-linear-gradient(125deg, rgba(255,255,255,.07) 0 1px, transparent 1px 6px),
+    repeating-linear-gradient(65deg, rgba(0,0,0,.05) 0 1px, transparent 1px 5px),
+    radial-gradient(ellipse at 30% 40%, rgba(255,255,255,.08), transparent 60%);
+  mix-blend-mode:multiply;
+  opacity:.35;
+  pointer-events:none;
 }
 
+/* Schattenkanten */
+.retro-panel::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:14px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,.15), inset 0 -3px 14px rgba(0,0,0,.18);
+  opacity:.9;
+  pointer-events:none;
+}
+
+/* Linke Seite (Dials) ---------------------------------------------------- */
 .rp-left{
   display:flex;
   flex-direction:column;
@@ -47,8 +60,8 @@
   text-decoration:none;
   position:relative;
   background:
-    radial-gradient(circle at 30% 30%, #444 0 18px, #111 19px 100%),
-    conic-gradient(from 210deg, #bfbfbf, #9e9e9e 40%, #d8d8d8 60%, #b0b0b0 80%, #cfcfcf);
+    radial-gradient(circle at 30% 30%, #3c3c3c 0 18px, #111 19px 100%),
+    conic-gradient(from 210deg, #bdbdbd, #999 40%, #d2d2d2 60%, #aaa 80%, #c9c9c9);
   box-shadow:
     inset -2px -2px 4px rgba(255,255,255,.15),
     inset 2px 2px 6px rgba(0,0,0,.45),
@@ -65,7 +78,7 @@
     linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.12)),
     repeating-linear-gradient(115deg, rgba(0,0,0,.04) 0 2px, transparent 2px 6px);
   pointer-events:none;
-  mix-blend-mode: multiply;
+  mix-blend-mode:multiply;
   opacity:.55;
 }
 .dial::after{
@@ -90,11 +103,12 @@
   filter: contrast(1.04) brightness(1.02);
 }
 
+/* Display (warmgrau/beige) --------------------------------------------- */
 .rp-display{
   width: 230px;
   height: 320px;
   border-radius: 12px;
-  background: #d9dde1;
+  background: #e1ddd3;
   box-shadow:
     inset 0 0 0 2px rgba(0,0,0,.08),
     inset 0 0 24px rgba(0,0,0,.15);
@@ -109,10 +123,11 @@
   width: 92%;
   height: 88%;
   border-radius: 12px;
-  background: linear-gradient(180deg, #e7eaee, #ccd3d9);
+  background:
+    linear-gradient(180deg, #e8e4db, #d6d1c7);
   box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.65),
-    inset 0 0 18px rgba(0,0,0,.15);
+    inset 0 0 0 2px rgba(255,255,255,.55),
+    inset 0 0 18px rgba(0,0,0,.12);
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -121,9 +136,22 @@
   padding: 14px;
 }
 
-.rp-title{ font: 700 20px 'Press Start 2P', Arial, sans-serif; margin-bottom: 12px; }
-.rp-desc { font: 400 15px 'Press Start 2P', Arial, sans-serif; opacity:.95; }
+.rp-title{
+  font: 700 20px 'Press Start 2P', Arial, sans-serif;
+  margin-bottom: 12px;
+  color:#222;
+}
+.rp-desc{
+  font: 400 15px 'Press Start 2P', Arial, sans-serif;
+  opacity:.95;
+  color:#333;
+}
 
+/* Sichtbar auf allen Geräten */
 @media (max-width: 700px){
-  .retro-panel{ display:none; }
+  .retro-panel{
+    left: 50%;
+    transform: translateX(-50%);
+    top: 80px;
+  }
 }
