@@ -1,8 +1,4 @@
-// swipe-nav.js — v5 (iPhone fix with RIGHT => NEXT mapping)
-// Your request: swipe LEFT→RIGHT should go to NEXT page, even on iPhone.
-// To avoid the iOS back-swipe from the very edge, we ignore swipes that start
-// closer than EDGE_GAP px to the screen edges.
-
+// swipe-nav.js — v8 (RIGHT => NEXT, LEFT => PREV)
 (function () {
   const DEFAULT_ORDER = [
     "index.html",
@@ -19,6 +15,7 @@
     const p = (window.location.pathname || "").split("/").pop();
     return p || "index.html";
   }
+
   function around(file) {
     const i = ORDER.indexOf(file);
     if (i === -1) return { prev: null, next: null };
@@ -55,7 +52,6 @@
       right.setAttribute("href", next);
     }
 
-    // Minimal inline styles if none exist
     if (!document.getElementById("nav-arrow-inline-style")) {
       const s = document.createElement("style");
       s.id = "nav-arrow-inline-style";
@@ -74,6 +70,7 @@
     const { next } = around(curFile());
     if (next) window.location.href = next;
   }
+
   function goPrev() {
     const l = document.querySelector(".nav-arrow.left");
     if (l && l.getAttribute("href")) { window.location.href = l.href; return; }
@@ -82,60 +79,54 @@
     else if (history.length > 1) history.back();
   }
 
-  // ---- Gesture detection (angle-based) ----
-  let sx=0, sy=0, st=0;
-  const MIN_X = 44;                              // min horizontal distance (px)
-  const MAX_TIME = 900;                          // ms
-  const MAX_TAN = Math.tan(32 * Math.PI/180);    // ~±32° from horizontal
-  const EDGE_GAP = 28;                           // ignore starts within 28px of edges (iOS back-swipe zone)
+  let sx = 0, sy = 0, st = 0;
+  const MIN_X = 44;
+  const MAX_TIME = 900;
+  const MAX_TAN = Math.tan(32 * Math.PI/180);
+  const EDGE_GAP = 28;
 
-  function onTouchStart(e){
-    if (e.touches && e.touches.length > 1) return; // ignore multi-touch
+  function onTouchStart(e) {
+    if (e.touches && e.touches.length > 1) return;
     const t = e.changedTouches ? e.changedTouches[0] : (e.touches ? e.touches[0] : e);
     sx = t.clientX; sy = t.clientY; st = performance.now();
   }
 
-  function onTouchEnd(e){
+  function onTouchEnd(e) {
     const t = e.changedTouches ? e.changedTouches[0] : e;
     const dx = t.clientX - sx;
     const dy = t.clientY - sy;
     const dt = performance.now() - st;
 
-    // avoid iOS edge back/forward gesture area
     if (sx < EDGE_GAP || (window.innerWidth - sx) < EDGE_GAP) return;
-
     if (dt > MAX_TIME) return;
     if (Math.abs(dx) < MIN_X) return;
-    if (Math.abs(dy)/Math.abs(dx) > MAX_TAN) return;
+    if (Math.abs(dy) / Math.abs(dx) > MAX_TAN) return;
 
-    // YOUR requested mapping on all devices:
-    // swipe RIGHT (dx>0) => NEXT, swipe LEFT (dx<0) => PREV
+    // RIGHT => NEXT, LEFT => PREV
     if (dx > 0) goNext();
     else goPrev();
   }
 
   document.addEventListener("touchstart", onTouchStart, { passive: true });
-  document.addEventListener("touchend",   onTouchEnd,   { passive: true });
+  document.addEventListener("touchend", onTouchEnd, { passive: true });
 
-  // Pointer fallback (Android/desktop)
-  let px=0, py=0, pt=0;
-  function onPointerDown(e){
+  let px = 0, py = 0, pt = 0;
+  function onPointerDown(e) {
     if (e.pointerType !== "touch") return;
-    px=e.clientX; py=e.clientY; pt=performance.now();
+    px = e.clientX; py = e.clientY; pt = performance.now();
   }
-  function onPointerUp(e){
+  function onPointerUp(e) {
     if (e.pointerType !== "touch") return;
     const dx = e.clientX - px;
     const dy = e.clientY - py;
     const dt = performance.now() - pt;
     if (px < EDGE_GAP || (window.innerWidth - px) < EDGE_GAP) return;
-    if (dt > MAX_TIME || Math.abs(dx) < MIN_X || Math.abs(dy)/Math.abs(dx) > MAX_TAN) return;
+    if (dt > MAX_TIME || Math.abs(dx) < MIN_X || Math.abs(dy) / Math.abs(dx) > MAX_TAN) return;
     if (dx > 0) goNext(); else goPrev();
   }
   document.addEventListener("pointerdown", onPointerDown, { passive: true });
-  document.addEventListener("pointerup",   onPointerUp,   { passive: true });
+  document.addEventListener("pointerup", onPointerUp, { passive: true });
 
-  // Ensure arrows when DOM is ready
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", ensureArrows);
   } else {
