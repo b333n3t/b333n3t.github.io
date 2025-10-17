@@ -1,0 +1,5 @@
+/* swipe-helper.css */
+/* Keep vertical scrolling smooth, allow horizontal swipe recognition */
+@media (pointer: coarse){
+  body { touch-action: pan-y; }
+}
