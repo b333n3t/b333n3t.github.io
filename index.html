@@ -10,10 +10,7 @@
   <!-- Haupt-Styles -->
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
-  <link rel="stylesheet" href="styles_nav_arrows.css" />
-
-  <!-- Swipe-Unterstützung für Mobile (touch-action: pan-y) -->
+  <!-- Swipe-Unterstützung für Mobile -->
   <link rel="stylesheet" href="swipe-helper.css" />
 </head>
 <body>
@@ -25,6 +22,7 @@
   </header>
 
   <main class="main">
+
     <h1>Willkommen</h1>
     <p>Hier findest du alles rund um <strong>b3nn3t</strong> – kurz, klar, ohne Schnickschnack.</p>
 
@@ -38,13 +36,16 @@
     </section>
 
     <p class="note">Tipp: Auf den Unterseiten kannst du mit den Pfeiltasten ← → wechseln. Drücke „H“ für die Startseite.</p>
+
   </main>
 
   <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
 
-  <!-- Skripte -->
+  <!-- Hauptskript -->
   <script src="script.js"></script>
-  <!-- WICHTIG: nur EINMAL laden, mit Cache-Buster v=12 -->
-  <script src="swipe-nav.js?v=12" defer></script>
+<script src="swipe-nav.js?v=6" defer></script>
+  
+  <!-- Swipe-Navigation aktivieren -->
+  <script src="swipe-nav.js?v=6" defer></script>
 </body>
 </html>
