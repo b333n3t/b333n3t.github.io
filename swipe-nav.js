@@ -1,6 +1,7 @@
-// swipe-nav.js — v12
+// swipe-nav.js — v15
 // NEXT on right→left (dx < 0 or wheel deltaX < 0), PREV on left→right.
 // Touch + Pointer + Trackpad (wheel). Idle-safe & iOS-edge-safe.
+// Desktop fix: auto-invert trackpad wheel on Windows; optional override via window.SWIPE_WHEEL_INVERT.
 (function () {
   // --- explicit order ---
   const ORDER = [
@@ -80,14 +81,23 @@
   let wheelDX=0, wheelDY=0, wheelTimer=null;
   const WHEEL_WINDOW=180; // ms
   const WHEEL_MIN_X=120;  // threshold
+
+  // Auto-invert on Windows (common deltaX sign difference vs macOS), allow override
+  const IS_WINDOWS = typeof navigator !== "undefined" && /Windows/i.test(navigator.userAgent || "");
+  const INVERT_WHEEL = (typeof window !== "undefined" && typeof window.SWIPE_WHEEL_INVERT === "boolean")
+    ? window.SWIPE_WHEEL_INVERT
+    : IS_WINDOWS;
+
   function flushWheel(){
-    const dx=wheelDX, dy=wheelDY; wheelDX=wheelDY=0; wheelTimer=null;
+    let dx=wheelDX, dy=wheelDY; wheelDX=wheelDY=0; wheelTimer=null;
+    if (INVERT_WHEEL) dx = -dx; // normalize: right→left should be negative
+
     if (Math.abs(dx) < WHEEL_MIN_X) return;
     if (Math.abs(dy)/Math.abs(dx) > MAX_TAN) return;
     if (dx < 0) goNext(); else goPrev();
   }
   document.addEventListener("wheel", e=>{
-    if (e.ctrlKey) return;
+    if (e.ctrlKey) return; // ignore pinch-zoom
     wheelDX += e.deltaX; wheelDY += e.deltaY;
     if (!wheelTimer) wheelTimer = setTimeout(flushWheel, WHEEL_WINDOW);
   }, {passive:true, capture:true});
