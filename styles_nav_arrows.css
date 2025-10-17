@@ -1,5 +1,5 @@
 
-/* === NAV-ARROWS: schwarze Halbkreise mit weißen Pfeilen (übersteuert alte Regeln) === */
+/* === NAV-ARROWS: transparente Halbkreise mit Glas-/Blur-Effekt === */
 .nav-arrow{
   position: fixed !important;
   top: 50% !important;
@@ -12,10 +12,13 @@
   padding: 0 !important;
 
   /* Look */
-  background: #000 !important;      /* schwarzer Halbkreis */
-  color: #fff !important;           /* weißer Pfeil (Text) */
+  background: rgba(0, 0, 0, 0.35) !important;     /* halbtransparentes Schwarz */
+  color: #fff !important;                         /* weißer Pfeil */
   box-shadow: 0 8px 24px rgba(0,0,0,.25) !important;
   text-decoration: none !important;
+  backdrop-filter: blur(6px) !important;          /* Glas-Effekt */
+  -webkit-backdrop-filter: blur(6px) !important;  /* Safari/iOS-Kompatibilität */
+  border: 1px solid rgba(255, 255, 255, 0.25);    /* dezente helle Kontur */
 
   display: flex !important;
   align-items: center !important;
@@ -40,7 +43,12 @@
 }
 
 /* Hover/Active Feedback (Desktop) */
-.nav-arrow:hover{ transform: translateY(-50%) scale(1.03) !important; background:#111 !important; }
+.nav-arrow:hover{
+  transform: translateY(-50%) scale(1.03) !important;
+  background: rgba(0, 0, 0, 0.55) !important;    /* etwas dunkler beim Hover */
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
 .nav-arrow:active{ transform: translateY(-50%) scale(0.98) !important; }
 
 /* SVG-Icons im Link automatisch weiß & zentriert */
