@@ -217,18 +217,19 @@ header img[src*="logo"] {
 
 /* === Footer: leicht transparent für harmonischen Look === */
 footer {
-  position: fixed;
+ position: fixed;
   bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  padding: 4px 8px;
+  padding: 2px 6px;
   text-align: center;
-  color: rgba(51, 51, 51, 0.85);
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 8px;
-  backdrop-filter: blur(6px);
-  font-weight: 500;
+  color: rgba(0, 0, 0, 0.7);
+  background: transparent;           /* komplett durchsichtig */
+  border-radius: 0;                  /* keine Rundung */
+  backdrop-filter: none;             /* kein Milchglas-Effekt */
+  font-weight: 400;
+  font-size: 0.8rem;                 /* kleinere Schrift */
 }
 
 
