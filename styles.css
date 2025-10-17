@@ -215,21 +215,48 @@ header img[src*="logo"] {
 }
 
 
-/* === Footer: leicht transparent für harmonischen Look === */
+/* === Footer: eine Zeile + näher am Rand, iOS-safe === */
 footer {
- position: fixed;
-  bottom: 16px;
+  position: fixed;
   left: 50%;
   transform: translateX(-50%);
+  bottom: calc(8px + env(safe-area-inset-bottom)); /* Abstand auch auf iPhones */
   margin: 0;
-  padding: 2px 6px;
+  padding: 2px 8px;
+  display: flex;                  /* verhindert Umbruch */
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;                     /* kleiner Abstand zwischen Textteilen */
+  white-space: nowrap;            /* alles in einer Zeile */
+  word-break: keep-all;
   text-align: center;
-  color: rgba(0, 0, 0, 0.7);
-  background: transparent;           /* komplett durchsichtig */
-  border-radius: 0;                  /* keine Rundung */
-  backdrop-filter: none;             /* kein Milchglas-Effekt */
+  color: rgba(0, 0, 0, 0.75);
+  background: transparent;        /* kein Hintergrund */
+  border-radius: 0;
+  backdrop-filter: none;
   font-weight: 400;
-  font-size: 0.8rem;                 /* kleinere Schrift */
+  font-size: 0.82rem;
+  line-height: 1.2;
+  z-index: 1000;
+}
+
+/* Footer-Links schwarz & einzeilig */
+footer a {
+  color: #000 !important;
+  text-decoration: none;
+  white-space: nowrap;
+}
+footer a:hover {
+  color: #000 !important;
+  text-decoration: underline;
+}
+
+/* Auf sehr schmalen Geräten leicht kleiner */
+@media (max-width: 420px) {
+  footer {
+    font-size: 0.75rem;
+    gap: .3rem;
+  }
 }
 /* Footer links black */
 footer a {
