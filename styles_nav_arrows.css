@@ -7,8 +7,8 @@
   z-index: 1000 !important;
 
   /* Klickfläche */
-  width: 44px !important;
-  height: 88px !important;
+  width: 26px !important;  /* vorher 44px */
+  height: 52px !important; /* vorher 88px */
   padding: 0 !important;
 
   /* Look */
@@ -31,15 +31,15 @@
 /* Linke Seite → rechter Kreisradius */
 .nav-arrow.left{
   left: 0 !important;
-  border-top-right-radius: 44px !important;
-  border-bottom-right-radius: 44px !important;
+  border-top-right-radius: 26px !important; /* vorher 44px */
+  border-bottom-right-radius: 26px !important; /* vorher 44px */
 }
 
 /* Rechte Seite → linker Kreisradius */
 .nav-arrow.right{
   right: 0 !important;
-  border-top-left-radius: 44px !important;
-  border-bottom-left-radius: 44px !important;
+  border-top-left-radius: 26px !important; /* vorher 44px */
+  border-bottom-left-radius: 26px !important; /* vorher 44px */
 }
 
 /* Hover/Active Feedback (Desktop) */
@@ -56,9 +56,9 @@
 
 /* Kleinere Geräte: etwas kompaktere Pfeile */
 @media (max-width: 480px){
-  .nav-arrow{ width: 38px !important; height: 76px !important; }
-  .nav-arrow.left{ border-top-right-radius: 38px !important; border-bottom-right-radius: 38px !important; }
-  .nav-arrow.right{ border-top-left-radius: 38px !important; border-bottom-left-radius: 38px !important; }
+  .nav-arrow{ width: 22px !important; height: 44px !important; } /* vorher 38 und 76px */
+  .nav-arrow.left{ border-top-right-radius: 22px !important; border-bottom-right-radius: 38px !important; } /* vorher 38px */  
+  .nav-arrow.right{ border-top-left-radius: 22px !important; border-bottom-left-radius: 38px !important; } /* vorher 38px */  
   .nav-arrow svg{ width:20px; height:20px; }
 }
 
