@@ -1,0 +1,58 @@
+
+/* === NAV-ARROWS: schwarze Halbkreise mit weißen Pfeilen (übersteuert alte Regeln) === */
+.nav-arrow{
+  position: fixed !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 1000 !important;
+
+  /* Klickfläche */
+  width: 44px !important;
+  height: 88px !important;
+  padding: 0 !important;
+
+  /* Look */
+  background: #000 !important;      /* schwarzer Halbkreis */
+  color: #fff !important;           /* weißer Pfeil (Text) */
+  box-shadow: 0 8px 24px rgba(0,0,0,.25) !important;
+  text-decoration: none !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  cursor: pointer !important;
+}
+
+/* Linke Seite → rechter Kreisradius */
+.nav-arrow.left{
+  left: 0 !important;
+  border-top-right-radius: 44px !important;
+  border-bottom-right-radius: 44px !important;
+}
+
+/* Rechte Seite → linker Kreisradius */
+.nav-arrow.right{
+  right: 0 !important;
+  border-top-left-radius: 44px !important;
+  border-bottom-left-radius: 44px !important;
+}
+
+/* Hover/Active Feedback (Desktop) */
+.nav-arrow:hover{ transform: translateY(-50%) scale(1.03) !important; background:#111 !important; }
+.nav-arrow:active{ transform: translateY(-50%) scale(0.98) !important; }
+
+/* SVG-Icons im Link automatisch weiß & zentriert */
+.nav-arrow svg{ width:22px; height:22px; fill:#fff; display:block; }
+
+/* Kleinere Geräte: etwas kompaktere Pfeile */
+@media (max-width: 480px){
+  .nav-arrow{ width: 38px !important; height: 76px !important; }
+  .nav-arrow.left{ border-top-right-radius: 38px !important; border-bottom-right-radius: 38px !important; }
+  .nav-arrow.right{ border-top-left-radius: 38px !important; border-bottom-left-radius: 38px !important; }
+  .nav-arrow svg{ width:20px; height:20px; }
+}
+
+/* Optional: Tastatur-Fokus sichtbar */
+.nav-arrow:focus-visible{ outline: 2px solid #fff; outline-offset: 2px; }
