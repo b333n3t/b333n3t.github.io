@@ -112,7 +112,7 @@ a:hover{ text-decoration: underline; }
   border-radius: 18px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.08);/* etwas leichterer Schatten */
   padding: clamp(18px, 2vw, 28px);
-  backdrop-filter: blur(4px);             /* sorgt für weichen Glas-Effekt */
+  backdrop-filter: blur(2px);             /* sorgt für weichen Glas-Effekt */
 }
 
 h1, h2{ margin: .2em 0 .4em; letter-spacing:.02em; }
