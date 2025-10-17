@@ -1,24 +1,27 @@
-// swipe-nav.js
-// Lightweight swipe navigation for mobile devices.
-// Swiping left -> click .nav-arrow.right
-// Swiping right -> click .nav-arrow.left
+// swipe-nav.js (mobile-first, robust)
+// Swiping LEFT -> previous page  (".nav-arrow.left")
+// Swiping RIGHT -> next page     (".nav-arrow.right")
+// Tweaked for iOS/Android reliability.
 
 (function () {
-  const prefersCoarse = matchMedia("(pointer: coarse)").matches;
-  if (!prefersCoarse) return; // limit to touch devices
+  // Run on touch-capable devices; allow desktop testing too
+  const isTouchCapable = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (!isTouchCapable && !matchMedia("(pointer: coarse)").matches) {
+    // still run, trackpads often act like touch (helps on notebooks)
+  }
 
-  let startX = 0;
-  let startY = 0;
-  let startT = 0;
+  let startX = 0, startY = 0, startT = 0;
 
-  const THRESHOLD_X = 60;     // px min horizontal distance
-  const MAX_OFF_AXIS = 50;    // px allowed vertical movement
-  const MAX_DURATION = 600;   // ms
+  // Calibrated for phones (a bit more permissive than before):
+  const THRESHOLD_X = 45;    // min horizontal distance in px
+  const MAX_OFF_AXIS = 80;   // allow more vertical drift
+  const MAX_DURATION = 800;  // allow a slightly longer swipe
 
-  const getLink = (sel) => document.querySelector(sel);
+  const leftLink  = () => document.querySelector(".nav-arrow.left");
+  const rightLink = () => document.querySelector(".nav-arrow.right");
 
   function onTouchStart(e) {
-    const t = e.changedTouches ? e.changedTouches[0] : e.touches[0];
+    const t = e.changedTouches ? e.changedTouches[0] : (e.touches ? e.touches[0] : e);
     startX = t.clientX;
     startY = t.clientY;
     startT = performance.now();
@@ -30,30 +33,25 @@
     const dy = t.clientY - startY;
     const dt = performance.now() - startT;
 
-    // ignore long drags or mostly vertical gestures
+    // Ignore long drags or mostly vertical gestures
     if (dt > MAX_DURATION || Math.abs(dy) > MAX_OFF_AXIS) return;
 
-    // swipe right -> go left; swipe left -> go right
+    // IMPORTANT: As requested — swipe RIGHT (dx > 0) goes to NEXT page
     if (dx > THRESHOLD_X) {
-      const left = getLink(".nav-arrow.left");
-      if (left && left.href) {
-        window.location.href = left.href;
-      } else if (history.length > 1) {
-        history.back();
-      }
+      const next = rightLink();
+      if (next && next.href) window.location.href = next.href;
     } else if (dx < -THRESHOLD_X) {
-      const right = getLink(".nav-arrow.right");
-      if (right && right.href) {
-        window.location.href = right.href;
-      }
+      const prev = leftLink();
+      if (prev && prev.href) window.location.href = prev.href;
+      else if (history.length > 1) history.back();
     }
   }
 
-  // Use passive listeners so we don't block scrolling
-  window.addEventListener("touchstart", onTouchStart, { passive: true });
-  window.addEventListener("touchend", onTouchEnd, { passive: true });
+  // Use document-level passive listeners (iOS-friendly)
+  document.addEventListener("touchstart", onTouchStart, { passive: true });
+  document.addEventListener("touchend", onTouchEnd,   { passive: true });
 
-  // Pointer event fallback (some browsers fire pointer events only)
+  // Pointer event fallback (for some Android/desktop browsers)
   let pStartX = 0, pStartY = 0, pStartT = 0;
   function onPointerDown(e) {
     if (e.pointerType !== "touch") return;
@@ -67,14 +65,14 @@
     if (dt > MAX_DURATION || Math.abs(dy) > MAX_OFF_AXIS) return;
 
     if (dx > THRESHOLD_X) {
-      const left = getLink(".nav-arrow.left");
-      if (left && left.href) { window.location.href = left.href; }
-      else if (history.length > 1) { history.back(); }
+      const next = rightLink();
+      if (next && next.href) window.location.href = next.href;
     } else if (dx < -THRESHOLD_X) {
-      const right = getLink(".nav-arrow.right");
-      if (right && right.href) { window.location.href = right.href; }
+      const prev = leftLink();
+      if (prev && prev.href) window.location.href = prev.href;
+      else if (history.length > 1) history.back();
     }
   }
-  window.addEventListener("pointerdown", onPointerDown, { passive: true });
-  window.addEventListener("pointerup", onPointerUp, { passive: true });
+  document.addEventListener("pointerdown", onPointerDown, { passive: true });
+  document.addEventListener("pointerup", onPointerUp,     { passive: true });
 })();
