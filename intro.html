@@ -56,4 +56,55 @@
         border: none;
         background: rgba(255,255,255,0.12);
         color: #fff;
-        backdrop-filter: blur(6p
+        backdrop-filter: blur(6px);
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      .skip-btn:hover { background: rgba(255,255,255,0.2); }
+
+      @media (max-width: 360px) {
+        .skip-btn { padding: 8px 12px; font-size: 13px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="video-container" id="videoContainer">
+      <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate">
+        <source src="assets/B3NN3T.mp4" type="video/mp4" />
+        Ihr Browser unterstützt das Video-Tag nicht.
+      </video>
+      <div class="controls">
+        <button id="skipBtn" class="skip-btn" aria-label="Intro überspringen">Überspringen</button>
+      </div>
+    </div>
+
+    <script>
+      // Nach dem Intro auf gesehen.html weiterleiten
+      const TARGET_URL = "/gesehen.html";
+
+      const video = document.getElementById('introVideo');
+      const skipBtn = document.getElementById('skipBtn');
+      const container = document.getElementById('videoContainer');
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        window.location.replace(TARGET_URL);
+      }
+
+      function fadeAndRedirect() {
+        container.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.replace(TARGET_URL);
+        }, 1000);
+      }
+
+      // Versuche Wiedergabe zu starten (iOS Autoplay-Policy -> muted + playsinline)
+      video.play().catch(() => {});
+
+      // Nur bei tatsächlichem Video-Ende oder Benutzeraktion weiterleiten
+      video.addEventListener('ended', fadeAndRedirect);
+      video.addEventListener('error', fadeAndRedirect);
+      skipBtn.addEventListener('click', fadeAndRedirect);
+    </script>
+  </body>
+</html>
