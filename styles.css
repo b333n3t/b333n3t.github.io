@@ -311,13 +311,13 @@ footer a:hover {
     font-size: 0.78rem;
   }
 }
-/* === "gesehen" Seite: Intro-Button wie Startseite, kompakt & zentriert === */
+/* === "gesehen" Seite: Intro-Button wie Startseite, kompakt & linksbündig === */
 .grid-seen {
   /* statt Vollbreite im Grid: kompakt zentrieren */
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* linksbündig statt zentriert */
   align-items: stretch;
-  gap: 14px;
+  gap: 14px
 }
 
 .grid-seen .card {
