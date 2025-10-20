@@ -3,20 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>hier die plattformen auf denen ich zu finden bin — b3nn3t</title>
-  <meta name="description" content="plattformen — b3nn3t" />
+  <title> b3nn3t</title>
+  <meta name="description" content="Hier findest du alle Plattformen, auf denen ich zu finden bin — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  
-   <!-- Haupt-Styles -->
+
+  <!-- Haupt-Styles -->
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
   <link rel="stylesheet" href="styles_nav_arrows.css" />
-
-  <!-- Swipe-Unterstützung für Mobile (touch-action: pan-y) -->
   <link rel="stylesheet" href="swipe-helper.css" />
-  
+
+  <style>
+    .platform-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .platform-list li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .platform-list li img {
+      width: 28px;
+      height: 28px;
+      margin-right: 10px;
+      border-radius: 6px;
+      object-fit: contain;
+    }
+    .platform-list a {
+      text-decoration: none;
+      color: #000;
+      font-weight: 500;
+    }
+    .platform-list a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
+
 <body>
   <header class="header">
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
@@ -25,28 +49,56 @@
     </a>
   </header>
 
-    <a class="nav-arrow left" aria-label="Vorherige Seite" href="#">&larr;</a>
-    <a class="nav-arrow right" aria-label="Nächste Seite" href="#">&rarr;</a>
+  <a class="nav-arrow left" aria-label="Vorherige Seite" href="gesehen.html">&larr;</a>
+  <a class="nav-arrow right" aria-label="Nächste Seite" href="index.html">&rarr;</a>
 
   <main class="main">
+    <h1>plattformen</h1>
+    <p>Hier findest du mich online:</p>
 
-  <h1>plattformen</h1>
-  <ul>
-    <li><a href="#" target="_blank" rel="noopener">Spotify</a></li>
-    <li><a href="#" target="_blank" rel="noopener">Apple Music</a></li>
-    <li><a href="#" target="_blank" rel="noopener">Bandcamp</a></li>
-    <li><a href="#" target="_blank" rel="noopener">Instagram</a></li>
-    <li><a href="#" target="_blank" rel="noopener">YouTube</a></li>
-  </ul>
-
+    <ul class="platform-list">
+      <li>
+        <img src="assets/spotify.png" alt="Spotify Logo">
+        <a href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A"
+           target="_blank" rel="noopener">
+          Spotify – <b>b3nn3t</b>
+        </a>
+      </li>
+      <li>
+        <img src="assets/apple-music.png" alt="Apple Music Logo">
+        <a href="https://music.apple.com/ch/artist/b3nn3t/1786857463?l=de-DE"
+           target="_blank" rel="noopener">
+          Apple Music – <b>b3nn3t</b>
+        </a>
+      </li>
+      <li>
+        <img src="assets/instagram.png" alt="Instagram Logo">
+        <a href="https://www.instagram.com/b333nn3t?igsh=MWphMjcxdXZwZ2s1ZQ=="
+           target="_blank" rel="noopener">
+          Instagram – <b>b333nn3t</b>
+        </a>
+      </li>
+      <li>
+        <img src="assets/youtube.png" alt="YouTube Logo">
+        <a href="#" target="_blank" rel="noopener">
+          YouTube – <b>@b333nn3t</b>
+        </a>
+      </li>
+      <li>
+        <img src="assets/linktree.png" alt="Linktr.ee Logo">
+        <a href="https://linktr.ee/b3nn3t" target="_blank" rel="noopener">
+          Linktr.ee – <b>b3nn3t</b>
+        </a>
+      </li>
+    </ul>
   </main>
+
   <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
+
   <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
 
-  <!-- Hauptskript -->
-    <script src="script.js"></script>
-
-  <!-- Swipe-Navigation aktivieren -->
+  <!-- Skripte -->
+  <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 </body>
 </html>
