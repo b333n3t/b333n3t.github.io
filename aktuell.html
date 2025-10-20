@@ -6,8 +6,8 @@
   <title>aktuell — b3nn3t</title>
   <meta name="description" content="aktuell — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  
-   <!-- Haupt-Styles -->
+
+  <!-- Haupt-Styles -->
   <link rel="stylesheet" href="styles.css" />
 
   <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
@@ -15,7 +15,84 @@
 
   <!-- Swipe-Unterstützung für Mobile (touch-action: pan-y) -->
   <link rel="stylesheet" href="swipe-helper.css" />
-  
+
+  <!-- Burger-Menü (schmal & isoliert) -->
+  <style>
+    /* === Hamburger-Button === */
+    .hamburger {
+      position: fixed;
+      top: 14px;
+      right: 18px;
+      width: 20px;
+      height: 20px;
+      border: none;
+      background: transparent;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      z-index: 1200;
+      padding: 0;
+    }
+    .hamburger span {
+      display: block;
+      width: 12px;
+      height: 1.4px;
+      margin: 1.5px 0;
+      background: #000;
+      border-radius: 2px;
+      transition: transform .2s ease, opacity .2s ease;
+    }
+    body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+    body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
+    body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
+
+    /* Overlay */
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.08);
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
+      z-index: 1099;
+    }
+    body.menu-open #menu-overlay { display: block; }
+    #menu-overlay[hidden]{ display:none; }
+
+    /* === Seitenmenü (schmal, nur lokal) === */
+    .site-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(70vw, 260px);
+      background: rgba(255,255,255,.32);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.08);
+      transform: translateX(100%);
+      transition: transform .25s ease;
+      z-index: 1101;
+      padding: 60px 16px 20px;
+    }
+    body.menu-open .site-menu { transform: translateX(0); }
+
+    /* Menü-Links – NUR im Menü-Panel */
+    .site-menu ul { list-style: none; margin: 0; padding: 0; }
+    .site-menu li { margin: 0 0 10px 0; }
+    .site-menu li.sep { margin-top: 18px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,.08); }
+    .site-menu a {
+      display: block;
+      padding: 8px 6px;
+      border-radius: 10px;
+      color: #000;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .site-menu a:hover { background: rgba(0,0,0,.05); }
+
+    .nav-arrow { z-index: 1000; }
+  </style>
 </head>
 <body>
   <header class="header">
@@ -25,16 +102,34 @@
     </a>
   </header>
 
-    <a class="nav-arrow left" aria-label="Vorherige Seite" href="#">&larr;</a>
-    <a class="nav-arrow right" aria-label="Nächste Seite" href="#">&rarr;</a>
+  <!-- Burger-Menü -->
+  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div id="menu-overlay" class="menu-overlay" hidden></div>
+  <nav id="site-menu" class="site-menu" aria-hidden="true">
+    <ul>
+      <li><a href="ueber-mich.html">über mich</a></li>
+      <li><a href="diskografie.html">diskografie</a></li>
+      <li><a href="kontakt.html">kontakt</a></li>
+      <li><a href="aktuell.html">aktuell</a></li>
+      <li><a href="gesehen.html">gesehen</a></li>
+      <li><a href="plattformen.html">plattformen</a></li>
+      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+    </ul>
+  </nav>
+
+  <!-- Pfeile (wie zuvor) -->
+  <a class="nav-arrow left" aria-label="Vorherige Seite" href="#">&larr;</a>
+  <a class="nav-arrow right" aria-label="Nächste Seite" href="#">&rarr;</a>
 
   <main class="main">
-
-  <h1>aktuell</h1>
-  <p>Was steht an, Neuigkeiten, Termine, Auftritte...</p>
-
+    <h1>aktuell</h1>
+    <p>Was steht an, Neuigkeiten, Termine, Auftritte...</p>
   </main>
+
   <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
+
   <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
 
   <!-- Hauptskript -->
