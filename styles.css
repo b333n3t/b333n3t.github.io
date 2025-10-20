@@ -1,75 +1,58 @@
-
 :root{
-  --bg-tint: rgba(255,255,255,.35); /* blasser Hintergrund */
+  --bg-tint: rgba(255,255,255,.35);
   --text: #0e0e0e;
   --text-dim: #2d2d2d;
   --accent: #0b84ff;
 }
 
-/* Base reset */
 *{ box-sizing:border-box; }
 
 html,body{
   height:100%;
   margin:0;
-  font-family: 'Press Start 2P', Arial, sans-serif;
-  letter-spacing: .03em;
-  color: var(--text);
+  font-family:'Press Start 2P',Arial,sans-serif;
+  letter-spacing:.03em;
+  color:var(--text);
 }
 
-/* === Einheitlicher Hintergrund: ruhiges Scrolling + dynamischer Fokus === */
+/* === Einheitlicher Hintergrund === */
 body{
-  background-color: #000;
+  background-color:#000;
   background-image:
-    linear-gradient(var(--bg-tint), var(--bg-tint)),
+    linear-gradient(var(--bg-tint),var(--bg-tint)),
     url('assets/b3nn3t.jpg');
-  background-repeat: no-repeat;
-  background-position: center 45%;   /* Grundfokus etwas höher */
-  background-size: cover;            /* keine Balken links/rechts */
-  background-attachment: scroll;     /* ruhiges Scrolling */
-  transition: background-position .35s ease;
-  min-height: 100vh;
-  min-height: 100svh;
+  background-repeat:no-repeat;
+  background-position:center 45%;
+  background-size:cover;
+  background-attachment:scroll;
+  transition:background-position .35s ease;
+  min-height:100vh;
+  min-height:100svh;
   display:flex;
   flex-direction:column;
 }
 
-/* Querformat (Landscape): mehr vom unteren Bereich sichtbar machen */
-@media (orientation: landscape){
-  body{ background-position: center 40%; }
-}
-
-/* Sehr flache Viewports (z.B. 1366×768, 1920×800): Fokus noch etwas höher */
-@media (max-height: 850px){
-  body{ background-position: center 38%; }
-}
-
-/* Extrem flache Viewports (sehr schmale Höhe) */
-@media (max-height: 760px){
-  body{ background-position: center 36%; }
-}
-
-/* Optional: mobiles, leichteres Bild falls vorhanden */
-@media (max-width: 768px){
+@media (orientation: landscape){ body{background-position:center 40%;}}
+@media (max-height:850px){body{background-position:center 38%;}}
+@media (max-height:760px){body{background-position:center 36%;}}
+@media (max-width:768px){
   body{
     background-image:
-      linear-gradient(var(--bg-tint), var(--bg-tint)),
+      linear-gradient(var(--bg-tint),var(--bg-tint)),
       url('assets/b3nn3t-mobile.jpg');
   }
 }
 
-/* Links */
-a{ color: var(--accent); text-decoration: none; }
-a:hover{ text-decoration: underline; }
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
 
-/* Header/Brand */
 .header{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding: 10px 14px;
-  position: sticky;
-  top: 0;
+  padding:10px 14px;
+  position:sticky;
+  top:0;
 }
 .brand{
   font-weight:700;
@@ -83,232 +66,139 @@ a:hover{ text-decoration: underline; }
   top:18px;
   text-decoration:none;
 }
-.brand:hover{ text-decoration: underline; }
+.brand:hover{text-decoration:underline;}
 
-/* navigation arrows */
 .nav-arrow{
   position:fixed;
   top:12px;
   z-index:10;
   padding:10px 12px;
-  background: rgba(255,255,255,.8);
-  border-radius: 14px;
-  backdrop-filter: blur(3px);
-  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  background:rgba(255,255,255,.8);
+  border-radius:14px;
+  backdrop-filter:blur(3px);
+  box-shadow:0 10px 24px rgba(0,0,0,.08);
   font-weight:600;
 }
-.nav-arrow:hover{ background: rgba(255,255,255,.95); }
-.nav-arrow.left{ left:12px; }
-.nav-arrow.right{ right:12px; }
+.nav-arrow:hover{background:rgba(255,255,255,.95);}
+.nav-arrow.left{left:12px;}
+.nav-arrow.right{right:12px;}
 
-/* main container */
 .main{
-  width: min(1100px, 92vw);               /* behält die bisherige Maximalbreite */
-  margin-top: clamp(24px, 5vh, 60px);     /* oben Abstand */
-  margin-bottom: clamp(24px, 5vh, 60px);  /* unten Abstand */
-  margin-left: clamp(20px, 3vw, 40px);    /* näher an den linken Rand */
-  margin-right: auto;                     /* rechter Abstand flexibel */
-  background: rgba(255,255,255,0.32);     /* transparenteres Weiß-Grau */
-  border-radius: 18px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.08);/* etwas leichterer Schatten */
-  padding: clamp(18px, 2vw, 28px);
-  backdrop-filter: blur(2px);             /* sorgt für weichen Glas-Effekt */
+  width:min(1100px,92vw);
+  margin-top:clamp(24px,5vh,60px);
+  margin-bottom:clamp(24px,5vh,60px);
+  margin-left:clamp(20px,3vw,40px);
+  margin-right:auto;
+  background:rgba(255,255,255,0.32);
+  border-radius:18px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.08);
+  padding:clamp(18px,2vw,28px);
+  backdrop-filter:blur(2px);
 }
 
-h1, h2{ margin: .2em 0 .4em; letter-spacing:.02em; }
-p{ line-height:1.6; color: var(--text-dim); }
+h1,h2{margin:.2em 0 .4em;letter-spacing:.02em;}
+p{line-height:1.6;color:var(--text-dim);}
 
 /* home grid */
 .grid{
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* vorher 180px */
-  gap: 12px;/* engerer Abstand */
-  margin-top: 10px;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;
+  margin-top:10px;
 }
 
 .card{
   display:block;
-  padding: 12px; /* vorher 16px */
-  background: rgba(255,255,255,.9);
-  border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0,0,0,.08);
-  font-weight: 600;
-  color: var(--text);
+  padding:16px;
+  background:rgba(255,255,255,.9);
+  border-radius:16px;
+  box-shadow:0 10px 20px rgba(0,0,0,.08);
+  font-weight:600;
+  color:var(--text);
   text-align:center;
 }
-.card small{ display:block; font-weight:400; color: #444; margin-top:6px; }
-.card:hover{ transform: translateY(-2px); transition: transform .12s ease; }
+.card small{display:block;font-weight:400;color:#444;margin-top:6px;}
+.card:hover{transform:translateY(-2px);transition:transform .12s ease;}
 
-/* home only footer note */
-.note{
-  margin-top: 18px;
-  font-size:.95rem;
-  color:#333;
-}
+.note{margin-top:18px;font-size:.95rem;color:#333;}
 
-/* home button on inner pages */
 .home-btn{
   position:fixed;
   bottom:16px;
   left:50%;
-  transform: translateX(-50%);
+  transform:translateX(-50%);
   padding:12px 16px;
-  background: rgba(255,255,255,.88);
-  border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0,0,0,.1);
+  background:rgba(255,255,255,.88);
+  border-radius:16px;
+  box-shadow:0 10px 20px rgba(0,0,0,.1);
   font-weight:700;
 }
 
-footer{
-  text-align:center;
-  padding: 24px 12px 36px;
-  color:#333;
-}
+footer{text-align:center;padding:24px 12px 36px;color:#333;}
 
+/* Landscape Fokus */
+@media (min-width:1600px) and (min-height:1100px) and (orientation:landscape){body{background-position:center 30%;}}
+@media (orientation:landscape){body{background-position:center 24%!important;}}
+@media (min-width:1600px) and (min-height:1100px) and (orientation:landscape){body{background-position:center 20%!important;}}
+@media (max-height:820px){body{background-position:center 18%!important;}}
 
-/* Notebook 1920x1200 (16:10) – shift focus higher so the head is visible */
-@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
-  body{ background-position: center 30%; }
-}
-
-
-/* === Stronger upward focus so the head is visible in landscape (mobile + desktop) === */
-@media (orientation: landscape){
-  body{ background-position: center 24% !important; }
-}
-
-/* 1920x1200 (16:10) notebooks: even higher focus */
-@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
-  body{ background-position: center 20% !important; }
-}
-
-/* Very flat viewports (ultra-wide or browser UI taking height): push higher */
-@media (max-height: 820px){
-  body{ background-position: center 18% !important; }
-}
-
-
-/* === Logo-Icon (z. B. favicon.svg) im Header auf allen Seiten ausblenden === */
+/* Logo ausblenden */
 .header img,
 .brand img,
 header img[alt=""],
 header img[src*="favicon"],
-header img[src*="logo"] {
-  display: none !important;
+header img[src*="logo"]{display:none!important;}
+
+/* Pfeile schwarz */
+.nav-arrow{
+  color:#000!important;
+  background:none!important;
+  box-shadow:none!important;
+  border:none;
+  font-weight:700;
+  padding:8px;
+  text-decoration:none;
 }
+.nav-arrow:hover{color:#333!important;background:none!important;}
 
-
-/* === Navigationpfeile: Schwarz, ohne Hintergrund === */
-.nav-arrow {
-  color: #000 !important;             /* schwarze Pfeile */
-  background: none !important;        /* kein Hintergrundfeld */
-  box-shadow: none !important;        /* keine Schatten */
-  border: none;
-  font-weight: 700;
-  padding: 8px;
-  text-decoration: none;
+/* Footer */
+footer{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(8px + env(safe-area-inset-bottom));
+  margin:0;
+  padding:2px 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.4rem;
+  white-space:nowrap;
+  word-break:keep-all;
+  text-align:center;
+  color:rgba(0,0,0,0.75);
+  background:transparent;
+  border-radius:0;
+  backdrop-filter:none;
+  font-weight:400;
+  font-size:0.82rem;
+  line-height:1.2;
+  z-index:1000;
 }
+footer a{color:#000!important;text-decoration:none;white-space:nowrap;}
+footer a:hover{color:#000!important;text-decoration:underline;}
+@media (max-width:420px){footer{font-size:0.75rem;gap:.3rem;}}
 
-.nav-arrow:hover {
-  color: #333 !important;             /* leicht dunkler beim Hover */
-  background: none !important;
-}
+/* b3nn3t-Link Position */
+.brand{left:25%;transform:translateX(-50%);}
 
+/* Startseite-Link ausblenden */
+.home-btn{display:none!important;}
 
-/* === Footer: eine Zeile + näher am Rand, iOS-safe === */
-footer {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(8px + env(safe-area-inset-bottom)); /* Abstand auch auf iPhones */
-  margin: 0;
-  padding: 2px 8px;
-  display: flex;                  /* verhindert Umbruch */
-  align-items: center;
-  justify-content: center;
-  gap: .4rem;                     /* kleiner Abstand zwischen Textteilen */
-  white-space: nowrap;            /* alles in einer Zeile */
-  word-break: keep-all;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.75);
-  background: transparent;        /* kein Hintergrund */
-  border-radius: 0;
-  backdrop-filter: none;
-  font-weight: 400;
-  font-size: 0.82rem;
-  line-height: 1.2;
-  z-index: 1000;
-}
-
-/* Footer-Links schwarz & einzeilig */
-footer a {
-  color: #000 !important;
-  text-decoration: none;
-  white-space: nowrap;
-}
-footer a:hover {
-  color: #000 !important;
-  text-decoration: underline;
-}
-
-/* Auf sehr schmalen Geräten leicht kleiner */
-@media (max-width: 420px) {
-  footer {
-    font-size: 0.75rem;
-    gap: .3rem;
-  }
-}
-/* Footer links black */
-footer a {
-  color: #000 !important;
-  text-decoration: none;
-}
-footer a:hover {
-  color: #000 !important;
-  text-decoration: underline;
-}
-
-/* === b3nn3t-Link leicht nach rechts verschoben === */
-.brand {
-  left: 25%;                /* Position etwa auf 1/4 der Seitenbreite */
-  transform: translateX(-50%);
-}
-
-
-/* === Startseite-Link vollständig ausblenden (global) === */
-.home-btn {
-  display: none !important;
-}
-/* === Mobile-Optimierung: Karten (über mich, diskografie, etc.) schmaler === */
-@media (max-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* vorher 180px */
-    gap: 10px; /* weniger Abstand */
-  }
-
-  .card {
-    padding: 10px;        /* kompaktere Felder */
-    border-radius: 14px;  /* leicht kleiner */
-  }
-
-  .card small {
-    font-size: 0.8rem;    /* kleinerer Untertext */
-    margin-top: 4px;
-  }
-}
-
-/* === Sehr kleine Geräte (z. B. iPhone SE, Galaxy Mini) === */
-@media (max-width: 360px) {
-  .grid {
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 8px;
-  }
-
-  .card {
-    padding: 8px;
-  }
-
-  .card small {
-    font-size: 0.78rem;
+/* === Mobile-Optimierung: Karten (untereinander) === */
+@media (max-width:480px){
+  .grid{
+    grid-template-columns:1fr; /* untereinander */
+    gap:12px;
   }
 }
