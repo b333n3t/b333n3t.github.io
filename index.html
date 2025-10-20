@@ -1,50 +1,55 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Start — b3nn3t</title>
-  <meta name="description" content="Start — b3nn3t" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-
-  <!-- Haupt-Styles -->
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
-  <link rel="stylesheet" href="styles_nav_arrows.css" />
-
-  <!-- Swipe-Unterstützung für Mobile (touch-action: pan-y) -->
-  <link rel="stylesheet" href="swipe-helper.css" />
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Start — b3nn3t</title>
+<meta content="Start — b3nn3t" name="description"/>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<!-- Haupt-Styles -->
+<link href="styles.css" rel="stylesheet">
+<!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
+<link href="styles_nav_arrows.css" rel="stylesheet"/>
+<!-- Swipe-Unterstützung für Mobile (touch-action: pan-y) -->
+<link href="swipe-helper.css" rel="stylesheet"/>
+</link><style id="panel-scroll-patch">
+/* === Patch: Vertikales Scrollen je Seite (Desktop & Mobile, ohne Frameworks) === */
+html, body { height: 100%; }
+body { overflow: hidden; } /* horizontales Wechseln bleibt Sache externer Scripte; Body selbst scrollt nicht */
+main.main { height: 100vh; width: 100vw; overflow: hidden; } /* Viewport-großer Rahmen */
+section.grid {
+  height: 100vh;                 /* jede 'Seite'/Sektion füllt den Viewport */
+  overflow-y: auto;              /* vertikales Scrollen innerhalb der Sektion */
+  -webkit-overflow-scrolling: touch; /* sanft auf iOS */
+  overscroll-behavior: contain;  /* kein Durchreichen an den Body */
+  scroll-behavior: smooth;
+}
+</style></head>
 <body>
-  <header class="header">
-    <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg">
-      <strong>b3nn3t</strong>
-    </a>
-  </header>
-
-  <main class="main">
-    <h1>moin und willkommen</h1>
-    <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
-
-    <section class="grid" aria-label="Seitenübersicht">
-      <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-      <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
-      <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
-      <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
-      <a class="card" href="gesehen.html">gesehen<small>Inspiration & Notizen</small></a>
-      <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
-    </section>
-
-    <p class="note"></p>
-  </main>
-
-  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
-
-  <!-- Skripte -->
-  <script src="script.js"></script>
-  <!-- WICHTIG: nur EINMAL laden, mit Cache-Buster v=12 -->
-  <script src="swipe-nav.js?v=12" defer></script>
+<header class="header">
+<a aria-label="b3nn3t Home" class="brand" href="index.html">
+<img alt="" src="favicon.svg"/>
+<strong>b3nn3t</strong>
+</a>
+</header>
+<main class="main">
+<h1>moin und willkommen</h1>
+<p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
+<section aria-label="Seitenübersicht" class="grid">
+<a class="card" href="ueber-mich.html">über mich<small>Bio &amp; Einblicke</small></a>
+<a class="card" href="diskografie.html">diskografie<small>Releases &amp; Projekte</small></a>
+<a class="card" href="kontakt.html">kontakt<small>Booking &amp; Mail</small></a>
+<a class="card" href="aktuell.html">aktuell<small>News &amp; Termine</small></a>
+<a class="card" href="gesehen.html">gesehen<small>Inspiration &amp; Notizen</small></a>
+<a class="card" href="plattformen.html">plattformen<small>Social &amp; Streaming</small></a>
+</section>
+<p class="note"></p>
+</main>
+<footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+<!-- Skripte -->
+<script src="script.js"></script>
+<!-- WICHTIG: nur EINMAL laden, mit Cache-Buster v=12 -->
+<script defer="" src="swipe-nav.js?v=12"></script>
 </body>
 </html>
