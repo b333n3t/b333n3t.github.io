@@ -31,10 +31,6 @@ function setArrowLinks() {
   if (right) right.setAttribute('href', next);
 
   window.addEventListener('keydown', (e) => {
-    // Guard: nicht auslösen in Eingabefeldern oder bei Modifiern
-    const tag = (e.target && e.target.tagName || '').toLowerCase();
-    if (tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
-    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
     if (e.key === "ArrowLeft") window.location.href = prev;
     if (e.key === "ArrowRight") window.location.href = next;
     if (e.key.toLowerCase() === "h") window.location.href = "index.html";
