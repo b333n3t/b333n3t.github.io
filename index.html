@@ -1,70 +1,51 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>B3NN3T</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Start — b3nn3t</title>
+  <meta name="description" content="Start — b3nn3t" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Haupt-Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Swipe-Unterstützung für Mobile -->
+  <link rel="stylesheet" href="swipe-helper.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="logo">B3NN3T</div>
-    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
-    <label for="menu-toggle" class="menu-icon">&#9776;</label>
-    <nav class="nav-links">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#work">Work</a>
-      <a href="#video">Video</a>
-      <a href="#contact">Contact</a>
-    </nav>
+  <header class="header">
+    <a class="brand" href="index.html" aria-label="b3nn3t Home">
+      <img alt="" src="favicon.svg">
+      <strong>b3nn3t</strong>
+    </a>
   </header>
 
-  <main class="viewport">
-    <section id="home" class="panel home-panel">
-      <div class="container">
-        <h1>B3NN3T</h1>
-      </div>
+  <main class="main">
+
+    <h1>Willkommen</h1>
+    <p>Hier findest du alles rund um <strong>b3nn3t</strong> – kurz, klar, ohne Schnickschnack.</p>
+
+    <section class="grid" aria-label="Seitenübersicht">
+      <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
+      <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
+      <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
+      <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
+      <a class="card" href="gesehen.html">gesehen<small>Inspiration & Notizen</small></a>
+      <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
     </section>
 
-    <section id="about" class="panel">
-      <div class="container">
-        <h2>About</h2>
-        <p>Kurze Beschreibung über B3NN3T.</p>
-      </div>
-    </section>
+    <p class="note">Tipp: Auf den Unterseiten kannst du mit den Pfeiltasten ← → wechseln. Drücke „H“ für die Startseite.</p>
 
-    <section id="work" class="panel">
-      <div class="container">
-        <h2>Work</h2>
-        <p>Hier können Projekte oder Leistungen präsentiert werden.</p>
-      </div>
-    </section>
-
-    <section id="video" class="panel">
-      <div class="container">
-        <h2>Video</h2>
-        <video controls playsinline loop muted class="hero-video">
-          <source src="assets/video.mp4" type="video/mp4">
-          Dein Browser unterstützt das Video-Tag nicht.
-        </video>
-        <p class="small">Lege dein Video als <code>assets/video.mp4</code> ab oder nutze eine externe URL.</p>
-      </div>
-    </section>
-
-    <section id="contact" class="panel">
-      <div class="container">
-        <h2>Contact</h2>
-        <p>Kontaktinformationen oder Formularbereich.</p>
-      </div>
-    </section>
   </main>
 
-  <footer class="footer">
-    <small>© B3NN3T · 2025</small>
-  </footer>
+  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
 
+  <!-- Hauptskript -->
   <script src="script.js"></script>
+<script src="swipe-nav.js?v=6" defer></script>
+  
+  <!-- Swipe-Navigation aktivieren -->
+  <script src="swipe-nav.js?v=6" defer></script>
 </body>
 </html>
