@@ -1,50 +1,152 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Start — b3nn3t</title>
-  <meta name="description" content="Start — b3nn3t" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-
-  <!-- Haupt-Styles -->
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
-  <link rel="stylesheet" href="styles_nav_arrows.css" />
-
-  <!-- Swipe-Unterstützung für Mobile (touch-action: pan-y) -->
-  <link rel="stylesheet" href="swipe-helper.css" />
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>B3NN3T</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="styles.css" rel="stylesheet"/>
+<style id="panel-scroll-patch">
+/* === Patch: Vertikales Scrollen je Seite (Desktop & Mobile) === */
+html, body { height: 100%; }
+body { overflow: hidden; } /* horizontales Wechseln bleibt, vertikal nur in .panel */
+main.viewport { height: 100vh; width: 100vw; overflow: hidden; /* behält horizontale Logik */ }
+.panel {
+  height: 100vh;                 /* jede Seite füllt den Viewport */
+  overflow-y: auto;              /* vertikales Scrollen innerhalb der Seite */
+  -webkit-overflow-scrolling: touch; /* sanftes Scrollen auf iOS */
+  overscroll-behavior: contain;  /* verhindert 'Gummiband' ins übergeordnete Element */
+  scroll-behavior: smooth;
+}
+/* Optional: verhindert, dass fixierte Topbar das Scrollen blockiert */
+.topbar { position: sticky; top: 0; z-index: 10; }
+</style></head>
 <body>
-  <header class="header">
-    <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg">
-      <strong>b3nn3t</strong>
-    </a>
-  </header>
+<header class="topbar">
+<div class="logo">B3NN3T</div>
+<input class="menu-toggle" id="menu-toggle" type="checkbox"/>
+<label class="menu-icon" for="menu-toggle">☰</label>
+<nav class="nav-links">
+<a href="#home">Home</a>
+<a href="#about">About</a>
+<a href="#work">Work</a>
+<a href="#video">Video</a>
+<a href="#contact">Contact</a>
+</nav>
+</header>
+<main class="viewport">
+<section class="panel home-panel" id="home">
+<div class="container">
+<h1>B3NN3T</h1>
+</div>
+</section>
+<section class="panel" id="about">
+<div class="container">
+<h2>About</h2>
+<p>Kurze Beschreibung über B3NN3T.</p>
+</div>
+</section>
+<section class="panel" id="work">
+<div class="container">
+<h2>Work</h2>
+<p>Hier können Projekte oder Leistungen präsentiert werden.</p>
+</div>
+</section>
+<section class="panel" id="video">
+<div class="container">
+<h2>Video</h2>
+<video class="hero-video" controls="" loop="" muted="" playsinline="">
+<source src="assets/video.mp4" type="video/mp4"/>
+          Dein Browser unterstützt das Video-Tag nicht.
+        </video>
+<p class="small">Lege dein Video als <code>assets/video.mp4</code> ab oder nutze eine externe URL.</p>
+</div>
+</section>
+<section class="panel" id="contact">
+<div class="container">
+<h2>Contact</h2>
+<p>Kontaktinformationen oder Formularbereich.</p>
+</div>
+</section>
+</main>
+<footer class="footer">
+<small>© B3NN3T · 2025</small>
+</footer>
+<script src="script.js"></script>
+<script id="panel-scroll-logic">
+(function() {
+  const panels = Array.from(document.querySelectorAll('main.viewport .panel'));
+  if (!panels.length) return;
 
-  <main class="main">
-    <h1>moin und willkommen</h1>
-    <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
+  const ids = panels.map(p => p.id).filter(Boolean);
+  function currentIndex() {
+    // Determine current via location.hash or by viewport proximity
+    const hash = location.hash.replace('#','');
+    let idx = ids.indexOf(hash);
+    if (idx !== -1) return idx;
+    // Fallback: closest panel in view horizontally
+    const x = window.scrollX || document.documentElement.scrollLeft || 0;
+    return Math.max(0, Math.min(panels.length-1, Math.round(x / window.innerWidth)));
+  }
 
-    <section class="grid" aria-label="Seitenübersicht">
-      <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-      <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
-      <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
-      <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
-      <a class="card" href="gesehen.html">gesehen<small>Inspiration & Notizen</small></a>
-      <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
-    </section>
+  function atTop(el){ return el.scrollTop <= 0; }
+  function atBottom(el){ return Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight; }
 
-    <p class="note"></p>
-  </main>
+  function goTo(i){
+    i = Math.max(0, Math.min(panels.length - 1, i));
+    if (ids[i]) {
+      // Use anchor navigation if IDs exist to preserve existing behavior
+      location.hash = ids[i];
+    } else {
+      // Fallback: scroll the page horizontally by viewport width (if used)
+      window.scrollTo({ left: i * window.innerWidth, behavior: 'smooth' });
+    }
+  }
 
-  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+  // Wheel handler: allow vertical scroll inside panel; if at edge, move horizontally
+  panels.forEach((panel, index) => {
+    panel.addEventListener('wheel', (e) => {
+      // if can scroll vertically, do nothing special
+      if (e.deltaY > 0 && !atBottom(panel)) return; // scrolling down inside
+      if (e.deltaY < 0 && !atTop(panel)) return;    // scrolling up inside
 
-  <!-- Skripte -->
-  <script src="script.js"></script>
-  <!-- WICHTIG: nur EINMAL laden, mit Cache-Buster v=12 -->
-  <script src="swipe-nav.js?v=12" defer></script>
-</body>
+      // Otherwise, switch horizontal
+      const dir = e.deltaY > 0 ? 1 : -1;
+      goTo(currentIndex() + dir);
+      e.preventDefault();
+    }, { passive: false });
+
+    // Touch support: allow vertical scroll; horizontal swipe changes section
+    let startX=0, startY=0, used=false;
+    const SWIPE_X=48, SWIPE_Y=80;
+    panel.addEventListener('touchstart', (e) => {
+      const t = e.changedTouches[0];
+      startX=t.clientX; startY=t.clientY; used=false;
+    }, { passive: true });
+    panel.addEventListener('touchmove', (e) => {
+      if (used) return;
+      const t = e.changedTouches[0];
+      const dx=t.clientX-startX, dy=t.clientY-startY;
+      // only treat mostly-horizontal swipe as page switch
+      if (Math.abs(dx) > SWIPE_X && Math.abs(dy) < SWIPE_Y){
+        used=true;
+        goTo(currentIndex() + (dx<0?1:-1));
+        e.preventDefault();
+      }
+    }, { passive: false });
+  });
+
+  // Keyboard: move horizontally at edges
+  window.addEventListener('keydown', (e) => {
+    const idx = currentIndex();
+    const panel = panels[idx];
+    if (!panel) return;
+    if (['ArrowDown','PageDown',' '].includes(e.key) && atBottom(panel)) { e.preventDefault(); goTo(idx+1); }
+    if (['ArrowUp','PageUp'].includes(e.key) && atTop(panel)) { e.preventDefault(); goTo(idx-1); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End')  { e.preventDefault(); goTo(panels.length-1); }
+  });
+})();
+</script></body>
 </html>
