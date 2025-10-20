@@ -20,6 +20,7 @@
         margin: 0;
         background: #000;
       }
+
       .video-container {
         position: fixed;
         inset: 0;
@@ -42,13 +43,15 @@
 
       .controls {
         position: fixed;
-        inset: calc(env(safe-area-inset-top, 0px) + 0px) calc(env(safe-area-inset-right, 0px) + 0px) auto auto;
-        padding: 16px;
+        top: 16px;
+        right: 16px;
+        padding: 8px;
         display: flex;
         gap: 8px;
         align-items: center;
         z-index: 10;
       }
+
       .skip-btn {
         font: 500 14px system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
         padding: 10px 14px;
@@ -69,17 +72,20 @@
   </head>
   <body>
     <div class="video-container" id="videoContainer">
-      <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate">
+      <!-- Video mit Autoplay-Trick -->
+      <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto"
+             disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate">
         <source src="assets/B3NN3T.mp4" type="video/mp4" />
         Ihr Browser unterstützt das Video-Tag nicht.
       </video>
+
       <div class="controls">
         <button id="skipBtn" class="skip-btn" aria-label="Intro überspringen">Überspringen</button>
       </div>
     </div>
 
     <script>
-      // Nach dem Intro auf gesehen.html weiterleiten
+      // Zielseite nach dem Intro
       const TARGET_URL = "/gesehen.html";
 
       const video = document.getElementById('introVideo');
@@ -98,10 +104,28 @@
         }, 1000);
       }
 
-      // Versuche Wiedergabe zu starten (iOS Autoplay-Policy -> muted + playsinline)
-      video.play().catch(() => {});
+      // === Autoplay-Trick für Ton ===
+      video.muted = true;
+      video.play().then(() => {
+        setTimeout(() => {
+          video.muted = false;
+          video.volume = 1.0;
+          video.play().catch(() => {});
+        }, 800);
+      }).catch(() => {
+        // Falls Autoplay blockiert: Ton bei erster Interaktion aktivieren
+        const unlock = () => {
+          video.muted = false;
+          video.volume = 1.0;
+          video.play();
+          window.removeEventListener('pointerdown', unlock, { once: true });
+          window.removeEventListener('keydown', unlock, { once: true });
+        };
+        window.addEventListener('pointerdown', unlock, { once: true });
+        window.addEventListener('keydown', unlock, { once: true });
+      });
 
-      // Nur bei tatsächlichem Video-Ende oder Benutzeraktion weiterleiten
+      // Weiterleitung nach Ende oder Klick
       video.addEventListener('ended', fadeAndRedirect);
       video.addEventListener('error', fadeAndRedirect);
       skipBtn.addEventListener('click', fadeAndRedirect);
