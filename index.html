@@ -20,34 +20,41 @@
   <style>
     /* === Hamburger-Menü (oben rechts) === */
     .hamburger {
-      position: fixed;
-      top: 12px;
-      right: 14px;
-      width: 42px;
-      height: 42px;
-      border: 0;
-      background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      z-index: 1100; /* über den Pfeilen */
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  width: 28px;               /* kleiner */
+  height: 28px;
+  border: none;
+  background: transparent;   /* kein Hintergrund, komplett durchsichtig */
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 1200;             /* über allem */
+  padding: 0;
     }
     .hamburger span {
-      display: block;
-      width: 22px;
-      height: 2px;
-      margin: 3px 0;
-      background: #000;
-      border-radius: 2px;
-      transition: transform .2s, opacity .2s;
+  display: block;
+  width: 18px;               /* kürzere Linien */
+  height: 2px;               /* dünnere Linien */
+  margin: 3px 0;
+  background: #000;          /* schwarze Linien */
+  border-radius: 2px;
+  transition: transform .2s ease, opacity .2s ease;
     }
-    /* Animation beim Öffnen */
-    body.menu-open .hamburger span:nth-child(1){ transform: translateY(5px) rotate(45deg); }
-    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
-    body.menu-open .hamburger span:nth-child(3){ transform: translateY(-5px) rotate(-45deg); }
+/* Animation beim Öffnen (Kreuzsymbol) */
+body.menu-open .hamburger span:nth-child(1) {
+  transform: translateY(5px) rotate(45deg);
+}
+body.menu-open .hamburger span:nth-child(2) {
+  opacity: 0;
+}
+body.menu-open .hamburger span:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg);
+}
 
     /* Hintergrundüberlagerung */
     .menu-overlay {
