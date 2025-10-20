@@ -9,11 +9,16 @@
 
   <!-- Haupt-Styles -->
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Pfeile (Halbkreise) -->
   <link rel="stylesheet" href="styles_nav_arrows.css" />
+
+  <!-- Swipe-Unterstützung (touch-action: pan-y) -->
   <link rel="stylesheet" href="swipe-helper.css" />
 
+  <!-- Hamburger-Menü Styles -->
   <style>
-    /* === Hamburger-Menü (oben rechts) === */
+    /* === Hamburger-Menü (oben rechts, 20x20 px) === */
     .hamburger {
       position: fixed;
       top: 14px;
@@ -22,10 +27,14 @@
       height: 20px;
       border: none;
       background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       display: grid;
       place-items: center;
       cursor: pointer;
       z-index: 1200;
+      padding: 0;
     }
     .hamburger span {
       display: block;
@@ -36,18 +45,29 @@
       border-radius: 2px;
       transition: transform .2s ease, opacity .2s ease;
     }
-    body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
-    body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
-    body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
+    body.menu-open .hamburger span:nth-child(1) {
+      transform: translateY(3.5px) rotate(45deg);
+    }
+    body.menu-open .hamburger span:nth-child(2) {
+      opacity: 0;
+    }
+    body.menu-open .hamburger span:nth-child(3) {
+      transform: translateY(-3.5px) rotate(-45deg);
+    }
 
+    /* Hintergrundüberlagerung */
     .menu-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,.08);
       backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
       z-index: 1099;
     }
+    body.menu-open #menu-overlay { display: block; }
+    #menu-overlay[hidden]{ display:none; }
 
+    /* Seitenmenü (Einklapp-Panel, milchiger Look) */
     .site-menu {
       position: fixed;
       top: 0;
@@ -56,6 +76,7 @@
       width: min(60vw, 220px);
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
       box-shadow: 0 20px 50px rgba(0,0,0,.08);
       transform: translateX(100%);
       transition: transform .25s ease;
@@ -66,25 +87,19 @@
 
     .site-menu ul { list-style: none; margin: 0; padding: 0; }
     .site-menu li { margin: 0 0 10px 0; }
-    .site-menu a { display: block; padding: 10px 8px; border-radius: 10px; color: #000; text-decoration: none; font-size: 1.02rem; font-weight: 500; }
+    .site-menu li.sep { margin-top: 18px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,.08); }
+    .site-menu a {
+      display: block;
+      padding: 10px 8px;
+      border-radius: 10px;
+      color: #000;
+      text-decoration: none;
+      font-size: 1.02rem;
+      font-weight: 500;
+    }
     .site-menu a:hover { background: rgba(0,0,0,.05); }
 
-    /* === B3NN3T Video === */
-    .b3nn3t-video {
-      position: relative;
-      display: block;
-      margin: 40px 0 20px 40px; /* linksbündig */
-      max-width: 500px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    .b3nn3t-video video {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 12px;
-    }
+    .nav-arrow { z-index: 1000; }
   </style>
 </head>
 
@@ -96,6 +111,7 @@
     </a>
   </header>
 
+  <!-- Hamburger-Menü-Button + Overlay + Panel -->
   <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
     <span></span><span></span><span></span>
   </button>
@@ -113,15 +129,6 @@
   </nav>
 
   <main class="main">
-
-    <!-- === B3NN3T Video mit Autoplay-Trick === -->
-    <section class="b3nn3t-video">
-      <video autoplay loop playsinline>
-        <source src="B3NN3T.mp4" type="video/mp4">
-        Dein Browser unterstützt das Video-Tag nicht.
-      </video>
-    </section>
-
     <h1>moin und willkommen</h1>
     <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
 
@@ -137,21 +144,10 @@
     <p class="note"></p>
   </main>
 
-  <footer>© b3nn3t 2025 · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
 
+  <!-- Skripte -->
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
-
-  <!-- Autoplay-Trick für Ton -->
-  <script>
-    const video = document.querySelector('.b3nn3t-video video');
-    video.muted = true;
-    video.play().then(() => {
-      setTimeout(() => {
-        video.muted = false;
-        video.volume = 1.0;
-      }, 1000);
-    }).catch(err => console.log('Autoplay blockiert:', err));
-  </script>
 </body>
 </html>
