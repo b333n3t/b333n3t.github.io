@@ -311,3 +311,25 @@ footer a:hover {
     font-size: 0.78rem;
   }
 }
+/* === "gesehen" Seite: Intro-Button wie Startseite, kompakt & zentriert === */
+.grid-seen {
+  /* statt Vollbreite im Grid: kompakt zentrieren */
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.grid-seen .card {
+  /* gleiche Kartengröße wie auf der Startseite (≈ 180px) */
+  flex: 0 1 180px;
+  max-width: 180px;
+}
+
+/* Auf Phones dieselben kleineren Maße wie auf der Startseite verwenden */
+@media (max-width: 480px) {
+  .grid-seen .card {
+    flex-basis: 120px;   /* passt zu deinen Phone-Einstellungen */
+    max-width: 120px;
+  }
+}
