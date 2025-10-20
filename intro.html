@@ -79,7 +79,6 @@
     </div>
 
     <script>
-      // Nach dem Intro auf geshen.html weiterleiten
       const TARGET_URL = "/geshen.html";
 
       const video = document.getElementById('introVideo');
@@ -98,22 +97,13 @@
         }, 1000);
       }
 
-      let durationTimeout;
-      function scheduleFallbackByDuration() {
-        if (!isFinite(video.duration) || video.duration <= 0) return;
-        clearTimeout(durationTimeout);
-        durationTimeout = setTimeout(fadeAndRedirect, (video.duration * 1000) + 500);
-      }
-
+      // Versuche Wiedergabe zu starten (iOS Autoplay-Policy -> muted + playsinline)
       video.play().catch(() => {});
-      video.addEventListener('loadedmetadata', scheduleFallbackByDuration);
+
+      // Nur bei tatsächlichem Video-Ende oder Benutzeraktion weiterleiten
       video.addEventListener('ended', fadeAndRedirect);
       video.addEventListener('error', fadeAndRedirect);
       skipBtn.addEventListener('click', fadeAndRedirect);
-
-      setTimeout(() => {
-        if (!video.ended) fadeAndRedirect();
-      }, 20000);
     </script>
   </body>
 </html>
