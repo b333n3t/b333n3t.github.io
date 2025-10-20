@@ -1,3 +1,4 @@
+/* dein vorhandener Code bleibt unverändert … */
 const order = [
   "index.html",
   "ueber-mich.html",
@@ -73,4 +74,32 @@ document.addEventListener('DOMContentLoaded', setArrowLinks);
   }else{
     document.addEventListener('DOMContentLoaded', setupRetroPanel);
   }
+})();
+
+
+// === Hamburger-Menü ein-/ausblenden (NEU) ===
+(() => {
+  const btn   = document.querySelector('.hamburger');
+  const menu  = document.getElementById('site-menu');
+  const shade = document.getElementById('menu-overlay');
+  if (!btn || !menu || !shade) return;
+
+  const open = () => {
+    document.body.classList.add('menu-open');
+    btn.setAttribute('aria-expanded','true');
+    menu.setAttribute('aria-hidden','false');
+    shade.hidden = false;
+  };
+  const close = () => {
+    document.body.classList.remove('menu-open');
+    btn.setAttribute('aria-expanded','false');
+    menu.setAttribute('aria-hidden','true');
+    shade.hidden = true;
+  };
+
+  btn.addEventListener('click', () => {
+    document.body.classList.contains('menu-open') ? close() : open();
+  });
+  shade.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 })();
