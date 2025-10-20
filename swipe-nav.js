@@ -7,7 +7,27 @@
   const ORDER = [
     "index.html","ueber-mich.html","diskografie.html",
     "kontakt.html","aktuell.html","gesehen.html","plattformen.html"
-  ];
+  
+  // --- allow vertical scroll inside scrollable containers (only navigate at edges) ---
+  let _startTarget = null;
+  function nearestScrollable(el){
+    let n = el;
+    while (n && n !== document.documentElement){
+      if (n.scrollHeight > n.clientHeight + 1) return n;
+      n = n.parentElement;
+    }
+    return null;
+  }
+  function canScrollVert(el, dir){ // dir: +1 = down, -1 = up
+    const sc = nearestScrollable(el);
+    if (!sc) return false;
+    const atTop    = sc.scrollTop <= 0;
+    const atBottom = Math.ceil(sc.scrollTop + sc.clientHeight) >= sc.scrollHeight;
+    if (dir > 0) return !atBottom; // scrolling down possible?
+    if (dir < 0) return !atTop;    // scrolling up possible?
+    return false;
+  }
+];
 
   const cur = () => (location.pathname.split("/").pop() || "index.html");
   const around = f => {
@@ -53,7 +73,7 @@
   }
 
   // Touch (mobile/tablet)
-  document.addEventListener("touchstart", e=>{
+  document.addEventListener("touchstart", e=>{ _startTarget = e.target;
     if (e.touches && e.touches.length > 1) return;
     const t = e.touches?.[0] || e.changedTouches?.[0]; if(!t) return;
     start(t.clientX,t.clientY);
@@ -61,19 +81,23 @@
 
   document.addEventListener("touchend", e=>{
     const t = e.changedTouches?.[0]; if(!t) return;
+    const dy = t.clientY - sy;
+    if (Math.abs(dy) > 0 && canScrollVert(_startTarget || t.target, dy > 0 ? -1 : 1)) { reset(); return; }
     end(t.clientX,t.clientY, TOUCH_EDGE_GAP); // edge gap only for touch
   }, {passive:true, capture:true});
 
   document.addEventListener("touchcancel", reset, {capture:true});
 
   // Pointer (touch-capable laptops, 2in1 etc.)
-  document.addEventListener("pointerdown", e=>{
+  document.addEventListener("pointerdown", e=>{ _startTarget = e.target;
     if (e.pointerType !== "touch") return;
     start(e.clientX, e.clientY);
   }, {passive:true, capture:true});
 
   document.addEventListener("pointerup", e=>{
     if (e.pointerType !== "touch") return;
+    const dy = e.clientY - sy;
+    if (Math.abs(dy) > 0 && canScrollVert(_startTarget || e.target, dy > 0 ? -1 : 1)) { reset(); return; }
     end(e.clientX, e.clientY, 0); // no edge gap for pointer
   }, {passive:true, capture:true});
 
@@ -98,6 +122,8 @@
   }
   document.addEventListener("wheel", e=>{
     if (e.ctrlKey) return; // ignore pinch-zoom
+    // If a scrollable container can consume this vertical movement, do not navigate
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && canScrollVert(e.target, e.deltaY > 0 ? 1 : -1)) return;
     wheelDX += e.deltaX; wheelDY += e.deltaY;
     if (!wheelTimer) wheelTimer = setTimeout(flushWheel, WHEEL_WINDOW);
   }, {passive:true, capture:true});
