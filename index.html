@@ -10,11 +10,92 @@
   <!-- Haupt-Styles -->
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
+  <!-- Pfeile (Halbkreise) -->
   <link rel="stylesheet" href="styles_nav_arrows.css" />
 
-  <!-- Swipe-Unterstützung für Mobile (touch-action: pan-y) -->
+  <!-- Swipe-Unterstützung (touch-action: pan-y) -->
   <link rel="stylesheet" href="swipe-helper.css" />
+
+  <!-- Hamburger-Menü Styles -->
+  <style>
+    /* === Hamburger-Menü (oben rechts) === */
+    .hamburger {
+      position: fixed;
+      top: 12px;
+      right: 14px;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      background: rgba(255,255,255,.32);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      z-index: 1100; /* über den Pfeilen */
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      margin: 3px 0;
+      background: #000;
+      border-radius: 2px;
+      transition: transform .2s, opacity .2s;
+    }
+    /* Animation beim Öffnen */
+    body.menu-open .hamburger span:nth-child(1){ transform: translateY(5px) rotate(45deg); }
+    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
+    body.menu-open .hamburger span:nth-child(3){ transform: translateY(-5px) rotate(-45deg); }
+
+    /* Hintergrundüberlagerung */
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.08);
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
+      z-index: 1099;
+    }
+    body.menu-open #menu-overlay { display: block; }
+    #menu-overlay[hidden]{ display:none; }
+
+    /* Seitenmenü (Einklapp-Panel, milchiger Look) */
+    .site-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(86vw, 340px);
+      background: rgba(255,255,255,.32);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.08);
+      transform: translateX(100%);
+      transition: transform .25s ease;
+      z-index: 1101;
+      padding: 72px 20px 24px;
+    }
+    body.menu-open .site-menu { transform: translateX(0); }
+
+    .site-menu ul { list-style: none; margin: 0; padding: 0; }
+    .site-menu li { margin: 0 0 10px 0; }
+    .site-menu li.sep { margin-top: 18px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,.08); }
+    .site-menu a {
+      display: block;
+      padding: 10px 8px;
+      border-radius: 10px;
+      color: #000;
+      text-decoration: none;
+      font-size: 1.02rem;
+      font-weight: 500;
+    }
+    .site-menu a:hover { background: rgba(0,0,0,.05); }
+
+    /* Pfeile bleiben klickbar */
+    .nav-arrow { z-index: 1000; }
+  </style>
 </head>
 <body>
   <header class="header">
@@ -23,6 +104,23 @@
       <strong>b3nn3t</strong>
     </a>
   </header>
+
+  <!-- Hamburger-Menü-Button + Overlay + Panel -->
+  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div id="menu-overlay" class="menu-overlay" hidden></div>
+  <nav id="site-menu" class="site-menu" aria-hidden="true">
+    <ul>
+      <li><a href="ueber-mich.html">über mich</a></li>
+      <li><a href="diskografie.html">diskografie</a></li>
+      <li><a href="kontakt.html">kontakt</a></li>
+      <li><a href="aktuell.html">aktuell</a></li>
+      <li><a href="gesehen.html">gesehen</a></li>
+      <li><a href="plattformen.html">plattformen</a></li>
+      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+    </ul>
+  </nav>
 
   <main class="main">
     <h1>moin und willkommen</h1>
@@ -40,11 +138,10 @@
     <p class="note"></p>
   </main>
 
-  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+  <footer>© b3nn3t 2025 · <a href="impressum.html">Impressum / Datenschutz</a></footer>
 
   <!-- Skripte -->
   <script src="script.js"></script>
-  <!-- WICHTIG: nur EINMAL laden, mit Cache-Buster v=12 -->
   <script src="swipe-nav.js?v=12" defer></script>
 </body>
 </html>
