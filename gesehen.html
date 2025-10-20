@@ -2,20 +2,21 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>gesehen — b3nn3t</title>
   <meta name="description" content="gesehen — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
   <!-- Haupt-Styles -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2" />
 
   <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
   <link rel="stylesheet" href="styles_nav_arrows.css" />
 
-  <!-- Swipe-Unterstützung für Mobile (touch-action: pan-y) -->
+  <!-- Swipe-Unterstützung für Mobile -->
   <link rel="stylesheet" href="swipe-helper.css" />
 </head>
+
 <body>
   <header class="header">
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
@@ -24,33 +25,32 @@
     </a>
   </header>
 
-  <!-- Navigationspfeile -->
+  <!-- Navigationpfeile -->
   <a class="nav-arrow left" aria-label="Vorherige Seite" href="#">&larr;</a>
   <a class="nav-arrow right" aria-label="Nächste Seite" href="#">&rarr;</a>
 
   <main class="main">
     <h1>gesehen</h1>
-    <p>...was mich gerade bewegt</p>
+    <p>Was mich gerade bewegt.</p>
 
-    <!-- Intro-Link im Stil der Startseiten-Kacheln -->
-    <section class="grid" aria-label="Intro & Start" style="margin-top: 1.5rem;">
-      <a class="card" href="index.html">
+    <!-- Grid im gleichen Stil wie index.html -->
+    <section class="grid" aria-label="Seitenübersicht">
+      <a class="card" href="intro.html">
         intro
         <small>Intro & Start</small>
       </a>
     </section>
   </main>
 
+  <!-- Zurück zur Startseite -->
   <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
 
   <footer>
     © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
   </footer>
 
-  <!-- Hauptskript -->
+  <!-- Skripte -->
   <script src="script.js"></script>
-
-  <!-- Swipe-Navigation aktivieren -->
   <script src="swipe-nav.js?v=12" defer></script>
 </body>
 </html>
