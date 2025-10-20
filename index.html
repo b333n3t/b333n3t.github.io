@@ -1,51 +1,86 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Start — b3nn3t</title>
-  <meta name="description" content="Start — b3nn3t" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-
-  <!-- Haupt-Styles -->
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Swipe-Unterstützung für Mobile -->
-  <link rel="stylesheet" href="swipe-helper.css" />
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Start — b3nn3t</title>
+<meta content="Start — b3nn3t" name="description"/>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<!-- Haupt-Styles -->
+<link href="styles.css" rel="stylesheet">
+<!-- Swipe-Unterstützung für Mobile -->
+<link href="swipe-helper.css" rel="stylesheet"/>
+</link><style id="panel-scroll-patch">
+/* === Patch: Vertikales Scrollen je Seite (Desktop & Mobile) === */
+html, body { height: 100%; }
+body { overflow: hidden; } /* horizontales Wechseln bleibt, vertikal nur in .panel */
+main.main { height: 100vh; width: 100vw; overflow: hidden; }
+section.grid {
+  height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+</style></head>
 <body>
-  <header class="header">
-    <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg">
-      <strong>b3nn3t</strong>
-    </a>
-  </header>
+<header class="header">
+<a aria-label="b3nn3t Home" class="brand" href="index.html">
+<img alt="" src="favicon.svg"/>
+<strong>b3nn3t</strong>
+</a>
+</header>
+<main class="main">
+<h1>Willkommen</h1>
+<p>Hier findest du alles rund um <strong>b3nn3t</strong> – kurz, klar, ohne Schnickschnack.</p>
+<section aria-label="Seitenübersicht" class="grid">
+<a class="card" href="ueber-mich.html">über mich<small>Bio &amp; Einblicke</small></a>
+<a class="card" href="diskografie.html">diskografie<small>Releases &amp; Projekte</small></a>
+<a class="card" href="kontakt.html">kontakt<small>Booking &amp; Mail</small></a>
+<a class="card" href="aktuell.html">aktuell<small>News &amp; Termine</small></a>
+<a class="card" href="gesehen.html">gesehen<small>Inspiration &amp; Notizen</small></a>
+<a class="card" href="plattformen.html">plattformen<small>Social &amp; Streaming</small></a>
+</section>
+<p class="note">Tipp: Auf den Unterseiten kannst du mit den Pfeiltasten ← → wechseln. Drücke „H“ für die Startseite.</p>
+</main>
+<footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+<!-- Hauptskript -->
+<script src="script.js"></script>
+<script defer="" src="swipe-nav.js?v=6"></script>
+<!-- Swipe-Navigation aktivieren -->
+<script defer="" src="swipe-nav.js?v=6"></script>
+<script id="panel-scroll-logic">
+(function() {
+  const panels = Array.from(document.querySelectorAll('section.grid'));
+  if (!panels.length) return;
 
-  <main class="main">
+  function atTop(el){ return el.scrollTop <= 0; }
+  function atBottom(el){ return Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight; }
 
-    <h1>Willkommen</h1>
-    <p>Hier findest du alles rund um <strong>b3nn3t</strong> – kurz, klar, ohne Schnickschnack.</p>
+  panels.forEach((panel) => {
+    panel.addEventListener('wheel', (e) => {
+      if (e.deltaY > 0 && !atBottom(panel)) return;
+      if (e.deltaY < 0 && !atTop(panel)) return;
+      e.preventDefault();
+    }, { passive: false });
 
-    <section class="grid" aria-label="Seitenübersicht">
-      <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-      <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
-      <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
-      <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
-      <a class="card" href="gesehen.html">gesehen<small>Inspiration & Notizen</small></a>
-      <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
-    </section>
-
-    <p class="note">Tipp: Auf den Unterseiten kannst du mit den Pfeiltasten ← → wechseln. Drücke „H“ für die Startseite.</p>
-
-  </main>
-
-  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
-
-  <!-- Hauptskript -->
-  <script src="script.js"></script>
-<script src="swipe-nav.js?v=6" defer></script>
-  
-  <!-- Swipe-Navigation aktivieren -->
-  <script src="swipe-nav.js?v=6" defer></script>
-</body>
+    let startX=0, startY=0, used=false;
+    const SWIPE_X=48, SWIPE_Y=80;
+    panel.addEventListener('touchstart', (e) => {
+      const t = e.changedTouches[0];
+      startX=t.clientX; startY=t.clientY; used=false;
+    }, { passive: true });
+    panel.addEventListener('touchmove', (e) => {
+      if (used) return;
+      const t = e.changedTouches[0];
+      const dx=t.clientX-startX, dy=t.clientY-startY;
+      if (Math.abs(dx) > SWIPE_X && Math.abs(dy) < SWIPE_Y){
+        used=true;
+        e.preventDefault();
+      }
+    }, { passive: false });
+  });
+})();
+</script></body>
 </html>
