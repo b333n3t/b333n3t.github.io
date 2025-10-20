@@ -14,6 +14,7 @@
 
   <!-- Schmaleres Hamburger-Menü -->
   <style>
+    /* === Hamburger-Menü === */
     .hamburger {
       position: fixed;
       top: 14px;
@@ -22,7 +23,6 @@
       height: 20px;
       border: none;
       background: transparent;
-      box-shadow: none;
       display: grid;
       place-items: center;
       cursor: pointer;
@@ -48,6 +48,7 @@
       transform: translateY(-3.5px) rotate(-45deg);
     }
 
+    /* Hintergrundüberlagerung */
     .menu-overlay {
       position: fixed;
       inset: 0;
@@ -58,23 +59,24 @@
     body.menu-open #menu-overlay { display: block; }
     #menu-overlay[hidden]{ display:none; }
 
-    /* Schmaleres Menüpanel */
+    /* Seitenmenü (Einklapp-Panel, schmaler) */
     .site-menu {
       position: fixed;
       top: 0;
       right: 0;
       height: 100vh;
-      width: min(70vw, 260px); /* kleiner als vorher */
+      width: min(70vw, 260px);
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
       box-shadow: 0 20px 50px rgba(0,0,0,.08);
       transform: translateX(100%);
       transition: transform .25s ease;
       z-index: 1101;
-      padding: 60px 16px 20px; /* kompakter */
+      padding: 60px 16px 20px;
     }
     body.menu-open .site-menu { transform: translateX(0); }
 
+    /* Menü-Links – nur innerhalb des Menüs */
     .site-menu ul { list-style: none; margin: 0; padding: 0; }
     .site-menu li { margin: 0 0 10px 0; }
     .site-menu li.sep { margin-top: 18px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,.08); }
@@ -88,6 +90,37 @@
       font-weight: 500;
     }
     .site-menu a:hover { background: rgba(0,0,0,.05); }
+
+    /* Plattform-Icons: Standardgröße wiederherstellen */
+    .platform-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 1.5rem;
+    }
+    .platform-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .platform-list img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+    .platform-list a {
+      display: inline;
+      padding: 0;
+      font-size: 1rem;
+      font-weight: 400;
+      border-radius: 0;
+      background: none;
+      color: #000;
+      text-decoration: none;
+    }
+    .platform-list a:hover {
+      text-decoration: underline;
+    }
 
     .nav-arrow { z-index: 1000; }
   </style>
@@ -118,7 +151,7 @@
     </ul>
   </nav>
 
-  <!-- Navigationspfeile -->
+  <!-- Pfeile -->
   <a class="nav-arrow left" aria-label="Vorherige Seite" href="gesehen.html">&larr;</a>
   <a class="nav-arrow right" aria-label="Nächste Seite" href="index.html">&rarr;</a>
 
