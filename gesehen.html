@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>b3nn3t</title>
-  <meta name="description" content="b3nn3t" />
+  <title>gesehen — b3nn3t</title>
+  <meta name="description" content="gesehen — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
   <!-- Haupt-Styles -->
@@ -24,22 +24,29 @@
     </a>
   </header>
 
-  <main class="main">
-    <h1>b3nn3t</h1>
-    <p>Was du machst, denkst, fühlst, teilst.</p>
+  <a class="nav-arrow left" aria-label="Vorherige Seite" href="#">&larr;</a>
+  <a class="nav-arrow right" aria-label="Nächste Seite" href="#">&rarr;</a>
 
-    <section class="grid" aria-label="Navigation">
-      <a class="card" href="gesehen.html">gesehen<small>Konzerte, Bücher, Filme, Ausstellungen</small></a>
-      <a class="card" href="gehört.html">gehört<small>Musik, Podcasts, Stimmen</small></a>
-      <a class="card" href="gelesen.html">gelesen<small>Artikel, Zitate, Gedanken</small></a>
-      <a class="card" href="geschrieben.html">geschrieben<small>Texte, Ideen, Notizen</small></a>
-      <a class="card" href="gedacht.html">gedacht<small>Reflexionen, Fragen, Meinungen</small></a>
-      <a class="card" href="gemacht.html">gemacht<small>Projekte, Arbeiten, Skizzen</small></a>
-      <a class="card" href="gefühlt.html">gefühlt<small>Erlebnisse, Momente, Emotionen</small></a>
-      <a class="card" href="geträumt.html">geträumt<small>Visionen, Wünsche, Ideen</small></a>
+  <main class="main">
+    <h1>gesehen</h1>
+    <p>Was dich zuletzt inspiriert hat: Konzerte, Bücher, Filme, Ausstellungen.</p>
+
+    <!-- Einziger Grid-Button im Stil der index.html -->
+    <section class="grid" aria-label="Zur Intro-Seite" style="margin-top: 1.5rem;">
+      <a class="card" href="intro.html">intro<small>Intro & Start</small></a>
     </section>
   </main>
 
+  <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
+
   <footer>
     © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-  </footer
+  </footer>
+
+  <!-- Hauptskript -->
+  <script src="script.js"></script>
+
+  <!-- Swipe-Navigation aktivieren -->
+  <script src="swipe-nav.js?v=12" defer></script>
+</body>
+</html>
