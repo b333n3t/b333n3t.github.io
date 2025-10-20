@@ -279,3 +279,36 @@ footer a:hover {
 .home-btn {
   display: none !important;
 }
+/* === Mobile-Optimierung: Karten (über mich, diskografie, etc.) schmaler === */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* vorher 180px */
+    gap: 10px; /* weniger Abstand */
+  }
+
+  .card {
+    padding: 10px;        /* kompaktere Felder */
+    border-radius: 14px;  /* leicht kleiner */
+  }
+
+  .card small {
+    font-size: 0.8rem;    /* kleinerer Untertext */
+    margin-top: 4px;
+  }
+}
+
+/* === Sehr kleine Geräte (z. B. iPhone SE, Galaxy Mini) === */
+@media (max-width: 360px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
+  }
+
+  .card {
+    padding: 8px;
+  }
+
+  .card small {
+    font-size: 0.78rem;
+  }
+}
