@@ -333,19 +333,3 @@ footer a:hover {
     max-width: 120px;
   }
 }
-/* === B3NN3T Video Stil === */
-.b3nn3t-video {
-  position: relative;
-  display: block;
-  margin: 40px 0 20px 40px; /* linksbündig */
-  max-width: 500px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-}
-.b3nn3t-video video {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
