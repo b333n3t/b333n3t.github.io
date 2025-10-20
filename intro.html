@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Intro</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        background: #000;
+      }
+      .video-container {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: #000;
+        opacity: 1;
+        transition: opacity 1s ease;
+      }
+      .video-container.fade-out {
+        opacity: 0;
+      }
+      video {
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+      }
+      .controls {
+        position: fixed;
+        inset: 0 0 auto auto;
+        padding: 16px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        z-index: 10;
+      }
+      .skip-btn {
+        font: 500 14px system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: none;
+        background: rgba(255,255,255,0.12);
+        color: #fff;
+        backdrop-filter: blur(6px);
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      .skip-btn:hover { background: rgba(255,255,255,0.2); }
+    </style>
+  </head>
+  <body>
+    <div class="video-container" id="videoContainer">
+      <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto">
+        <source src="assets/B3NN3T.mp4" type="video/mp4" />
+        Ihr Browser unterstützt das Video-Tag nicht.
+      </video>
+      <div class="controls">
+        <button id="skipBtn" class="skip-btn" aria-label="Intro überspringen">Überspringen</button>
+      </div>
+    </div>
+
+    <script>
+      const TARGET_URL = "/index.html";
+
+      const video = document.getElementById('introVideo');
+      const skipBtn = document.getElementById('skipBtn');
+      const container = document.getElementById('videoContainer');
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        window.location.replace(TARGET_URL);
+      }
+
+      function fadeAndRedirect() {
+        container.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.replace(TARGET_URL);
+        }, 1000);
+      }
+
+      let durationTimeout;
+      function scheduleFallbackByDuration() {
+        if (!isFinite(video.duration) || video.duration <= 0) return;
+        clearTimeout(durationTimeout);
+        durationTimeout = setTimeout(fadeAndRedirect, (video.duration * 1000) + 500);
+      }
+
+      video.play().catch(() => {});
+      video.addEventListener('loadedmetadata', scheduleFallbackByDuration);
+      video.addEventListener('ended', fadeAndRedirect);
+      video.addEventListener('error', fadeAndRedirect);
+      skipBtn.addEventListener('click', fadeAndRedirect);
+
+      setTimeout(() => {
+        if (!video.ended) fadeAndRedirect();
+      }, 20000);
+    </script>
+  </body>
+</html>
