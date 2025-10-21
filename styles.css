@@ -333,3 +333,48 @@ footer a:hover {
     max-width: 120px;
   }
 }
+/* === Plattformen (Spotify, Apple Music, Instagram, YouTube, SoundCloud) === */
+.platform-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.platform-list li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.platform-list img {
+  height: 22px;   /* Einheitliche Größe für alle Logos */
+  width: auto;
+  margin-right: 10px;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); /* leichte Tiefe */
+}
+
+.platform-list a {
+  text-decoration: none;
+  color: #111;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.platform-list a:hover {
+  text-decoration: underline;
+  color: #000;
+}
+
+/* === Mobile-Optimierung für Plattformen === */
+@media (max-width: 480px) {
+  .platform-list img {
+    height: 18px;  /* kleinere Logos auf Smartphones */
+    margin-right: 8px;
+  }
+
+  .platform-list a {
+    font-size: 0.9rem;
+  }
+}
