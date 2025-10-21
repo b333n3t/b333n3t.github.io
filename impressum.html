@@ -48,8 +48,8 @@
   background: transparent;
   border: 0;
   cursor: pointer;
-  width: 44px;
-  height: 44px;
+  width: 32px;   /* 👈 kleiner als vorher (44px) */
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -57,7 +57,7 @@
 }
 .menu-toggle .bar {
   display: block;
-  width: 22px;
+  width: 16px;   /* 👈 kleiner */
   height: 2px;
   background: #111;
   position: relative;
@@ -67,12 +67,13 @@
   content: "";
   position: absolute;
   left: 0;
-  width: 22px;
+  width: 16px;   /* 👈 kleiner */
   height: 2px;
   background: #111;
 }
-.menu-toggle .bar::before { top: -7px; }
-.menu-toggle .bar::after  { top:  7px; }
+.menu-toggle .bar::before { top: -5px; }  /* enger zusammen */
+.menu-toggle .bar::after  { top:  5px; }
+
 
 .site-nav {
   position: fixed;
