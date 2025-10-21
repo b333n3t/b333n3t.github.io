@@ -130,7 +130,17 @@
 <h1>diskografie</h1>
 <p>liste meiner releases & kollabos.</p>
 <h2></h2><style>
-.disco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:0 0 2rem;}
+.disco-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:1rem;
+  margin:0 0 2rem;
+  align-items:start; /* verhindert, dass Nachbarkarten mitwachsen */
+}
+.disco-grid > .release{
+  align-self:start;  /* doppelte Absicherung */
+}
+
 .release{border:1px solid #ddd;border-radius:12px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);background:#fff}
 .release img{width:100%;height:220px;object-fit:cover;border-radius:8px;background:#f2f2f2}
 .release .meta{font-size:.9rem;color:#444;margin-top:.5rem}
