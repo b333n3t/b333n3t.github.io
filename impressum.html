@@ -6,158 +6,118 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Impressum &amp; Datenschutz — b3nn3t</title>
 <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="styles.css" rel="stylesheet">
-</link><style>
-/* --- Burger Navigation (aligned with kontakt.html look & feel) --- */
-.menu-toggle {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
+<link href="styles.css" rel="stylesheet"/>
+<style>
+.scroll-panel {
+  overflow: auto;
+  max-height: 75vh;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(255,255,255,0.92);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 1.25rem 1rem;
+  margin-top: 1rem;
+  margin-left: 0; /* align left like kontakt.html */
+  max-width: 650px; /* consistent width with kontakt.html */
+  scrollbar-width: none; /* hide scrollbar (Firefox) */
+  -ms-overflow-style: none; /* hide scrollbar (IE/Edge legacy) */
 }
-.menu-toggle .bar {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: #111;
-  position: relative;
+.scroll-panel::-webkit-scrollbar {
+  display: none; /* hide scrollbar (Chrome, Safari, etc.) */
 }
-.menu-toggle .bar::before,
-.menu-toggle .bar::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 22px;
-  height: 2px;
-  background: #111;
-}
-.menu-toggle .bar::before { top: -7px; }
-.menu-toggle .bar::after  { top:  7px; }
-
-.site-nav {
-  position: fixed;
-  top: 0; right: 0;
-  width: 78vw;
-  max-width: 360px;
-  height: 100vh;
-  background: rgba(255,255,255,0.96);
-  box-shadow: -8px 0 24px rgba(0,0,0,0.12);
-  transform: translateX(100%);
-  transition: transform 220ms ease;
-  z-index: 1000;
-  padding: 72px 24px 24px;
-}
-.site-nav.open { transform: translateX(0); }
-
-.site-nav a {
-  display: block;
-  padding: 10px 0;
-  font-size: 1.05rem;
-  color: #111;
-  text-decoration: none;
-}
-.site-nav a:hover { text-decoration: underline; }
-
-/* Dim background when menu is open */
-.backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.25);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 180ms ease;
-  z-index: 900;
-}
-.backdrop.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Keep header layout tight on the right so the burger sits on the edge */
-.header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.header .brand { margin-right: auto; }
-</style></head>
+</style><script>
+(function() {
+  function resizePanel() {
+    var panel = document.querySelector('.scroll-panel');
+    if (!panel) return;
+    var header = document.querySelector('.header');
+    var footer = document.querySelector('footer');
+    var hh = header ? header.offsetHeight : 0;
+    var fh = footer ? footer.offsetHeight : 0;
+    var extra = 32; // small top/bottom margins
+    var max = window.innerHeight - hh - fh - extra;
+    if (max > 240) panel.style.maxHeight = max + 'px';
+  }
+  window.addEventListener('load', resizePanel);
+  window.addEventListener('resize', resizePanel);
+})();
+</script></head>
 <body>
 <header class="header">
 <a aria-label="b3nn3t Home" class="brand" href="index.html">
 <img alt="" src="favicon.svg"/><strong>b3nn3t</strong>
-</a><button aria-controls="site-nav" aria-expanded="false" aria-label="Menü öffnen" class="menu-toggle"><span class="bar"></span></button>
-</header><nav aria-hidden="true" class="site-nav" id="site-nav"><a href="index.html">Startseite</a><a href="aktuell.html">Aktuell</a><a href="diskografie.html">Diskografie</a><a href="kontakt.html">Kontakt</a><a href="impressum.html">Impressum / Datenschutz</a></nav><div class="backdrop" data-backdrop="nav"></div>
+</a>
+</header>
 <main class="main">
-<h1>Impressum</h1>
-<p>Angaben gemäß § 5 TMG:</p>
-<p><strong>Name:</strong> Max Mustermann<br/>
-<strong>Adresse:</strong> Musterstraße 1, 12345 Musterstadt<br/>
-<strong>E-Mail:</strong> <a href="mailto:hello@example.com">hello@example.com</a></p>
-<h2>Haftungsausschluss</h2>
-<p>Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.</p>
-<h2>Datenschutz</h2>
-<h2>Datenschutzerklärung</h2>
-<p>Diese Website wird über <strong>GitHub Pages</strong> gehostet. Beim Aufruf werden technisch notwendige Daten (z. B. IP-Adresse, Datum/Uhrzeit, Browser) durch die Server von GitHub verarbeitet. Anbieter ist GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA. Weitere Informationen findest du in der <a href="https://docs.github.com/de/site-policy/privacy-policies/github-privacy-statement" rel="noopener" target="_blank">Datenschutzerklärung von GitHub</a>.</p>
+<h1>Impressum &amp; Datenschutzerklärung</h1>
+<div class="scroll-panel"><h1>Impressum &amp; Datenschutzerklärung</h1><section>
+<h2>Impressum</h2>
+<p><strong>Angaben gemäß Schweizer Recht (Art. 3 Abs. 1 lit. s UWG):</strong></p>
+<p><strong>Bennet Kohnke</strong><br/>
+        St. Gallerstrasse 131<br/>
+        8645 Rapperswil-Jona<br/>
+        Schweiz</p>
+<p><strong>E-Mail:</strong> info@b3nn3t.ch<br/>
+<strong>Telefon:</strong> +41 - </p>
+<h3>Haftungsausschluss</h3>
+<p>Diese Website wurde mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte
+        kann jedoch keine Gewähr übernommen werden. Trotz sorgfältiger Kontrolle übernehme ich keine Haftung für externe Links.
+        Für den Inhalt verlinkter Seiten sind ausschließlich deren Betreiber verantwortlich.</p><p>Die oben genannte Person ist zugleich die verantwortliche Stelle für die Datenbearbeitung gemäß dem Schweizer Datenschutzgesetz (DSG).</p>
+</section><section>
+<h2>Datenschutzerklärung (nach Schweizer Datenschutzgesetz, DSG)</h2>
+<h3>1. Verantwortliche Stelle</h3>
+<p>Bennet Kohnke<br/>St. Gallerstrasse 131<br/>8645 Rapperswil-Jona<br/>info@b3nn3t.ch</p>
+<h3>2. Erhebung und Speicherung personenbezogener Daten</h3>
+<p>Beim Besuch dieser Website werden automatisch technische Daten (z. B. IP-Adresse, Browsertyp, Datum und Uhrzeit des Zugriffs)
+        durch den Hosting-Anbieter erfasst. Diese Daten sind notwendig, um den sicheren und stabilen Betrieb der Website zu gewährleisten.
+        Eine personenbezogene Auswertung findet nicht statt.</p>
+<h3>3. Hosting über GitHub Pages</h3>
+<p>Diese Website wird über <strong>GitHub Pages</strong>, einen Dienst der <strong>GitHub, Inc.</strong> mit Sitz in den USA, gehostet.
+        Beim Aufruf der Seite werden technische Daten (z. B. IP-Adresse, Browserinformationen, Zugriffszeitpunkt) automatisch verarbeitet, um den sicheren Betrieb der Website zu ermöglichen.
+        GitHub kann Daten in Länder außerhalb der Schweiz und der EU übermitteln. Ich habe keinen Einfluss auf diese Datenverarbeitung.
+        Weitere Informationen findest du in der <a href="https://docs.github.com/de/site-policy/privacy-policies/github-privacy-statement" target="_blank">Datenschutzerklärung von GitHub</a>.</p>
+<h3>4. Kontaktaufnahme</h3>
+<p>Wenn du mich per E-Mail kontaktierst, werden deine Angaben zur Bearbeitung der Anfrage gespeichert. Diese Daten werden nicht
+        ohne deine Einwilligung an Dritte weitergegeben.</p>
 <h3>Kontaktformular / Newsletter (FormSubmit)</h3>
 <p>Wenn du uns per Formular kontaktierst oder den Newsletter abonnierst, werden die von dir eingegebenen Daten (Name, E‑Mail, Nachricht sowie ggf. Einwilligungen) zum Zweck der Bearbeitung deiner Anfrage bzw. des Newsletterversands verarbeitet. Der Versand erfolgt über den Dienst <strong>FormSubmit</strong> (formsubmit.co), der die Formulardaten als E‑Mail an uns weiterleitet. Es findet keine Speicherung der Inhalte auf dieser Website statt. Anbieterangaben und Details findest du unter <a href="https://formsubmit.co/privacy.pdf" rel="noopener" target="_blank">formsubmit.co/privacy</a>.</p>
-<p><strong>Rechtsgrundlagen:</strong> Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) für Newsletter; Art. 6 Abs. 1 lit. b DSGVO (Vertrag/Anbahnung) bzw. lit. f (berechtigtes Interesse) für Kontaktanfragen. Du kannst eine erteilte Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.</p>
-<p><strong>Empfänger:</strong> FormSubmit (Übermittlung der Daten als E‑Mail). <strong>Drittlandtransfer:</strong> Eine Übermittlung in die USA kann stattfinden. Wir haben die Datenübermittlung auf das Notwendige beschränkt.</p>
+<p><strong>Rechtsgrundlage:</strong> Die Verarbeitung erfolgt gemäss dem <strong>Schweizer Datenschutzgesetz (DSG)</strong> auf Basis deiner Einwilligung oder weil sie zur Bearbeitung deiner Anfrage erforderlich ist. Du kannst eine erteilte Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.</p>
+<p><strong>Empfänger:</strong> FormSubmit (Übermittlung der Daten als E‑Mail). <strong>Datenübermittlung:</strong> Eine Übermittlung in die USA kann stattfinden. Wir haben die Datenübermittlung auf das Notwendige beschränkt.</p>
 <p><strong>Speicherdauer:</strong> Wir speichern deine E‑Mails nur so lange, wie es zur Bearbeitung notwendig ist bzw. gesetzliche Aufbewahrungspflichten bestehen.</p>
-<h3>Deine Rechte</h3>
-<p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung deiner personenbezogenen Daten (Art. 15–21 DSGVO). Außerdem hast du das Recht, erteilte Einwilligungen zu widerrufen. Wende dich hierzu bitte per E‑Mail an uns.</p>
-<h3>Verantwortliche Stelle</h3>
-<p><strong>Name:</strong> Max Mustermann<br/>
-<strong>E‑Mail:</strong> <a href="mailto:hello@example.com">hello@example.com</a></p>
-<h2>Datenschutz</h2>
-<p>Personenbezogene Daten werden auf dieser Website nur im technisch notwendigen Umfang erhoben. In keinem Fall werden die erhobenen Daten verkauft oder aus anderen Gründen an Dritte weitergegeben.</p>
-<h2>Kontaktformular</h2>
-<p>Die eingegebenen Daten werden über den Dienst <a href="https://formsubmit.co" rel="noopener" target="_blank">FormSubmit</a> per E-Mail an uns übermittelt. Eine Speicherung auf dieser Website findet nicht statt.</p>
-<h2>Urheberrecht</h2>
-<p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet.</p>
-<p><a class="btn" href="index.html">Zurück</a></p>
-</main>
+<h3>5. Einbindung von Diensten und Inhalten Dritter</h3>
+<p>Auf dieser Website können Inhalte Dritter eingebunden sein, z. B.:
+        <ul>
+<li>YouTube (zur Einbettung von Musikvideos)</li>
+<li>Spotify oder SoundCloud (zur Musikwiedergabe)</li>
+<li>Instagram / TikTok / Facebook (zur Darstellung von Social-Feeds oder Links)</li>
+</ul>
+        Diese Anbieter können Daten (z. B. IP-Adresse, Cookies) erheben, sobald ihre Inhalte geladen werden.
+        Ich habe keinen Einfluss auf diese Datenverarbeitung.
+        Weitere Informationen findest du in den Datenschutzerklärungen der jeweiligen Dienste:
+        <ul>
+<li><a href="https://policies.google.com/privacy" target="_blank">YouTube / Google Datenschutzerklärung</a></li>
+<li><a href="https://www.spotify.com/de/legal/privacy-policy/" target="_blank">Spotify Datenschutzrichtlinie</a></li>
+<li><a href="https://privacycenter.instagram.com/policy" target="_blank">Meta (Instagram / Facebook)</a></li>
+</ul></p>
+<h3>6. Internationale Zugriffe</h3>
+<p>Diese Website richtet sich primär an Besucherinnen und Besucher in der Schweiz, kann jedoch weltweit aufgerufen werden.
+        Ich verarbeite keine personenbezogenen Daten gezielt für Nutzer aus der EU oder anderen Staaten. Dennoch kann es technisch
+        vorkommen, dass Daten bei Zugriffen aus dem Ausland übermittelt werden. Diese Übertragungen erfolgen gemäß den geltenden
+        Datenschutzbestimmungen und nur soweit für den Betrieb der Website erforderlich.</p>
+<h3>7. Cookies</h3>
+<p>Diese Website verwendet in der Regel keine Cookies. Sollte ein eingebetteter Dienst (z. B. YouTube oder Spotify) Cookies setzen,
+        erfolgt dies außerhalb meines Einflussbereichs. Du kannst Cookies in den Einstellungen deines Browsers jederzeit löschen oder blockieren.</p>
+<h3>8. Deine Rechte im Zusammenhang mit deinen Daten</h3>
+<p>Du hast im Rahmen des Schweizer Datenschutzgesetzes (DSG) das Recht, Auskunft über die dich betreffenden personenbezogenen Daten zu erhalten, sie berichtigen oder löschen zu lassen und dich über die Art der Datenbearbeitung zu informieren. 
+Soweit die Datenbearbeitung im Rahmen dieser Website erfolgt oder direkt über mich läuft, komme ich diesen Rechten selbstverständlich gerne nach.</p>
+<p>Bitte beachte jedoch, dass bestimmte Daten über externe Dienste (z. B. <strong>YouTube</strong>, <strong>Spotify</strong>, <strong>SoundCloud</strong>, <strong>GitHub</strong> oder soziale Netzwerke wie <strong>Instagram</strong>) verarbeitet werden. 
+Auf diese externen Systeme habe ich <strong>keinen direkten Zugriff</strong> und kann daher <strong>keine Auskunft über dort gespeicherte oder verarbeitete Daten geben</strong>. 
+In diesen Fällen gelten die jeweiligen <strong>Datenschutzerklärungen der Anbieter</strong>, die im entsprechenden Abschnitt dieser Seite verlinkt sind.</p>
+<p>Wenn du Fragen zu deinen Daten oder zur Datenbearbeitung im Rahmen dieser Website hast, kannst du dich jederzeit formlos an <strong>info@b3nn3t.ch</strong> wenden.</p>
+<h3>9. Änderungen dieser Datenschutzerklärung</h3>
+<p>Ich behalte mir vor, diese Datenschutzerklärung gelegentlich anzupassen, um sie an aktuelle rechtliche Anforderungen anzupassen.</p>
+<p><em>Stand: Oktober 2025</em></p>
+</section><p><a class="btn" href="index.html">Zurück zur Startseite</a></p></div></main>
 <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
-<script>
-(function(){
-  var btn = document.querySelector('.menu-toggle');
-  var nav = document.getElementById('site-nav');
-  var backdrop = document.querySelector('[data-backdrop="nav"]');
-  if(!btn || !nav) return;
-
-  function openNav(){
-    nav.classList.add('open');
-    nav.setAttribute('aria-hidden', 'false');
-    btn.setAttribute('aria-expanded', 'true');
-    if (backdrop){ backdrop.classList.add('show'); }
-    // prevent body scroll behind the menu
-    document.documentElement.style.overflow = 'hidden';
-  }
-  function closeNav(){
-    nav.classList.remove('open');
-    nav.setAttribute('aria-hidden', 'true');
-    btn.setAttribute('aria-expanded', 'false');
-    if (backdrop){ backdrop.classList.remove('show'); }
-    document.documentElement.style.overflow = '';
-  }
-
-  btn.addEventListener('click', function(){
-    if(nav.classList.contains('open')) closeNav();
-    else openNav();
-  });
-
-  if (backdrop){
-    backdrop.addEventListener('click', closeNav);
-  }
-
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && nav.classList.contains('open')) closeNav();
-  });
-})();
-</script></body>
+</body>
 </html>
