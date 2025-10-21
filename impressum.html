@@ -42,60 +42,32 @@
   window.addEventListener('resize', resizePanel);
 })();
 </script><style>
-/* --- Burger Navigation (like kontakt.html, without swipe arrows) --- */
-.menu-toggle {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-}
-.menu-toggle .bar {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: #111;
-  position: relative;
-}
-.menu-toggle .bar::before,
-.menu-toggle .bar::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 22px;
-  height: 2px;
-  background: #111;
-}
-.menu-toggle .bar::before { top: -7px; }
-.menu-toggle .bar::after  { top:  7px; }
-
-.site-nav {
+/* --- Burger Navigation Style (updated to match diskografie.html) --- */
+.site-menu {
   position: fixed;
-  top: 0; right: 0;
-  width: 78vw;
-  max-width: 360px;
-  height: 100vh;
-  background: rgba(255,255,255,0.96);
-  box-shadow: -8px 0 24px rgba(0,0,0,0.12);
+  top: 0;
+  right: 0;
+  height: auto;
+  max-height: 90vh;
+  width: min(40vw, 150px);
+  background: rgba(255,255,255,.32);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.08);
   transform: translateX(100%);
-  transition: transform 220ms ease;
-  z-index: 1000;
-  padding: 72px 24px 24px;
+  transition: transform .25s ease;
+  z-index: 1101;
+  padding: 46px 10px 14px;
 }
-.site-nav.open { transform: translateX(0); }
-.site-nav a {
+.site-menu.open { transform: translateX(0); }
+.site-menu a {
   display: block;
-  padding: 10px 0;
+  padding: 8px 0;
   font-size: 1.05rem;
   color: #111;
   text-decoration: none;
 }
-.site-nav a:hover { text-decoration: underline; }
+.site-menu a:hover { text-decoration: underline; }
 
 .backdrop {
   position: fixed;
@@ -110,20 +82,16 @@
   opacity: 1;
   pointer-events: auto;
 }
-
-/* Ensure header layout aligns brand left, burger right */
-.header { display: flex; align-items: center; gap: 12px; }
-.header .brand { margin-right: auto; }
 </style></head>
 <body>
 <header class="header">
 <a aria-label="b3nn3t Home" class="brand" href="index.html">
 <img alt="" src="favicon.svg"/><strong>b3nn3t</strong>
 </a><button aria-controls="site-nav" aria-expanded="false" aria-label="Menü öffnen" class="menu-toggle"><span class="bar"></span></button>
-</header><nav aria-hidden="true" class="site-nav" id="site-nav"><a href="ueber-mich.html">über mich</a><a href="diskografie.html">diskografie</a><a href="kontakt.html">kontakt</a><a href="aktuell.html">aktuell</a><a href="gesehen.html">gesehen</a><a href="plattformen.html">plattformen</a><a href="impressum.html">Impressum / Datenschutz</a></nav><div class="backdrop" data-backdrop="nav"></div>
+</header><nav aria-hidden="true" class="site-menu" id="site-menu"><a href="ueber-mich.html">über mich</a><a href="diskografie.html">diskografie</a><a href="kontakt.html">kontakt</a><a href="aktuell.html">aktuell</a><a href="gesehen.html">gesehen</a><a href="plattformen.html">plattformen</a><a href="impressum.html">Impressum / Datenschutz</a></nav><div class="backdrop" data-backdrop="nav"></div>
 <main class="main">
 <h1>Impressum &amp; Datenschutzerklärung</h1>
-<div class="scroll-panel"><h1></h1><section>
+<div class="scroll-panel"><h1>Impressum &amp; Datenschutzerklärung</h1><section>
 <h2>Impressum</h2>
 <p><strong>Angaben gemäß Schweizer Recht (Art. 3 Abs. 1 lit. s UWG):</strong></p>
 <p><strong>Bennet Kohnke</strong><br/>
@@ -135,11 +103,7 @@
 <h3>Haftungsausschluss</h3>
 <p>Diese Website wurde mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte
         kann jedoch keine Gewähr übernommen werden. Trotz sorgfältiger Kontrolle übernehme ich keine Haftung für externe Links.
-        Für den Inhalt verlinkter Seiten sind ausschließlich deren Betreiber verantwortlich.</p> 
-<p>Der Künstlername b3nn3t® ist in der Schweiz als Marke eingetragen und geschützt
-(Markennummer 818956, gemäss Art. 1 ff. Markenschutzgesetz [MSchG]).</p>
-
-<p>Die oben genannte Person ist zugleich die verantwortliche Stelle für die Datenbearbeitung gemäß dem Schweizer Datenschutzgesetz (DSG).</p>
+        Für den Inhalt verlinkter Seiten sind ausschließlich deren Betreiber verantwortlich.</p><p>Die oben genannte Person ist zugleich die verantwortliche Stelle für die Datenbearbeitung gemäß dem Schweizer Datenschutzgesetz (DSG).</p>
 </section><section>
 <h2>Datenschutzerklärung (nach Schweizer Datenschutzgesetz, DSG)</h2>
 <h3>1. Verantwortliche Stelle</h3>
@@ -194,12 +158,12 @@ In diesen Fällen gelten die jeweiligen <strong>Datenschutzerklärungen der Anbi
 <h3>9. Änderungen dieser Datenschutzerklärung</h3>
 <p>Ich behalte mir vor, diese Datenschutzerklärung gelegentlich anzupassen, um sie an aktuelle rechtliche Anforderungen anzupassen.</p>
 <p><em>Stand: Oktober 2025</em></p>
-</section><p><a class="btn" href=</a></p></div></main>
+</section><p><a class="btn" href="index.html">Zurück zur Startseite</a></p></div></main>
 <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
 <script>
 (function(){
   var btn = document.querySelector('.menu-toggle');
-  var nav = document.getElementById('site-nav');
+  var nav = document.getElementById('site-menu');
   var backdrop = document.querySelector('[data-backdrop="nav"]');
   if(!btn || !nav) return;
 
