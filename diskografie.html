@@ -132,7 +132,7 @@
 <h2>Diskografie (neu → alt)</h2><style>
 .disco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:0 0 2rem;}
 .release{border:1px solid #ddd;border-radius:12px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);background:#fff}
-.release img{width:100%;height:220px;object-fit:cover;border-radius:8px;background:#f2f2f2}
+.release img{width:100%;height: var(--cover-h, 220px);object-fit:cover;border-radius:8px;background:#f2f2f2}
 .release .meta{font-size:.9rem;color:#444;margin-top:.5rem}
 .release .title{font-weight:600}
 .badge{display:inline-block;background:#111;color:#fff;border-radius:999px;padding:.2rem .55rem;font-size:.75rem;margin-left:.35rem}
@@ -190,7 +190,7 @@ section:has(h3:contains('Singles')) .cover-wrap .overlay.open{ display:block; }
 </style><style>
 /* Constrain overlay strictly to the cover area */
 .cover-wrap{position:relative; overflow:hidden; border-radius:8px}
-.cover-wrap img{display:block; width:100%; height:220px; object-fit:cover; border-radius:8px}
+.cover-wrap img{display:block; width:100%; height: var(--cover-h, 220px); object-fit:cover; border-radius:8px}
 .cover-wrap .tracklist{
   position:absolute; inset:0;
   background: rgba(130,130,130,0.55);
