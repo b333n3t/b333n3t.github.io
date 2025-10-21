@@ -41,13 +41,86 @@
   window.addEventListener('load', resizePanel);
   window.addEventListener('resize', resizePanel);
 })();
-</script></head>
+</script><style>
+/* --- Burger Navigation (like kontakt.html, without swipe arrows) --- */
+.menu-toggle {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+.menu-toggle .bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #111;
+  position: relative;
+}
+.menu-toggle .bar::before,
+.menu-toggle .bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 2px;
+  background: #111;
+}
+.menu-toggle .bar::before { top: -7px; }
+.menu-toggle .bar::after  { top:  7px; }
+
+.site-nav {
+  position: fixed;
+  top: 0; right: 0;
+  width: 78vw;
+  max-width: 360px;
+  height: 100vh;
+  background: rgba(255,255,255,0.96);
+  box-shadow: -8px 0 24px rgba(0,0,0,0.12);
+  transform: translateX(100%);
+  transition: transform 220ms ease;
+  z-index: 1000;
+  padding: 72px 24px 24px;
+}
+.site-nav.open { transform: translateX(0); }
+.site-nav a {
+  display: block;
+  padding: 10px 0;
+  font-size: 1.05rem;
+  color: #111;
+  text-decoration: none;
+}
+.site-nav a:hover { text-decoration: underline; }
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  z-index: 900;
+}
+.backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Ensure header layout aligns brand left, burger right */
+.header { display: flex; align-items: center; gap: 12px; }
+.header .brand { margin-right: auto; }
+</style></head>
 <body>
 <header class="header">
 <a aria-label="b3nn3t Home" class="brand" href="index.html">
 <img alt="" src="favicon.svg"/><strong>b3nn3t</strong>
-</a>
-</header>
+</a><button aria-controls="site-nav" aria-expanded="false" aria-label="Menü öffnen" class="menu-toggle"><span class="bar"></span></button>
+</header><nav aria-hidden="true" class="site-nav" id="site-nav"><a href="index.html">Startseite</a><a href="aktuell.html">Aktuell</a><a href="diskografie.html">Diskografie</a><a href="kontakt.html">Kontakt</a><a href="impressum.html">Impressum / Datenschutz</a></nav><div class="backdrop" data-backdrop="nav"></div>
 <main class="main">
 <h1>Impressum &amp; Datenschutzerklärung</h1>
 <div class="scroll-panel"><h1>Impressum &amp; Datenschutzerklärung</h1><section>
@@ -119,5 +192,36 @@ In diesen Fällen gelten die jeweiligen <strong>Datenschutzerklärungen der Anbi
 <p><em>Stand: Oktober 2025</em></p>
 </section><p><a class="btn" href="index.html">Zurück zur Startseite</a></p></div></main>
 <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
-</body>
+<script>
+(function(){
+  var btn = document.querySelector('.menu-toggle');
+  var nav = document.getElementById('site-nav');
+  var backdrop = document.querySelector('[data-backdrop="nav"]');
+  if(!btn || !nav) return;
+
+  function openNav(){
+    nav.classList.add('open');
+    nav.setAttribute('aria-hidden', 'false');
+    btn.setAttribute('aria-expanded', 'true');
+    if (backdrop){ backdrop.classList.add('show'); }
+    document.documentElement.style.overflow = 'hidden';
+  }
+  function closeNav(){
+    nav.classList.remove('open');
+    nav.setAttribute('aria-hidden', 'true');
+    btn.setAttribute('aria-expanded', 'false');
+    if (backdrop){ backdrop.classList.remove('show'); }
+    document.documentElement.style.overflow = '';
+  }
+
+  btn.addEventListener('click', function(){
+    if(nav.classList.contains('open')) closeNav();
+    else openNav();
+  });
+  if (backdrop){ backdrop.addEventListener('click', closeNav); }
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && nav.classList.contains('open')) closeNav();
+  });
+})();
+</script></body>
 </html>
