@@ -62,19 +62,20 @@
 
     /* Seitenmenü (schmal) */
     .site-menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      height: 100vh;
-      width: min(45vw, 160px);
-      background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      box-shadow: 0 20px 50px rgba(0,0,0,.08);
-      transform: translateX(100%);
-      transition: transform .25s ease;
-      z-index: 1101;
-      padding: 48px 12px 14px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: auto;
+  max-height: 90vh;
+  width: min(40vw, 150px);
+  background: rgba(255,255,255,.32);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.08);
+  transform: translateX(100%);
+  transition: transform .25s ease;
+  z-index: 1101;
+  padding: 46px 10px 14px;
     }
     body.menu-open .site-menu { transform: translateX(0); }
 
