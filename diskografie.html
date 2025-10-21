@@ -128,8 +128,8 @@
 <a aria-label="Nächste Seite" class="nav-arrow right" href="kontakt.html">→</a>
 <main class="main">
 <h1>diskografie</h1>
-<p>Liste meiner Releases, EPs, Alben, Kollabos.</p>
-<h2>Diskografie (neu → alt)</h2><style>
+<p>liste meiner releases & kollabos.</p>
+<h2></h2><style>
 .disco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:0 0 2rem;}
 .release{border:1px solid #ddd;border-radius:12px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);background:#fff}
 .release img{width:100%;height:220px;object-fit:cover;border-radius:8px;background:#f2f2f2}
@@ -163,7 +163,66 @@ document.addEventListener('DOMContentLoaded', ()=>{
 .tracklist{margin-top:.6rem;display:none}
 .tracklist.open{display:block}
 .tracklist iframe{width:100%;height:352px;border:0;border-radius:8px}
-</style><script>
+</style>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 1) Singles-Sektion finden
+  const singlesHeading = Array.from(document.querySelectorAll('main h3'))
+    .find(h => h.textContent.trim().toLowerCase().startsWith('singles'));
+  if (!singlesHeading) return;
+
+  const singlesGrid = singlesHeading.nextElementSibling;
+  if (!singlesGrid || !singlesGrid.classList.contains('disco-grid')) return;
+
+  // 2) Für jede Single-Karte Button + Panel ergänzen (falls nicht vorhanden)
+  let idx = 1;
+  singlesGrid.querySelectorAll('.release').forEach(card => {
+    const hasToggle = card.querySelector('.toggle');
+    const hasTracklist = card.querySelector('.tracklist');
+    if (hasToggle && hasTracklist) return; // schon vorhanden
+
+    // Cover / Datenquelle
+    const cover = card.querySelector('img.cover');
+    const url = cover?.dataset.spotify || '';
+
+    // Embed-URL bestimmen (Spotify/Apple Music)
+    let embed = '';
+    if (/open\.spotify\.com/.test(url)) {
+      // track/album/… -> embed/track | embed/album
+      embed = url.replace('open.spotify.com/', 'open.spotify.com/embed/');
+    } else if (/music\.apple\.com/.test(url)) {
+      // Apple Music: https://embed.music.apple.com/<rest>
+      embed = url.replace('https://music.apple.com', 'https://embed.music.apple.com');
+    } else {
+      // Fallback: versuche aus title-Link zu lesen
+      const link = card.querySelector('.title a')?.href || '';
+      if (/open\.spotify\.com/.test(link)) embed = link.replace('open.spotify.com/', 'open.spotify.com/embed/');
+      if (/music\.apple\.com/.test(link)) embed = link.replace('https://music.apple.com', 'https://embed.music.apple.com');
+    }
+
+    // 3) DOM-Bausteine einfügen (direkt unter Title/Meta)
+    const afterMeta = card.querySelector('.meta') || card.lastElementChild;
+    const toggleWrap = document.createElement('div');
+    toggleWrap.className = 'toggle';
+
+    const id = `tracklist-s-${idx++}`;
+    toggleWrap.innerHTML = `<button type="button" onclick="toggleTracklist('${id}')">Mehr</button>`;
+
+    const panel = document.createElement('div');
+    panel.className = 'tracklist';
+    panel.id = id;
+    panel.innerHTML = embed
+      ? `<iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="${embed}"></iframe>`
+      : `<div style="padding:.6rem 0;color:#666">Keine Einbettung gefunden.</div>`;
+
+    afterMeta.insertAdjacentElement('afterend', toggleWrap);
+    toggleWrap.insertAdjacentElement('afterend', panel);
+  });
+});
+</script>
+  
+    
+    <script>
 function toggleTracklist(id){
   const el = document.getElementById(id);
   if(!el) return;
