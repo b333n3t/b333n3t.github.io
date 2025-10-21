@@ -1,19 +1,18 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>über mich — b3nn3t</title>
-  <meta name="description" content="über mich — b3nn3t" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-
-  <!-- Haupt-Styles -->
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="styles_nav_arrows.css" />
-  <link rel="stylesheet" href="swipe-helper.css" />
-
-  <!-- Burger-Menü (schmal & isoliert) -->
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>über mich — b3nn3t</title>
+<meta content="über mich — b3nn3t" name="description"/>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<!-- Haupt-Styles -->
+<link href="styles.css" rel="stylesheet">
+<link href="styles_nav_arrows.css" rel="stylesheet"/>
+<link href="swipe-helper.css" rel="stylesheet"/>
+<!-- Burger-Menü (schmal & isoliert) -->
+<style>
     /* === Hamburger-Menü === */
     .hamburger {
       position: fixed;
@@ -94,49 +93,52 @@
 
     .nav-arrow { z-index: 1000; }
   </style>
-</head>
-
+</link></head>
 <body>
-  <header class="header">
-    <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg">
-      <strong>b3nn3t</strong>
-    </a>
-  </header>
+<header class="header">
+<a aria-label="b3nn3t Home" class="brand" href="index.html">
+<img alt="" src="favicon.svg"/>
+<strong>b3nn3t</strong>
+</a>
+</header>
+<!-- Burger-Menü -->
+<button aria-controls="site-menu" aria-expanded="false" aria-label="Menü öffnen" class="hamburger">
+<span></span><span></span><span></span>
+</button>
+<div class="menu-overlay" hidden="" id="menu-overlay"></div>
+<nav aria-hidden="true" class="site-menu" id="site-menu">
+<ul>
+<li><a href="ueber-mich.html">über mich</a></li>
+<li><a href="diskografie.html">diskografie</a></li>
+<li><a href="kontakt.html">kontakt</a></li>
+<li><a href="aktuell.html">aktuell</a></li>
+<li><a href="gesehen.html">gesehen</a></li>
+<li><a href="plattformen.html">plattformen</a></li>
+<li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+</ul>
+</nav>
+<!-- Pfeile -->
+<a aria-label="Vorherige Seite" class="nav-arrow left" href="index.html">←</a>
+<a aria-label="Nächste Seite" class="nav-arrow right" href="diskografie.html">→</a>
+<main class="main">
+<h1>über mich</h1>
+<p>wer bin ich, wo komme ich her, was bewegt mich – n.</p>
 
-  <!-- Burger-Menü -->
-  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div id="menu-overlay" class="menu-overlay" hidden></div>
-  <nav id="site-menu" class="site-menu" aria-hidden="true">
-    <ul>
-      <li><a href="ueber-mich.html">über mich</a></li>
-      <li><a href="diskografie.html">diskografie</a></li>
-      <li><a href="kontakt.html">kontakt</a></li>
-      <li><a href="aktuell.html">aktuell</a></li>
-      <li><a href="gesehen.html">gesehen</a></li>
-      <li><a href="plattformen.html">plattformen</a></li>
-      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-    </ul>
-  </nav>
-
-  <!-- Pfeile -->
-  <a class="nav-arrow left" aria-label="Vorherige Seite" href="index.html">&larr;</a>
-  <a class="nav-arrow right" aria-label="Nächste Seite" href="diskografie.html">&rarr;</a>
-
-  <main class="main">
-    <h1>über mich</h1>
-    <p>wer bin ich, wo komme ich her, was bewegt mich – n.</p>
-  </main>
-
-  <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
-
-  <footer>
+<p>
+  Zum Schluss noch etwas, das mir wichtig ist:<br/>
+<strong>„b3nn3t“</strong> ist für mich mehr als nur ein Künstlername – er steht für alles, was ich musikalisch erschaffe.<br/>
+  Mit der Zeit ist daraus nicht nur eine Idee, sondern auch eine geschützte Marke geworden.<br/>
+<strong>b3nn3t®</strong> ist offiziell in der Schweiz eingetragen (Markennummer <strong>818956</strong>, gemäss Art. 1 ff. des Schweizerischen Markenschutzgesetzes [MSchG, SR 232.11]).<br/>
+<em>– Jede unbefugte Nutzung oder Nachahmung ist untersagt, es gibt eben nur ein Original –</em><br/>
+  Für mich ist das ein kleiner Meilenstein und ein Versprechen, diesen Weg weiterzugehen.<br/>
+  Danke euch für euren Support – und eure Ohren. 🎧
+</p>
+</main>
+<a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
+<footer>
     © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-  </footer>
-
-  <script src="script.js"></script>
-  <script src="swipe-nav.js?v=6" defer></script>
+</footer>
+<script src="script.js"></script>
+<script defer="" src="swipe-nav.js?v=6"></script>
 </body>
 </html>
