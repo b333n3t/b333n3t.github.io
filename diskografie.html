@@ -6,39 +6,225 @@
 <title>diskografie — b3nn3t</title>
 <meta content="diskografie — b3nn3t" name="description"/>
 <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
-
 <!-- Haupt-Styles -->
 <link href="styles.css" rel="stylesheet"/>
 <link href="styles_nav_arrows.css" rel="stylesheet"/>
 <link href="swipe-helper.css" rel="stylesheet">
 
-<!-- ... alle bestehenden internen Styles unverändert ... -->
-
-<!-- ✅ KORREKTUR: Oberer Abstand wie bei kontakt.html -->
+<!-- Burger-Menü (schmal & isoliert) -->
 <style>
-  /* Abstand des Panels leicht nach unten, damit es nicht am oberen Rand klebt */
+  /* === Hamburger-Menü === */
+  .hamburger {
+    position: fixed;
+    top: 14px;
+    right: 18px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    z-index: 1200;
+    padding: 0;
+  }
+  .hamburger span {
+    display: block;
+    width: 12px;
+    height: 1.4px;
+    margin: 1.5px 0;
+    background: #000;
+    border-radius: 2px;
+    transition: transform .2s ease, opacity .2s ease;
+  }
+  body.menu-open .hamburger span:nth-child(1) {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+  body.menu-open .hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+  body.menu-open .hamburger span:nth-child(3) {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+
+  /* Overlay */
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.08);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+    z-index: 1099;
+  }
+  body.menu-open #menu-overlay { display: block; }
+  #menu-overlay[hidden]{ display:none; }
+
+  /* Seitenmenü (schmal) */
+  .site-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: auto;
+    max-height: 90vh;
+    width: min(40vw, 150px);
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.08);
+    transform: translateX(100%);
+    transition: transform .25s ease;
+    z-index: 1101;
+    padding: 46px 10px 14px;
+  }
+  body.menu-open .site-menu { transform: translateX(0); }
+
+  /* Menü-Links – nur im Menü */
+  .site-menu ul { list-style: none; margin: 0; padding: 0; }
+  .site-menu li { margin: 0 0 10px 0; }
+  .site-menu li.sep {
+    margin-top: 18px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,0,0,.08);
+  }
+  .site-menu a {
+    display: block;
+    padding: 8px 6px;
+    border-radius: 10px;
+    color: #000;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .site-menu a:hover { background: rgba(0,0,0,.05); }
+
+  .nav-arrow { z-index: 1000; }
+</style>
+
+<style>
+  :root{
+    /* exakt der aktuell verwendete Panel-Hintergrund */
+    --panel-bg: rgba(255,255,255,0.92);
+  }
+
   .scroll-panel {
+    overflow: auto;
+    max-height: 75vh;
+    min-height: 320px;
+    -webkit-overflow-scrolling: touch;
+
+    /* WICHTIG: Panel selbst wird transparent */
+    background: transparent;
+
+    color: #111;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 1.25rem 1rem;
     margin-top: 1rem;
+    margin-left: 0;
+    width: min(1100px, 95%);
   }
 
-  /* Erster Inhaltsblock bündig und mit leichtem Innenabstand */
-  .panel-block:first-of-type {
-    margin-top: 0;
-    padding-top: 0.75rem; /* leicht, wie bei kontakt */
+  /* Blöcke, die den alten (gewohnten) Hintergrund behalten */
+  .panel-block{
+    background: var(--panel-bg);
+    border-radius: 12px;
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
   }
 
-  /* Überschrift selbst bündig halten */
-  .panel-block:first-of-type h1 {
-    margin-top: 0;
-    padding-top: 0;
+  /* Grid & Karten */
+  .disco-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:1rem;
+    margin:0 0 2rem;
+    align-items:start;
+    /* transparenter Bereich für Zwischenräume */
+    background: transparent;
+  }
+  .disco-grid > .release{ align-self:start; }
+
+  .release{
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:12px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06);
+    background:#fff; /* Karten dürfen weiß bleiben */
+  }
+  .release img{
+    width:100%;height:220px;object-fit:cover;border-radius:8px;background:#f2f2f2
+  }
+  .release .meta{font-size:.9rem;color:#444;margin-top:.5rem}
+  .release .title{font-weight:600}
+  .badge{
+    display:inline-block;background:#111;color:#fff;border-radius:999px;
+    padding:.2rem .55rem;font-size:.75rem;margin-left:.35rem
+  }
+  .kollabo{background:#6b7280}
+</style>
+
+<!-- OVERRIDES: Textbereich transparent über „glasigem“ Hintergrund, Scrollleisten aus -->
+<style id="transparent-panel-overrides">
+  /* Halbtransparenter, glasiger Container unter dem Textbereich */
+  .main{
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 12px;
   }
 
-  /* Hauptcontainer ohne zusätzlichen Außenabstand */
-  .main {
-    margin-top: 0;
-    padding-top: 0;
+  /* Textbereich selbst: komplett transparent und über dem Glas-Layer */
+  .scroll-panel{
+    background: transparent !important;
+    box-shadow: none !important;
+    position: relative;
+    z-index: 10;
+
+    /* Scrollleisten ausblenden – Scrollen bleibt möglich */
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE/Edge legacy */
+  }
+  .scroll-panel::-webkit-scrollbar{ display: none; } /* WebKit */
+
+  /* Panel-Blöcke im Textbereich ebenfalls transparent, damit nichts hinterlegt wirkt */
+  .panel-block{
+    background: transparent !important;
+    box-shadow: none !important;
   }
 </style>
+
+<!-- NEU: (klein) Einklapp-Styles für Kategorien -->
+<style>
+  /* Headings klickbar + Pfeilindikator */
+  .panel-block h3[role="button"] { cursor: pointer; user-select: none; }
+  .panel-block h3[aria-expanded="true"]::after  { content: " ↑"; font-weight: 400; }
+  .panel-block h3[aria-expanded="false"]::after { content: " ↓"; font-weight: 400; }
+  /* Grid verstecken, wenn hidden */
+  .disco-grid[hidden] { display: none; }
+</style>
+
+<!-- NEU: Badges (Album/EP/Single) ausblenden -->
+<style>
+  .badge { display: none !important; }
+</style>
+
+<script>
+(function() {
+  function resizePanel() {
+    var panel = document.querySelector('.scroll-panel');
+    if (!panel) return;
+    var header = document.querySelector('.header');
+    var footer = document.querySelector('footer');
+    var hh = header ? header.offsetHeight : 0;
+    var fh = footer ? footer.offsetHeight : 0;
+    var extra = 32;
+    var max = window.innerHeight - hh - fh - extra;
+    panel.style.maxHeight = Math.max(320, max) + 'px';
+  }
+  window.addEventListener('load', resizePanel);
+  window.addEventListener('resize', resizePanel);
+})();
+</script>
 </head>
 
 <body>
@@ -73,14 +259,251 @@
 <main class="main">
   <div class="scroll-panel">
 
+    <!-- Intro (behält den bisherigen Hintergrund) -->
     <div class="panel-block">
       <h1>diskografie</h1>
       <p>meine releases & kollabos</p>
     </div>
 
-    <!-- ab hier dein bisheriger Inhalt bleibt unverändert -->
-    <!-- Alben / EPs / Singles ... -->
-    <!-- ... -->
+    <!-- Alben: Überschrift im gewohnten Hintergrund -->
+    <section>
+      <div class="panel-block">
+        <h3>Alben</h3>
+      </div>
+
+      <!-- Grid ist transparent -->
+      <div class="disco-grid">
+        <article class="release">
+          <img alt="Cover: traeum ich??" class="cover" data-spotify="https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz" loading="lazy"/>
+          <div class="title">
+            <a aria-label="traeum ich?? auf Spotify" href="https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz" rel="noopener noreferrer" target="_blank">traeum ich??</a>
+            <span class="badge">Album</span>
+          </div>
+          <div class="meta">2025</div>
+          <div class="toggle"><button onclick="toggleTracklist('tracklist-1')" type="button">Mehr</button></div>
+          <div class="tracklist" id="tracklist-1">
+            <iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/0om0qmIgGQdOfVaNIKUNmz"></iframe>
+          </div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: laut nachgedacht" class="cover" data-spotify="https://open.spotify.com/album/4n2ziE3adhDkSf4WPy7c1l" loading="lazy"/>
+          <div class="title">
+            <a aria-label="laut nachgedacht auf Spotify" href="https://open.spotify.com/album/4n2ziE3adhDkSf4WPy7c1l" rel="noopener noreferrer" target="_blank">laut nachgedacht</a>
+            <span class="badge">Album</span>
+          </div>
+          <div class="meta">2024</div>
+          <div class="toggle"><button onclick="toggleTracklist('tracklist-2')" type="button">Mehr</button></div>
+          <div class="tracklist" id="tracklist-2">
+            <iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/4n2ziE3adhDkSf4WPy7c1l"></iframe>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- EPs -->
+    <section>
+      <div class="panel-block">
+        <h3>EPs</h3>
+      </div>
+
+      <div class="disco-grid">
+        <article class="release">
+          <img alt="Cover: st3rne☆*" class="cover" data-spotify="https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI" loading="lazy"/>
+          <div class="title">
+            <a aria-label="st3rne☆* auf Spotify" href="https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI" rel="noopener noreferrer" target="_blank">st3rne☆*</a>
+            <span class="badge">EP</span>
+          </div>
+          <div class="meta">2025</div>
+          <div class="toggle"><button onclick="toggleTracklist('tracklist-3')" type="button">Mehr</button></div>
+          <div class="tracklist" id="tracklist-3">
+            <iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/3d7F0wnumMBtTKar2t2cgI"></iframe>
+          </div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: hundert grad" class="cover" data-spotify="https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz" loading="lazy"/>
+          <div class="title">
+            <a aria-label="hundert grad auf Spotify" href="https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz" rel="noopener noreferrer" target="_blank">hundert grad</a>
+            <span class="badge">EP</span>
+          </div>
+          <div class="meta">2024</div>
+          <div class="toggle"><button onclick="toggleTracklist('tracklist-4')" type="button">Mehr</button></div>
+          <div class="tracklist" id="tracklist-4">
+            <iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/363ITnyvTfkJ4p5yu3K0Bz"></iframe>
+          </div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: gesund/krank" class="cover" data-spotify="https://open.spotify.com/album/63meNbUfVkmao1NCuiplaf" loading="lazy"/>
+          <div class="title">
+            <a aria-label="gesund/krank auf Spotify" href="https://open.spotify.com/album/63meNbUfVkmao1NCuiplaf" rel="noopener noreferrer" target="_blank">gesund/krank</a>
+            <span class="badge">EP</span>
+          </div>
+          <div class="meta">2023</div>
+          <div class="toggle"><button onclick="toggleTracklist('tracklist-5')" type="button">Mehr</button></div>
+          <div class="tracklist" id="tracklist-5">
+            <iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/63meNbUfVkmao1NCuiplaf"></iframe>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Singles (inkl. Kollabos) -->
+    <section>
+      <div class="panel-block">
+        <h3>Singles (inkl. Kollabos)</h3>
+      </div>
+
+      <div class="disco-grid">
+        <article class="release">
+          <img alt="Cover: kreative perspektiven" class="cover" data-spotify="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" loading="lazy"/>
+          <div class="title"><a aria-label="kreative perspektiven auf Spotify" href="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" rel="noopener noreferrer" target="_blank">kreative perspektiven</a><span class="badge">Single</span></div>
+          <div class="meta">2025</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: 03.02.25" class="cover" data-spotify="https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG" loading="lazy"/>
+          <div class="title"><a aria-label="03.02.25 auf Spotify" href="https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG" rel="noopener noreferrer" target="_blank">03.02.25</a><span class="badge">Single</span></div>
+          <div class="meta">2025</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: wer bist du wenn keiner schaut??" class="cover" data-spotify="https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM" loading="lazy"/>
+          <div class="title"><a aria-label="wer bist du wenn keiner schaut?? auf Spotify" href="https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM" rel="noopener noreferrer" target="_blank">wer bist du wenn keiner schaut??</a><span class="badge">Single</span></div>
+          <div class="meta">2025</div>
+        </article>
+
+<article class="release">
+  <img alt="Cover: mani matter (mit XYZ)" class="cover"
+       data-spotify="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" loading="lazy"/>
+  <div class="title">
+    <a aria-label="mani matter (mit XYZ) auf Spotify"
+       href="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU"
+       rel="noopener noreferrer" target="_blank">mani matter (mit XYZ)</a>
+    <span class="badge">Single ·Kollabo</span>
+  </div>
+  <div class="meta">2025</div>
+</article>
+
+        
+<article class="release">
+  <img alt="Cover: oder auch in fabeln" class="cover"
+       data-spotify="https://open.spotify.com/track/1ucICLXPSxrr8RYZqTxbdR" loading="lazy"/>
+  <div class="title">
+    <a aria-label="oder auch in fabeln auf Spotify"
+       href="https://open.spotify.com/track/1ucICLXPSxrr8RYZqTxbdR"
+       rel="noopener noreferrer" target="_blank">oder auch in fabeln</a>
+    <span class="badge">Single</span>
+  </div>
+  <div class="meta">2025</div>
+</article>
+
+<article class="release">
+  <img alt="Cover: TRÄUME BRÜCKEN ZÄUNE" class="cover"
+       data-spotify="https://open.spotify.com/track/0s8XyPtRo8lCWzDfZ7gqSD" loading="lazy"/>
+  <div class="title">
+    <a aria-label="TRÄUME BRÜCKEN ZÄUNE auf Spotify"
+       href="https://open.spotify.com/track/0s8XyPtRo8lCWzDfZ7gqSD"
+       rel="noopener noreferrer" target="_blank">TRÄUME BRÜCKEN ZÄUNE</a>
+    <span class="badge">Single</span>
+  </div>
+  <div class="meta">2025</div>
+</article>
+
+<article class="release">
+  <img alt="Cover: neigen" class="cover"
+       data-spotify="https://open.spotify.com/track/5LP9Ef4tNuDYvNNxltKKuv" loading="lazy"/>
+  <div class="title">
+    <a aria-label="neigen auf Spotify"
+       href="https://open.spotify.com/track/5LP9Ef4tNuDYvNNxltKKuv"
+       rel="noopener noreferrer" target="_blank">neigen</a>
+    <span class="badge">Single</span>
+  </div>
+  <div class="meta">2025</div>
+</article>
+
+        
+        <article class="release">
+          <img alt="Cover: seit wieviel jahren leuchten sterne??" class="cover" data-spotify="https://open.spotify.com/album/0UfKvNdoEEc00LcgmwL7TE" loading="lazy"/>
+          <div class="title"><a aria-label="seit wieviel jahren leuchten sterne?? auf Spotify" href="https://open.spotify.com/album/0UfKvNdoEEc00LcgmwL7TE" rel="noopener noreferrer" target="_blank">seit wieviel jahren leuchten sterne??</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: kinderleicht" class="cover" data-spotify="https://open.spotify.com/track/0K3Wl0QNxPvVb599JsXFGx" loading="lazy"/>
+          <div class="title"><a aria-label="kinderleicht auf Spotify" href="https://open.spotify.com/track/0K3Wl0QNxPvVb599JsXFGx" rel="noopener noreferrer" target="_blank">kinderleicht</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: kein phone" class="cover" data-spotify="https://open.spotify.com/album/3gN1G0ci9JVR5WsH6ZoGYY" loading="lazy"/>
+          <div class="title"><a aria-label="kein phone auf Spotify" href="https://open.spotify.com/album/3gN1G0ci9JVR5WsH6ZoGYY" rel="noopener noreferrer" target="_blank">kein phone</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+        
+        <article class="release">
+          <img alt="Cover: bleibt für ewich" class="cover" data-spotify="https://open.spotify.com/album/6D3qdbNuGvYErKxfB0hCUL" loading="lazy"/>
+          <div class="title"><a aria-label="bleibt für ewich auf Spotify" href="https://open.spotify.com/album/6D3qdbNuGvYErKxfB0hCUL" rel="noopener noreferrer" target="_blank">bleibt für ewich</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: es ist ok (mit al1en &amp; diemfeif)" class="cover" data-spotify="https://open.spotify.com/album/2eSMAj5YAvm8yqGxf8n3RV" loading="lazy"/>
+          <div class="title"><a aria-label="es ist ok (mit al1en &amp; diemfeif) auf Spotify" href="https://open.spotify.com/album/2eSMAj5YAvm8yqGxf8n3RV" rel="noopener noreferrer" target="_blank">es ist ok (mit al1en &amp; diemfeif)</a><span class="badge">Single ·Kollabo</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: raucherschaeden (mit sotbarn)" class="cover" data-spotify="https://open.spotify.com/track/24vQfWDt2rj60Bek47cKzv" loading="lazy"/>
+          <div class="title"><a aria-label="raucherschaeden (mit sotbarn) auf Spotify" href="https://open.spotify.com/track/24vQfWDt2rj60Bek47cKzv" rel="noopener noreferrer" target="_blank">raucherschaeden (mit sotbarn)</a><span class="badge">Single ·Kollabo</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: was wir möchten" class="cover" data-spotify="https://open.spotify.com/album/3lArtOVk2ifWSw6kcFos11" loading="lazy"/>
+          <div class="title"><a aria-label="was wir möchten auf Spotify" href="https://open.spotify.com/album/3lArtOVk2ifWSw6kcFos11" rel="noopener noreferrer" target="_blank">was wir möchten</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: unsere ferne/ein paar memorie" class="cover" data-spotify="https://open.spotify.com/album/00rRbuG4SzPFLo5mucA97W" loading="lazy"/>
+          <div class="title"><a aria-label="unsere ferne/ein paar memorie auf Spotify" href="https://open.spotify.com/album/00rRbuG4SzPFLo5mucA97W" rel="noopener noreferrer" target="_blank">unsere ferne/ein paar memorie</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: anwesenheit" class="cover" data-spotify="https://open.spotify.com/album/25NBwRCESVSN4xLGy8yJPE" loading="lazy"/>
+          <div class="title"><a aria-label="anwesenheit auf Spotify" href="https://open.spotify.com/album/25NBwRCESVSN4xLGy8yJPE" rel="noopener noreferrer" target="_blank">anwesenheit</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: ohne waffe" class="cover" data-spotify="https://open.spotify.com/album/07IwWTYKTqq73hG0NEAJxZ" loading="lazy"/>
+          <div class="title"><a aria-label="ohne waffe auf Spotify" href="https://open.spotify.com/album/07IwWTYKTqq73hG0NEAJxZ" rel="noopener noreferrer" target="_blank">ohne waffe</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: zwei stunden" class="cover" data-spotify="https://open.spotify.com/album/7dSgBqlyFyTep2QhdkZIyB" loading="lazy"/>
+          <div class="title"><a aria-label="zwei stunden auf Spotify" href="https://open.spotify.com/album/7dSgBqlyFyTep2QhdkZIyB" rel="noopener noreferrer" target="_blank">zwei stunden</a><span class="badge">Single</span></div>
+          <div class="meta">2023</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: fast wie lego baun" class="cover" data-spotify="https://open.spotify.com/album/4rw4OrtCGXvOsSw11lPiX9" loading="lazy"/>
+          <div class="title"><a aria-label="fast wie lego baun auf Spotify" href="https://open.spotify.com/album/4rw4OrtCGXvOsSw11lPiX9" rel="noopener noreferrer" target="_blank">fast wie lego baun</a><span class="badge">Single</span></div>
+          <div class="meta">2023</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: diese welt, sie schweigt" class="cover" data-spotify="https://open.spotify.com/album/5OLu9T84QPWW2mFMOMd4A9" loading="lazy"/>
+          <div class="title"><a aria-label="diese welt, sie schweigt auf Spotify" href="https://open.spotify.com/album/5OLu9T84QPWW2mFMOMd4A9" rel="noopener noreferrer" target="_blank">diese welt, sie schweigt</a><span class="badge">Single</span></div>
+          <div class="meta">2023</div>
+        </article>
+      </div>
+    </section>
+
   </div>
 </main>
 
@@ -90,7 +513,163 @@
   © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
 </footer>
 
+<!-- Skripte -->
 <script src="script.js"></script>
 <script defer src="swipe-nav.js?v=12"></script>
+
+<!-- NEU: Cover-Loader mit JPG-Fallback -->
+<script>
+(function () {
+  const FALLBACK_SRC = 'assets/placeholder-cover.jpg'; // ⇦ Pfad hier anpassen, falls nötig
+
+  async function setCover(img) {
+    const url = img.dataset.spotify;
+    if (!url) { img.src = FALLBACK_SRC; return; }
+    try {
+      let embedUrl = '';
+      if (/open\.spotify\.com/.test(url)) {
+        embedUrl = `https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`;
+      } else if (/music\.apple\.com/.test(url)) {
+        img.src = FALLBACK_SRC; return; // Apple ohne oEmbed → Fallback
+      } else {
+        img.src = FALLBACK_SRC; return;
+      }
+      const res = await fetch(embedUrl, { mode: 'cors' });
+      if (!res.ok) { img.src = FALLBACK_SRC; return; }
+      const data = await res.json();
+      if (data.thumbnail_url) {
+        const src = data.thumbnail_url.replace(/&?size=\d+/, '');
+        img.src = src;
+      } else {
+        img.src = FALLBACK_SRC;
+      }
+    } catch {
+      img.src = FALLBACK_SRC;
+    }
+  }
+
+  function initCovers() {
+    document.querySelectorAll('img.cover[data-spotify]').forEach(setCover);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCovers);
+  } else {
+    initCovers();
+  }
+})();
+</script>
+
+<!-- Bereits vorhanden: Tracklist-Autofill für Singles -->
+<style>
+  .toggle{margin-top:.5rem}
+  .toggle button{border:1px solid #111;border-radius:999px;padding:.35rem .7rem;font-weight:600;background:#111;color:#fff;cursor:pointer}
+  .tracklist{margin-top:.6rem;display:none}
+  .tracklist.open{display:block}
+  .tracklist iframe{width:100%;height:352px;border:0;border-radius:8px}
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Singles-Sektion
+    const singlesHeading = Array.from(document.querySelectorAll('main h3'))
+      .find(h => h.textContent.trim().toLowerCase().startsWith('singles'));
+    if (!singlesHeading) return;
+
+    const singlesGrid = singlesHeading.closest('.panel-block')?.nextElementSibling;
+    if (!singlesGrid || !singlesGrid.classList.contains('disco-grid')) return;
+
+    // Für jede Single-Karte Button + Panel ergänzen (falls nicht vorhanden)
+    let idx = 1;
+    singlesGrid.querySelectorAll('.release').forEach(card => {
+      const hasToggle = card.querySelector('.toggle');
+      const hasTracklist = card.querySelector('.tracklist');
+      if (hasToggle && hasTracklist) return;
+
+      const cover = card.querySelector('img.cover');
+      const url = cover?.dataset.spotify || '';
+
+      let embed = '';
+      if (/open\.spotify\.com/.test(url)) {
+        embed = url.replace('open.spotify.com/', 'open.spotify.com/embed/');
+      } else if (/music\.apple\.com/.test(url)) {
+        embed = url.replace('https://music.apple.com', 'https://embed.music.apple.com');
+      } else {
+        const link = card.querySelector('.title a')?.href || '';
+        if (/open\.spotify\.com/.test(link)) embed = link.replace('open.spotify.com/', 'open.spotify.com/embed/');
+        if (/music\.apple\.com/.test(link)) embed = link.replace('https://music.apple.com', 'https://embed.music.apple.com');
+      }
+
+      const afterMeta = card.querySelector('.meta') || card.lastElementChild;
+      const toggleWrap = document.createElement('div');
+      toggleWrap.className = 'toggle';
+
+      const id = `tracklist-s-${idx++}`;
+      toggleWrap.innerHTML = `<button type="button" onclick="toggleTracklist('${id}')">Mehr</button>`;
+
+      const panel = document.createElement('div');
+      panel.className = 'tracklist';
+      panel.id = id;
+      panel.innerHTML = embed
+        ? `<iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="${embed}"></iframe>`
+        : `<div style="padding:.6rem 0;color:#666">Keine Einbettung gefunden.</div>`;
+
+      afterMeta.insertAdjacentElement('afterend', toggleWrap);
+      toggleWrap.insertAdjacentElement('afterend', panel);
+    });
+  });
+
+  function toggleTracklist(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.toggle('open');
+  }
+</script>
+
+<!-- NEU: Akkordeon-Logik für Alben / EPs / Singles -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Jede Sektion: <div.panel-block><h3>…</h3></div> + folgendes <div.disco-grid>
+    const sections = document.querySelectorAll('main section');
+
+    sections.forEach((section, i) => {
+      const heading = section.querySelector('.panel-block h3');
+      const grid = section.querySelector('.disco-grid');
+      if (!heading || !grid) return;
+
+      // Zugänglich machen
+      heading.setAttribute('role', 'button');
+      heading.setAttribute('tabindex', '0');
+
+      const gridId = `cat-grid-${i+1}`;
+      heading.setAttribute('aria-controls', gridId);
+      heading.setAttribute('aria-expanded', 'false');
+      grid.id = gridId;
+      grid.hidden = true; // Start: eingeklappt
+
+      const toggle = () => {
+        const isOpen = heading.getAttribute('aria-expanded') === 'true';
+        heading.setAttribute('aria-expanded', String(!isOpen));
+        grid.hidden = isOpen;
+      };
+
+      heading.addEventListener('click', toggle);
+      heading.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+
+    // Optional: erste Kategorie beim Laden geöffnet anzeigen
+    const openFirst = false; // auf true setzen, wenn gewünscht
+    if (openFirst) {
+      const firstHeading = document.querySelector('main section .panel-block h3[role="button"]');
+      const firstGrid = document.getElementById('cat-grid-1');
+      if (firstHeading && firstGrid) {
+        firstHeading.setAttribute('aria-expanded', 'true');
+        firstGrid.hidden = false;
+      }
+    }
+  });
+</script>
 </body>
 </html>
