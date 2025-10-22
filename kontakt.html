@@ -11,10 +11,9 @@
 <link rel="stylesheet" href="swipe-helper.css"/>
 
 <style>
-  /* Basisgröße (aber KEINE lokale body-Schrift – Header bleibt identisch zu ueber-mich) */
-  html { font-size: 16px; }
+  /* ⚠️ Kein lokales body/html-Typo-Override mehr – Desktop entspricht ueber-mich */
 
-  /* === Scroll-Panel: wie auf ueber-mich === */
+  /* Scroll-Panel wie ueber-mich (transparent + intern scrollen) */
   .scroll-panel {
     overflow: auto;
     max-height: 75vh;
@@ -22,7 +21,7 @@
     background: transparent;
     border-radius: 12px;
     box-shadow: none;
-    padding: 0;         /* Abstände kommen vom glasigen Rahmen (.main) */
+    padding: 0;      /* Abstände kommen vom glasigen Rahmen (.main) */
     margin: 0;
     max-width: 650px;
     scrollbar-width: none;
@@ -30,12 +29,31 @@
   }
   .scroll-panel::-webkit-scrollbar { display: none; }
 
+  .scroll-panel h1{ margin: 0 0 .75rem 0; }
+  .scroll-panel p{ margin: 0 0 1rem 0; }
+
+  /* Glasiger Container (wie „aktuell“/„über mich“) */
+  :root{ --frame-pad: clamp(18px, 3vw, 28px); }
+  .main{
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 12px;
+    padding: var(--frame-pad);
+  }
+  .main .scroll-panel{
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
   /* Formular */
   form { margin:0; display:grid; gap:.8rem; }
   form label { font-weight:600; }
 
   /* Alle Inputs/Textareas außer Checkbox */
-  form input:not([type="checkbox"]), 
+  form input:not([type="checkbox"]),
   form textarea {
     width: 100%;
     border: 1px solid #ccc;
@@ -44,7 +62,7 @@
     background: rgba(255,255,255,0.85);
     font: inherit;
   }
-  form textarea { min-height:120px; }
+  form textarea { min-height: 120px; }
 
   /* Checkbox linksbündig */
   form input[type="checkbox"] {
@@ -59,19 +77,19 @@
   form label input[type="checkbox"] + * { display:block; }
 
   /* Senden-Button mit Abstand unten */
-  form button {
+  form button{
     margin-top: .6rem;
     margin-bottom: 1.25rem;
-    border:none;
-    border-radius:8px;
-    padding:.6rem 1.2rem;
-    background:#111;
-    color:#fff;
-    font-weight:600;
-    cursor:pointer;
+    border: none;
+    border-radius: 8px;
+    padding: .6rem 1.2rem;
+    background: #111;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
   }
 
-  /* === Hamburger-Menü (wie ueber-mich) === */
+  /* Hamburger/Offcanvas wie auf ueber-mich */
   .hamburger {
     position: fixed; top: 14px; right: 18px; width: 20px; height: 20px;
     border: none; background: transparent; display: grid; place-items: center;
@@ -106,31 +124,6 @@
   }
   .site-menu a:hover{ background: rgba(0,0,0,.05); }
   .nav-arrow { z-index:1000; }
-</style>
-
-<!-- Align like 'aktuell.html' (identisch zu ueber-mich) -->
-<style id="align-like-aktuell">
-  :root{ --frame-pad: clamp(18px, 3vw, 28px); }
-
-  /* Glasiger Container übernimmt den Abstand nach oben/links */
-  .main{
-    background: rgba(255,255,255,.32);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    border-radius: 12px;
-    padding: var(--frame-pad);
-  }
-
-  /* Inhalt bleibt transparent & ohne eigene Außenabstände */
-  .main .scroll-panel{
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 650px;
-  }
-
-  .scroll-panel h1{ margin: 0 0 .6rem; }
 </style>
 </head>
 
@@ -207,7 +200,7 @@
 <script src="script.js"></script>
 <script src="swipe-nav.js?v=12" defer></script>
 
-<!-- Dynamische Höhenanpassung wie ueber-mich -->
+<!-- Dynamische Höhenanpassung -->
 <script>
 (function() {
   function resizePanel() {
