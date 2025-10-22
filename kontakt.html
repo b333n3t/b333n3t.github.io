@@ -11,28 +11,34 @@
 <link rel="stylesheet" href="swipe-helper.css"/>
 
 <style>
-  /* ⚠️ Kein lokales body/html-Typo-Override mehr – Desktop entspricht ueber-mich */
-
-  /* Scroll-Panel wie ueber-mich (transparent + intern scrollen) */
-  .scroll-panel {
-    overflow: auto;
-    max-height: 75vh;
-    -webkit-overflow-scrolling: touch;
-    background: transparent;
-    border-radius: 12px;
-    box-shadow: none;
-    padding: 0;      /* Abstände kommen vom glasigen Rahmen (.main) */
-    margin: 0;
-    max-width: 650px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  /* =========================
+     Header-Brand exakt wie ueber-mich (erzwingt Gleichheit auf Desktop & Mobile)
+     ========================= */
+  .header { display:flex; justify-content:center; align-items:center; padding: 10px 0; }
+  .header .brand{
+    display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; color:#000;
   }
-  .scroll-panel::-webkit-scrollbar { display: none; }
+  .header .brand img{ width:22px; height:22px; }
+  .header .brand strong{
+    font-weight:800 !important;
+    font-size: clamp(18px, 2.15vw, 28px) !important; /* skaliert wie auf 'über mich' */
+    line-height:1 !important;
+    letter-spacing: 0 !important;
+    text-transform:none !important;
+    font-family: inherit !important;
+  }
 
-  .scroll-panel h1{ margin: 0 0 .75rem 0; }
-  .scroll-panel p{ margin: 0 0 1rem 0; }
+  /* === Transparenter, intern scrollbarer Inhaltsbereich === */
+  .scroll-panel{
+    overflow:auto; max-height:75vh; -webkit-overflow-scrolling:touch;
+    background:transparent; box-shadow:none; padding:0; margin:0; max-width:650px;
+    scrollbar-width:none; -ms-overflow-style:none;
+  }
+  .scroll-panel::-webkit-scrollbar{ display:none; }
+  .scroll-panel h1{ margin:0 0 .75rem 0; }
+  .scroll-panel p{ margin:0 0 1rem 0; }
 
-  /* Glasiger Container (wie „aktuell“/„über mich“) */
+  /* Glasiger Rahmen (wie auf den anderen Seiten) */
   :root{ --frame-pad: clamp(18px, 3vw, 28px); }
   .main{
     background: rgba(255,255,255,.32);
@@ -41,80 +47,52 @@
     border-radius: 12px;
     padding: var(--frame-pad);
   }
-  .main .scroll-panel{
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
 
   /* Formular */
-  form { margin:0; display:grid; gap:.8rem; }
-  form label { font-weight:600; }
-
-  /* Alle Inputs/Textareas außer Checkbox */
-  form input:not([type="checkbox"]),
-  form textarea {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: .6rem;
-    background: rgba(255,255,255,0.85);
-    font: inherit;
+  form{ margin:0; display:grid; gap:.8rem; }
+  form label{ font-weight:600; }
+  form input:not([type="checkbox"]), form textarea{
+    width:100%; border:1px solid #ccc; border-radius:8px; padding:.6rem;
+    background:rgba(255,255,255,0.85); font:inherit;
   }
-  form textarea { min-height: 120px; }
+  form textarea{ min-height:120px; }
 
   /* Checkbox linksbündig */
-  form input[type="checkbox"] {
-    width: auto;
-    margin: .25rem .5rem 0 0;
-    padding: 0;
-    border: none;
-    vertical-align: top;
-  }
-  form label { display:block; }
-  form label input[type="checkbox"] { float:left; }
-  form label input[type="checkbox"] + * { display:block; }
+  form input[type="checkbox"]{ width:auto; margin:.25rem .5rem 0 0; padding:0; border:none; vertical-align:top; }
+  form label{ display:block; }
+  form label input[type="checkbox"]{ float:left; }
+  form label input[type="checkbox"] + *{ display:block; }
 
   /* Senden-Button mit Abstand unten */
   form button{
-    margin-top: .6rem;
-    margin-bottom: 1.25rem;
-    border: none;
-    border-radius: 8px;
-    padding: .6rem 1.2rem;
-    background: #111;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
+    margin-top:.6rem; margin-bottom:1.25rem;
+    border:none; border-radius:8px; padding:.6rem 1.2rem;
+    background:#111; color:#fff; font-weight:600; cursor:pointer;
   }
 
-  /* Hamburger/Offcanvas wie auf ueber-mich */
-  .hamburger {
-    position: fixed; top: 14px; right: 18px; width: 20px; height: 20px;
-    border: none; background: transparent; display: grid; place-items: center;
-    cursor: pointer; z-index: 1200; padding: 0;
+  /* Hamburger-Menü (gleich wie auf den anderen Seiten) */
+  .hamburger{
+    position:fixed; top:14px; right:18px; width:20px; height:20px; border:none;
+    background:transparent; display:grid; place-items:center; cursor:pointer; z-index:1200; padding:0;
   }
-  .hamburger span {
-    display:block; width:12px; height:1.4px; margin:1.5px 0; background:#000;
-    border-radius:2px; transition: transform .2s ease, opacity .2s ease;
-  }
-  body.menu-open .hamburger span:nth-child(1){ transform: translateY(3.5px) rotate(45deg); }
+  .hamburger span{ display:block; width:12px; height:1.4px; margin:1.5px 0; background:#000;
+    border-radius:2px; transition:transform .2s ease, opacity .2s ease; }
+  body.menu-open .hamburger span:nth-child(1){ transform:translateY(3.5px) rotate(45deg); }
   body.menu-open .hamburger span:nth-child(2){ opacity:0; }
-  body.menu-open .hamburger span:nth-child(3){ transform: translateY(-3.5px) rotate(-45deg); }
+  body.menu-open .hamburger span:nth-child(3){ transform:translateY(-3.5px) rotate(-45deg); }
 
-  .menu-overlay { position:fixed; inset:0; background:rgba(0,0,0,.08);
+  .menu-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.08);
     backdrop-filter:blur(1px); -webkit-backdrop-filter:blur(1px); z-index:1099; }
   body.menu-open #menu-overlay{ display:block; }
   #menu-overlay[hidden]{ display:none; }
 
-  .site-menu {
-    position: fixed; top:0; right:0; height:auto; max-height:90vh; width:min(40vw,150px);
-    background: rgba(255,255,255,.32); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
-    box-shadow: 0 20px 50px rgba(0,0,0,.08); transform: translateX(100%);
-    transition: transform .25s ease; z-index:1101; padding:46px 10px 14px;
+  .site-menu{
+    position:fixed; top:0; right:0; height:auto; max-height:90vh; width:min(40vw,150px);
+    background:rgba(255,255,255,.32); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+    box-shadow:0 20px 50px rgba(0,0,0,.08); transform:translateX(100%); transition:transform .25s ease;
+    z-index:1101; padding:46px 10px 14px;
   }
-  body.menu-open .site-menu { transform: translateX(0); }
+  body.menu-open .site-menu{ transform:translateX(0); }
   .site-menu ul{ list-style:none; margin:0; padding:0; }
   .site-menu li{ margin:0 0 10px 0; }
   .site-menu li.sep{ margin-top:18px; padding-top:8px; border-top:1px solid rgba(0,0,0,.08); }
@@ -122,8 +100,8 @@
     display:block; padding:8px 6px; border-radius:10px; color:#000; text-decoration:none;
     font-size:1rem; font-weight:500;
   }
-  .site-menu a:hover{ background: rgba(0,0,0,.05); }
-  .nav-arrow { z-index:1000; }
+  .site-menu a:hover{ background:rgba(0,0,0,.05); }
+  .nav-arrow{ z-index:1000; }
 </style>
 </head>
 
