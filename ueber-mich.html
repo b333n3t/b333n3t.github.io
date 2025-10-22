@@ -16,9 +16,9 @@
   overflow: auto;
   max-height: 75vh;
   -webkit-overflow-scrolling: touch;
-  background: transparent;            /* <-- Kein Hintergrund, völlig durchsichtig */
+  background: transparent;
   border-radius: 12px;
-  box-shadow: none;                    /* kein Schatten, damit es "verschmilzt" */
+  box-shadow: none;
   padding: 1.25rem 1rem;
   margin-top: 1rem;
   margin-left: 0;
@@ -26,9 +26,7 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.scroll-panel::-webkit-scrollbar {
-  display: none;
-}
+.scroll-panel::-webkit-scrollbar { display: none; }
 
 /* === Hamburger-Menü === */
 .hamburger {
@@ -105,6 +103,35 @@ body.menu-open .site-menu { transform: translateX(0); }
 }
 .site-menu a:hover { background: rgba(0,0,0,.05); }
 .nav-arrow { z-index: 1000; }
+</style>
+
+<!-- Align like 'aktuell.html' (glasiger Rahmen übernimmt die Einrückung) -->
+<style id="align-like-aktuell">
+  :root{
+    /* gleiche Einrückung wie auf 'aktuell' und 'diskografie' */
+    --frame-pad: clamp(18px, 3vw, 28px);
+  }
+
+  /* Glasiger Container übernimmt den Abstand nach oben/links */
+  .main{
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 12px;
+    padding: var(--frame-pad);
+  }
+
+  /* Inhalt selbst bleibt transparent und ohne eigene Außenabstände */
+  .main .scroll-panel{
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 650px; /* deine gewünschte Textbreite hier beibehalten */
+  }
+
+  /* kleine Typo-Kosmetik */
+  .scroll-panel h1{ margin: 0 0 .6rem; }
 </style>
 </head>
 
