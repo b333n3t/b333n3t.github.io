@@ -522,6 +522,23 @@ a:hover{ text-decoration: underline; }
 .main{
   width: min(1100px, 92vw);
   margin
+/* ====================================
+   Header-Logo „b3nn3t“ – einheitlich mittig positionieren
+   ==================================== */
+.brand {
+  position: absolute;
+  left: 50% !important;          /* exakt zentriert */
+  transform: translateX(-50%) !important;
+  top: 18px;                     /* gleichbleibender vertikaler Abstand */
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #000;
+  text-decoration: none;
+}
+
+.brand:hover {
+  text-decoration: underline;
+}
 
 
 
