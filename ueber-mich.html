@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="de">
 <head>
 <meta charset="utf-8"/>
@@ -11,50 +10,67 @@
 <link href="styles.css" rel="stylesheet">
 <link href="styles_nav_arrows.css" rel="stylesheet"/>
 <link href="swipe-helper.css" rel="stylesheet"/>
-<!-- Burger-Menü (schmal & isoliert) -->
+
+<!-- Scroll-Panel-Styling -->
 <style>
-    /* === Hamburger-Menü === */
-    .hamburger {
-      position: fixed;
-      top: 14px;
-      right: 18px;
-      width: 20px;
-      height: 20px;
-      border: none;
-      background: transparent;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      z-index: 1200;
-      padding: 0;
-    }
-    .hamburger span {
-      display: block;
-      width: 12px;
-      height: 1.4px;
-      margin: 1.5px 0;
-      background: #000;
-      border-radius: 2px;
-      transition: transform .2s ease, opacity .2s ease;
-    }
-    body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
-    body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
-    body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
+.scroll-panel {
+  overflow: auto;
+  max-height: 75vh;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(255,255,255,0.92);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 1.25rem 1rem;
+  margin-top: 1rem;
+  margin-left: 0;
+  max-width: 650px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-panel::-webkit-scrollbar {
+  display: none;
+}
 
-    /* Overlay */
-    .menu-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.08);
-      backdrop-filter: blur(1px);
-      -webkit-backdrop-filter: blur(1px);
-      z-index: 1099;
-    }
-    body.menu-open #menu-overlay { display: block; }
-    #menu-overlay[hidden]{ display:none; }
+/* === Hamburger-Menü (unverändert) === */
+.hamburger {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 1200;
+  padding: 0;
+}
+.hamburger span {
+  display: block;
+  width: 12px;
+  height: 1.4px;
+  margin: 1.5px 0;
+  background: #000;
+  border-radius: 2px;
+  transition: transform .2s ease, opacity .2s ease;
+}
+body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
+body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
 
-    /* Seitenmenü (schmal & isoliert) */
-    .site-menu {
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.08);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  z-index: 1099;
+}
+body.menu-open #menu-overlay { display: block; }
+#menu-overlay[hidden]{ display:none; }
+
+.site-menu {
   position: fixed;
   top: 0;
   right: 0;
@@ -69,76 +85,101 @@
   transition: transform .25s ease;
   z-index: 1101;
   padding: 46px 10px 14px;
-    }
-    body.menu-open .site-menu { transform: translateX(0); }
+}
+body.menu-open .site-menu { transform: translateX(0); }
 
-    /* Menü-Links – nur im Menü */
-    .site-menu ul { list-style: none; margin: 0; padding: 0; }
-    .site-menu li { margin: 0 0 10px 0; }
-    .site-menu li.sep {
-      margin-top: 18px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(0,0,0,.08);
-    }
-    .site-menu a {
-      display: block;
-      padding: 8px 6px;
-      border-radius: 10px;
-      color: #000;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    .site-menu a:hover { background: rgba(0,0,0,.05); }
+.site-menu ul { list-style: none; margin: 0; padding: 0; }
+.site-menu li { margin: 0 0 10px 0; }
+.site-menu li.sep {
+  margin-top: 18px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+.site-menu a {
+  display: block;
+  padding: 8px 6px;
+  border-radius: 10px;
+  color: #000;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.site-menu a:hover { background: rgba(0,0,0,.05); }
+.nav-arrow { z-index: 1000; }
+</style>
+</head>
 
-    .nav-arrow { z-index: 1000; }
-  </style>
-</link></head>
 <body>
 <header class="header">
-<a aria-label="b3nn3t Home" class="brand" href="index.html">
-<img alt="" src="favicon.svg"/>
-<strong>b3nn3t</strong>
-</a>
+  <a aria-label="b3nn3t Home" class="brand" href="index.html">
+    <img alt="" src="favicon.svg"/>
+    <strong>b3nn3t</strong>
+  </a>
 </header>
+
 <!-- Burger-Menü -->
 <button aria-controls="site-menu" aria-expanded="false" aria-label="Menü öffnen" class="hamburger">
-<span></span><span></span><span></span>
+  <span></span><span></span><span></span>
 </button>
-<div class="menu-overlay" hidden="" id="menu-overlay"></div>
+<div class="menu-overlay" hidden id="menu-overlay"></div>
 <nav aria-hidden="true" class="site-menu" id="site-menu">
-<ul>
-<li><a href="ueber-mich.html">über mich</a></li>
-<li><a href="diskografie.html">diskografie</a></li>
-<li><a href="kontakt.html">kontakt</a></li>
-<li><a href="aktuell.html">aktuell</a></li>
-<li><a href="gesehen.html">gesehen</a></li>
-<li><a href="plattformen.html">plattformen</a></li>
-<li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-</ul>
+  <ul>
+    <li><a href="ueber-mich.html">über mich</a></li>
+    <li><a href="diskografie.html">diskografie</a></li>
+    <li><a href="kontakt.html">kontakt</a></li>
+    <li><a href="aktuell.html">aktuell</a></li>
+    <li><a href="gesehen.html">gesehen</a></li>
+    <li><a href="plattformen.html">plattformen</a></li>
+    <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+  </ul>
 </nav>
+
 <!-- Pfeile -->
 <a aria-label="Vorherige Seite" class="nav-arrow left" href="index.html">←</a>
 <a aria-label="Nächste Seite" class="nav-arrow right" href="diskografie.html">→</a>
-<main class="main">
-<h1>über mich</h1>
-<p>wer bin ich, wo komme ich her, was bewegt mich – n.</p>
 
-<p>
-  Zum Schluss noch etwas, das mir wichtig ist:<br/>
-<strong>b3nn3t</strong> ist für mich mehr als nur ein Künstlername – er steht für alles, was ich musikalisch erschaffe.<br/>
-  Mit der Zeit ist daraus nicht nur eine Idee, sondern auch eine geschützte Marke geworden.<br/>
-<strong>b3nn3t®</strong> ist offiziell in der Schweiz eingetragen (Markennummer <strong>818956</strong>, gemäss Art. 1 ff. des Schweizerischen Markenschutzgesetzes [MSchG, SR 232.11]).<br/>
-<em>– Jede unbefugte Nutzung oder Nachahmung ist untersagt, es gibt eben nur ein Original –</em><br/>
-  Für mich ist das ein kleiner Meilenstein und ein Versprechen, diesen Weg weiterzugehen.<br/>
-  Danke euch für euren Support und eure Ohren. 
-</p>
+<main class="main">
+  <div class="scroll-panel">
+    <h1>über mich</h1>
+    <p>wer bin ich, wo komme ich her, was bewegt mich – n.</p>
+    <p>
+      Zum Schluss noch etwas, das mir wichtig ist:<br/>
+      <strong>b3nn3t</strong> ist für mich mehr als nur ein Künstlername – er steht für alles, was ich musikalisch erschaffe.<br/>
+      Mit der Zeit ist daraus nicht nur eine Idee, sondern auch eine geschützte Marke geworden.<br/>
+      <strong>b3nn3t®</strong> ist offiziell in der Schweiz eingetragen (Markennummer <strong>818956</strong>, gemäss Art. 1 ff. des Schweizerischen Markenschutzgesetzes [MSchG, SR 232.11]).<br/>
+      <em>– Jede unbefugte Nutzung oder Nachahmung ist untersagt, es gibt eben nur ein Original –</em><br/>
+      Für mich ist das ein kleiner Meilenstein und ein Versprechen, diesen Weg weiterzugehen.<br/>
+      Danke euch für euren Support und eure Ohren.
+    </p>
+  </div>
 </main>
+
 <a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
+
 <footer>
-    © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+  © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
 </footer>
+
 <script src="script.js"></script>
-<script defer="" src="swipe-nav.js?v=6"></script>
+<script defer src="swipe-nav.js?v=6"></script>
+
+<!-- Dynamische Höhenanpassung -->
+<script>
+(function() {
+  function resizePanel() {
+    var panel = document.querySelector('.scroll-panel');
+    if (!panel) return;
+    var header = document.querySelector('.header');
+    var footer = document.querySelector('footer');
+    var hh = header ? header.offsetHeight : 0;
+    var fh = footer ? footer.offsetHeight : 0;
+    var extra = 32; // zusätzlicher Abstand oben/unten
+    var max = window.innerHeight - hh - fh - extra;
+    if (max > 240) panel.style.maxHeight = max + 'px';
+  }
+  window.addEventListener('load', resizePanel);
+  window.addEventListener('resize', resizePanel);
+})();
+</script>
 </body>
 </html>
