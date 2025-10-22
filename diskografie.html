@@ -226,16 +226,19 @@
 })();
 </script>
 
-<!-- ✅ KORREKTUR: Titel-Abstand im ersten Block angleichen -->
+<!-- ✅ Präzise Korrektur: identischer Abstand oben & links wie bei „über mich“ -->
 <style>
-  .panel-block:first-of-type { 
-    padding-top: .25rem;   /* feiner Innenabstand oben */
+  .scroll-panel .panel-block:first-of-type{
+    padding: 0;                 /* entfernt zusätzliches Innenpadding */
+    margin: 0 0 1rem 0;         /* nur unten etwas Luft */
+    background: transparent !important;
+    box-shadow: none !important;
   }
-  .panel-block:first-of-type h1 {
-    margin-top: 0;         /* entfernt Default h1-Top-Margin */
+  .scroll-panel .panel-block:first-of-type h1{
+    margin: 0;                  /* entfernt Default-h1-Top-Margin */
   }
-  .panel-block:first-of-type p {
-    margin-top: .5rem;     /* harmonischer Abstand zur Unterzeile */
+  .scroll-panel .panel-block:first-of-type p{
+    margin: .75rem 0 0;         /* harmonischer Abstand unter dem Titel */
   }
 </style>
 </head>
