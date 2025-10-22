@@ -11,12 +11,19 @@
 <link rel="stylesheet" href="swipe-helper.css"/>
 
 <style>
-  /* Basisgröße (ohne die globale Schrift aus styles.css zu überschreiben) */
-  html { font-size: 16px; }
+  /* === Header-Brand exakt wie auf „über mich“ erzwingen === */
+  .header { display:flex; justify-content:center; align-items:center; padding:10px 14px; position:sticky; top:0; }
+  .brand{ display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; color:#000; }
+  .brand strong{
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: 0 !important;
+    font-size: clamp(18px, 2.15vw, 28px) !important;
+    line-height: 1 !important;
+  }
 
+  /* === Glasiger Rahmen & transparent scrollbarer Inhalt === */
   :root{ --frame-pad: clamp(18px, 3vw, 28px); }
-
-  /* Glasiger Rahmen übernimmt die Außenabstände */
   .main{
     background: rgba(255,255,255,.32);
     backdrop-filter: blur(2px);
@@ -24,68 +31,38 @@
     border-radius: 12px;
     padding: var(--frame-pad);
   }
-
-  /* === Scroll-Panel: komplett transparent + intern scrollen === */
   .scroll-panel{
-    overflow: auto;
-    max-height: 75vh;
-    -webkit-overflow-scrolling: touch;
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    max-width: 650px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    overflow:auto; max-height:75vh; -webkit-overflow-scrolling:touch;
+    background:transparent; box-shadow:none; padding:0; margin:0; max-width:650px;
+    scrollbar-width:none; -ms-overflow-style:none;
   }
   .scroll-panel::-webkit-scrollbar{ display:none; }
+  .scroll-panel h1{ margin:0 0 .75rem 0; }
+  .scroll-panel p{ margin:0 0 1rem 0; }
 
-  .scroll-panel h1{ margin: 0 0 .75rem 0; }
-  .scroll-panel p{ margin: 0 0 1rem 0; }
-
-  /* Formular */
+  /* === Formular === */
   form{ margin:0; display:grid; gap:.8rem; }
   form label{ font-weight:600; }
-
-  /* Alle Inputs/Textareas außer Checkbox */
-  form input:not([type="checkbox"]), 
-  form textarea {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: .6rem;
-    background: rgba(255,255,255,0.85);
-    font: inherit;
+  form input:not([type="checkbox"]), form textarea{
+    width:100%; border:1px solid #ccc; border-radius:8px; padding:.6rem;
+    background:rgba(255,255,255,0.85); font:inherit;
   }
-
   form textarea{ min-height:120px; }
 
-  /* Checkbox sauber linksbündig ausrichten */
-  form input[type="checkbox"] {
-    width: auto;
-    margin: .25rem .5rem 0 0;
-    padding: 0;
-    border: none;
-    vertical-align: top;
-  }
-  form label { display: block; }
-  form label input[type="checkbox"] { float: left; }
-  form label input[type="checkbox"] + * { display: block; }
+  /* Checkbox linksbündig */
+  form input[type="checkbox"]{ width:auto; margin:.25rem .5rem 0 0; padding:0; border:none; vertical-align:top; }
+  form label{ display:block; }
+  form label input[type="checkbox"]{ float:left; }
+  form label input[type="checkbox"] + *{ display:block; }
 
-  /* Senden-Button mit Abstand unten */
+  /* Button mit Abstand nach unten */
   form button{
-    margin-top: .6rem;
-    margin-bottom: 1.25rem;  /* zusätzlicher Abstand unten */
-    border: none;
-    border-radius: 8px;
-    padding: .6rem 1.2rem;
-    background: #111;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
+    margin-top:.6rem; margin-bottom:1.25rem;
+    border:none; border-radius:8px; padding:.6rem 1.2rem;
+    background:#111; color:#fff; font-weight:600; cursor:pointer;
   }
 
-  /* === Hamburger-Menü === */
+  /* === Burger/Offcanvas (wie auf den anderen Seiten) === */
   .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
   .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
   body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
@@ -142,8 +119,6 @@
       Für dich entstehen keine weiteren Schritte.
     </p>
 
-    <!-- Social-Link-Zeile wurde entfernt -->
-
     <form action="https://formsubmit.co/kohnke.bjoern@yahoo.com" method="POST" accept-charset="UTF-8">
       <input type="hidden" name="_captcha" value="false" />
       <input type="hidden" name="_next" value="https://b333n3t.github.io/danke.html" />
@@ -190,7 +165,7 @@
     var footer = document.querySelector('footer');
     var hh = header ? header.offsetHeight : 0;
     var fh = footer ? footer.offsetHeight : 0;
-    var extra = 32; 
+    var extra = 32;
     var max = window.innerHeight - hh - fh - extra;
     if (max > 240) panel.style.maxHeight = max + 'px';
   }
