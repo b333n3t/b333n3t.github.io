@@ -378,3 +378,152 @@ footer a:hover {
     font-size: 0.9rem;
   }
 }
+* ====================================
+   Brand-Typo einheitlich über alle Seiten
+   ==================================== */
+.brand strong {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  font-size: clamp(18px, 2.15vw, 28px) !important;
+  line-height: 1 !important;
+}
+📍 Anleitung:
+
+Öffne deine styles.css
+
+Scrolle ganz nach unten
+
+Füge diesen letzten Block (ab /* Brand-Typo einheitlich... */) dort komplett ein
+
+Datei speichern
+
+Browser neu laden (Strg + F5 bzw. Cmd + Shift + R auf dem Mac)
+
+Danach ist „b3nn3t“ im Header auf allen Seiten (Desktop + Mobil) gleich formatiert wie auf ueber-mich.html.
+
+
+
+
+
+Du:
+zeige mir bitte den ganzen code
+
+
+ChatGPT:
+Natürlich 👍 — hier ist deine vollständige und funktionierende styles.css, inklusive des neuen Blocks am Ende, der das Schriftbild von „b3nn3t“ im Header auf allen Seiten (Desktop + Mobile) identisch macht.
+Ich habe alles aus deiner bisherigen Datei beibehalten und nur am Ende den neuen Abschnitt hinzugefügt.
+
+css
+Code kopieren
+:root{
+  --bg-tint: rgba(255,255,255,.35); /* blasser Hintergrund */
+  --text: #0e0e0e;
+  --text-dim: #2d2d2d;
+  --accent: #0b84ff;
+}
+
+/* Base reset */
+*{ box-sizing:border-box; }
+
+html,body{
+  height:100%;
+  margin:0;
+  font-family: 'Press Start 2P', Arial, sans-serif;
+  letter-spacing: .03em;
+  color: var(--text);
+}
+
+/* === Einheitlicher Hintergrund: ruhiges Scrolling + dynamischer Fokus === */
+body{
+  background-color: #000;
+  background-image:
+    linear-gradient(var(--bg-tint), var(--bg-tint)),
+    url('assets/b3nn3t.jpg');
+  background-repeat: no-repeat;
+  background-position: center 45%;
+  background-size: cover;
+  background-attachment: scroll;
+  transition: background-position .35s ease;
+  min-height: 100vh;
+  min-height: 100svh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Querformat (Landscape): mehr vom unteren Bereich sichtbar machen */
+@media (orientation: landscape){
+  body{ background-position: center 40%; }
+}
+
+/* Sehr flache Viewports (z.B. 1366×768, 1920×800): Fokus noch etwas höher */
+@media (max-height: 850px){
+  body{ background-position: center 38%; }
+}
+
+/* Extrem flache Viewports (sehr schmale Höhe) */
+@media (max-height: 760px){
+  body{ background-position: center 36%; }
+}
+
+/* Optional: mobiles, leichteres Bild falls vorhanden */
+@media (max-width: 768px){
+  body{
+    background-image:
+      linear-gradient(var(--bg-tint), var(--bg-tint)),
+      url('assets/b3nn3t-mobile.jpg');
+  }
+}
+
+/* Links */
+a{ color: var(--accent); text-decoration: none; }
+a:hover{ text-decoration: underline; }
+
+/* Header/Brand */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 10px 14px;
+  position: sticky;
+  top: 0;
+}
+.brand{
+  font-weight:700;
+  letter-spacing:.04em;
+  color:#000;
+  background:none;
+  padding:0;
+  box-shadow:none;
+  position:absolute;
+  left:18px;
+  top:18px;
+  text-decoration:none;
+}
+.brand:hover{ text-decoration: underline; }
+
+/* navigation arrows */
+.nav-arrow{
+  position:fixed;
+  top:12px;
+  z-index:10;
+  padding:10px 12px;
+  background: rgba(255,255,255,.8);
+  border-radius: 14px;
+  backdrop-filter: blur(3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  font-weight:600;
+}
+.nav-arrow:hover{ background: rgba(255,255,255,.95); }
+.nav-arrow.left{ left:12px; }
+.nav-arrow.right{ right:12px; }
+
+/* main container */
+.main{
+  width: min(1100px, 92vw);
+  margin
+
+
+
+
+
