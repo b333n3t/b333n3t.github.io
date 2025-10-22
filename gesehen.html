@@ -60,20 +60,20 @@
 
     /* === Seitenmenü (schmal, isoliert) === */
     .site-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: auto;
-  max-height: 90vh;
-  width: min(40vw, 150px);
-  background: rgba(255,255,255,.32);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  box-shadow: 0 20px 50px rgba(0,0,0,.08);
-  transform: translateX(100%);
-  transition: transform .25s ease;
-  z-index: 1101;
-  padding: 46px 10px 14px;
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: auto;
+      max-height: 90vh;
+      width: min(40vw, 150px);
+      background: rgba(255,255,255,.32);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.08);
+      transform: translateX(100%);
+      transition: transform .25s ease;
+      z-index: 1101;
+      padding: 46px 10px 14px;
     }
     body.menu-open .site-menu { transform: translateX(0); }
 
@@ -93,6 +93,37 @@
     .site-menu a:hover { background: rgba(0,0,0,.05); }
 
     .nav-arrow { z-index: 1000; }
+  </style>
+
+  <!-- === OVERRIDE: Transparenter Textbereich über glasigem Hintergrund === -->
+  <style id="transparent-panel-overrides">
+    /* Glasiger Hintergrund unter dem Inhalt */
+    .main{
+      background: rgba(255,255,255,.32);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Inhalt komplett transparent */
+    .main h1,
+    .main p,
+    .main section{
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    /* Scrollleisten ausblenden, Scrollen bleibt möglich */
+    .main{
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;      /* Firefox */
+      -ms-overflow-style: none;   /* IE/Edge */
+    }
+    .main::-webkit-scrollbar{ display: none; } /* WebKit */
   </style>
 </head>
 <body>
