@@ -11,9 +11,6 @@
 <link rel="stylesheet" href="swipe-helper.css"/>
 
 <style>
-  /* Basisgröße (ohne die globale Schrift aus styles.css zu überschreiben) */
-  html { font-size: 16px; }
-
   :root{ --frame-pad: clamp(18px, 3vw, 28px); }
 
   /* Glasiger Rahmen übernimmt die Außenabstände */
@@ -31,58 +28,46 @@
     max-height: 75vh;
     -webkit-overflow-scrolling: touch;
     background: transparent;
+    border-radius: 12px;
     box-shadow: none;
-    padding: 0;
+    padding: 0;          /* Abstände kommen vom .main-Rahmen */
     margin: 0;
     max-width: 650px;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
   .scroll-panel::-webkit-scrollbar{ display:none; }
-
   .scroll-panel h1{ margin: 0 0 .75rem 0; }
   .scroll-panel p{ margin: 0 0 1rem 0; }
 
   /* Formular */
   form{ margin:0; display:grid; gap:.8rem; }
   form label{ font-weight:600; }
-
   /* Alle Inputs/Textareas außer Checkbox */
   form input:not([type="checkbox"]), 
-  form textarea {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: .6rem;
-    background: rgba(255,255,255,0.85);
-    font: inherit;
+  form textarea{
+    width:100%;
+    border:1px solid #ccc;
+    border-radius:8px;
+    padding:.6rem;
+    background:rgba(255,255,255,0.85);
+    font:inherit;
   }
-
   form textarea{ min-height:120px; }
 
-  /* Checkbox sauber linksbündig ausrichten */
-  form input[type="checkbox"] {
-    width: auto;
-    margin: .25rem .5rem 0 0;
-    padding: 0;
-    border: none;
-    vertical-align: top;
+  /* Checkbox linksbündig */
+  form input[type="checkbox"]{
+    width:auto; margin:.25rem .5rem 0 0; padding:0; border:none; vertical-align:top;
   }
-  form label { display: block; }
-  form label input[type="checkbox"] { float: left; }
-  form label input[type="checkbox"] + * { display: block; }
+  form label{ display:block; }
+  form label input[type="checkbox"]{ float:left; }
+  form label input[type="checkbox"] + *{ display:block; }
 
   /* Senden-Button mit Abstand unten */
   form button{
-    margin-top: .6rem;
-    margin-bottom: 1.25rem;  /* zusätzlicher Abstand unten */
-    border: none;
-    border-radius: 8px;
-    padding: .6rem 1.2rem;
-    background: #111;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
+    margin-top:.6rem; margin-bottom:1.25rem;
+    border:none; border-radius:8px; padding:.6rem 1.2rem;
+    background:#111; color:#fff; font-weight:600; cursor:pointer;
   }
 
   /* === Hamburger-Menü === */
@@ -102,6 +87,28 @@
   .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
   .site-menu a:hover{background:rgba(0,0,0,.05)}
   .nav-arrow{z-index:1000}
+</style>
+
+<!-- Align like 'aktuell.html'  — identisch zu ueber-mich.html -->
+<style id="align-like-aktuell">
+  :root{
+    --frame-pad: clamp(18px, 3vw, 28px);
+  }
+  .main{
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 12px;
+    padding: var(--frame-pad);
+  }
+  .main .scroll-panel{
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 650px;
+  }
+  .scroll-panel h1{ margin: 0 0 .6rem; }
 </style>
 </head>
 
@@ -142,8 +149,6 @@
       Für dich entstehen keine weiteren Schritte.
     </p>
 
-    <!-- Social-Link-Zeile wurde entfernt -->
-
     <form action="https://formsubmit.co/kohnke.bjoern@yahoo.com" method="POST" accept-charset="UTF-8">
       <input type="hidden" name="_captcha" value="false" />
       <input type="hidden" name="_next" value="https://b333n3t.github.io/danke.html" />
@@ -159,44 +164,4 @@
       <input id="subject" name="subject" placeholder="Worum geht’s?" />
 
       <label for="message">Nachricht</label>
-      <textarea id="message" name="message" placeholder="Hi b3nn3t, ..." required></textarea>
-
-      <label style="font-weight:400">
-        <input type="checkbox" required />
-        Ich stimme zu, dass meine Angaben zur Beantwortung der Anfrage gespeichert werden.
-      </label>
-
-      <button type="submit">Nachricht senden</button>
-    </form>
-  </div>
-</main>
-
-<a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
-
-<footer>
-  © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-</footer>
-
-<script src="script.js"></script>
-<script src="swipe-nav.js?v=12" defer></script>
-
-<!-- Dynamische Höhenanpassung -->
-<script>
-(function() {
-  function resizePanel() {
-    var panel = document.querySelector('.scroll-panel');
-    if (!panel) return;
-    var header = document.querySelector('.header');
-    var footer = document.querySelector('footer');
-    var hh = header ? header.offsetHeight : 0;
-    var fh = footer ? footer.offsetHeight : 0;
-    var extra = 32; 
-    var max = window.innerHeight - hh - fh - extra;
-    if (max > 240) panel.style.maxHeight = max + 'px';
-  }
-  window.addEventListener('load', resizePanel);
-  window.addEventListener('resize', resizePanel);
-})();
-</script>
-</body>
-</html>
+      <textarea
