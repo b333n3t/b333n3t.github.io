@@ -193,6 +193,16 @@
   }
 </style>
 
+<!-- NEU: (klein) Einklapp-Styles für Kategorien -->
+<style>
+  /* Headings klickbar + Pfeilindikator */
+  .panel-block h3[role="button"] { cursor: pointer; user-select: none; }
+  .panel-block h3[aria-expanded="true"]::after  { content: " ↑"; font-weight: 400; }
+  .panel-block h3[aria-expanded="false"]::after { content: " ↓"; font-weight: 400; }
+  /* Grid verstecken, wenn hidden */
+  .disco-grid[hidden] { display: none; }
+</style>
+
 <script>
 (function() {
   function resizePanel() {
@@ -559,6 +569,52 @@
     if(!el) return;
     el.classList.toggle('open');
   }
+</script>
+
+<!-- NEU: Akkordeon-Logik für Alben / EPs / Singles -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Jede Sektion: <div.panel-block><h3>…</h3></div> + folgendes <div.disco-grid>
+    const sections = document.querySelectorAll('main section');
+
+    sections.forEach((section, i) => {
+      const heading = section.querySelector('.panel-block h3');
+      const grid = section.querySelector('.disco-grid');
+      if (!heading || !grid) return;
+
+      // Zugänglich machen
+      heading.setAttribute('role', 'button');
+      heading.setAttribute('tabindex', '0');
+
+      const gridId = `cat-grid-${i+1}`;
+      heading.setAttribute('aria-controls', gridId);
+      heading.setAttribute('aria-expanded', 'false');
+      grid.id = gridId;
+      grid.hidden = true; // Start: eingeklappt
+
+      const toggle = () => {
+        const isOpen = heading.getAttribute('aria-expanded') === 'true';
+        heading.setAttribute('aria-expanded', String(!isOpen));
+        grid.hidden = isOpen;
+      };
+
+      heading.addEventListener('click', toggle);
+      heading.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+
+    // Optional: erste Kategorie beim Laden geöffnet anzeigen
+    const openFirst = false; // auf true setzen, wenn gewünscht
+    if (openFirst) {
+      const firstHeading = document.querySelector('main section .panel-block h3[role="button"]');
+      const firstGrid = document.getElementById('cat-grid-1');
+      if (firstHeading && firstGrid) {
+        firstHeading.setAttribute('aria-expanded', 'true');
+        firstGrid.hidden = false;
+      }
+    }
+  });
 </script>
 </body>
 </html>
