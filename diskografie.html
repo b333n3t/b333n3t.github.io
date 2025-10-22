@@ -72,7 +72,7 @@
 })();
 </script>
 
-<!-- ✅ Finale Korrektur: Abstände exakt wie kontakt.html -->
+<!-- ✅ FINALER, HARTER RESET -->
 <style>
   .scroll-panel .panel-block:first-of-type{
     padding:1rem 1rem;
@@ -82,16 +82,25 @@
     border-radius:12px;
   }
 
-  /* Entfernt wirklich alle Einrückungen/Abstände links & oben */
+  /* Alle Abstände und Einrückungen neutralisieren */
   .scroll-panel .panel-block:first-of-type h1,
   .scroll-panel .panel-block:first-of-type p{
-    margin:0;
-    padding:0;
-    text-indent:0;
+    margin:0 !important;
+    padding:0 !important;
+    text-indent:0 !important;
+    margin-inline:0 !important;
+    padding-inline:0 !important;
+    transform:none !important;
+    line-height:1.2;
   }
 
   .scroll-panel .panel-block:first-of-type p{
-    margin-top:.75rem;
+    margin-top:.75rem !important;
+  }
+
+  .scroll-panel .panel-block:first-of-type > *{
+    margin-left:0 !important;
+    padding-left:0 !important;
   }
 </style>
 </head>
@@ -134,7 +143,7 @@
     <section>
       <div class="panel-block"><h3>Alben</h3></div>
       <div class="disco-grid">
-        <!-- Alben / Inhalte -->
+        <!-- deine Inhalte -->
       </div>
     </section>
   </div>
