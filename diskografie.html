@@ -12,95 +12,183 @@
 
 <!-- Burger-Menü -->
 <style>
-  .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
-  .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
-  body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
-  body.menu-open .hamburger span:nth-child(2){opacity:0}
-  body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
-  .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
-  body.menu-open #menu-overlay{display:block}
-  #menu-overlay[hidden]{display:none}
-  .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s ease;z-index:1101;padding:46px 10px 14px}
-  body.menu-open .site-menu{transform:translateX(0)}
-  .site-menu ul{list-style:none;margin:0;padding:0}
-  .site-menu li{margin:0 0 10px 0}
-  .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
-  .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
-  .site-menu a:hover{background:rgba(0,0,0,.05)}
-  .nav-arrow{z-index:1000}
+  .hamburger {
+    position: fixed;
+    top: 14px;
+    right: 18px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    z-index: 1200;
+    padding: 0;
+  }
+  .hamburger span {
+    display: block;
+    width: 12px;
+    height: 1.4px;
+    margin: 1.5px 0;
+    background: #000;
+    border-radius: 2px;
+    transition: transform .2s ease, opacity .2s ease;
+  }
+  body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+  body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
+  body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.08);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+    z-index: 1099;
+  }
+  body.menu-open #menu-overlay { display: block; }
+  #menu-overlay[hidden]{ display:none; }
+  .site-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: auto;
+    max-height: 90vh;
+    width: min(40vw, 150px);
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.08);
+    transform: translateX(100%);
+    transition: transform .25s ease;
+    z-index: 1101;
+    padding: 46px 10px 14px;
+  }
+  body.menu-open .site-menu { transform: translateX(0); }
+  .site-menu ul { list-style: none; margin: 0; padding: 0; }
+  .site-menu li { margin: 0 0 10px 0; }
+  .site-menu li.sep {
+    margin-top: 18px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,0,0,.08);
+  }
+  .site-menu a {
+    display: block;
+    padding: 8px 6px;
+    border-radius: 10px;
+    color: #000;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .site-menu a:hover { background: rgba(0,0,0,.05); }
+  .nav-arrow { z-index: 1000; }
 </style>
 
+<!-- Grundlayout -->
 <style>
-  :root{--panel-bg:rgba(255,255,255,0.92)}
-  .scroll-panel{overflow:auto;max-height:75vh;min-height:320px;-webkit-overflow-scrolling:touch;background:transparent;color:#111;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.08);padding:1.25rem 1rem;margin-top:1rem;margin-left:0;width:min(1100px,95%)}
-  .panel-block{background:var(--panel-bg);border-radius:12px;padding:1rem 1rem;margin-bottom:1rem}
-  .disco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:0 0 2rem;align-items:start;background:transparent}
-  .release{border:1px solid #ddd;border-radius:12px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);background:#fff}
-  .release img{width:100%;height:220px;object-fit:cover;border-radius:8px;background:#f2f2f2}
-  .release .meta{font-size:.9rem;color:#444;margin-top:.5rem}
-  .release .title{font-weight:600}
-  .badge{display:inline-block;background:#111;color:#fff;border-radius:999px;padding:.2rem .55rem;font-size:.75rem;margin-left:.35rem}
-  .kollabo{background:#6b7280}
+  :root { --panel-bg: rgba(255,255,255,0.92); }
+
+  .main {
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 12px;
+  }
+
+  .scroll-panel {
+    overflow: auto;
+    max-height: 75vh;
+    min-height: 320px;
+    -webkit-overflow-scrolling: touch;
+    background: transparent;
+    color: #111;
+    border-radius: 12px;
+    box-shadow: none;
+    /* Diese beiden Zeilen korrigieren den zu großen Rand */
+    padding: 0;
+    margin-top: 0;
+    width: min(1100px, 95%);
+  }
+
+  .panel-block {
+    background: var(--panel-bg);
+    border-radius: 12px;
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .disco-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+    gap: 1rem;
+    margin: 0 0 2rem;
+    align-items: start;
+    background: transparent;
+  }
+
+  .release {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    background: #fff;
+  }
+
+  .release img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #f2f2f2;
+  }
+
+  .release .meta { font-size: .9rem; color: #444; margin-top: .5rem; }
+  .release .title { font-weight: 600; }
+
+  .badge {
+    display: inline-block;
+    background: #111;
+    color: #fff;
+    border-radius: 999px;
+    padding: .2rem .55rem;
+    font-size: .75rem;
+    margin-left: .35rem;
+  }
+
+  .kollabo { background: #6b7280; }
 </style>
 
-<style id="transparent-panel-overrides">
-  .main{background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:12px}
-  .scroll-panel{background:transparent!important;box-shadow:none!important;position:relative;z-index:10;scrollbar-width:none;-ms-overflow-style:none}
-  .scroll-panel::-webkit-scrollbar{display:none}
-  .panel-block{background:transparent!important;box-shadow:none!important}
-</style>
-
+<!-- ✳️ Korrektur: identischer Abstand wie aktuell.html -->
 <style>
-  .panel-block h3[role="button"]{cursor:pointer;user-select:none}
-  .panel-block h3[aria-expanded="true"]::after{content:" ↑";font-weight:400}
-  .panel-block h3[aria-expanded="false"]::after{content:" ↓";font-weight:400}
-  .disco-grid[hidden]{display:none}
-</style>
-
-<style>.badge{display:none!important}</style>
-
-<script>
-(function(){
-  function resizePanel(){
-    var panel=document.querySelector('.scroll-panel');if(!panel)return;
-    var header=document.querySelector('.header');var footer=document.querySelector('footer');
-    var hh=header?header.offsetHeight:0;var fh=footer?footer.offsetHeight:0;var extra=32;
-    var max=window.innerHeight-hh-fh-extra;panel.style.maxHeight=Math.max(320,max)+'px';
-  }
-  window.addEventListener('load',resizePanel);
-  window.addEventListener('resize',resizePanel);
-})();
-</script>
-
-<!-- ✅ FINALER, HARTER RESET -->
-<style>
-  .scroll-panel .panel-block:first-of-type{
-    padding:1rem 1rem;
-    margin:0 0 1rem 0;
-    background:var(--panel-bg);
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
-    border-radius:12px;
+  /* Entfernt den zusätzlichen Außenabstand des Scrollcontainers */
+  .main .scroll-panel {
+    padding: 0 !important;
+    margin-top: 0 !important;
   }
 
-  /* Alle Abstände und Einrückungen neutralisieren */
-  .scroll-panel .panel-block:first-of-type h1,
-  .scroll-panel .panel-block:first-of-type p{
-    margin:0 !important;
-    padding:0 !important;
-    text-indent:0 !important;
-    margin-inline:0 !important;
-    padding-inline:0 !important;
-    transform:none !important;
-    line-height:1.2;
+  /* Erster Block im Scrollpanel erhält eigenen Innenabstand */
+  .main .scroll-panel .panel-block:first-child {
+    padding: 1rem 1rem;
+    margin: 0 0 1rem 0;
+    background: var(--panel-bg);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
   }
 
-  .scroll-panel .panel-block:first-of-type p{
-    margin-top:.75rem !important;
+  /* Titel & Untertitel exakt bündig */
+  .main .scroll-panel .panel-block:first-child h1,
+  .main .scroll-panel .panel-block:first-child p {
+    margin: 0;
+    padding: 0;
+    text-indent: 0;
+    margin-inline: 0;
+    padding-inline: 0;
   }
 
-  .scroll-panel .panel-block:first-of-type > *{
-    margin-left:0 !important;
-    padding-left:0 !important;
+  /* Kleiner harmonischer Abstand zwischen h1 und p */
+  .main .scroll-panel .panel-block:first-child p {
+    margin-top: .75rem;
   }
 </style>
 </head>
@@ -113,6 +201,7 @@
   </a>
 </header>
 
+<!-- Burger-Menü -->
 <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
   <span></span><span></span><span></span>
 </button>
@@ -135,15 +224,20 @@
 
 <main class="main">
   <div class="scroll-panel">
+
+    <!-- Intro (wie bei aktuell.html: bündig oben + links) -->
     <div class="panel-block">
       <h1>diskografie</h1>
       <p>meine releases & kollabos</p>
     </div>
 
+    <!-- Beispielinhalt -->
     <section>
-      <div class="panel-block"><h3>Alben</h3></div>
+      <div class="panel-block">
+        <h3>Alben</h3>
+      </div>
       <div class="disco-grid">
-        <!-- deine Inhalte -->
+        <!-- Inhalte -->
       </div>
     </section>
   </div>
