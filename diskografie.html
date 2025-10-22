@@ -163,6 +163,36 @@
   .kollabo{background:#6b7280}
 </style>
 
+<!-- OVERRIDES: Textbereich transparent über „glasigem“ Hintergrund, Scrollleisten aus -->
+<style id="transparent-panel-overrides">
+  /* Halbtransparenter, glasiger Container unter dem Textbereich */
+  .main{
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 12px;
+  }
+
+  /* Textbereich selbst: komplett transparent und über dem Glas-Layer */
+  .scroll-panel{
+    background: transparent !important;
+    box-shadow: none !important;
+    position: relative;
+    z-index: 10;
+
+    /* Scrollleisten ausblenden – Scrollen bleibt möglich */
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE/Edge legacy */
+  }
+  .scroll-panel::-webkit-scrollbar{ display: none; } /* WebKit */
+
+  /* Panel-Blöcke im Textbereich ebenfalls transparent, damit nichts hinterlegt wirkt */
+  .panel-block{
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+</style>
+
 <script>
 (function() {
   function resizePanel() {
