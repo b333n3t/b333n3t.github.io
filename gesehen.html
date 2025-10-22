@@ -2,128 +2,106 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- wie ueber-mich.html: ohne viewport-fit=cover -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>gesehen — b3nn3t</title>
   <meta name="description" content="gesehen — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-  <!-- Haupt-Styles -->
-  <link rel="stylesheet" href="styles.css?v=3" />
-
-  <!-- Pfeile -->
+  <!-- Haupt-Styles (Version-Param optional) -->
+  <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
-
-  <!-- Swipe-Unterstützung für Mobile -->
   <link rel="stylesheet" href="swipe-helper.css" />
 
-  <!-- Burger-Menü (schmal & isoliert) -->
+  <!-- Hamburger-Menü (identisch zu ueber-mich) -->
   <style>
-    /* === Hamburger-Button === */
-    .hamburger {
-      position: fixed;
-      top: 14px;
-      right: 18px;
-      width: 20px;
-      height: 20px;
-      border: none;
-      background: transparent;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      z-index: 1200;
-      padding: 0;
+    .hamburger{
+      position:fixed; top:14px; right:18px; width:20px; height:20px;
+      border:none; background:transparent; display:grid; place-items:center;
+      cursor:pointer; z-index:1200; padding:0;
     }
-    .hamburger span {
-      display: block;
-      width: 12px;
-      height: 1.4px;
-      margin: 1.5px 0;
-      background: #000;
-      border-radius: 2px;
-      transition: transform .2s ease, opacity .2s ease;
+    .hamburger span{
+      display:block; width:12px; height:1.4px; margin:1.5px 0; background:#000;
+      border-radius:2px; transition:transform .2s ease, opacity .2s ease;
     }
-    body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
-    body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
-    body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
+    body.menu-open .hamburger span:nth-child(1){ transform:translateY(3.5px) rotate(45deg); }
+    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
+    body.menu-open .hamburger span:nth-child(3){ transform:translateY(-3.5px) rotate(-45deg); }
 
-    /* Overlay */
-    .menu-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.08);
-      backdrop-filter: blur(1px);
-      -webkit-backdrop-filter: blur(1px);
-      z-index: 1099;
+    .menu-overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.08);
+      backdrop-filter:blur(1px); -webkit-backdrop-filter:blur(1px); z-index:1099;
     }
-    body.menu-open #menu-overlay { display: block; }
+    body.menu-open #menu-overlay{ display:block; }
     #menu-overlay[hidden]{ display:none; }
 
-    /* === Seitenmenü (schmal, isoliert) === */
-    .site-menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      height: auto;
-      max-height: 90vh;
-      width: min(40vw, 150px);
-      background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      box-shadow: 0 20px 50px rgba(0,0,0,.08);
-      transform: translateX(100%);
-      transition: transform .25s ease;
-      z-index: 1101;
-      padding: 46px 10px 14px;
+    .site-menu{
+      position:fixed; top:0; right:0; height:auto; max-height:90vh; width:min(40vw,150px);
+      background:rgba(255,255,255,.32); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+      box-shadow:0 20px 50px rgba(0,0,0,.08); transform:translateX(100%); transition:transform .25s ease;
+      z-index:1101; padding:46px 10px 14px;
     }
-    body.menu-open .site-menu { transform: translateX(0); }
+    body.menu-open .site-menu{ transform:translateX(0); }
 
-    /* Menü-Links – NUR im Menü-Panel */
-    .site-menu ul { list-style: none; margin: 0; padding: 0; }
-    .site-menu li { margin: 0 0 10px 0; }
-    .site-menu li.sep { margin-top: 18px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,.08); }
-    .site-menu a {
-      display: block;
-      padding: 8px 6px;
-      border-radius: 10px;
-      color: #000;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: 500;
+    .site-menu ul{ list-style:none; margin:0; padding:0; }
+    .site-menu li{ margin:0 0 10px 0; }
+    .site-menu li.sep{ margin-top:18px; padding-top:8px; border-top:1px solid rgba(0,0,0,.08); }
+    .site-menu a{
+      display:block; padding:8px 6px; border-radius:10px; color:#000; text-decoration:none;
+      font-size:1rem; font-weight:500;
     }
-    .site-menu a:hover { background: rgba(0,0,0,.05); }
+    .site-menu a:hover{ background:rgba(0,0,0,.05); }
 
-    .nav-arrow { z-index: 1000; }
+    .nav-arrow{ z-index:1000; }
   </style>
 
-  <!-- === OVERRIDE: Transparenter Textbereich über glasigem Hintergrund === -->
-  <style id="transparent-panel-overrides">
-    /* Glasiger Hintergrund unter dem Inhalt */
+  <!-- Align & Panel wie ueber-mich.html -->
+  <style id="align-like-ueber-mich">
+    :root{ --frame-pad: clamp(18px, 3vw, 28px); }
+
+    /* Glasiger Rahmen übernimmt Abstände */
     .main{
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
       border-radius: 12px;
-      padding: 1.25rem 1rem;
-      position: relative;
-      z-index: 1;
+      padding: var(--frame-pad);
     }
 
-    /* Inhalt komplett transparent */
-    .main h1,
-    .main p,
-    .main section{
-      background: transparent !important;
-      box-shadow: none !important;
-    }
-
-    /* Scrollleisten ausblenden, Scrollen bleibt möglich */
-    .main{
+    /* Transparentes Scroll-Panel wie auf ueber-mich */
+    .scroll-panel {
       overflow: auto;
+      max-height: 75vh;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;      /* Firefox */
-      -ms-overflow-style: none;   /* IE/Edge */
+      background: transparent;
+      border-radius: 12px;
+      box-shadow: none;
+      padding: 0;         /* Abstände kommen vom .main-Rahmen */
+      margin: 0;
+      max-width: 650px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-    .main::-webkit-scrollbar{ display: none; } /* WebKit */
+    .scroll-panel::-webkit-scrollbar { display: none; }
+
+    .scroll-panel h1{ margin: 0 0 .6rem; }
+    .scroll-panel p{ margin: 0 0 1rem; }
+
+    /* Gesehene-Karten (wie in deiner aktuellen gesehen.html) */
+    .grid-seen {
+      display: flex;
+      justify-content: flex-start;
+      align-items: stretch;
+      gap: 14px;
+      margin-top: .5rem;
+    }
+    .grid-seen .card {
+      flex: 0 1 180px;
+      max-width: 180px;
+    }
+    @media (max-width: 480px) {
+      .grid-seen .card { flex-basis: 120px; max-width: 120px; }
+    }
   </style>
 </head>
 <body>
@@ -151,21 +129,23 @@
     </ul>
   </nav>
 
-  <!-- Pfeile -->
-  <a class="nav-arrow left" aria-label="Vorherige Seite" href="#">&larr;</a>
-  <a class="nav-arrow right" aria-label="Nächste Seite" href="#">&rarr;</a>
+  <!-- Pfeile (setz hier gern echte Links) -->
+  <a class="nav-arrow left"  aria-label="Vorherige Seite" href="aktuell.html">←</a>
+  <a class="nav-arrow right" aria-label="Nächste Seite"   href="plattformen.html">→</a>
 
   <main class="main">
-    <h1>gesehen</h1>
-    <p>schon mal reingeschaut</p>
+    <div class="scroll-panel">
+      <h1>gesehen</h1>
+      <p>schon mal reingeschaut</p>
 
-    <!-- exakt wie Startseite, aber mit eigener Klasse -->
-    <section class="grid grid-seen" aria-label="Seitenübersicht">
-      <a class="card" href="intro.html">
-        intro
-        <small>Intro & Start</small>
-      </a>
-    </section>
+      <!-- identisches Kartenraster wie zuvor -->
+      <section class="grid grid-seen" aria-label="Seitenübersicht">
+        <a class="card" href="intro.html">
+          intro
+          <small>Intro & Start</small>
+        </a>
+      </section>
+    </div>
   </main>
 
   <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
@@ -176,5 +156,24 @@
 
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
+
+  <!-- dynamische Höhe wie auf ueber-mich -->
+  <script>
+  (function() {
+    function resizePanel() {
+      var panel = document.querySelector('.scroll-panel');
+      if (!panel) return;
+      var header = document.querySelector('.header');
+      var footer = document.querySelector('footer');
+      var hh = header ? header.offsetHeight : 0;
+      var fh = footer ? footer.offsetHeight : 0;
+      var extra = 32;
+      var max = window.innerHeight - hh - fh - extra;
+      if (max > 240) panel.style.maxHeight = max + 'px';
+    }
+    window.addEventListener('load', resizePanel);
+    window.addEventListener('resize', resizePanel);
+  })();
+  </script>
 </body>
 </html>
