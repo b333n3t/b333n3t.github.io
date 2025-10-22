@@ -1,203 +1,74 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>diskografie — b3nn3t</title>
-<meta name="description" content="diskografie — b3nn3t" />
-<link rel="icon" href="favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="styles.css" />
-<link rel="stylesheet" href="styles_nav_arrows.css" />
-<link rel="stylesheet" href="swipe-helper.css" />
+<meta name="description" content="diskografie — b3nn3t"/>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="styles.css"/>
+<link rel="stylesheet" href="styles_nav_arrows.css"/>
+<link rel="stylesheet" href="swipe-helper.css"/>
 
-<!-- Burger-Menü -->
+<!-- Burger-Menü (kompakt) -->
 <style>
-  .hamburger {
-    position: fixed;
-    top: 14px;
-    right: 18px;
-    width: 20px;
-    height: 20px;
-    border: none;
-    background: transparent;
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    z-index: 1200;
-    padding: 0;
-  }
-  .hamburger span {
-    display: block;
-    width: 12px;
-    height: 1.4px;
-    margin: 1.5px 0;
-    background: #000;
-    border-radius: 2px;
-    transition: transform .2s ease, opacity .2s ease;
-  }
-  body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
-  body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
-  body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
-  .menu-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.08);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
-    z-index: 1099;
-  }
-  body.menu-open #menu-overlay { display: block; }
-  #menu-overlay[hidden]{ display:none; }
-  .site-menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: auto;
-    max-height: 90vh;
-    width: min(40vw, 150px);
-    background: rgba(255,255,255,.32);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    box-shadow: 0 20px 50px rgba(0,0,0,.08);
-    transform: translateX(100%);
-    transition: transform .25s ease;
-    z-index: 1101;
-    padding: 46px 10px 14px;
-  }
-  body.menu-open .site-menu { transform: translateX(0); }
-  .site-menu ul { list-style: none; margin: 0; padding: 0; }
-  .site-menu li { margin: 0 0 10px 0; }
-  .site-menu li.sep {
-    margin-top: 18px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(0,0,0,.08);
-  }
-  .site-menu a {
-    display: block;
-    padding: 8px 6px;
-    border-radius: 10px;
-    color: #000;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-  }
-  .site-menu a:hover { background: rgba(0,0,0,.05); }
-  .nav-arrow { z-index: 1000; }
+  .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
+  .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+  body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
+  body.menu-open .hamburger span:nth-child(2){opacity:0}
+  body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+  .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
+  body.menu-open #menu-overlay{display:block}
+  #menu-overlay[hidden]{display:none}
+  .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s ease;z-index:1101;padding:46px 10px 14px}
+  body.menu-open .site-menu{transform:translateX(0)}
+  .site-menu ul{list-style:none;margin:0;padding:0}
+  .site-menu li{margin:0 0 10px 0}
+  .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
+  .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
+  .site-menu a:hover{background:rgba(0,0,0,.05)}
+  .nav-arrow{z-index:1000}
 </style>
 
-<!-- Grundlayout -->
+<!-- Panels / Karten -->
 <style>
-  :root { --panel-bg: rgba(255,255,255,0.92); }
+  :root{--panel-bg:rgba(255,255,255,0.92)}
 
-  .main {
-    background: rgba(255,255,255,.32);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    border-radius: 12px;
+  /* Glasiger Container wie bei aktuell.html */
+  .main{
+    background:rgba(255,255,255,.32);
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+    border-radius:12px;
   }
 
-  .scroll-panel {
-    overflow: auto;
-    max-height: 75vh;
-    min-height: 320px;
-    -webkit-overflow-scrolling: touch;
-    background: transparent;
-    color: #111;
-    border-radius: 12px;
-    box-shadow: none;
-    /* Diese beiden Zeilen korrigieren den zu großen Rand */
-    padding: 0;
-    margin-top: 0;
-    width: min(1100px, 95%);
+  /* Einheitliches Panel (wie auf kontakt/aktuell) */
+  .panel-block{
+    background:var(--panel-bg);
+    border-radius:12px;
+    padding:1rem 1rem;
+    margin-bottom:1rem;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
   }
 
-  .panel-block {
-    background: var(--panel-bg);
-    border-radius: 12px;
-    padding: 1rem 1rem;
-    margin-bottom: 1rem;
-  }
+  /* Titelblock: h1/p bündig */
+  .panel-block h1{margin:0}
+  .panel-block p{margin:.75rem 0 0}
 
-  .disco-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
-    gap: 1rem;
-    margin: 0 0 2rem;
-    align-items: start;
-    background: transparent;
-  }
-
-  .release {
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.06);
-    background: #fff;
-  }
-
-  .release img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 8px;
-    background: #f2f2f2;
-  }
-
-  .release .meta { font-size: .9rem; color: #444; margin-top: .5rem; }
-  .release .title { font-weight: 600; }
-
-  .badge {
-    display: inline-block;
-    background: #111;
-    color: #fff;
-    border-radius: 999px;
-    padding: .2rem .55rem;
-    font-size: .75rem;
-    margin-left: .35rem;
-  }
-
-  .kollabo { background: #6b7280; }
-</style>
-
-<!-- ✳️ Korrektur: identischer Abstand wie aktuell.html -->
-<style>
-  /* Entfernt den zusätzlichen Außenabstand des Scrollcontainers */
-  .main .scroll-panel {
-    padding: 0 !important;
-    margin-top: 0 !important;
-  }
-
-  /* Erster Block im Scrollpanel erhält eigenen Innenabstand */
-  .main .scroll-panel .panel-block:first-child {
-    padding: 1rem 1rem;
-    margin: 0 0 1rem 0;
-    background: var(--panel-bg);
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.08);
-  }
-
-  /* Titel & Untertitel exakt bündig */
-  .main .scroll-panel .panel-block:first-child h1,
-  .main .scroll-panel .panel-block:first-child p {
-    margin: 0;
-    padding: 0;
-    text-indent: 0;
-    margin-inline: 0;
-    padding-inline: 0;
-  }
-
-  /* Kleiner harmonischer Abstand zwischen h1 und p */
-  .main .scroll-panel .panel-block:first-child p {
-    margin-top: .75rem;
-  }
+  /* Grid & Karten */
+  .disco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:0 0 2rem;align-items:start}
+  .release{border:1px solid #ddd;border-radius:12px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);background:#fff}
+  .release img{width:100%;height:220px;object-fit:cover;border-radius:8px;background:#f2f2f2}
+  .release .meta{font-size:.9rem;color:#444;margin-top:.5rem}
+  .release .title{font-weight:600}
+  .badge{display:none} /* Badges ausgeblendet wie gewünscht */
 </style>
 </head>
 
 <body>
 <header class="header">
   <a class="brand" href="index.html" aria-label="b3nn3t Home">
-    <img src="favicon.svg" alt="" />
-    <strong>b3nn3t</strong>
+    <img src="favicon.svg" alt=""/><strong>b3nn3t</strong>
   </a>
 </header>
 
@@ -206,7 +77,6 @@
   <span></span><span></span><span></span>
 </button>
 <div id="menu-overlay" class="menu-overlay" hidden></div>
-
 <nav id="site-menu" class="site-menu" aria-hidden="true">
   <ul>
     <li><a href="ueber-mich.html">über mich</a></li>
@@ -219,28 +89,46 @@
   </ul>
 </nav>
 
+<!-- Pfeile -->
 <a class="nav-arrow left" href="ueber-mich.html" aria-label="Vorherige Seite">←</a>
 <a class="nav-arrow right" href="kontakt.html" aria-label="Nächste Seite">→</a>
 
 <main class="main">
-  <div class="scroll-panel">
-
-    <!-- Intro (wie bei aktuell.html: bündig oben + links) -->
-    <div class="panel-block">
-      <h1>diskografie</h1>
-      <p>meine releases & kollabos</p>
-    </div>
-
-    <!-- Beispielinhalt -->
-    <section>
-      <div class="panel-block">
-        <h3>Alben</h3>
-      </div>
-      <div class="disco-grid">
-        <!-- Inhalte -->
-      </div>
-    </section>
+  <!-- Intro-Panel (bündig wie auf aktuell.html) -->
+  <div class="panel-block">
+    <h1>diskografie</h1>
+    <p>meine releases &amp; kollabos</p>
   </div>
+
+  <!-- Alben -->
+  <section>
+    <div class="panel-block">
+      <h3>Alben</h3>
+    </div>
+    <div class="disco-grid">
+      <!-- … Releases … -->
+    </div>
+  </section>
+
+  <!-- EPs -->
+  <section>
+    <div class="panel-block">
+      <h3>EPs</h3>
+    </div>
+    <div class="disco-grid">
+      <!-- … -->
+    </div>
+  </section>
+
+  <!-- Singles -->
+  <section>
+    <div class="panel-block">
+      <h3>Singles (inkl. Kollabos)</h3>
+    </div>
+    <div class="disco-grid">
+      <!-- … -->
+    </div>
+  </section>
 </main>
 
 <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
