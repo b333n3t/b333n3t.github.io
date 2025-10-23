@@ -109,7 +109,7 @@
       border: 0;
     }
 
-    /* NEU: Thumbnail-Vorschaubild in Karten */
+    /* Vorschaubild in Karten (für YouTube & Instagram) */
     .card .thumb {
       width: 100%;
       aspect-ratio: 16/9;
@@ -162,15 +162,15 @@
 
       <!-- Karten für Instagram + YouTube Videos (Lazy-Load) -->
       <section class="grid grid-seen" aria-label="Videos">
-        <!-- Instagram (mit individuellen .avif Thumbnails) -->
-        <div class="card" id="video1" data-embed-src="https://www.instagram.com/reel/DKHa8SoMzQ-/embed" data-thumb="assets/reel1.avif">▶︎ Video 1<small>Instagram</small></div>
-        <div class="card" id="video2" data-embed-src="https://www.instagram.com/reel/DK9pg-boyA1/embed" data-thumb="assets/reel2.avif">▶︎ Video 2<small>Instagram</small></div>
-        <div class="card" id="video3" data-embed-src="https://www.instagram.com/reel/DLqGKqLsY6S/embed" data-thumb="assets/reel3.avif">▶︎ Video 3<small>Instagram</small></div>
-        <div class="card" id="video4" data-embed-src="https://www.instagram.com/reel/C9-hoZOs6hV/embed" data-thumb="assets/reel4.avif">▶︎ Video 4<small>Instagram</small></div>
-        <div class="card" id="video5" data-embed-src="https://www.instagram.com/reel/C40c2qsN_eI/embed" data-thumb="assets/reel5.avif">▶︎ Video 5<small>Instagram</small></div>
-        <div class="card" id="video6" data-embed-src="https://www.instagram.com/reel/C9opXa-MIvF/embed" data-thumb="assets/reel6.avif">▶︎ Video 6<small>Instagram</small></div>
+        <!-- Instagram (einheitliches Thumbnail aus assets/instagram_poster.jpg) -->
+        <div class="card" id="video1" data-embed-src="https://www.instagram.com/reel/DKHa8SoMzQ-/embed">▶︎ Video 1<small>Instagram</small></div>
+        <div class="card" id="video2" data-embed-src="https://www.instagram.com/reel/DK9pg-boyA1/embed">▶︎ Video 2<small>Instagram</small></div>
+        <div class="card" id="video3" data-embed-src="https://www.instagram.com/reel/DLqGKqLsY6S/embed">▶︎ Video 3<small>Instagram</small></div>
+        <div class="card" id="video4" data-embed-src="https://www.instagram.com/reel/C9-hoZOs6hV/embed">▶︎ Video 4<small>Instagram</small></div>
+        <div class="card" id="video5" data-embed-src="https://www.instagram.com/reel/C40c2qsN_eI/embed">▶︎ Video 5<small>Instagram</small></div>
+        <div class="card" id="video6" data-embed-src="https://www.instagram.com/reel/C9opXa-MIvF/embed">▶︎ Video 6<small>Instagram</small></div>
 
-        <!-- YouTube (unverändert; Thumbnails werden automatisch per Script geladen) -->
+        <!-- YouTube (Thumbnails: assets/reel1.avif – reel7.avif) -->
         <div class="card" id="yt1" data-embed-src="https://www.youtube.com/embed/ZSaj_FuqPN8">▶︎ YouTube 1<small>YouTube</small></div>
         <div class="card" id="yt2" data-embed-src="https://www.youtube.com/embed/DMNl40Tip1w">▶︎ YouTube 2<small>YouTube</small></div>
         <div class="card" id="yt3" data-embed-src="https://www.youtube.com/embed/K5pKG0Smdfc">▶︎ YouTube 3<small>YouTube</small></div>
@@ -193,8 +193,9 @@
 
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
+
+  <!-- Lazy Load: Karten -> eingebettetes Video -->
   <script>
-    // Lazy Load: Videos werden erst geladen, wenn man klickt
     const cards = document.querySelectorAll('.card[data-embed-src]');
     const container = document.getElementById('videoContainer');
 
@@ -215,38 +216,7 @@
     });
   </script>
 
-  <!-- Auto-Thumbnails für YouTube-Karten -->
-  <script>
-    (function () {
-      const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
-        .filter(c => /youtube\.com\/embed\//.test(c.getAttribute('data-embed-src') || ''));
-
-      function extractYtId(url) {
-        const m = (url || '').match(/(?:embed\/|v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-        return m ? m[1] : null;
-      }
-
-      ytCards.forEach(card => {
-        if (card.querySelector('img.thumb')) return;
-
-        const src = card.getAttribute('data-embed-src');
-        const id = extractYtId(src);
-        if (!id) return;
-
-        const img = new Image();
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        img.className = 'thumb';
-        img.alt = 'YouTube-Vorschau';
-        img.src = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-        img.onerror = () => { img.onerror = null; img.src = `https://img.youtube.com/vi/${id}/hqdefault.jpg`; };
-
-        card.insertBefore(img, card.firstChild);
-      });
-    })();
-  </script>
-
-  <!-- NEU: Thumbnails für Instagram-Karten (.avif aus assets/) -->
+  <!-- Thumbnails für INSTAGRAM-Karten: einheitliches Poster -->
   <script>
     (function () {
       const igCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
@@ -255,13 +225,36 @@
       igCards.forEach(card => {
         if (card.querySelector('img.thumb')) return;
 
-        const thumb = card.getAttribute('data-thumb') || 'assets/instagram_poster.avif';
         const img = new Image();
         img.loading = 'lazy';
         img.decoding = 'async';
         img.className = 'thumb';
         img.alt = 'Instagram-Vorschau';
-        img.src = thumb;
+        img.src = 'assets/instagram_poster.jpg';
+        img.onerror = () => { img.onerror = null; img.remove(); }; // falls Bild fehlt
+
+        card.insertBefore(img, card.firstChild);
+      });
+    })();
+  </script>
+
+  <!-- Thumbnails für YOUTUBE-Karten: reel1.avif – reel7.avif -->
+  <script>
+    (function () {
+      const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
+        .filter(c => /youtube\.com\/embed\//.test(c.getAttribute('data-embed-src') || ''));
+
+      ytCards.forEach((card, idx) => {
+        if (card.querySelector('img.thumb')) return;
+
+        const n = idx + 1; // 1..7 in der Reihenfolge der Karten
+        const img = new Image();
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.className = 'thumb';
+        img.alt = 'YouTube-Vorschau';
+        img.src = `assets/reel${n}.avif`;
+        img.onerror = () => { img.onerror = null; img.remove(); }; // falls Bild fehlt
 
         card.insertBefore(img, card.firstChild);
       });
@@ -269,3 +262,4 @@
   </script>
 </body>
 </html>
+
