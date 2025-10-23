@@ -40,43 +40,28 @@
       border-radius: 2px;
       transition: transform .2s ease, opacity .2s ease;
     }
-    body.menu-open .hamburger span:nth-child(1) {
-      transform: translateY(3.5px) rotate(45deg);
-    }
-    body.menu-open .hamburger span:nth-child(2) {
-      opacity: 0;
-    }
-    body.menu-open .hamburger span:nth-child(3) {
-      transform: translateY(-3.5px) rotate(-45deg);
-    }
+    body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+    body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
+    body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
 
     /* === Seitenmenü === */
     .menu-overlay {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(0,0,0,.08);
-      backdrop-filter: blur(1px);
-      -webkit-backdrop-filter: blur(1px);
+      backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);
       z-index: 1099;
     }
     body.menu-open #menu-overlay { display: block; }
     #menu-overlay[hidden]{ display:none; }
 
     .site-menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      height: auto;
-      max-height: 90vh;
-      width: min(40vw, 150px);
+      position: fixed; top: 0; right: 0;
+      height: auto; max-height: 90vh; width: min(40vw, 150px);
       background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
       box-shadow: 0 20px 50px rgba(0,0,0,.08);
-      transform: translateX(100%);
-      transition: transform .25s ease;
-      z-index: 1101;
-      padding: 46px 10px 14px;
+      transform: translateX(100%); transition: transform .25s ease;
+      z-index: 1101; padding: 46px 10px 14px;
     }
     body.menu-open .site-menu { transform: translateX(0); }
 
@@ -84,98 +69,67 @@
     .site-menu li { margin: 0 0 10px 0; }
     .site-menu li.sep { margin-top: 18px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,.08); }
     .site-menu a {
-      display: block;
-      padding: 10px 8px;
-      border-radius: 10px;
-      color: #000;
-      text-decoration: none;
-      font-size: 1.02rem;
-      font-weight: 500;
+      display: block; padding: 10px 8px; border-radius: 10px;
+      color: #000; text-decoration: none; font-size: 1.02rem; font-weight: 500;
     }
     .site-menu a:hover { background: rgba(0,0,0,.05); }
 
-    /* === Glasiger, transparenter Hauptbereich === */
-    .main {
+    /* === Glasiger, transparenter Hauptbereich (scrollt intern) === */
+    .main{
       background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
       border-radius: 12px;
       padding: 1.25rem 1rem;
       position: relative;
       z-index: 1;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      overflow: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; -ms-overflow-style: none;
     }
-    .main::-webkit-scrollbar { display: none; }
+    .main::-webkit-scrollbar{ display: none; }
 
-    .main h1,
-    .main p,
-    .main section {
-      background: transparent !important;
-      box-shadow: none !important;
+    .main h1, .main p, .main section{
+      background: transparent !important; box-shadow: none !important;
     }
 
-    /* === Inhalt nach unten verschieben === */
-    .main .content-offset {
-      padding-top: 105vh; /* bestimmt, wo der Text startet */
-    }
+    /* Inhalt bewusst nach unten starten lassen */
+    .content-offset{ padding-top: 105vh; } /* 90–110vh feinjustieren */
+    .main{ padding-bottom: 2.5rem; }
 
-    .main { padding-bottom: 2.5rem; }
-
-    /* === Pfeil nach unten (autark, mobile-fix) === */
-    .nav-arrow-down {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%) translateY(0);
-      width: 36px;
-      height: 36px;
+    /* === Scroll-Hinweis (fixiert am unteren Viewportrand, mobil-sicher) === */
+    .scroll-cue{
+      position: fixed;              /* bleibt unten, bewegt sich nicht mit */
+      left: 50%; bottom: 18px;
+      transform: translateX(-50%) translateY(12px);
+      width: 36px; height: 36px;
       border-radius: 50%;
       background: rgba(255,255,255,.4);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
       box-shadow: 0 4px 12px rgba(0,0,0,.08);
-      z-index: 10;
-      opacity: 0;
+      display: grid; place-items: center;
+      z-index: 50;
+      opacity: 0;                   /* Start unsichtbar → weiches Einblenden */
       transition: opacity .8s ease, transform .8s ease;
-      pointer-events: none;
+      pointer-events: none;         /* dekorativ, nicht klickbar */
     }
+    /* Down-Chevron als SVG, nicht drehend → immer nach unten */
+    .scroll-cue svg{ width: 16px; height: 16px; display: block; }
 
-    .nav-arrow-down::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      display: block;
-      border-right: 2px solid #000;
-      border-bottom: 2px solid #000;
-      transform: rotate(135deg); /* Spitze nach unten */
+    /* sanftes Auf-/Abwippen (keine Rotation → mobil-sicher) */
+    @keyframes cue-bounce {
+      0%,100% { transform: translateX(-50%) translateY(12px); opacity: 1; }
+      50%     { transform: translateX(-50%) translateY(18px); opacity: .75; }
     }
-
-    @keyframes arrow-bounce-down {
-      0%,100% { transform: translateX(-50%) translateY(0); opacity: 1; }
-      50%     { transform: translateX(-50%) translateY(6px); opacity: .75; }
-    }
-
-    .nav-arrow-down.visible {
+    .scroll-cue.visible{
       opacity: 1;
-      animation: arrow-bounce-down 2.5s ease-in-out infinite;
+      transform: translateX(-50%) translateY(12px);
+      animation: cue-bounce 2.5s ease-in-out infinite;
     }
-
-    .nav-arrow-down.hidden {
+    .scroll-cue.hidden{
       opacity: 0;
-      transform: translateX(-50%) translateY(15px);
+      transform: translateX(-50%) translateY(28px);
     }
 
-    footer {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 0.9rem;
-    }
+    footer{ text-align: center; margin-top: 2rem; font-size: .9rem; }
   </style>
 </head>
 
@@ -222,43 +176,48 @@
 
       <p class="note"></p>
     </div>
-
-    <!-- Pfeil INS Panel -->
-    <div class="nav-arrow-down" aria-hidden="true"></div>
   </main>
 
   <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+
+  <!-- Scroll-Hinweis (fixiert, SVG-Pfeil nach unten) -->
+  <div class="scroll-cue" aria-hidden="true">
+    <!-- Down chevron as SVG (stroke currentColor for theming if needed) -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </div>
 
   <!-- Skripte -->
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- Pfeilsteuerung -->
+  <!-- Pfeilsteuerung: auf .main scrollen, Pfeil bei Scroll ausblenden -->
   <script>
-    const arrowDown = document.querySelector('.nav-arrow-down');
+    const cue = document.querySelector('.scroll-cue');
     const scroller = document.querySelector('.main'); // eigener Scroll-Container
 
-    function updateArrow() {
+    function updateCue() {
       const y = scroller ? scroller.scrollTop : window.scrollY;
       if (y > 50) {
-        arrowDown.classList.add('hidden');
+        cue.classList.add('hidden');
       } else {
-        arrowDown.classList.remove('hidden');
+        cue.classList.remove('hidden');
       }
     }
 
-    // Pfeil nach 1 Sekunde weich einblenden
+    // nach 1s weich einblenden + Zustand prüfen
     window.addEventListener('load', () => {
       setTimeout(() => {
-        arrowDown.classList.add('visible');
-        updateArrow();
+        cue.classList.add('visible');
+        updateCue();
       }, 1000);
     });
 
-    // Scroll-Überwachung (Panel + Fenster)
-    if (scroller) scroller.addEventListener('scroll', updateArrow, { passive: true });
-    window.addEventListener('scroll', updateArrow, { passive: true });
-    window.addEventListener('resize', updateArrow);
+    // Scroll-Quellen überwachen
+    if (scroller) scroller.addEventListener('scroll', updateCue, { passive: true });
+    window.addEventListener('scroll', updateCue, { passive: true });
+    window.addEventListener('resize', updateCue);
   </script>
 </body>
 </html>
