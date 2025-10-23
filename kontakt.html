@@ -1,136 +1,249 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kontakt</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>kontakt — b3nn3t</title>
+<meta name="description" content="kontakt — b3nn3t"/>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="styles.css"/>
+<link rel="stylesheet" href="styles_nav_arrows.css"/>
+<link rel="stylesheet" href="swipe-helper.css"/>
 
-  <style>
-    html { font-size: 16px; }
-    :root{ --frame-pad: clamp(18px, 3vw, 28px); }
+<style>
+  html { font-size: 16px; }
+  :root{ --frame-pad: clamp(18px, 3vw, 28px); }
 
-    /* ========= GRAUER TRANSPARENTER BEREICH ========= */
-    .main{
-      background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      border-radius: 12px;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-    }
+  /* Glasiger Rahmen übernimmt die Außenabstände */
+  .main{
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 12px;
+    padding: var(--frame-pad);
+  }
 
-    .scroll-panel{
-      overflow: auto;
-      max-height: 75vh;
-      -webkit-overflow-scrolling: touch;
-      background: transparent;
-      box-shadow: none;
-      padding: var(--frame-pad);
-      margin: 0 auto calc(var(--frame-pad) - 6px);
-      max-width: 650px;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      overscroll-behavior: contain;
-      touch-action: pan-y;
-    }
-    .scroll-panel::-webkit-scrollbar{ display:none; }
+  /* === Scroll-Panel: komplett transparent + intern scrollen === */
+  .scroll-panel{
+    overflow: auto;
+    max-height: 75vh;
+    -webkit-overflow-scrolling: touch;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    max-width: 650px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+  .scroll-panel::-webkit-scrollbar{ display:none; }
 
-    /* ========= NAVIGATIONSPFEILE ========= */
-    .nav-arrow{
-      pointer-events: auto;
-      position: fixed;
-      z-index: 2000 !important;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 3rem;
-      line-height: 1;
-      color: #000;
-      cursor: pointer;
-      user-select: none;
-      transition: opacity 0.2s ease;
-    }
-    .nav-arrow.left  { left: 2%; }
-    .nav-arrow.right { right: 2%; }
-    .nav-arrow:hover { opacity: 0.6; }
+  .scroll-panel h1{ margin: 0 0 .75rem 0; }
+  .scroll-panel p{ margin: 0 0 1rem 0; }
 
-    /* ========= SWIPE-ZONEN ========= */
-    .edge-swipe{
-      position: fixed;
-      top: 0; bottom: 0;
-      width: 15%;
-      z-index: 1201;
-      background: transparent;
-      pointer-events: none; /* standardmäßig klick-durchlässig */
-    }
-    .edge-swipe.left  { left: 0; }
-    .edge-swipe.right { right: 0; }
+  /* Formular */
+  form{ margin:0; display:grid; gap:.8rem; }
+  form label{ font-weight:600; }
 
-    /* Auf Touch-Geräten aktivieren wir die Zonen fürs Swipen */
-    @media (pointer: coarse){
-      .edge-swipe{ pointer-events: auto; }
-    }
-  </style>
+  form input:not([type="checkbox"]), form textarea{
+    width:100%;
+    border:1px solid #ccc;
+    border-radius:8px;
+    padding:.6rem;
+    background:rgba(255,255,255,0.85);
+    font:inherit;
+  }
+  form textarea{ min-height:120px; }
+
+  form input[type="checkbox"]{
+    width:auto; margin:.25rem .5rem 0 0; padding:0; border:none; vertical-align:top;
+  }
+  form label{ display:block; }
+  form label input[type="checkbox"]{ float:left; }
+  form label input[type="checkbox"] + *{ display:block; }
+
+  form button{
+    margin-top:.6rem; margin-bottom:1.25rem;
+    border:none; border-radius:8px; padding:.6rem 1.2rem;
+    background:#111; color:#fff; font-weight:600; cursor:pointer;
+  }
+
+  /* === Hamburger-Menü === */
+  .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
+  .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+  body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
+  body.menu-open .hamburger span:nth-child(2){opacity:0}
+  body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+  .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
+  body.menu-open #menu-overlay{display:block}
+  #menu-overlay[hidden]{display:none}
+  .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s ease;z-index:1101;padding:46px 10px 14px}
+  body.menu-open .site-menu{transform:translateX(0)}
+  .site-menu ul{list-style:none;margin:0;padding:0}
+  .site-menu li{margin:0 0 10px 0}
+  .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
+  .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
+  .site-menu a:hover{background:rgba(0,0,0,.05)}
+  .nav-arrow{z-index:1000}
+
+  /* Swipe-Zonen */
+  .edge-swipe {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 28px;
+    z-index: 1201;
+    background: transparent;
+    pointer-events: auto;
+  }
+  .edge-swipe.left  { left: 0; }
+  .edge-swipe.right { right: 0; }
+</style>
 </head>
 
 <body>
-  <!-- ========= INHALT ========= -->
-  <div class="main">
-    <div class="scroll-panel">
-      <h1>Kontakt</h1>
-      <p>Hier steht dein Kontakttext …</p>
-      <p>Dieser Bereich ist jetzt scrollbar, wenn der Inhalt höher als 75 vh ist.</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in lorem ac sem aliquet feugiat. Donec sit amet urna nec odio tempor condimentum. Vivamus tempus augue at justo dignissim, sed congue justo hendrerit.</p>
-      <p>Phasellus sed arcu mauris. Nulla facilisi. Integer vel nisi ac est sodales volutpat. Etiam ut dui sit amet elit fermentum tempor. Mauris quis tortor non risus efficitur interdum. Cras vel consequat eros, a efficitur odio.</p>
-      <p>...</p>
-    </div>
+<header class="header">
+  <a class="brand" href="index.html" aria-label="b3nn3t Home">
+    <img src="favicon.svg" alt=""/><strong>b3nn3t</strong>
+  </a>
+</header>
+
+<!-- Burger-Menü -->
+<button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
+  <span></span><span></span><span></span>
+</button>
+<div id="menu-overlay" class="menu-overlay" hidden></div>
+<nav id="site-menu" class="site-menu" aria-hidden="true">
+  <ul>
+    <li><a href="ueber-mich.html">über mich</a></li>
+    <li><a href="diskografie.html">diskografie</a></li>
+    <li><a href="kontakt.html">kontakt</a></li>
+    <li><a href="aktuell.html">aktuell</a></li>
+    <li><a href="gesehen.html">gesehen</a></li>
+    <li><a href="plattformen.html">plattformen</a></li>
+    <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+  </ul>
+</nav>
+
+<!-- Pfeile -->
+<a class="nav-arrow left" aria-label="Vorherige Seite" href="diskografie.html">←</a>
+<a class="nav-arrow right" aria-label="Nächste Seite" href="aktuell.html">→</a>
+
+<main class="main">
+  <div class="scroll-panel">
+    <h1>kontakt</h1>
+    <p>
+      Schreib mir – das Formular sendet deine Nachricht direkt per E-Mail an mich
+      (über <a href="https://formsubmit.co" target="_blank" rel="noopener">FormSubmit</a>).
+      Für dich entstehen keine weiteren Schritte.
+    </p>
+
+    <form action="https://formsubmit.co/kohnke.bjoern@yahoo.com" method="POST" accept-charset="UTF-8">
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" value="https://b333n3t.github.io/danke.html" />
+      <input type="hidden" name="_subject" value="Neue Nachricht über b3nn3t Website" />
+
+      <label for="name">Name</label>
+      <input id="name" name="name" placeholder="Dein Name" required />
+
+      <label for="email">E-Mail</label>
+      <input id="email" name="email" type="email" placeholder="dein@mail.ch" required />
+
+      <label for="subject">Betreff</label>
+      <input id="subject" name="subject" placeholder="Worum geht’s?" />
+
+      <label for="message">Nachricht</label>
+      <textarea id="message" name="message" placeholder="Hi b3nn3t, ..." required></textarea>
+
+      <label style="font-weight:400">
+        <input type="checkbox" required />
+        Ich stimme zu, dass meine Angaben zur Beantwortung der Anfrage gespeichert werden.
+      </label>
+
+      <button type="submit">Nachricht senden</button>
+    </form>
   </div>
+</main>
 
-  <!-- ========= PFEILE ========= -->
-  <div class="nav-arrow left">‹</div>
-  <div class="nav-arrow right">›</div>
+<a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
 
-  <!-- ========= SWIPE-ZONEN ========= -->
-  <div class="edge-swipe left"></div>
-  <div class="edge-swipe right"></div>
+<footer>
+  © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+</footer>
 
-  <!-- ========= SCRIPT ========= -->
-  <script>
-    (function(){
-      const left  = document.querySelector('.nav-arrow.left');
-      const right = document.querySelector('.nav-arrow.right');
-      const leftZone  = document.querySelector('.edge-swipe.left');
-      const rightZone = document.querySelector('.edge-swipe.right');
+<!-- Unsichtbare Swipe-Zonen -->
+<div class="edge-swipe left"  aria-hidden="true"></div>
+<div class="edge-swipe right" aria-hidden="true"></div>
 
-      // === Klick-Funktion für Pfeile ===
-      const LEFT_TARGET  = 'diskografie.html'; // Zielseite links
-      const RIGHT_TARGET = 'nextpage.html';    // Zielseite rechts
+<script src="script.js"></script>
+<script src="swipe-nav.js?v=12" defer></script>
 
-      function go(url){ if (url) window.location.href = url; }
+<!-- Dynamische Höhenanpassung -->
+<script>
+(function() {
+  function resizePanel() {
+    var panel = document.querySelector('.scroll-panel');
+    if (!panel) return;
+    var header = document.querySelector('.header');
+    var footer = document.querySelector('footer');
+    var hh = header ? header.offsetHeight : 0;
+    var fh = footer ? footer.offsetHeight : 0;
+    var extra = 32;
+    var max = window.innerHeight - hh - fh - extra;
+    if (max > 240) panel.style.maxHeight = max + 'px';
+  }
+  window.addEventListener('load', resizePanel);
+  window.addEventListener('resize', resizePanel);
+})();
+</script>
 
-      left?.addEventListener('click',  e => { e.stopPropagation(); go(LEFT_TARGET); });
-      right?.addEventListener('click', e => { e.stopPropagation(); go(RIGHT_TARGET); });
+<!-- Swipe-Funktion -->
+<script>
+(function () {
+  var prev = document.querySelector('.nav-arrow.left');
+  var next = document.querySelector('.nav-arrow.right');
+  if (!prev && !next) return;
 
-      // === Swipe-Funktion für Touch-Geräte ===
-      if (leftZone && rightZone){
-        let startX = 0, distX = 0;
-        const threshold = 50;
+  var leftZone  = document.querySelector('.edge-swipe.left');
+  var rightZone = document.querySelector('.edge-swipe.right');
 
-        function onStart(e){ startX = e.touches[0].clientX; }
-        function onMove(e){ distX = e.touches[0].clientX - startX; }
-        function onEnd(){
-          if (distX > threshold) left?.click();
-          else if (distX < -threshold) right?.click();
-          startX = distX = 0;
-        }
+  var sx = 0, sy = 0, t0 = 0, side = null;
 
-        [leftZone, rightZone].forEach(zone => {
-          zone.addEventListener('touchstart', onStart);
-          zone.addEventListener('touchmove', onMove);
-          zone.addEventListener('touchend', onEnd);
-        });
-      }
-    })();
-  </script>
+  function onStart(e, which) {
+    var t = e.changedTouches[0];
+    sx = t.clientX; sy = t.clientY; t0 = Date.now(); side = which;
+  }
+
+  function onMove(e) {
+    if (!side) return;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - sx;
+    var dy = Math.abs(t.clientY - sy);
+    if (Math.abs(dx) > 10 && dy < 30) e.preventDefault();
+  }
+
+  function onEnd(e) {
+    if (!side) return;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - sx;
+    var dy = Math.abs(t.clientY - sy);
+    var fast = (Date.now() - t0) < 500;
+    var far  = Math.abs(dx) > 50;
+
+    if (dy < 40 && (fast || far)) {
+      if (side === 'left'  && dx > 30 && prev) location.href = prev.href;
+      if (side === 'right' && dx < -30 && next) location.href = next.href;
+    }
+    side = null;
+  }
+
+  leftZone.addEventListener('touchstart',  function(e){ onStart(e,'left'); },  {passive:true});
+  rightZone.addEventListener('touchstart', function(e){ onStart(e,'right'); }, {passive:true});
+  window.addEventListener('touchmove', onMove, {passive:false});
+  window.addEventListener('touchend',  onEnd,  {passive:true});
+})();
+</script>
 </body>
 </html>
