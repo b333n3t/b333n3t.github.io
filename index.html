@@ -53,24 +53,15 @@
     }
     .site-menu a:hover{background:rgba(0,0,0,.05);}
 
-    /* === Hauptbereich (grau-transparent mit Verlauf) === */
+    /* === Hauptbereich: oben 100% transparent, Effekt erst ab 100vh über ::before === */
     .main {
-      background: linear-gradient(
-        to bottom,
-        rgba(255,255,255,0) 0vh,
-        rgba(255,255,255,0) 100vh,
-        rgba(255,255,255,0.32) 110vh,
-        rgba(255,255,255,0.32) 100%
-      );
-
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
+      background: none;           /* kein Hintergrund oben */
+      /* WICHTIG: kein backdrop-filter hier – sonst milchig überall */
       border-radius: 12px;
       padding: 1.25rem 1rem;
 
-      /* Fix: Panel darf Klicks durchlassen und unter Pfeilen liegen */
       position: relative;
-      z-index: 0;
+      z-index: 0;                 /* unter Navigationspfeilen */
       pointer-events: auto;
 
       overflow: auto;
@@ -79,15 +70,41 @@
       -ms-overflow-style: none;
     }
     .main::-webkit-scrollbar{display:none;}
+
+    /* Das „Glas“-Overlay, das erst ab 100vh einsetzt */
+    .main::before{
+      content:"";
+      position: absolute;
+      top: 100vh;                 /* beginnt exakt bei 100vh */
+      left: 0; right: 0; bottom: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0) 0vh,          /* 100–110vh: sanfter Übergang */
+        rgba(255,255,255,0.32) 10vh,      /* ab +10vh (also 110vh gesamt) grau */
+        rgba(255,255,255,0.32) 100%
+      );
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      pointer-events: none;        /* lässt Klicks/Scrolls durch */
+      z-index: 0;                  /* unter dem Content */
+    }
+
     .main h1, .main p, .main section{background:transparent !important; box-shadow:none !important;}
 
-    .main .content-offset{padding-top:105vh;}
+    /* Inhalt später beginnen lassen */
+    .main .content-offset{
+      position: relative;
+      z-index: 1;                  /* ÜBER dem Overlay anzeigen */
+      padding-top: 105vh;          /* Startpunkt der Inhalte */
+    }
     .main{padding-bottom:2.5rem;}
 
     /* === Navigationspfeile wieder klickbar === */
     .nav-arrow { z-index: 1000 !important; }
 
-    /* === Pfeil unten (fixiert, verschwindet beim Scrollen) === */
+    /* === Pfeil unten (fixiert) === */
     .scroll-cue{
       position:fixed; left:50%; bottom:60px;
       transform:translateX(-50%) translateY(12px);
@@ -118,6 +135,8 @@
       overflow:hidden;
       line-height:0;
       box-shadow:0 6px 24px rgba(0,0,0,.15);
+      position: relative;
+      z-index: 1;                  /* sicher über dem ::before-Overlay */
     }
     .panel-photo img{
       display:block;
@@ -223,7 +242,7 @@
 
   <!-- Fade-In beim Scrollen -->
   <script>
-    const scroller = document.querySelector('.main');
+    const scrollerEl = document.querySelector('.main');
     const observer = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
         if(e.isIntersecting){
@@ -231,7 +250,7 @@
           observer.unobserve(e.target);
         }
       });
-    },{root:scroller,threshold:0.1});
+    },{root:scrollerEl,threshold:0.1});
     document.querySelectorAll('.reveal-on-scroll').forEach(el=>observer.observe(el));
   </script>
 </body>
