@@ -66,7 +66,6 @@
     .main::-webkit-scrollbar{display:none;}
     .main h1, .main p, .main section{background:transparent !important; box-shadow:none !important;}
 
-    /* Inhalt bewusst nach unten verschoben */
     .main .content-offset{padding-top:105vh;}
     .main{padding-bottom:2.5rem;}
 
@@ -79,16 +78,12 @@
       backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
       box-shadow:0 4px 12px rgba(0,0,0,.08);
       display:grid; place-items:center; z-index:50;
-      opacity:0; transition:opacity .8s ease, transform .8s ease;
+      opacity:0; transition:opacity .4s ease;
       pointer-events:none;
     }
     .scroll-cue svg{width:16px;height:16px;display:block;}
-    @keyframes cue-bounce{
-      0%,100%{transform:translateX(-50%) translateY(12px);opacity:1;}
-      50%{transform:translateX(-50%) translateY(18px);opacity:.75;}
-    }
-    .scroll-cue.visible{opacity:1;transform:translateX(-50%) translateY(12px);animation:cue-bounce 2.5s ease-in-out infinite;}
-    .scroll-cue.hidden{opacity:0;transform:translateX(-50%) translateY(28px);}
+    .scroll-cue.visible{opacity:1;}
+    .scroll-cue.hidden{opacity:0;}
 
     /* === Buttons untereinander === */
     .main .grid{
@@ -98,13 +93,13 @@
     }
     .main .grid .card{ width:100%; }
 
-    /* === Panel-breite Bilder inkl. leichtem Schatten === */
+    /* === Panel-breite Bilder mit Schatten === */
     .panel-photo{
-      margin:1rem -1rem 0;     /* gleicht Panel-Padding aus → volle Panelbreite */
+      margin:1rem -1rem 0;
       border-radius:12px;
       overflow:hidden;
       line-height:0;
-      box-shadow: 0 10px 30px rgba(0,0,0,.10);  /* leichter Shadow-Effekt */
+      box-shadow: 0 6px 24px rgba(0,0,0,.15); /* weicher Schatten */
     }
     .panel-photo img{
       display:block;
@@ -112,9 +107,13 @@
       height:auto;
       object-fit:cover;
       object-position:center;
+      transition:filter .6s ease;
+    }
+    .panel-photo img[data-loaded="false"]{
+      filter:blur(8px) brightness(0.9);
     }
 
-    /* === Fade-In Effekt für Bilder/Blöcke === */
+    /* === Fade-In Effekt === */
     .reveal-on-scroll{
       opacity:0;
       transform:translateY(14px);
@@ -124,9 +123,6 @@
     .reveal-on-scroll.in-view{
       opacity:1;
       transform:none;
-    }
-    @media (prefers-reduced-motion:reduce){
-      .reveal-on-scroll{transition:none;transform:none;opacity:1;}
     }
 
     footer{text-align:center;margin-top:2rem;font-size:.9rem;}
@@ -165,39 +161,29 @@
       <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
 
       <section class="grid" aria-label="Seitenübersicht">
-        <!-- Button 1 -->
         <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
 
-        <!-- Bild 1 -->
         <figure class="panel-photo reveal-on-scroll">
-          <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="lazy">
+          <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="lazy" data-loaded="false">
         </figure>
 
-        <!-- Button 2 -->
         <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
 
-        <!-- Bild 2 -->
         <figure class="panel-photo reveal-on-scroll">
-          <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="lazy">
+          <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="lazy" data-loaded="false">
         </figure>
 
-        <!-- Button 3 -->
         <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
 
-        <!-- Button 4 -->
         <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
 
-        <!-- Bild 3 (NEU: direkt unter "aktuell") -->
         <figure class="panel-photo reveal-on-scroll">
-          <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell" loading="lazy">
+          <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell" loading="lazy" data-loaded="false">
         </figure>
 
-        <!-- Rest der Buttons -->
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
         <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
       </section>
-
-      <p class="note"></p>
     </div>
   </main>
 
@@ -212,71 +198,47 @@
   </div>
 
   <!-- Skripte -->
-  <script src="script.js"></script>
-  <script src="swipe-nav.js?v=12" defer></script>
-
-  <!-- Pfeil-Logik (robust: .main + window + rAF-Fallback) -->
   <script>
-    (function () {
-      const cue = document.querySelector('.scroll-cue');
-      const scroller = document.querySelector('.main');
+    // === Pfeil: reagiert zuverlässig auf Scroll ===
+    const cue = document.querySelector('.scroll-cue');
+    const scroller = document.querySelector('.main');
+    let scrollTimeout;
 
-      function currentScroll() {
-        // kombiniere Panel-Scroll + Window-Scroll, nimm den größeren
-        const panelY = scroller ? scroller.scrollTop : 0;
-        const winY   = window.scrollY || document.documentElement.scrollTop || 0;
-        return Math.max(panelY, winY);
-      }
+    function checkScroll() {
+      const y = scroller ? scroller.scrollTop : 0;
+      if (y > 50) cue.classList.add('hidden');
+      else cue.classList.remove('hidden');
+    }
 
-      function updateCue() {
-        if (!cue) return;
-        if (currentScroll() > 50) cue.classList.add('hidden');
-        else cue.classList.remove('hidden');
-      }
+    scroller.addEventListener('scroll', () => {
+      cue.classList.add('hidden');
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(checkScroll, 150);
+    });
 
-      // sanftes Einblenden nach 1s
-      window.addEventListener('load', () => {
-        setTimeout(() => {
-          cue.classList.add('visible');
-          updateCue();
-        }, 1000);
+    window.addEventListener('load', () => {
+      cue.classList.add('visible');
+      checkScroll();
+    });
+
+    // === Lazy-Blur → sauberer Bildaufbau ===
+    document.querySelectorAll('.panel-photo img').forEach(img => {
+      img.addEventListener('load', () => {
+        img.dataset.loaded = "true";
       });
+    });
 
-      // auf beide Scroll-Quellen hören
-      if (scroller) scroller.addEventListener('scroll', updateCue, { passive: true });
-      window.addEventListener('scroll', updateCue, { passive: true });
-      window.addEventListener('resize', updateCue);
-
-      // kleiner Fallback: falls ein Browser kein Scroll-Event feuert
-      let lastY = -1;
-      function tick() {
-        const y = currentScroll();
-        if (y !== lastY) { lastY = y; updateCue(); }
-        requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    })();
-  </script>
-
-  <!-- Fade-In beim Scrollen -->
-  <script>
-    (function() {
-      const scroller = document.querySelector('.main');
-      const items = document.querySelectorAll('.reveal-on-scroll');
-      if (!('IntersectionObserver' in window) || !scroller) {
-        items.forEach(el => el.classList.add('in-view'));
-        return;
-      }
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in-view');
-            io.unobserve(e.target);
-          }
+    // === Fade-In Observer ===
+    const scItems = document.querySelectorAll('.reveal-on-scroll');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view');
+          io.unobserve(e.target);
         }
-      }, { root: scroller, rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
-      items.forEach(el => io.observe(el));
-    })();
+      });
+    }, { root: scroller, threshold: 0.1 });
+    scItems.forEach(el => io.observe(el));
   </script>
 </body>
 </html>
