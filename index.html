@@ -100,9 +100,9 @@
       width:100%;
     }
 
-    /* === Vollbreites Bild innerhalb des Panels === */
+    /* === Vollbreite Bilder im Panel === */
     .panel-photo{
-      margin:1rem -1rem 0;   /* gleicht Panel-Padding aus */
+      margin:1rem -1rem 0;
       border-radius:12px;
       overflow:hidden;
       line-height:0;
@@ -166,14 +166,23 @@
       <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
 
       <section class="grid" aria-label="Seitenübersicht">
+        <!-- Button 1 -->
         <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
 
-        <!-- Vollbreites Bild mit Fade-In Effekt -->
+        <!-- Bild 1 -->
         <figure class="panel-photo reveal-on-scroll">
           <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="lazy">
         </figure>
 
+        <!-- Button 2 -->
         <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
+
+        <!-- Bild 2 -->
+        <figure class="panel-photo reveal-on-scroll">
+          <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="lazy">
+        </figure>
+
+        <!-- Rest der Buttons -->
         <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
         <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
@@ -198,20 +207,26 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- Pfeil-Logik -->
+  <!-- Pfeil-Logik (jetzt stabil für .main-Scroll) -->
   <script>
     const cue = document.querySelector('.scroll-cue');
     const scroller = document.querySelector('.main');
+
     function updateCue() {
-      const y = scroller ? scroller.scrollTop : window.scrollY;
+      if (!cue || !scroller) return;
+      const y = scroller.scrollTop;
       if (y > 50) cue.classList.add('hidden');
       else cue.classList.remove('hidden');
     }
+
     window.addEventListener('load', () => {
-      setTimeout(() => { cue.classList.add('visible'); updateCue(); }, 1000);
+      setTimeout(() => {
+        cue.classList.add('visible');
+        updateCue();
+      }, 1000);
     });
-    if (scroller) scroller.addEventListener('scroll', updateCue, { passive: true });
-    window.addEventListener('scroll', updateCue, { passive: true });
+
+    scroller.addEventListener('scroll', updateCue, { passive: true });
     window.addEventListener('resize', updateCue);
   </script>
 
