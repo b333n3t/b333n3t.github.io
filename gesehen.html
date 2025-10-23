@@ -73,7 +73,7 @@
       <h1>gesehen</h1>
       <p>schon mal reingeschaut</p>
 
-      <!-- Intro Video mit Thumbnail -->
+      <!-- Intro Video -->
       <section class="grid grid-seen" aria-label="Intro">
         <div class="card" id="introVideo" data-embed-src="https://www.youtube.com/embed/DEIN_INTRO_VIDEO_ID">
           ▶︎ Intro-Video
@@ -82,7 +82,7 @@
       </section>
 
       <section class="grid grid-seen" aria-label="Videos">
-        <!-- Instagram Videos -->
+        <!-- Instagram -->
         <div class="card" id="video1" data-embed-src="https://www.instagram.com/reel/DKHa8SoMzQ-/embed">▶︎ Video 1<small>Instagram</small></div>
         <div class="card" id="video2" data-embed-src="https://www.instagram.com/reel/DK9pg-boyA1/embed">▶︎ Video 2<small>Instagram</small></div>
         <div class="card" id="video3" data-embed-src="https://www.instagram.com/reel/DLqGKqLsY6S/embed">▶︎ Video 3<small>Instagram</small></div>
@@ -90,11 +90,11 @@
         <div class="card" id="video5" data-embed-src="https://www.instagram.com/reel/C40c2qsN_eI/embed">▶︎ Video 5<small>Instagram</small></div>
         <div class="card" id="video6" data-embed-src="https://www.instagram.com/reel/C9opXa-MIvF/embed">▶︎ Video 6<small>Instagram</small></div>
 
-        <!-- YouTube Videos -->
+        <!-- YouTube -->
         <div class="card" id="yt1" data-embed-src="https://www.youtube.com/embed/ZSaj_FuqPN8">▶︎ YouTube 1<small>YouTube</small></div>
         <div class="card" id="yt2" data-embed-src="https://www.youtube.com/embed/DMNl40Tip1w">▶︎ YouTube 2<small>YouTube</small></div>
         <div class="card" id="yt3" data-embed-src="https://www.youtube.com/embed/K5pKG0Smdfc">▶︎ YouTube 3<small>YouTube</small></div>
-        <div class="card" id="yt4" data-embed-src="https://www.youtube.com/embed/w0pNdnlb96M">▶︎ YouTube 4<small>YouTube</small></div>
+        <div class="card" id="yt4" data-embed-src="https://www.youtube.com/embed/4I9vlcGvFGQ">▶︎ YouTube 4<small>YouTube</small></div>
         <div class="card" id="yt5" data-embed-src="https://www.youtube.com/embed/w0pNdnlb96M">▶︎ YouTube 5<small>YouTube</small></div>
         <div class="card" id="yt6" data-embed-src="https://www.youtube.com/embed/rV1U891RKLo">▶︎ YouTube 6<small>YouTube</small></div>
         <div class="card" id="yt7" data-embed-src="https://www.youtube.com/embed/fq8zhAQMam0">▶︎ YouTube 7<small>YouTube</small></div>
@@ -111,69 +111,44 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- Lazy Load: Video-Fenster direkt unter Karte mit Schließen-Button -->
+  <!-- Lazy Load: Video-Fenster unter Karte mit Schließen -->
   <script>
     const cards = document.querySelectorAll('.card[data-embed-src]');
-
-    function closeAllVideos() {
-      document.querySelectorAll('.video-wrapper').forEach(v => v.remove());
-    }
+    function closeAllVideos() { document.querySelectorAll('.video-wrapper').forEach(v => v.remove()); }
 
     cards.forEach(card => {
       card.addEventListener('click', () => {
-        // Wenn in dieser Karte schon ein Video offen ist -> schließen (toggle)
         const existing = card.querySelector('.video-wrapper');
         if (existing) { existing.remove(); return; }
-
-        // Andere offene schließen
         closeAllVideos();
-
-        // Neues Video-Wrapper-Element direkt in der Karte erstellen
         const src = card.getAttribute('data-embed-src');
         const wrapper = document.createElement('div');
         wrapper.className = 'video-wrapper';
-
         const closeBtn = document.createElement('button');
         closeBtn.textContent = '×';
         closeBtn.className = 'video-close';
-        closeBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          wrapper.remove();
-        });
-
+        closeBtn.addEventListener('click', (e) => { e.stopPropagation(); wrapper.remove(); });
         const iframe = document.createElement('iframe');
-        iframe.src = src;
-        iframe.allowFullscreen = true;
-        iframe.loading = 'lazy';
-        iframe.title = 'Video';
-        wrapper.appendChild(closeBtn);
-        wrapper.appendChild(iframe);
-
+        iframe.src = src; iframe.allowFullscreen = true; iframe.loading = 'lazy'; iframe.title = 'Video';
+        wrapper.appendChild(closeBtn); wrapper.appendChild(iframe);
         card.appendChild(wrapper);
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     });
-
-    // Optional: Schließen bei ESC
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeAllVideos();
-    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllVideos(); });
   </script>
 
-  <!-- Instagram Thumbnails: insta1.png … insta6.png + Fallback -->
+  <!-- Instagram Thumbnails -->
   <script>
     (function () {
       const igCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
-        .filter(c => /instagram\.com\/reel\//.test(c.getAttribute('data-embed-src') || ''));
-
+        .filter(c => /instagram\\.com\\/reel\\//.test(c.getAttribute('data-embed-src') || ''));
       igCards.forEach((card, idx) => {
         if (card.querySelector('img.thumb')) return;
-        const n = idx + 1; // 1..6 entsprechend der Reihenfolge
+        const n = idx + 1;
         const img = new Image();
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        img.className = 'thumb';
-        img.alt = 'Instagram-Vorschau';
+        img.loading = 'lazy'; img.decoding = 'async';
+        img.className = 'thumb'; img.alt = 'Instagram-Vorschau';
         img.src = `assets/insta${n}.png`;
         img.onerror = () => { img.onerror = null; img.src = 'assets/instagram_poster.jpg'; };
         card.insertBefore(img, card.firstChild);
@@ -181,50 +156,43 @@
     })();
   </script>
 
-  <!-- YouTube Thumbnails: yt1..yt7 -> assets/reel1.avif..reel7.avif (Intro ausgeschlossen) -->
+  <!-- YouTube Thumbnails: reel1.avif – reel7.avif (yt4 = reel4.jpg) -->
   <script>
     (function () {
       const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
         .filter(c =>
-          /youtube\.com\/embed\//.test(c.getAttribute('data-embed-src') || '') &&
-          c.id !== 'introVideo' // wichtig: Intro nicht doppelt bebildern
+          /youtube\\.com\\/embed\\//.test(c.getAttribute('data-embed-src') || '') &&
+          c.id !== 'introVideo'
         );
 
       ytCards.forEach((card) => {
-        const m = (card.id || '').match(/^yt(\d+)$/); // erwartet yt1..yt7
+        const m = (card.id || '').match(/^yt(\\d+)$/);
         if (!m) return;
         const n = m[1];
-
         if (card.querySelector('img.thumb')) return;
-
         const img = new Image();
         img.loading = 'lazy';
         img.decoding = 'async';
         img.className = 'thumb';
         img.alt = 'YouTube-Vorschau';
-        img.src = `assets/reel${n}.avif`;
+        img.src = (n === '4') ? 'assets/reel4.jpg' : `assets/reel${n}.avif`;
         img.onerror = () => { img.onerror = null; img.remove(); };
         card.insertBefore(img, card.firstChild);
       });
     })();
   </script>
 
-  <!-- Intro Thumbnail mit Case-Fallback (nur 1 Bild) -->
+  <!-- Intro Thumbnail -->
   <script>
     (function () {
       const intro = document.getElementById('introVideo');
       if (!intro) return;
-
-      if (intro.querySelector('img.thumb')) return; // doppelte Einfügung verhindern
-
+      if (intro.querySelector('img.thumb')) return;
       const img = new Image();
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      img.className = 'thumb';
-      img.alt = 'Intro-Vorschau';
-      img.src = 'assets/Intro.jpg';                // groß geschrieben (deine Datei)
-      img.onerror = () => { img.onerror = null; img.src = 'assets/intro.jpg'; }; // Fallback klein
-
+      img.loading = 'lazy'; img.decoding = 'async';
+      img.className = 'thumb'; img.alt = 'Intro-Vorschau';
+      img.src = 'assets/Intro.jpg';
+      img.onerror = () => { img.onerror = null; img.src = 'assets/intro.jpg'; };
       intro.insertBefore(img, intro.firstChild);
     })();
   </script>
