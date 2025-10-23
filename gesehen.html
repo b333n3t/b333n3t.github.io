@@ -108,6 +108,17 @@
       height: 100%;
       border: 0;
     }
+
+    /* NEU: Thumbnail-Vorschaubild in Karten */
+    .card .thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: block;
+      border-radius: 12px;
+      object-fit: cover;
+      background: #000;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
@@ -202,6 +213,41 @@
         container.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
+  </script>
+
+  <!-- NEU: Auto-Thumbnails für YouTube-Karten -->
+  <script>
+    (function () {
+      // Nur Karten mit YouTube-Embed berücksichtigen
+      const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
+        .filter(c => /youtube\\.com\\/embed\\//.test(c.getAttribute('data-embed-src') || ''));
+
+      function extractYtId(url) {
+        const m = (url || '').match(/(?:embed\\/|v=|youtu\\.be\\/)([A-Za-z0-9_-]{11})/);
+        return m ? m[1] : null;
+      }
+
+      ytCards.forEach(card => {
+        // Doppeltes Einfügen vermeiden
+        if (card.querySelector('img.thumb')) return;
+
+        const src = card.getAttribute('data-embed-src');
+        const id = extractYtId(src);
+        if (!id) return;
+
+        const img = new Image();
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.className = 'thumb';
+        img.alt = 'YouTube-Vorschau';
+        // Versuche maximale Auflösung, dann Fallback
+        img.src = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+        img.onerror = () => { img.onerror = null; img.src = `https://img.youtube.com/vi/${id}/hqdefault.jpg`; };
+
+        // Bild am Anfang der Karte einfügen
+        card.insertBefore(img, card.firstChild);
+      });
+    })();
   </script>
 </body>
 </html>
