@@ -18,6 +18,11 @@
     .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
     .video-row { display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap; }
     .hint { font-size: .9rem; opacity: .75; }
+
+    /* Karten-Buttons als „card“ mit Mini-Link */
+    .card.card-video { cursor: pointer; }
+    .card.card-video .mini-link { text-decoration: underline; }
+    .card.card-video .mini-link:focus { outline: none; }
   </style>
 </head>
 <body>
@@ -60,41 +65,32 @@
         </a>
       </section>
 
-      <!-- Video-Aktionen als Karten (gleicher Stil/Größe) -->
+      <!-- Videos: je EINE Karte, kleiner Link innen führt zu Instagram -->
       <section class="grid grid-seen" aria-label="Videos">
-        <!-- Video 1: Karte zum Abspielen -->
-        <a id="play1Card" class="card" role="button" tabindex="0">
+        <div class="card card-video" id="v1" role="button" tabindex="0" data-embed-src="https://www.instagram.com/reel/DKHa8SoMzQ-/embed">
           ▶︎ Video 1 hier abspielen
-          <small>Instagram-Embed lädt bei Klick</small>
-        </a>
-        <!-- Video 1: Karte zum Öffnen auf Instagram -->
-        <a class="card" href="https://www.instagram.com/reel/DKHa8SoMzQ-/?igsh=MTV3NmljOGVyaGt4ZQ==" target="_blank" rel="noopener">
-          ⧉ Video 1 auf Instagram
-          <small>neuer Tab</small>
-        </a>
+          <small>
+            Instagram-Embed lädt bei Klick ·
+            <a class="mini-link" href="https://www.instagram.com/reel/DKHa8SoMzQ-/?igsh=MTV3NmljOGVyaGt4ZQ==" target="_blank" rel="noopener">auf Instagram</a>
+          </small>
+        </div>
+        <div class="card card-video" id="v2" role="button" tabindex="0" data-embed-src="https://www.instagram.com/reel/DK9pg-boyA1/embed">
+          ▶︎ Video 2 hier abspielen
+          <small>
+            Instagram-Embed lädt bei Klick ·
+            <a class="mini-link" href="https://www.instagram.com/reel/DK9pg-boyA1/?igsh=d2d0eG04N2JnZHZ3" target="_blank" rel="noopener">auf Instagram</a>
+          </small>
+        </div>
       </section>
+
       <div id="vid1" class="video-wrapper" hidden>
         <iframe id="frame1" title="Instagram Reel 1"></iframe>
       </div>
-
-      <section class="grid grid-seen" aria-label="Videos">
-        <!-- Video 2: Karte zum Abspielen -->
-        <a id="play2Card" class="card" role="button" tabindex="0">
-          ▶︎ Video 2 hier abspielen
-          <small>Instagram-Embed lädt bei Klick</small>
-        </a>
-        <!-- Video 2: Karte zum Öffnen auf Instagram -->
-        <a class="card" href="https://www.instagram.com/reel/DK9pg-boyA1/?igsh=d2d0eG04N2JnZHZ3" target="_blank" rel="noopener">
-          ⧉ Video 2 auf Instagram
-          <small>neuer Tab</small>
-        </a>
-      </section>
       <div id="vid2" class="video-wrapper" hidden>
         <iframe id="frame2" title="Instagram Reel 2"></iframe>
       </div>
 
       <p class="hint">Hinweis: Embeds laden erst nach Klick (bessere Performance). Reels müssen öffentlich sein, sonst zeigt Instagram nichts an.</p>
-
     </div>
   </main>
 
@@ -109,26 +105,32 @@
   <script>
     // Lazy-Load der Instagram-Embeds erst beim Klick
     const embeds = [
-      { btn: 'play1Card', wrap: 'vid1', frame: 'frame1', src: 'https://www.instagram.com/reel/DKHa8SoMzQ-/embed' },
-      { btn: 'play2Card', wrap: 'vid2', frame: 'frame2', src: 'https://www.instagram.com/reel/DK9pg-boyA1/embed' }
+      { btn: 'v1', wrap: 'vid1', frame: 'frame1' },
+      { btn: 'v2', wrap: 'vid2', frame: 'frame2' }
     ];
 
-    embeds.forEach(({btn, wrap, frame, src}) => {
-      const b = document.getElementById(btn);
+    embeds.forEach(({btn, wrap, frame}) => {
+      const card = document.getElementById(btn);
       const w = document.getElementById(wrap);
       const f = document.getElementById(frame);
-      if (!b || !w || !f) return;
-      b.addEventListener('click', () => {
-        if (!f.src) f.src = src; // erst jetzt laden
+      if (!card || !w || !f) return;
+
+      const src = card.getAttribute('data-embed-src');
+
+      function play() {
+        if (!f.src) f.src = src;        // erst jetzt laden
         w.hidden = false;
         w.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      card.addEventListener('click', play);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); }
       });
-      // auch Enter/Space auf der "Karte" aktivieren
-      b.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          b.click();
-        }
+
+      // Klicks auf den kleinen Instagram-Link sollen NICHT das Video laden
+      card.querySelectorAll('a.mini-link').forEach((a) => {
+        a.addEventListener('click', (e) => e.stopPropagation());
       });
     });
   </script>
