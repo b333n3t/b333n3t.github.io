@@ -4,28 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kontakt</title>
+
   <style>
     html { font-size: 16px; }
     :root{ --frame-pad: clamp(18px, 3vw, 28px); }
 
-    /* Glasiger Rahmen: kein Innen-Padding, wie diskografie.html */
+    /* ========= GRAUER TRANSPARENTER BEREICH ========= */
     .main{
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
       border-radius: 12px;
-      padding: 0;               /* geändert */
+      padding: 0;
+      display: flex;
+      justify-content: center;
     }
 
-    /* === Scroll-Panel: komplett transparent + intern scrollen === */
     .scroll-panel{
       overflow: auto;
       max-height: 75vh;
       -webkit-overflow-scrolling: touch;
       background: transparent;
       box-shadow: none;
-      padding: var(--frame-pad);                     /* geändert */
-      margin: 0 0 calc(var(--frame-pad) - 6px) 0;    /* geändert */
+      padding: var(--frame-pad);
+      margin: 0 auto calc(var(--frame-pad) - 6px);
       max-width: 650px;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -34,80 +36,100 @@
     }
     .scroll-panel::-webkit-scrollbar{ display:none; }
 
-    /* ... alle bestehenden Styles unverändert ... */
-
-    .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
-    .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
-    .site-menu a:hover{background:rgba(0,0,0,.05)}
-
-    /* Pfeile über Swipe-Zonen */
+    /* ========= NAVIGATIONSPFEILE ========= */
     .nav-arrow{
+      pointer-events: auto;
       position: fixed;
-      z-index: 1400 !important;
+      z-index: 2000 !important;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+      line-height: 1;
+      color: #000;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.2s ease;
     }
+    .nav-arrow.left  { left: 2%; }
+    .nav-arrow.right { right: 2%; }
+    .nav-arrow:hover { opacity: 0.6; }
 
-    /* Swipe-Zonen */
-    .edge-swipe {
+    /* ========= SWIPE-ZONEN ========= */
+    .edge-swipe{
       position: fixed;
-      top: 0;
-      bottom: 0;
+      top: 0; bottom: 0;
       width: 15%;
       z-index: 1201;
-      touch-action: pan-y;
+      background: transparent;
+      pointer-events: none; /* standardmäßig klick-durchlässig */
     }
     .edge-swipe.left  { left: 0; }
     .edge-swipe.right { right: 0; }
 
-    /* Desktop: prevent invisible edge-swipe zones from blocking clicks */
-    @media (hover:hover) and (pointer:fine){
-      .edge-swipe{ pointer-events: none; }
+    /* Auf Touch-Geräten aktivieren wir die Zonen fürs Swipen */
+    @media (pointer: coarse){
+      .edge-swipe{ pointer-events: auto; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Bestehender HTML-Aufbau bleibt hier komplett unverändert -->
+  <!-- ========= INHALT ========= -->
   <div class="main">
     <div class="scroll-panel">
-      <!-- dein Kontaktinhalt -->
+      <h1>Kontakt</h1>
+      <p>Hier steht dein Kontakttext …</p>
+      <p>Dieser Bereich ist jetzt scrollbar, wenn der Inhalt höher als 75 vh ist.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in lorem ac sem aliquet feugiat. Donec sit amet urna nec odio tempor condimentum. Vivamus tempus augue at justo dignissim, sed congue justo hendrerit.</p>
+      <p>Phasellus sed arcu mauris. Nulla facilisi. Integer vel nisi ac est sodales volutpat. Etiam ut dui sit amet elit fermentum tempor. Mauris quis tortor non risus efficitur interdum. Cras vel consequat eros, a efficitur odio.</p>
+      <p>...</p>
     </div>
   </div>
 
-  <!-- Pfeile -->
+  <!-- ========= PFEILE ========= -->
   <div class="nav-arrow left">‹</div>
   <div class="nav-arrow right">›</div>
 
-  <!-- Swipe-Zonen -->
+  <!-- ========= SWIPE-ZONEN ========= -->
   <div class="edge-swipe left"></div>
   <div class="edge-swipe right"></div>
 
-  <!-- Vorhandenes JS (nicht verändert) -->
+  <!-- ========= SCRIPT ========= -->
   <script>
-    (function () {
-      var prev = document.querySelector('.nav-arrow.left');
-      var next = document.querySelector('.nav-arrow.right');
-      var leftZone  = document.querySelector('.edge-swipe.left');
-      var rightZone = document.querySelector('.edge-swipe.right');
-      if (!prev && !next) return;
-      if (!leftZone || !rightZone) return;
+    (function(){
+      const left  = document.querySelector('.nav-arrow.left');
+      const right = document.querySelector('.nav-arrow.right');
+      const leftZone  = document.querySelector('.edge-swipe.left');
+      const rightZone = document.querySelector('.edge-swipe.right');
 
-      let startX = 0, distX = 0;
-      const threshold = 50;
+      // === Klick-Funktion für Pfeile ===
+      const LEFT_TARGET  = 'diskografie.html'; // Zielseite links
+      const RIGHT_TARGET = 'nextpage.html';    // Zielseite rechts
 
-      function onStart(e){ startX = e.touches[0].clientX; }
-      function onMove(e){ distX = e.touches[0].clientX - startX; }
-      function onEnd(){
-        if (distX > threshold) prev?.click();
-        else if (distX < -threshold) next?.click();
-        startX = distX = 0;
+      function go(url){ if (url) window.location.href = url; }
+
+      left?.addEventListener('click',  e => { e.stopPropagation(); go(LEFT_TARGET); });
+      right?.addEventListener('click', e => { e.stopPropagation(); go(RIGHT_TARGET); });
+
+      // === Swipe-Funktion für Touch-Geräte ===
+      if (leftZone && rightZone){
+        let startX = 0, distX = 0;
+        const threshold = 50;
+
+        function onStart(e){ startX = e.touches[0].clientX; }
+        function onMove(e){ distX = e.touches[0].clientX - startX; }
+        function onEnd(){
+          if (distX > threshold) left?.click();
+          else if (distX < -threshold) right?.click();
+          startX = distX = 0;
+        }
+
+        [leftZone, rightZone].forEach(zone => {
+          zone.addEventListener('touchstart', onStart);
+          zone.addEventListener('touchmove', onMove);
+          zone.addEventListener('touchend', onEnd);
+        });
       }
-
-      leftZone.addEventListener('touchstart', onStart);
-      leftZone.addEventListener('touchmove', onMove);
-      leftZone.addEventListener('touchend', onEnd);
-      rightZone.addEventListener('touchstart', onStart);
-      rightZone.addEventListener('touchmove', onMove);
-      rightZone.addEventListener('touchend', onEnd);
     })();
   </script>
 </body>
