@@ -165,4 +165,48 @@
       <!-- Eingebettete Video-Felder -->
       <div id="vid1" class="video-wrapper" hidden>
         <iframe id="frame1" title="Instagram Video 1"></iframe>
-      </div
+      </div>
+      <div id="vid2" class="video-wrapper" hidden>
+        <iframe id="frame2" title="Instagram Video 2"></iframe>
+      </div>
+
+    </div>
+  </main>
+
+  <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
+
+  <footer>
+    © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="swipe-nav.js?v=12" defer></script>
+  <script>
+    // Lazy Load: Videos werden erst geladen, wenn man klickt
+    const videos = [
+      { btn: 'video1', wrap: 'vid1', frame: 'frame1' },
+      { btn: 'video2', wrap: 'vid2', frame: 'frame2' }
+    ];
+
+    videos.forEach(({btn, wrap, frame}) => {
+      const card = document.getElementById(btn);
+      const w = document.getElementById(wrap);
+      const f = document.getElementById(frame);
+      if (!card || !w || !f) return;
+
+      const src = card.getAttribute('data-embed-src');
+
+      function play() {
+        if (!f.src) f.src = src;
+        w.hidden = false;
+        w.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      card.addEventListener('click', play);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); }
+      });
+    });
+  </script>
+</body>
+</html>
