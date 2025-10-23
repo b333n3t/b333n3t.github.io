@@ -53,9 +53,8 @@
     }
     .site-menu a:hover{background:rgba(0,0,0,.05);}
 
-    /* === Hauptbereich (grau-transparent mit Gradient) === */
+    /* === Hauptbereich (grau-transparent mit Verlauf) === */
     .main {
-      /* Verlauf: 0–100vh = durchsichtig, 100–110vh Übergang, danach halbtransparent */
       background: linear-gradient(
         to bottom,
         rgba(255,255,255,0) 0vh,
@@ -68,8 +67,12 @@
       -webkit-backdrop-filter: blur(2px);
       border-radius: 12px;
       padding: 1.25rem 1rem;
+
+      /* Fix: Panel darf Klicks durchlassen und unter Pfeilen liegen */
       position: relative;
-      z-index: 1;
+      z-index: 0;
+      pointer-events: auto;
+
       overflow: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
@@ -78,11 +81,13 @@
     .main::-webkit-scrollbar{display:none;}
     .main h1, .main p, .main section{background:transparent !important; box-shadow:none !important;}
 
-    /* Inhalt nach unten verschoben */
     .main .content-offset{padding-top:105vh;}
     .main{padding-bottom:2.5rem;}
 
-    /* === Pfeil unten (fixiert) === */
+    /* === Navigationspfeile wieder klickbar === */
+    .nav-arrow { z-index: 1000 !important; }
+
+    /* === Pfeil unten (fixiert, verschwindet beim Scrollen) === */
     .scroll-cue{
       position:fixed; left:50%; bottom:60px;
       transform:translateX(-50%) translateY(12px);
@@ -90,7 +95,7 @@
       background:rgba(255,255,255,.4);
       backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
       box-shadow:0 4px 12px rgba(0,0,0,.08);
-      display:grid; place-items:center; z-index:50;
+      display:grid; place-items:center; z-index:900;
       opacity:0; transition:opacity .4s ease;
       pointer-events:none;
     }
@@ -106,7 +111,7 @@
     }
     .main .grid .card{width:100%;}
 
-    /* === Bilder: volle Panelbreite + Schatten === */
+    /* === Panel-breite Bilder mit Schatten === */
     .panel-photo{
       margin:1rem -1rem 0;
       border-radius:12px;
@@ -120,7 +125,6 @@
       height:auto;
       object-fit:cover;
       object-position:center;
-      transition:filter .6s ease;
     }
 
     /* === Fade-In Effekt === */
@@ -139,7 +143,7 @@
   </style>
 </head>
 
-<body>
+<body ontouchstart="">
   <header class="header">
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
       <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
@@ -203,7 +207,11 @@
     </svg>
   </div>
 
-  <!-- Pfeil- und Fade-In-Logik -->
+  <!-- Skripte -->
+  <script src="script.js"></script>
+  <script src="swipe-nav.js?v=12" defer></script>
+
+  <!-- Pfeil-Logik -->
   <script>
     const cue = document.querySelector('.scroll-cue');
     const scroller = document.querySelector('.main');
@@ -211,10 +219,17 @@
       cue.classList.toggle('hidden', scroller.scrollTop > 50);
     });
     window.addEventListener('load', () => cue.classList.add('visible'));
+  </script>
 
+  <!-- Fade-In beim Scrollen -->
+  <script>
+    const scroller = document.querySelector('.main');
     const observer = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
-        if(e.isIntersecting){e.target.classList.add('in-view'); observer.unobserve(e.target);}
+        if(e.isIntersecting){
+          e.target.classList.add('in-view');
+          observer.unobserve(e.target);
+        }
       });
     },{root:scroller,threshold:0.1});
     document.querySelectorAll('.reveal-on-scroll').forEach(el=>observer.observe(el));
