@@ -6,23 +6,94 @@
   <title>gesehen — b3nn3t</title>
   <meta name="description" content="gesehen — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
-  <style>
-    .btns { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-    .btn { background: rgba(255,255,255,0.25); border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; padding: 10px 16px; font-weight: 500; text-decoration: none; color: #000; transition: background 0.2s ease; cursor: pointer; }
-    .btn:hover { background: rgba(255,255,255,0.4); }
-    .btn.link { background: transparent; border: none; padding: 0; color: inherit; text-decoration: underline; }
-    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 16px; border-radius: 12px; background: #000; border: 1px solid rgba(0,0,0,0.06); }
-    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-    .video-row { display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap; }
-    .hint { font-size: .9rem; opacity: .75; }
 
-    /* Karten-Buttons als „card“ mit Mini-Link */
-    .card.card-video { cursor: pointer; }
-    .card.card-video .mini-link { text-decoration: underline; }
-    .card.card-video .mini-link:focus { outline: none; }
+  <style>
+    .hamburger{
+      position:fixed; top:14px; right:18px; width:20px; height:20px;
+      border:none; background:transparent; display:grid; place-items:center;
+      cursor:pointer; z-index:1200; padding:0;
+    }
+    .hamburger span{
+      display:block; width:12px; height:1.4px; margin:1.5px 0; background:#000;
+      border-radius:2px; transition:transform .2s ease, opacity .2s ease;
+    }
+    body.menu-open .hamburger span:nth-child(1){ transform:translateY(3.5px) rotate(45deg); }
+    body.menu-open .hamburger span:nth-child(2){ opacity:0; }
+    body.menu-open .hamburger span:nth-child(3){ transform:translateY(-3.5px) rotate(-45deg); }
+
+    .menu-overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.08);
+      backdrop-filter:blur(1px); -webkit-backdrop-filter:blur(1px); z-index:1099;
+    }
+    body.menu-open #menu-overlay{ display:block; }
+    #menu-overlay[hidden]{ display:none; }
+
+    .site-menu{
+      position:fixed; top:0; right:0; height:auto; max-height:90vh; width:min(40vw,150px);
+      background:rgba(255,255,255,.32); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+      box-shadow:0 20px 50px rgba(0,0,0,.08); transform:translateX(100%); transition:transform .25s ease;
+      z-index:1101; padding:46px 10px 14px;
+    }
+    body.menu-open .site-menu{ transform:translateX(0); }
+
+    .site-menu ul{ list-style:none; margin:0; padding:0; }
+    .site-menu li{ margin:0 0 10px 0; }
+    .site-menu li.sep{ margin-top:18px; padding-top:8px; border-top:1px solid rgba(0,0,0,.08); }
+    .site-menu a{
+      display:block; padding:8px 6px; border-radius:10px; color:#000; text-decoration:none;
+      font-size:1rem; font-weight:500;
+    }
+    .site-menu a:hover{ background:rgba(0,0,0,.05); }
+
+    .nav-arrow{ z-index:1000; }
+
+    :root{ --frame-pad: clamp(18px, 3vw, 28px); }
+
+    .main{
+      background: rgba(255,255,255,.32);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border-radius: 12px;
+      padding: var(--frame-pad);
+    }
+
+    .scroll-panel {
+      overflow: auto;
+      max-height: 75vh;
+      -webkit-overflow-scrolling: touch;
+      background: transparent;
+      border-radius: 12px;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+      max-width: 650px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .scroll-panel::-webkit-scrollbar { display: none; }
+
+    .scroll-panel h1{ margin: 0 0 .6rem; }
+    .scroll-panel p{ margin: 0 0 1rem; }
+
+    .grid-seen {
+      display: flex;
+      justify-content: flex-start;
+      align-items: stretch;
+      gap: 14px;
+      margin-top: .5rem;
+      flex-wrap: wrap;
+    }
+    .grid-seen .card {
+      flex: 0 1 180px;
+      max-width: 180px;
+    }
+    @media (max-width: 480px) {
+      .grid-seen .card { flex-basis: 120px; max-width: 120px; }
+    }
   </style>
 </head>
 <body>
@@ -49,48 +120,31 @@
     </ul>
   </nav>
 
-  <a class="nav-arrow left" aria-label="Vorherige Seite" href="aktuell.html">←</a>
-  <a class="nav-arrow right" aria-label="Nächste Seite" href="plattformen.html">→</a>
+  <a class="nav-arrow left"  aria-label="Vorherige Seite" href="aktuell.html">←</a>
+  <a class="nav-arrow right" aria-label="Nächste Seite"   href="plattformen.html">→</a>
 
   <main class="main">
     <div class="scroll-panel">
       <h1>gesehen</h1>
       <p>schon mal reingeschaut</p>
 
-      <!-- Original-Intro-Karte beibehalten -->
       <section class="grid grid-seen" aria-label="Seitenübersicht">
         <a class="card" href="intro.html">
           intro
           <small>Intro & Start</small>
         </a>
+
+        <!-- Neue Video-Buttons -->
+        <a class="card" href="https://www.instagram.com/reel/DKHa8SoMzQ-/?igsh=MTV3NmljOGVyaGt4ZQ==" target="_blank" rel="noopener">
+          Video 1
+          <small>auf Instagram ansehen</small>
+        </a>
+
+        <a class="card" href="https://www.instagram.com/reel/DK9pg-boyA1/?igsh=d2d0eG04N2JnZHZ3" target="_blank" rel="noopener">
+          Video 2
+          <small>auf Instagram ansehen</small>
+        </a>
       </section>
-
-      <!-- Videos: je EINE Karte, kleiner Link innen führt zu Instagram -->
-      <section class="grid grid-seen" aria-label="Videos">
-        <div class="card card-video" id="v1" role="button" tabindex="0" data-embed-src="https://www.instagram.com/reel/DKHa8SoMzQ-/embed">
-          ▶︎ Video 1 hier abspielen
-          <small>
-            Instagram-Embed lädt bei Klick ·
-            <a class="mini-link" href="https://www.instagram.com/reel/DKHa8SoMzQ-/?igsh=MTV3NmljOGVyaGt4ZQ==" target="_blank" rel="noopener">auf Instagram</a>
-          </small>
-        </div>
-        <div class="card card-video" id="v2" role="button" tabindex="0" data-embed-src="https://www.instagram.com/reel/DK9pg-boyA1/embed">
-          ▶︎ Video 2 hier abspielen
-          <small>
-            Instagram-Embed lädt bei Klick ·
-            <a class="mini-link" href="https://www.instagram.com/reel/DK9pg-boyA1/?igsh=d2d0eG04N2JnZHZ3" target="_blank" rel="noopener">auf Instagram</a>
-          </small>
-        </div>
-      </section>
-
-      <div id="vid1" class="video-wrapper" hidden>
-        <iframe id="frame1" title="Instagram Reel 1"></iframe>
-      </div>
-      <div id="vid2" class="video-wrapper" hidden>
-        <iframe id="frame2" title="Instagram Reel 2"></iframe>
-      </div>
-
-      <p class="hint">Hinweis: Embeds laden erst nach Klick (bessere Performance). Reels müssen öffentlich sein, sonst zeigt Instagram nichts an.</p>
     </div>
   </main>
 
@@ -102,37 +156,23 @@
 
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
+
   <script>
-    // Lazy-Load der Instagram-Embeds erst beim Klick
-    const embeds = [
-      { btn: 'v1', wrap: 'vid1', frame: 'frame1' },
-      { btn: 'v2', wrap: 'vid2', frame: 'frame2' }
-    ];
-
-    embeds.forEach(({btn, wrap, frame}) => {
-      const card = document.getElementById(btn);
-      const w = document.getElementById(wrap);
-      const f = document.getElementById(frame);
-      if (!card || !w || !f) return;
-
-      const src = card.getAttribute('data-embed-src');
-
-      function play() {
-        if (!f.src) f.src = src;        // erst jetzt laden
-        w.hidden = false;
-        w.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      card.addEventListener('click', play);
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); }
-      });
-
-      // Klicks auf den kleinen Instagram-Link sollen NICHT das Video laden
-      card.querySelectorAll('a.mini-link').forEach((a) => {
-        a.addEventListener('click', (e) => e.stopPropagation());
-      });
-    });
+  (function() {
+    function resizePanel() {
+      var panel = document.querySelector('.scroll-panel');
+      if (!panel) return;
+      var header = document.querySelector('.header');
+      var footer = document.querySelector('footer');
+      var hh = header ? header.offsetHeight : 0;
+      var fh = footer ? footer.offsetHeight : 0;
+      var extra = 32;
+      var max = window.innerHeight - hh - fh - extra;
+      if (max > 240) panel.style.maxHeight = max + 'px';
+    }
+    window.addEventListener('load', resizePanel);
+    window.addEventListener('resize', resizePanel);
+  })();
   </script>
 </body>
 </html>
