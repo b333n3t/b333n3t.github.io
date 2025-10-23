@@ -53,23 +53,36 @@
     }
     .site-menu a:hover{background:rgba(0,0,0,.05);}
 
-    /* === Hauptbereich (grau-transparent) === */
+    /* === Hauptbereich (grau-transparent mit Gradient) === */
     .main {
-      background:rgba(255,255,255,.32);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-      border-radius:12px;
-      padding:1.25rem 1rem;
-      position:relative; z-index:1;
-      overflow:auto; -webkit-overflow-scrolling:touch;
-      scrollbar-width:none; -ms-overflow-style:none;
+      /* Verlauf: 0–100vh = durchsichtig, 100–110vh Übergang, danach halbtransparent */
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0) 0vh,
+        rgba(255,255,255,0) 100vh,
+        rgba(255,255,255,0.32) 110vh,
+        rgba(255,255,255,0.32) 100%
+      );
+
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      position: relative;
+      z-index: 1;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
     .main::-webkit-scrollbar{display:none;}
     .main h1, .main p, .main section{background:transparent !important; box-shadow:none !important;}
 
+    /* Inhalt nach unten verschoben */
     .main .content-offset{padding-top:105vh;}
     .main{padding-bottom:2.5rem;}
 
-    /* === Pfeil unten (fixiert, leicht höher) === */
+    /* === Pfeil unten (fixiert) === */
     .scroll-cue{
       position:fixed; left:50%; bottom:60px;
       transform:translateX(-50%) translateY(12px);
@@ -91,15 +104,15 @@
       flex-direction:column;
       gap:1rem;
     }
-    .main .grid .card{ width:100%; }
+    .main .grid .card{width:100%;}
 
-    /* === Panel-breite Bilder mit Schatten === */
+    /* === Bilder: volle Panelbreite + Schatten === */
     .panel-photo{
       margin:1rem -1rem 0;
       border-radius:12px;
       overflow:hidden;
       line-height:0;
-      box-shadow: 0 6px 24px rgba(0,0,0,.15); /* weicher Schatten */
+      box-shadow:0 6px 24px rgba(0,0,0,.15);
     }
     .panel-photo img{
       display:block;
@@ -108,9 +121,6 @@
       object-fit:cover;
       object-position:center;
       transition:filter .6s ease;
-    }
-    .panel-photo img[data-loaded="false"]{
-      filter:blur(8px) brightness(0.9);
     }
 
     /* === Fade-In Effekt === */
@@ -162,23 +172,19 @@
 
       <section class="grid" aria-label="Seitenübersicht">
         <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-
         <figure class="panel-photo reveal-on-scroll">
-          <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="lazy" data-loaded="false">
+          <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="lazy">
         </figure>
 
         <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
-
         <figure class="panel-photo reveal-on-scroll">
-          <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="lazy" data-loaded="false">
+          <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="lazy">
         </figure>
 
         <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
-
         <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
-
         <figure class="panel-photo reveal-on-scroll">
-          <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell" loading="lazy" data-loaded="false">
+          <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell" loading="lazy">
         </figure>
 
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
@@ -197,48 +203,21 @@
     </svg>
   </div>
 
-  <!-- Skripte -->
+  <!-- Pfeil- und Fade-In-Logik -->
   <script>
-    // === Pfeil: reagiert zuverlässig auf Scroll ===
     const cue = document.querySelector('.scroll-cue');
     const scroller = document.querySelector('.main');
-    let scrollTimeout;
-
-    function checkScroll() {
-      const y = scroller ? scroller.scrollTop : 0;
-      if (y > 50) cue.classList.add('hidden');
-      else cue.classList.remove('hidden');
-    }
-
     scroller.addEventListener('scroll', () => {
-      cue.classList.add('hidden');
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(checkScroll, 150);
+      cue.classList.toggle('hidden', scroller.scrollTop > 50);
     });
+    window.addEventListener('load', () => cue.classList.add('visible'));
 
-    window.addEventListener('load', () => {
-      cue.classList.add('visible');
-      checkScroll();
-    });
-
-    // === Lazy-Blur → sauberer Bildaufbau ===
-    document.querySelectorAll('.panel-photo img').forEach(img => {
-      img.addEventListener('load', () => {
-        img.dataset.loaded = "true";
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){e.target.classList.add('in-view'); observer.unobserve(e.target);}
       });
-    });
-
-    // === Fade-In Observer ===
-    const scItems = document.querySelectorAll('.reveal-on-scroll');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in-view');
-          io.unobserve(e.target);
-        }
-      });
-    }, { root: scroller, threshold: 0.1 });
-    scItems.forEach(el => io.observe(el));
+    },{root:scroller,threshold:0.1});
+    document.querySelectorAll('.reveal-on-scroll').forEach(el=>observer.observe(el));
   </script>
 </body>
 </html>
