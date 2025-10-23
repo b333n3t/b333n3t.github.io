@@ -9,14 +9,9 @@
 
   <!-- Haupt-Styles -->
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Pfeile (Halbkreise) -->
   <link rel="stylesheet" href="styles_nav_arrows.css" />
-
-  <!-- Swipe-Unterstützung (touch-action: pan-y) -->
   <link rel="stylesheet" href="swipe-helper.css" />
 
-  <!-- Hamburger-Menü Styles -->
   <style>
     /* === Hamburger-Menü (oben rechts, 20x20 px) === */
     .hamburger {
@@ -67,7 +62,7 @@
     body.menu-open #menu-overlay { display: block; }
     #menu-overlay[hidden]{ display:none; }
 
-    /* Seitenmenü (Einklapp-Panel, milchiger Look) */
+    /* Seitenmenü */
     .site-menu {
       position: fixed;
       top: 0;
@@ -100,44 +95,95 @@
     }
     .site-menu a:hover { background: rgba(0,0,0,.05); }
 
-    .nav-arrow { z-index: 1000; }
-  </style>
-
-  <!-- === OVERRIDE: Transparenter Textbereich über glasigem Hintergrund === -->
-  <style id="transparent-panel-overrides">
-    /* Glasiger Hintergrund unter dem Inhalt (unverändert) */
-    .main{
+    /* === Glasiger, transparenter Hauptbereich === */
+    .main {
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
       border-radius: 12px;
       padding: 1.25rem 1rem;
-      position: relative; /* unverändert */
+      position: relative;
       z-index: 1;
-
-      /* Scrollbar-Einstellungen wie gehabt */
       overflow: auto;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;      /* Firefox */
-      -ms-overflow-style: none;   /* IE/Edge */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-    .main::-webkit-scrollbar{ display: none; } /* WebKit */
+    .main::-webkit-scrollbar { display: none; }
 
-    /* Inhalt komplett transparent halten */
     .main h1,
     .main p,
-    .main section{
+    .main section {
       background: transparent !important;
       box-shadow: none !important;
     }
 
-    /* >>> NEU: Inhalt nach unten verschieben, ohne den oberen Rand zu verändern */
-    .main .content-offset{
-      padding-top: 105vh; /* Wert nach Wunsch: 50–80vh */
+    /* Inhalt nach unten verschieben (nur innen, grauer Block bleibt oben gleich) */
+    .main .content-offset {
+      padding-top: 105vh; /* hier den Startpunkt des Inhalts anpassen */
     }
 
-    /* Kleiner Puffer unten, damit das Ende nicht klebt (optional) */
-    .main{ padding-bottom: 2.5rem; }
+    .main { padding-bottom: 2.5rem; }
+
+    /* === Dekorativer nach unten zeigender Pfeil === */
+    .nav-arrow-down {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) rotate(90deg) translateY(25px);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.4);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .nav-arrow-down.visible {
+      opacity: 1;
+      transform: translateX(-50%) rotate(90deg) translateY(10px);
+      animation: arrow-bounce 2.5s ease-in-out infinite;
+    }
+
+    .nav-arrow-down::before {
+      content: "";
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid #000;
+      border-bottom: 2px solid #000;
+      transform: rotate(45deg);
+    }
+
+    @keyframes arrow-bounce {
+      0%, 100% {
+        transform: translateX(-50%) rotate(90deg) translateY(10px);
+        opacity: 1;
+      }
+      50% {
+        transform: translateX(-50%) rotate(90deg) translateY(16px);
+        opacity: 0.7;
+      }
+    }
+
+    .nav-arrow-down.hidden {
+      opacity: 0;
+      transform: translateX(-50%) rotate(90deg) translateY(30px);
+      pointer-events: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 
@@ -149,11 +195,12 @@
     </a>
   </header>
 
-  <!-- Hamburger-Menü-Button + Overlay + Panel -->
+  <!-- Hamburger-Menü -->
   <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
     <span></span><span></span><span></span>
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
+
   <nav id="site-menu" class="site-menu" aria-hidden="true">
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
@@ -166,8 +213,8 @@
     </ul>
   </nav>
 
+  <!-- Hauptinhalt -->
   <main class="main">
-    <!-- NEU: Wrapper, der nur den Inhalt weiter nach unten schiebt -->
     <div class="content-offset">
       <h1>moin und willkommen</h1>
       <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
@@ -187,8 +234,32 @@
 
   <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
 
+  <!-- Dekorativer Pfeil unten -->
+  <div class="nav-arrow nav-arrow-down" aria-hidden="true"></div>
+
   <!-- Skripte -->
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
+
+  <!-- Pfeilsteuerung -->
+  <script>
+    const arrowDown = document.querySelector('.nav-arrow-down');
+
+    // Pfeil nach 1 Sekunde weich einblenden
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        arrowDown.classList.add('visible');
+      }, 1000);
+    });
+
+    // Pfeil beim Scrollen ausblenden / wieder einblenden
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        arrowDown.classList.add('hidden');
+      } else {
+        arrowDown.classList.remove('hidden');
+      }
+    });
+  </script>
 </body>
 </html>
