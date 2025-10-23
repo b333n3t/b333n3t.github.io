@@ -10,114 +10,33 @@
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
   <style>
-    .hamburger {
-      position: fixed; top: 14px; right: 18px; width: 20px; height: 20px;
-      border: none; background: transparent; display: grid; place-items: center;
-      cursor: pointer; z-index: 1200; padding: 0;
-    }
-    .hamburger span {
-      display: block; width: 12px; height: 1.4px; margin: 1.5px 0; background: #000;
-      border-radius: 2px; transition: transform .2s ease, opacity .2s ease;
-    }
-    body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
-    body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
-    body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
-
-    .menu-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.08);
-      backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); z-index: 1099;
-    }
-    body.menu-open #menu-overlay { display: block; }
-    #menu-overlay[hidden] { display: none; }
-
-    .site-menu {
-      position: fixed; top: 0; right: 0; height: auto; max-height: 90vh; width: min(40vw, 150px);
-      background: rgba(255,255,255,.32); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
-      box-shadow: 0 20px 50px rgba(0,0,0,.08); transform: translateX(100%); transition: transform .25s ease;
-      z-index: 1101; padding: 46px 10px 14px;
-    }
-    body.menu-open .site-menu { transform: translateX(0); }
-
-    .site-menu ul { list-style: none; margin: 0; padding: 0; }
-    .site-menu li { margin: 0 0 10px 0; }
-    .site-menu li.sep { margin-top: 18px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,.08); }
-    .site-menu a {
-      display: block; padding: 8px 6px; border-radius: 10px; color: #000; text-decoration: none;
-      font-size: 1rem; font-weight: 500;
-    }
-    .site-menu a:hover { background: rgba(0,0,0,.05); }
-
-    .nav-arrow { z-index: 1000; }
-
-    :root { --frame-pad: clamp(18px, 3vw, 28px); }
-
-    .main {
-      background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      border-radius: 12px;
-      padding: var(--frame-pad);
-    }
-
-    .scroll-panel {
-      overflow: auto;
-      max-height: 75vh;
-      -webkit-overflow-scrolling: touch;
-      background: transparent;
-      border-radius: 12px;
-      box-shadow: none;
-      padding: 0;
-      margin: 0;
-      max-width: 650px;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-    .scroll-panel::-webkit-scrollbar { display: none; }
-
-    .scroll-panel h1 { margin: 0 0 .6rem; }
-    .scroll-panel p { margin: 0 0 1rem; }
-
-    .grid-seen {
-      display: flex;
-      justify-content: flex-start;
-      align-items: stretch;
-      gap: 14px;
-      margin-top: .5rem;
-      flex-wrap: wrap;
-    }
-    .grid-seen .card {
-      flex: 0 1 180px;
-      max-width: 180px;
-      cursor: pointer;
-    }
-
-    .video-wrapper {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      margin-top: 12px;
-      border-radius: 12px;
-      background: #000;
-      border: 1px solid rgba(0,0,0,0.06);
-    }
-    .video-wrapper iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    .card .thumb {
-      width: 100%;
-      aspect-ratio: 16/9;
-      display: block;
-      border-radius: 12px;
-      object-fit: cover;
-      background: #000;
-      margin-bottom: 8px;
-    }
+    .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
+    .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+    body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
+    body.menu-open .hamburger span:nth-child(2){opacity:0}
+    body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+    .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
+    body.menu-open #menu-overlay{display:block}
+    #menu-overlay[hidden]{display:none}
+    .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s ease;z-index:1101;padding:46px 10px 14px}
+    body.menu-open .site-menu{transform:translateX(0)}
+    .site-menu ul{list-style:none;margin:0;padding:0}
+    .site-menu li{margin:0 0 10px 0}
+    .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
+    .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
+    .site-menu a:hover{background:rgba(0,0,0,.05)}
+    .nav-arrow{z-index:1000}
+    :root{--frame-pad:clamp(18px,3vw,28px)}
+    .main{background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-radius:12px;padding:var(--frame-pad)}
+    .scroll-panel{overflow:auto;max-height:75vh;-webkit-overflow-scrolling:touch;background:transparent;border-radius:12px;box-shadow:none;padding:0;margin:0;max-width:650px;scrollbar-width:none;-ms-overflow-style:none}
+    .scroll-panel::-webkit-scrollbar{display:none}
+    .scroll-panel h1{margin:0 0 .6rem}
+    .scroll-panel p{margin:0 0 1rem}
+    .grid-seen{display:flex;justify-content:flex-start;align-items:stretch;gap:14px;margin-top:.5rem;flex-wrap:wrap}
+    .grid-seen .card{flex:0 1 180px;max-width:180px;cursor:pointer}
+    .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-top:12px;border-radius:12px;background:#000;border:1px solid rgba(0,0,0,0.06)}
+    .video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .card .thumb{width:100%;aspect-ratio:16/9;display:block;border-radius:12px;object-fit:cover;background:#000;margin-bottom:8px}
   </style>
 </head>
 <body>
@@ -192,10 +111,11 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- Lazy Load Funktion -->
+  <!-- Lazy Load: Karten -> eingebettetes Video -->
   <script>
     const cards = document.querySelectorAll('.card[data-embed-src]');
     const container = document.getElementById('videoContainer');
+
     cards.forEach(card => {
       card.addEventListener('click', () => {
         const src = card.getAttribute('data-embed-src');
@@ -206,7 +126,7 @@
         iframe.style.width = '100%';
         iframe.style.height = '400px';
         iframe.style.border = '0';
-        container.innerHTML = '';
+        container.innerHTML = ''; // vorherige Videos entfernen
         container.appendChild(iframe);
         container.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
@@ -218,9 +138,10 @@
     (function () {
       const igCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
         .filter(c => /instagram\.com\/reel\//.test(c.getAttribute('data-embed-src') || ''));
+
       igCards.forEach((card, idx) => {
         if (card.querySelector('img.thumb')) return;
-        const n = idx + 1;
+        const n = idx + 1; // 1..6 entsprechend der Reihenfolge
         const img = new Image();
         img.loading = 'lazy';
         img.decoding = 'async';
@@ -233,14 +154,22 @@
     })();
   </script>
 
-  <!-- YouTube Thumbnails: reel1.avif – reel7.avif -->
+  <!-- YouTube Thumbnails: yt1..yt7 -> assets/reel1.avif..reel7.avif (Intro ausgeschlossen) -->
   <script>
     (function () {
       const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
-        .filter(c => /youtube\.com\/embed\//.test(c.getAttribute('data-embed-src') || ''));
-      ytCards.forEach((card, idx) => {
+        .filter(c =>
+          /youtube\.com\/embed\//.test(c.getAttribute('data-embed-src') || '') &&
+          c.id !== 'introVideo' // wichtig: Intro nicht doppelt bebildern
+        );
+
+      ytCards.forEach((card) => {
+        const m = (card.id || '').match(/^yt(\d+)$/); // erwartet yt1..yt7
+        if (!m) return;
+        const n = m[1];
+
         if (card.querySelector('img.thumb')) return;
-        const n = idx + 1;
+
         const img = new Image();
         img.loading = 'lazy';
         img.decoding = 'async';
@@ -253,18 +182,22 @@
     })();
   </script>
 
-  <!-- Intro Thumbnail mit Case-Fallback -->
+  <!-- Intro Thumbnail mit Case-Fallback (nur 1 Bild) -->
   <script>
     (function () {
       const intro = document.getElementById('introVideo');
       if (!intro) return;
+
+      if (intro.querySelector('img.thumb')) return; // doppelte Einfügung verhindern
+
       const img = new Image();
       img.loading = 'lazy';
       img.decoding = 'async';
       img.className = 'thumb';
       img.alt = 'Intro-Vorschau';
-      img.src = 'assets/Intro.jpg';
-      img.onerror = () => { img.onerror = null; img.src = 'assets/intro.jpg'; };
+      img.src = 'assets/Intro.jpg';                // groß geschrieben (deine Datei)
+      img.onerror = () => { img.onerror = null; img.src = 'assets/intro.jpg'; }; // Fallback klein
+
       intro.insertBefore(img, intro.firstChild);
     })();
   </script>
