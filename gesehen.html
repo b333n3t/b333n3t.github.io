@@ -152,7 +152,8 @@
       <h1>gesehen</h1>
       <p>schon mal reingeschaut</p>
 
-      <section class="grid grid-seen" aria-label="Seitenübersicht">
+      <!-- Intro Video mit Thumbnail -->
+      <section class="grid grid-seen" aria-label="Intro">
         <div class="card" id="introVideo" data-embed-src="https://www.youtube.com/embed/DEIN_INTRO_VIDEO_ID">
           ▶︎ Intro-Video
           <small>Intro & Start</small>
@@ -160,6 +161,7 @@
       </section>
 
       <section class="grid grid-seen" aria-label="Videos">
+        <!-- Instagram Videos -->
         <div class="card" id="video1" data-embed-src="https://www.instagram.com/reel/DKHa8SoMzQ-/embed">▶︎ Video 1<small>Instagram</small></div>
         <div class="card" id="video2" data-embed-src="https://www.instagram.com/reel/DK9pg-boyA1/embed">▶︎ Video 2<small>Instagram</small></div>
         <div class="card" id="video3" data-embed-src="https://www.instagram.com/reel/DLqGKqLsY6S/embed">▶︎ Video 3<small>Instagram</small></div>
@@ -167,6 +169,7 @@
         <div class="card" id="video5" data-embed-src="https://www.instagram.com/reel/C40c2qsN_eI/embed">▶︎ Video 5<small>Instagram</small></div>
         <div class="card" id="video6" data-embed-src="https://www.instagram.com/reel/C9opXa-MIvF/embed">▶︎ Video 6<small>Instagram</small></div>
 
+        <!-- YouTube Videos -->
         <div class="card" id="yt1" data-embed-src="https://www.youtube.com/embed/ZSaj_FuqPN8">▶︎ YouTube 1<small>YouTube</small></div>
         <div class="card" id="yt2" data-embed-src="https://www.youtube.com/embed/DMNl40Tip1w">▶︎ YouTube 2<small>YouTube</small></div>
         <div class="card" id="yt3" data-embed-src="https://www.youtube.com/embed/K5pKG0Smdfc">▶︎ YouTube 3<small>YouTube</small></div>
@@ -189,10 +192,10 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
+  <!-- Lazy Load Funktion -->
   <script>
     const cards = document.querySelectorAll('.card[data-embed-src]');
     const container = document.getElementById('videoContainer');
-
     cards.forEach(card => {
       card.addEventListener('click', () => {
         const src = card.getAttribute('data-embed-src');
@@ -210,31 +213,31 @@
     });
   </script>
 
+  <!-- Instagram Thumbnails: insta1.png … insta6.png + Fallback -->
   <script>
     (function () {
       const igCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
         .filter(c => /instagram\.com\/reel\//.test(c.getAttribute('data-embed-src') || ''));
-
-      igCards.forEach(card => {
+      igCards.forEach((card, idx) => {
         if (card.querySelector('img.thumb')) return;
-
+        const n = idx + 1;
         const img = new Image();
         img.loading = 'lazy';
         img.decoding = 'async';
         img.className = 'thumb';
         img.alt = 'Instagram-Vorschau';
-        img.src = 'assets/instagram_poster.jpg';
-        img.onerror = () => { img.onerror = null; img.remove(); };
+        img.src = `assets/insta${n}.png`;
+        img.onerror = () => { img.onerror = null; img.src = 'assets/instagram_poster.jpg'; };
         card.insertBefore(img, card.firstChild);
       });
     })();
   </script>
 
+  <!-- YouTube Thumbnails: reel1.avif – reel7.avif -->
   <script>
     (function () {
       const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
         .filter(c => /youtube\.com\/embed\//.test(c.getAttribute('data-embed-src') || ''));
-
       ytCards.forEach((card, idx) => {
         if (card.querySelector('img.thumb')) return;
         const n = idx + 1;
@@ -250,6 +253,7 @@
     })();
   </script>
 
+  <!-- Intro Thumbnail mit Case-Fallback -->
   <script>
     (function () {
       const intro = document.getElementById('introVideo');
@@ -259,8 +263,8 @@
       img.decoding = 'async';
       img.className = 'thumb';
       img.alt = 'Intro-Vorschau';
-      img.src = 'assets/intro.jpg';
-      img.onerror = () => { img.onerror = null; img.remove(); };
+      img.src = 'assets/Intro.jpg';
+      img.onerror = () => { img.onerror = null; img.src = 'assets/intro.jpg'; };
       intro.insertBefore(img, intro.firstChild);
     })();
   </script>
