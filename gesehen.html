@@ -34,7 +34,9 @@
     .scroll-panel p{margin:0 0 1rem}
     .grid-seen{display:flex;justify-content:flex-start;align-items:stretch;gap:14px;margin-top:.5rem;flex-wrap:wrap}
     .grid-seen .card{flex:0 1 180px;max-width:180px;cursor:pointer;position:relative}
-    .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-top:12px;border-radius:12px;background:#000;border:1px solid rgba(0,0,0,0.06)}
+    /* Zeile für das große Video direkt unter einer Karte */
+    .video-row{flex:0 0 100%;width:100%;display:flex;justify-content:flex-start}
+    .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-top:12px;border-radius:12px;background:#000;border:1px solid rgba(0,0,0,0.06);width:100%}
     .video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
     .card .thumb{width:100%;aspect-ratio:16/9;display:block;border-radius:12px;object-fit:cover;background:#000;margin-bottom:8px}
     .video-close{position:absolute;top:6px;right:10px;font-size:24px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:4px;cursor:pointer;z-index:10;line-height:1;padding:2px 8px}
@@ -73,7 +75,7 @@
       <h1>gesehen</h1>
       <p>schon mal reingeschaut</p>
 
-      <!-- Intro Video -->
+      <!-- Intro -->
       <section class="grid grid-seen" aria-label="Intro">
         <div class="card" id="introVideo" data-embed-src="https://www.youtube.com/embed/DEIN_INTRO_VIDEO_ID">
           ▶︎ Intro-Video
@@ -111,83 +113,113 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- Lazy Load: Video-Fenster unter Karte mit Schließen -->
+  <!-- Öffnet Video direkt unter der Karte (volle Breite) + Schließen -->
   <script>
     const cards = document.querySelectorAll('.card[data-embed-src]');
-    function closeAllVideos() { document.querySelectorAll('.video-wrapper').forEach(v => v.remove()); }
+
+    function closeAllVideos() {
+      document.querySelectorAll('.video-row').forEach(row => row.remove());
+    }
 
     cards.forEach(card => {
       card.addEventListener('click', () => {
-        const existing = card.querySelector('.video-wrapper');
-        if (existing) { existing.remove(); return; }
+        // falls bereits unter dieser Karte geöffnet -> schließen (toggle)
+        const next = card.nextElementSibling;
+        if (next && next.classList.contains('video-row')) { next.remove(); return; }
+
+        // andere schließen
         closeAllVideos();
-        const src = card.getAttribute('data-embed-src');
+
+        // neue Zeile (volle Breite) direkt NACH der Karte
+        const row = document.createElement('div');
+        row.className = 'video-row';
+
         const wrapper = document.createElement('div');
         wrapper.className = 'video-wrapper';
+
         const closeBtn = document.createElement('button');
         closeBtn.textContent = '×';
         closeBtn.className = 'video-close';
-        closeBtn.addEventListener('click', (e) => { e.stopPropagation(); wrapper.remove(); });
+        closeBtn.addEventListener('click', (e) => { e.stopPropagation(); row.remove(); });
+
         const iframe = document.createElement('iframe');
-        iframe.src = src; iframe.allowFullscreen = true; iframe.loading = 'lazy'; iframe.title = 'Video';
-        wrapper.appendChild(closeBtn); wrapper.appendChild(iframe);
-        card.appendChild(wrapper);
+        iframe.src = card.getAttribute('data-embed-src');
+        iframe.allowFullscreen = true;
+        iframe.loading = 'lazy';
+        iframe.title = 'Video';
+
+        wrapper.appendChild(closeBtn);
+        wrapper.appendChild(iframe);
+        row.appendChild(wrapper);
+
+        card.parentNode.insertBefore(row, card.nextSibling);
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     });
+
+    // ESC schließt
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllVideos(); });
   </script>
 
-  <!-- Instagram Thumbnails -->
+  <!-- Instagram Thumbnails: per ID auf insta1.png..insta6.png, Fallback -->
   <script>
     (function () {
-      const igCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
-        .filter(c => /instagram\\.com\\/reel\\//.test(c.getAttribute('data-embed-src') || ''));
-      igCards.forEach((card, idx) => {
-        if (card.querySelector('img.thumb')) return;
-        const n = idx + 1;
+      const map = {
+        video1: 'assets/insta1.png',
+        video2: 'assets/insta2.png',
+        video3: 'assets/insta3.png',
+        video4: 'assets/insta4.png',
+        video5: 'assets/insta5.png',
+        video6: 'assets/insta6.png'
+      };
+      Object.entries(map).forEach(([id, src]) => {
+        const card = document.getElementById(id);
+        if (!card || card.querySelector('img.thumb')) return;
         const img = new Image();
         img.loading = 'lazy'; img.decoding = 'async';
         img.className = 'thumb'; img.alt = 'Instagram-Vorschau';
-        img.src = `assets/insta${n}.png`;
+        img.src = src;
         img.onerror = () => { img.onerror = null; img.src = 'assets/instagram_poster.jpg'; };
         card.insertBefore(img, card.firstChild);
       });
     })();
   </script>
 
-  <!-- YouTube Thumbnails: reel1.avif – reel7.avif (yt4 = reel4.jpg) -->
+  <!-- YouTube Thumbnails: per ID; yt4 nutzt reel4.jpg, andere reelN.avif; Fallback -> YouTube hqdefault -->
   <script>
     (function () {
-      const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
-        .filter(c =>
-          /youtube\\.com\\/embed\\//.test(c.getAttribute('data-embed-src') || '') &&
-          c.id !== 'introVideo'
-        );
+      const map = {
+        yt1: { file: 'assets/reel1.avif', id: 'ZSaj_FuqPN8' },
+        yt2: { file: 'assets/reel2.avif', id: 'DMNl40Tip1w' },
+        yt3: { file: 'assets/reel3.avif', id: 'K5pKG0Smdfc' },
+        yt4: { file: 'assets/reel4.jpg',  id: '4I9vlcGvFGQ' }, // <-- jpg
+        yt5: { file: 'assets/reel5.avif', id: 'w0pNdnlb96M' },
+        yt6: { file: 'assets/reel6.avif', id: 'rV1U891RKLo' },
+        yt7: { file: 'assets/reel7.avif', id: 'fq8zhAQMam0' }
+      };
 
-      ytCards.forEach((card) => {
-        const m = (card.id || '').match(/^yt(\\d+)$/);
-        if (!m) return;
-        const n = m[1];
-        if (card.querySelector('img.thumb')) return;
+      Object.entries(map).forEach(([id, cfg]) => {
+        const card = document.getElementById(id);
+        if (!card || card.querySelector('img.thumb')) return;
+
         const img = new Image();
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        img.className = 'thumb';
-        img.alt = 'YouTube-Vorschau';
-        img.src = (n === '4') ? 'assets/reel4.jpg' : `assets/reel${n}.avif`;
-        img.onerror = () => { img.onerror = null; img.remove(); };
+        img.loading = 'lazy'; img.decoding = 'async';
+        img.className = 'thumb'; img.alt = 'YouTube-Vorschau';
+        img.src = cfg.file;
+        img.onerror = () => { // Fallback auf YouTube-Thumbnail
+          img.onerror = null;
+          img.src = `https://img.youtube.com/vi/${cfg.id}/hqdefault.jpg`;
+        };
         card.insertBefore(img, card.firstChild);
       });
     })();
   </script>
 
-  <!-- Intro Thumbnail -->
+  <!-- Intro Thumbnail (Case-Fallback) -->
   <script>
     (function () {
       const intro = document.getElementById('introVideo');
-      if (!intro) return;
-      if (intro.querySelector('img.thumb')) return;
+      if (!intro || intro.querySelector('img.thumb')) return;
       const img = new Image();
       img.loading = 'lazy'; img.decoding = 'async';
       img.className = 'thumb'; img.alt = 'Intro-Vorschau';
