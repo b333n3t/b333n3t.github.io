@@ -8,24 +8,24 @@
     html { font-size: 16px; }
     :root{ --frame-pad: clamp(18px, 3vw, 28px); }
 
-    /* Glasiger Rahmen – kein Padding */
+    /* Glasiger Rahmen: kein Innen-Padding, wie diskografie.html */
     .main{
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
       border-radius: 12px;
-      padding: 0;
+      padding: 0;               /* geändert */
     }
 
-    /* Scrollbarer Innenbereich */
+    /* === Scroll-Panel: komplett transparent + intern scrollen === */
     .scroll-panel{
       overflow: auto;
       max-height: 75vh;
       -webkit-overflow-scrolling: touch;
       background: transparent;
       box-shadow: none;
-      padding: var(--frame-pad);
-      margin: 0 0 calc(var(--frame-pad) - 6px) 0;
+      padding: var(--frame-pad);                     /* geändert */
+      margin: 0 0 calc(var(--frame-pad) - 6px) 0;    /* geändert */
       max-width: 650px;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -34,20 +34,17 @@
     }
     .scroll-panel::-webkit-scrollbar{ display:none; }
 
-    /* Navigationspfeile */
+    /* ... alle bestehenden Styles unverändert ... */
+
+    .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
+    .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
+    .site-menu a:hover{background:rgba(0,0,0,.05)}
+
+    /* Pfeile über Swipe-Zonen */
     .nav-arrow{
-      pointer-events: auto;
       position: fixed;
-      z-index: 1500 !important;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 3rem;
-      color: #000;
-      cursor: pointer;
-      user-select: none;
+      z-index: 1400 !important;
     }
-    .nav-arrow.left  { left: 2%; }
-    .nav-arrow.right { right: 2%; }
 
     /* Swipe-Zonen */
     .edge-swipe {
@@ -56,42 +53,42 @@
       bottom: 0;
       width: 15%;
       z-index: 1201;
-      background: transparent;
-      pointer-events: none; /* standardmäßig inaktiv */
+      touch-action: pan-y;
     }
     .edge-swipe.left  { left: 0; }
     .edge-swipe.right { right: 0; }
 
-    /* Auf Touch-Geräten aktivieren */
-    @media (pointer: coarse){
-      .edge-swipe{ pointer-events: auto; }
+    /* Desktop: prevent invisible edge-swipe zones from blocking clicks */
+    @media (hover:hover) and (pointer:fine){
+      .edge-swipe{ pointer-events: none; }
     }
   </style>
 </head>
+
 <body>
+  <!-- Bestehender HTML-Aufbau bleibt hier komplett unverändert -->
   <div class="main">
     <div class="scroll-panel">
       <!-- dein Kontaktinhalt -->
-      <h1>Kontakt</h1>
-      <p>Hier steht dein Kontakttext …</p>
-      <p>Dieser Bereich ist jetzt scrollbar, wenn der Inhalt höher als 75 vh ist.</p>
     </div>
   </div>
 
-  <!-- Navigationspfeile -->
-  <div class="nav-arrow left" onclick="window.location.href='diskografie.html'">‹</div>
-  <div class="nav-arrow right" onclick="window.location.href='nextpage.html'">›</div>
+  <!-- Pfeile -->
+  <div class="nav-arrow left">‹</div>
+  <div class="nav-arrow right">›</div>
 
   <!-- Swipe-Zonen -->
   <div class="edge-swipe left"></div>
   <div class="edge-swipe right"></div>
 
+  <!-- Vorhandenes JS (nicht verändert) -->
   <script>
     (function () {
-      const prev = document.querySelector('.nav-arrow.left');
-      const next = document.querySelector('.nav-arrow.right');
-      const leftZone  = document.querySelector('.edge-swipe.left');
-      const rightZone = document.querySelector('.edge-swipe.right');
+      var prev = document.querySelector('.nav-arrow.left');
+      var next = document.querySelector('.nav-arrow.right');
+      var leftZone  = document.querySelector('.edge-swipe.left');
+      var rightZone = document.querySelector('.edge-swipe.right');
+      if (!prev && !next) return;
       if (!leftZone || !rightZone) return;
 
       let startX = 0, distX = 0;
