@@ -105,33 +105,43 @@
 
   <!-- === OVERRIDE: Transparenter Textbereich über glasigem Hintergrund === -->
   <style id="transparent-panel-overrides">
-    /* Glasiger Hintergrund unter dem Inhalt */
+    /* Glasiger, fixierter Bereich über dem Hintergrund */
     .main{
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
       border-radius: 12px;
+
+      /* ursprüngliche Innenabstände */
       padding: 1.25rem 1rem;
-      position: relative;
+      /* zusätzlicher oberer Innenabstand, damit der Inhalt weiter unten startet */
+      padding-top: calc(60vh + 1.25rem); /* Wert anpassbar: 50–80vh */
+
+      /* fixiert sichtbar */
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      /* innerhalb scrollen */
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+
+      /* Scrollleisten ausblenden, Scrollen bleibt möglich */
+      scrollbar-width: none;      /* Firefox */
+      -ms-overflow-style: none;   /* IE/Edge */
       z-index: 1;
     }
+    .main::-webkit-scrollbar{ display: none; } /* WebKit */
 
-    /* Inhalt komplett transparent */
+    /* Inhalt komplett transparent halten */
     .main h1,
     .main p,
     .main section{
       background: transparent !important;
       box-shadow: none !important;
     }
-
-    /* Scrollleisten ausblenden, Scrollen bleibt möglich */
-    .main{
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;      /* Firefox */
-      -ms-overflow-style: none;   /* IE/Edge */
-    }
-    .main::-webkit-scrollbar{ display: none; } /* WebKit */
   </style>
 </head>
 
