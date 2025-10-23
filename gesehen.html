@@ -160,6 +160,26 @@
           ▶︎ Video 2 hier abspielen
           <small>Instagram-Embed lädt bei Klick</small>
         </div>
+
+        <div class="card" id="video3" data-embed-src="https://www.instagram.com/reel/DLqGKqLsY6S/embed">
+          ▶︎ Video 3 hier abspielen
+          <small>Instagram-Embed lädt bei Klick</small>
+        </div>
+
+        <div class="card" id="video4" data-embed-src="https://www.instagram.com/reel/C9-hoZOs6hV/embed">
+          ▶︎ Video 4 hier abspielen
+          <small>Instagram-Embed lädt bei Klick</small>
+        </div>
+
+        <div class="card" id="video5" data-embed-src="https://www.instagram.com/reel/C40c2qsN_eI/embed">
+          ▶︎ Video 5 hier abspielen
+          <small>Instagram-Embed lädt bei Klick</small>
+        </div>
+
+        <div class="card" id="video6" data-embed-src="https://www.instagram.com/reel/C9opXa-MIvF/embed">
+          ▶︎ Video 6 hier abspielen
+          <small>Instagram-Embed lädt bei Klick</small>
+        </div>
       </section>
 
       <!-- Eingebettete Video-Felder -->
@@ -168,6 +188,18 @@
       </div>
       <div id="vid2" class="video-wrapper" hidden>
         <iframe id="frame2" title="Instagram Video 2"></iframe>
+      </div>
+      <div id="vid3" class="video-wrapper" hidden>
+        <iframe id="frame3" title="Instagram Video 3"></iframe>
+      </div>
+      <div id="vid4" class="video-wrapper" hidden>
+        <iframe id="frame4" title="Instagram Video 4"></iframe>
+      </div>
+      <div id="vid5" class="video-wrapper" hidden>
+        <iframe id="frame5" title="Instagram Video 5"></iframe>
+      </div>
+      <div id="vid6" class="video-wrapper" hidden>
+        <iframe id="frame6" title="Instagram Video 6"></iframe>
       </div>
 
     </div>
@@ -185,7 +217,11 @@
     // Lazy Load: Videos werden erst geladen, wenn man klickt
     const videos = [
       { btn: 'video1', wrap: 'vid1', frame: 'frame1' },
-      { btn: 'video2', wrap: 'vid2', frame: 'frame2' }
+      { btn: 'video2', wrap: 'vid2', frame: 'frame2' },
+      { btn: 'video3', wrap: 'vid3', frame: 'frame3' },
+      { btn: 'video4', wrap: 'vid4', frame: 'frame4' },
+      { btn: 'video5', wrap: 'vid5', frame: 'frame5' },
+      { btn: 'video6', wrap: 'vid6', frame: 'frame6' }
     ];
 
     videos.forEach(({btn, wrap, frame}) => {
