@@ -105,40 +105,39 @@
 
   <!-- === OVERRIDE: Transparenter Textbereich über glasigem Hintergrund === -->
   <style id="transparent-panel-overrides">
-    /* Fixierter, halbtransparenter Bereich bleibt wie vorher */
+    /* Glasiger Hintergrund unter dem Inhalt (unverändert) */
     .main{
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
       border-radius: 12px;
       padding: 1.25rem 1rem;
+      position: relative; /* unverändert */
+      z-index: 1;
 
-      /* bleibt fixiert am oberen Rand */
-      position: fixed;
-      top: 40px; /* exakt wie vorher */
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      /* scrollbarer Innenbereich */
-      overflow-y: auto;
+      /* Scrollbar-Einstellungen wie gehabt */
+      overflow: auto;
       -webkit-overflow-scrolling: touch;
-
-      /* Scrollleisten ausblenden */
       scrollbar-width: none;      /* Firefox */
       -ms-overflow-style: none;   /* IE/Edge */
-      z-index: 1;
     }
     .main::-webkit-scrollbar{ display: none; } /* WebKit */
 
-    /* Text + Buttons nach unten verschieben */
+    /* Inhalt komplett transparent halten */
     .main h1,
     .main p,
     .main section{
       background: transparent !important;
       box-shadow: none !important;
-      margin-top: 60vh; /* Verschiebung nach unten */
     }
+
+    /* >>> NEU: Inhalt nach unten verschieben, ohne den oberen Rand zu verändern */
+    .main .content-offset{
+      padding-top: 60vh; /* Wert nach Wunsch: 50–80vh */
+    }
+
+    /* Kleiner Puffer unten, damit das Ende nicht klebt (optional) */
+    .main{ padding-bottom: 2.5rem; }
   </style>
 </head>
 
@@ -168,19 +167,22 @@
   </nav>
 
   <main class="main">
-    <h1>moin und willkommen</h1>
-    <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
+    <!-- NEU: Wrapper, der nur den Inhalt weiter nach unten schiebt -->
+    <div class="content-offset">
+      <h1>moin und willkommen</h1>
+      <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
 
-    <section class="grid" aria-label="Seitenübersicht">
-      <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-      <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
-      <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
-      <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
-      <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
-      <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
-    </section>
+      <section class="grid" aria-label="Seitenübersicht">
+        <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
+        <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
+        <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
+        <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
+        <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
+        <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
+      </section>
 
-    <p class="note"></p>
+      <p class="note"></p>
+    </div>
   </main>
 
   <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
