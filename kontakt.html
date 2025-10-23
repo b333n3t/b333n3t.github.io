@@ -14,24 +14,24 @@
   html { font-size: 16px; }
   :root{ --frame-pad: clamp(18px, 3vw, 28px); }
 
-  /* Glasiger Rahmen übernimmt die Außenabstände */
+  /* Glasiger Rahmen – KEIN Innen-Padding (Fix) */
   .main{
     background: rgba(255,255,255,.32);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     border-radius: 12px;
-    padding: var(--frame-pad);
+    padding: 0; /* ← war: var(--frame-pad) */
   }
 
-  /* === Scroll-Panel: komplett transparent + intern scrollen === */
+  /* Scroll-Panel: trägt den Innenabstand + etwas Luft unten (Fix) */
   .scroll-panel{
     overflow: auto;
     max-height: 75vh;
     -webkit-overflow-scrolling: touch;
     background: transparent;
     box-shadow: none;
-    padding: 0;
-    margin: 0;
+    padding: var(--frame-pad);                      /* ← neu */
+    margin: 0 0 calc(var(--frame-pad) - 6px) 0;     /* ← neu */
     max-width: 650px;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -70,7 +70,7 @@
     background:#111; color:#fff; font-weight:600; cursor:pointer;
   }
 
-  /* === Hamburger-Menü === */
+  /* Menü (unverändert) */
   .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
   .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
   body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
@@ -86,9 +86,11 @@
   .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
   .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
   .site-menu a:hover{background:rgba(0,0,0,.05)}
-  .nav-arrow{z-index:1000}
 
-  /* Swipe-Zonen */
+  /* Pfeile über den Swipe-Zonen (Fix) */
+  .nav-arrow{ z-index: 1400 !important; } /* edge-swipe hat 1201 */
+
+  /* Swipe-Zonen – blockieren Desktop nicht (Fix) */
   .edge-swipe {
     position: fixed;
     top: 0;
@@ -96,10 +98,15 @@
     width: 28px;
     z-index: 1201;
     background: transparent;
-    pointer-events: auto;
+    pointer-events: none; /* ← war: auto */
   }
   .edge-swipe.left  { left: 0; }
   .edge-swipe.right { right: 0; }
+
+  /* Nur auf Touch-Geräten aktivieren wir die Zonen fürs Swipen */
+  @media (pointer: coarse){
+    .edge-swipe{ pointer-events: auto; }
+  }
 </style>
 </head>
 
