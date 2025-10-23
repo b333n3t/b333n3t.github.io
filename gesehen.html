@@ -109,7 +109,6 @@
       border: 0;
     }
 
-    /* Vorschaubild in Karten (für YouTube & Instagram) */
     .card .thumb {
       width: 100%;
       aspect-ratio: 16/9;
@@ -154,15 +153,13 @@
       <p>schon mal reingeschaut</p>
 
       <section class="grid grid-seen" aria-label="Seitenübersicht">
-        <a class="card" href="intro.html">
-          intro
+        <div class="card" id="introVideo" data-embed-src="https://www.youtube.com/embed/DEIN_INTRO_VIDEO_ID">
+          ▶︎ Intro-Video
           <small>Intro & Start</small>
-        </a>
+        </div>
       </section>
 
-      <!-- Karten für Instagram + YouTube Videos (Lazy-Load) -->
       <section class="grid grid-seen" aria-label="Videos">
-        <!-- Instagram (einheitliches Thumbnail aus assets/instagram_poster.jpg) -->
         <div class="card" id="video1" data-embed-src="https://www.instagram.com/reel/DKHa8SoMzQ-/embed">▶︎ Video 1<small>Instagram</small></div>
         <div class="card" id="video2" data-embed-src="https://www.instagram.com/reel/DK9pg-boyA1/embed">▶︎ Video 2<small>Instagram</small></div>
         <div class="card" id="video3" data-embed-src="https://www.instagram.com/reel/DLqGKqLsY6S/embed">▶︎ Video 3<small>Instagram</small></div>
@@ -170,7 +167,6 @@
         <div class="card" id="video5" data-embed-src="https://www.instagram.com/reel/C40c2qsN_eI/embed">▶︎ Video 5<small>Instagram</small></div>
         <div class="card" id="video6" data-embed-src="https://www.instagram.com/reel/C9opXa-MIvF/embed">▶︎ Video 6<small>Instagram</small></div>
 
-        <!-- YouTube (Thumbnails: assets/reel1.avif – reel7.avif) -->
         <div class="card" id="yt1" data-embed-src="https://www.youtube.com/embed/ZSaj_FuqPN8">▶︎ YouTube 1<small>YouTube</small></div>
         <div class="card" id="yt2" data-embed-src="https://www.youtube.com/embed/DMNl40Tip1w">▶︎ YouTube 2<small>YouTube</small></div>
         <div class="card" id="yt3" data-embed-src="https://www.youtube.com/embed/K5pKG0Smdfc">▶︎ YouTube 3<small>YouTube</small></div>
@@ -180,7 +176,6 @@
         <div class="card" id="yt7" data-embed-src="https://www.youtube.com/embed/fq8zhAQMam0">▶︎ YouTube 7<small>YouTube</small></div>
       </section>
 
-      <!-- Video-Container -->
       <div id="videoContainer"></div>
     </div>
   </main>
@@ -194,7 +189,6 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- Lazy Load: Karten -> eingebettetes Video -->
   <script>
     const cards = document.querySelectorAll('.card[data-embed-src]');
     const container = document.getElementById('videoContainer');
@@ -209,14 +203,13 @@
         iframe.style.width = '100%';
         iframe.style.height = '400px';
         iframe.style.border = '0';
-        container.innerHTML = ''; // vorherige Videos entfernen
+        container.innerHTML = '';
         container.appendChild(iframe);
         container.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
   </script>
 
-  <!-- Thumbnails für INSTAGRAM-Karten: einheitliches Poster -->
   <script>
     (function () {
       const igCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
@@ -231,14 +224,12 @@
         img.className = 'thumb';
         img.alt = 'Instagram-Vorschau';
         img.src = 'assets/instagram_poster.jpg';
-        img.onerror = () => { img.onerror = null; img.remove(); }; // falls Bild fehlt
-
+        img.onerror = () => { img.onerror = null; img.remove(); };
         card.insertBefore(img, card.firstChild);
       });
     })();
   </script>
 
-  <!-- Thumbnails für YOUTUBE-Karten: reel1.avif – reel7.avif -->
   <script>
     (function () {
       const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src]'))
@@ -246,20 +237,32 @@
 
       ytCards.forEach((card, idx) => {
         if (card.querySelector('img.thumb')) return;
-
-        const n = idx + 1; // 1..7 in der Reihenfolge der Karten
+        const n = idx + 1;
         const img = new Image();
         img.loading = 'lazy';
         img.decoding = 'async';
         img.className = 'thumb';
         img.alt = 'YouTube-Vorschau';
         img.src = `assets/reel${n}.avif`;
-        img.onerror = () => { img.onerror = null; img.remove(); }; // falls Bild fehlt
-
+        img.onerror = () => { img.onerror = null; img.remove(); };
         card.insertBefore(img, card.firstChild);
       });
     })();
   </script>
+
+  <script>
+    (function () {
+      const intro = document.getElementById('introVideo');
+      if (!intro) return;
+      const img = new Image();
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.className = 'thumb';
+      img.alt = 'Intro-Vorschau';
+      img.src = 'assets/intro.jpg';
+      img.onerror = () => { img.onerror = null; img.remove(); };
+      intro.insertBefore(img, intro.firstChild);
+    })();
+  </script>
 </body>
 </html>
-
