@@ -7,13 +7,11 @@
   <meta name="description" content="Start — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-  <!-- Externe Styles (deine bestehenden) -->
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
   <style>
-    /* ===== Header / Menü ===== */
     .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
     .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s,opacity .2s}
     body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
@@ -30,47 +28,17 @@
     .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
     .site-menu a:hover{background:rgba(0,0,0,.05)}
 
-    /* ===== FIXED Glas-Overlay: exakt wie gesehen.html ===== */
-    #page-glass{
-      position:fixed; left:0; right:0; top:0; bottom:0;
-      pointer-events:none;
-      z-index:0;
-    }
-    #page-glass .glass-fade{
-      position:absolute; left:0; right:0; top:100vh; height:10vh;
-      background:linear-gradient(to bottom,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.32) 100%);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-    }
-    #page-glass .glass-solid{
-      position:absolute; left:0; right:0; top:110vh; bottom:0;
-      background:rgba(255,255,255,.32);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-    }
+    #page-glass{position:fixed;left:0;right:0;top:0;bottom:0;pointer-events:none;z-index:0;}
+    #page-glass .glass-fade{position:absolute;left:0;right:0;top:100vh;height:10vh;background:linear-gradient(to bottom,rgba(255,255,255,0) 0%,rgba(255,255,255,.32) 100%);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+    #page-glass .glass-solid{position:absolute;left:0;right:0;top:110vh;bottom:0;background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 
-    body .main,
-    body .main::before,
-    body .main::after{
-      background:transparent !important;
-      backdrop-filter:none !important;
-      -webkit-backdrop-filter:none !important;
-      box-shadow:none !important;
-    }
-    .main{
-      border-radius:12px;
-      padding:1.25rem 1rem;
-      position:relative;
-      z-index:1;
-      overflow:auto;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-width:none; -ms-overflow-style:none;
-    }
+    body .main,body .main::before,body .main::after{background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;}
+    .main{border-radius:12px;padding:1.25rem 1rem;position:relative;z-index:1;overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;}
     .main::-webkit-scrollbar{display:none}
     .main .content-offset{padding-top:105vh}
     .main{padding-bottom:2.5rem}
 
-    .nav-arrow{z-index:1000 !important}
+    .nav-arrow{z-index:1000!important}
     .scroll-cue{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.4);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 4px 12px rgba(0,0,0,.08);display:grid;place-items:center;z-index:900;opacity:0;transition:opacity .2s;pointer-events:none}
     .scroll-cue svg{width:16px;height:16px}
     .scroll-cue.visible{opacity:1}
@@ -80,7 +48,6 @@
     .grid .card{width:100%}
     .panel-photo{margin:1rem -1rem 0;border-radius:12px;overflow:hidden;line-height:0;box-shadow:0 6px 24px rgba(0,0,0,.15)}
     .panel-photo img{display:block;width:100%;height:auto;object-fit:cover;object-position:center}
-
     footer{text-align:center;margin-top:2rem;font-size:.9rem}
   </style>
 </head>
@@ -120,14 +87,10 @@
       <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
 
       <section class="grid" aria-label="Seitenübersicht">
-        <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-        <figure class="panel-photo">
-          <picture>
-            <source srcset="assets/bennet_index1.avif" type="image/avif">
-            <source srcset="assets/bennet_index1.webp" type="image/webp">
-            <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet">
-          </picture>
-        </figure>
+        <!-- über mich: jetzt klickbares Bild -->
+        <a class="card" href="ueber-mich.html" aria-label="über mich">
+          <img src="assets/IMG_5655_4.webp" alt="b3nn3t – über mich" class="panel-photo">
+        </a>
 
         <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
         <figure class="panel-photo">
@@ -179,7 +142,6 @@
       const glass = document.getElementById('page-glass');
       const panel = document.querySelector('.main');
       if (!glass || !panel) return;
-
       function positionGlass() {
         const r = panel.getBoundingClientRect();
         glass.style.left  = r.left + 'px';
@@ -190,7 +152,6 @@
       window.addEventListener('load', positionGlass);
       window.addEventListener('resize', positionGlass);
       window.addEventListener('scroll', positionGlass, { passive: true });
-
       let raf; function tick(){ positionGlass(); raf = requestAnimationFrame(tick); }
       tick(); setTimeout(()=>cancelAnimationFrame(raf), 800);
     })();
