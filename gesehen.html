@@ -40,6 +40,8 @@
     .card .thumb{width:100%;aspect-ratio:16/9;display:block;border-radius:12px;object-fit:cover;background:#000;margin-bottom:8px}
     .video-close{position:absolute;top:6px;right:10px;font-size:24px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:4px;cursor:pointer;z-index:10;line-height:1;padding:2px 8px}
     .video-close:hover{background:rgba(255,255,255,0.9);color:#000}
+    /* NEW: Titel unter YT-Thumb */
+    .grid-seen .card .yt-title{display:block;margin-top:4px;font-size:.95rem;font-weight:600}
   </style>
 </head>
 <body>
@@ -114,61 +116,79 @@
 
   <!-- Öffnet Video direkt unter der Karte (volle Breite) + Schließen -->
   <script>
-    const cards = document.querySelectorAll('.card[data-embed-src]');
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const cards = document.querySelectorAll('.card[data-embed-src]');
 
-    function closeAllVideos() {
-      document.querySelectorAll('.video-row').forEach(row => row.remove());
-    }
+      function closeAllVideos() {
+        document.querySelectorAll('.video-row').forEach(row => row.remove());
+      }
 
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        const next = card.nextElementSibling;
-        if (next && next.classList.contains('video-row')) { next.remove(); return; }
-        closeAllVideos();
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          try {
+            const next = card.nextElementSibling;
+            if (next && next.classList.contains('video-row')) { next.remove(); return; }
+            closeAllVideos();
 
-        const row = document.createElement('div');
-        row.className = 'video-row';
+            const row = document.createElement('div');
+            row.className = 'video-row';
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'video-wrapper';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'video-wrapper';
 
-        const closeBtn = document.createElement('button');
-        closeBtn.textContent = '×';
-        closeBtn.className = 'video-close';
-        closeBtn.addEventListener('click', (e) => { e.stopPropagation(); row.remove(); });
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '×';
+            closeBtn.className = 'video-close';
+            closeBtn.addEventListener('click', (e) => { e.stopPropagation(); row.remove(); });
 
-        const src = card.getAttribute('data-embed-src');
-        if (src.endsWith('.mp4')) {
-          const video = document.createElement('video');
-          video.src = src;
-          video.controls = true;
-          video.autoplay = true;
-          video.style.width = '100%';
-          video.style.height = '100%';
-          wrapper.appendChild(closeBtn);
-          wrapper.appendChild(video);
-        } else {
-          const iframe = document.createElement('iframe');
-          iframe.src = src;
-          iframe.allowFullscreen = true;
-          iframe.loading = 'lazy';
-          iframe.title = 'Video';
-          wrapper.appendChild(closeBtn);
-          wrapper.appendChild(iframe);
-        }
+            const src = card.getAttribute('data-embed-src') || '';
+            if (src.toLowerCase().endsWith('.mp4')) {
+              const video = document.createElement('video');
+              video.src = src;
+              video.controls = true;
+              video.autoplay = true;
+              video.playsInline = true;
+              video.style.width = '100%';
+              video.style.height = '100%';
+              wrapper.appendChild(closeBtn);
+              wrapper.appendChild(video);
+            } else {
+              const iframe = document.createElement('iframe');
+              iframe.src = src;
+              iframe.allowFullscreen = true;
+              iframe.loading = 'lazy';
+              iframe.title = 'Video';
+              // NEW: Falls YouTube, echten Titel setzen
+              const m = src.match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
+              if (m && window.YT_TITLES && window.YT_TITLES[m[1]]) {
+                iframe.title = window.YT_TITLES[m[1]];
+              }
+              wrapper.appendChild(closeBtn);
+              wrapper.appendChild(iframe);
+            }
 
-        row.appendChild(wrapper);
-        card.parentNode.insertBefore(row, card.nextSibling);
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            row.appendChild(wrapper);
+            card.parentNode.insertBefore(row, card.nextSibling);
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch (err) {
+            console.error('Video open error:', err);
+          }
+        });
       });
-    });
 
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllVideos(); });
+      // ESC schließt
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllVideos(); });
+    } catch (err) {
+      console.error('Init error:', err);
+    }
+  });
   </script>
 
   <!-- Instagram Thumbnails -->
   <script>
-    (function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
       const map = {
         video1: 'assets/insta1.png',
         video2: 'assets/insta2.png',
@@ -187,12 +207,16 @@
         img.onerror = () => { img.onerror = null; img.src = 'assets/instagram_poster.jpg'; };
         card.insertBefore(img, card.firstChild);
       });
-    })();
+    } catch (err) {
+      console.error('IG thumbs error:', err);
+    }
+  });
   </script>
 
   <!-- YouTube Thumbnails -->
   <script>
-    (function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
       const map = {
         yt1: { file: 'assets/reel1.avif', id: 'ZSaj_FuqPN8' },
         yt2: { file: 'assets/reel2.avif', id: 'DMNl40Tip1w' },
@@ -217,12 +241,58 @@
         };
         card.insertBefore(img, card.firstChild);
       });
-    })();
+    } catch (err) {
+      console.error('YT thumbs error:', err);
+    }
+  });
+  </script>
+
+  <!-- NEW: YouTube Titel automatisch holen (oEmbed, ohne API-Key) -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      window.YT_TITLES = window.YT_TITLES || {};
+      const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src*="youtube.com/embed/"]'));
+
+      function extractId(src){
+        const m = (src||'').match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
+        return m ? m[1] : null;
+      }
+
+      ytCards.forEach((card) => {
+        const src = card.getAttribute('data-embed-src');
+        const id  = extractId(src);
+        if (!id) return;
+
+        // oEmbed JSON
+        const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`;
+        fetch(url, { mode: 'cors' })
+          .then(res => res.ok ? res.json() : Promise.reject('oEmbed failed'))
+          .then(data => {
+            const title = (data && data.title) ? data.title : '';
+            if (!title) return;
+            window.YT_TITLES[id] = title;
+
+            let t = card.querySelector('.yt-title');
+            if (!t) {
+              t = document.createElement('span');
+              t.className = 'yt-title';
+              card.appendChild(t);
+            }
+            t.textContent = title;
+          })
+          .catch(() => { /* still bleiben, wenn geblockt */ });
+      });
+    } catch (err) {
+      console.error('YT titles error:', err);
+    }
+  });
   </script>
 
   <!-- Intro Thumbnail -->
   <script>
-    (function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
       const intro = document.getElementById('introVideo');
       if (!intro || intro.querySelector('img.thumb')) return;
       const img = new Image();
@@ -231,7 +301,10 @@
       img.src = 'assets/Intro.jpg';
       img.onerror = () => { img.onerror = null; img.src = 'assets/intro.jpg'; };
       intro.insertBefore(img, intro.firstChild);
-    })();
+    } catch (err) {
+      console.error('Intro thumb error:', err);
+    }
+  });
   </script>
 </body>
 </html>
