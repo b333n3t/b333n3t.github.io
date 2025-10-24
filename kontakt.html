@@ -14,6 +14,13 @@
   html { font-size: 16px; }
   :root{ --frame-pad: clamp(18px, 3vw, 28px); }
 
+  /* NEU: Seiten-Scrollbalken entfernen, Panel/Felder behalten Scroll */
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+  textarea { overflow: auto; } /* Scroll im Nachrichtenfeld bleibt */
+
   /* Glasiger Rahmen – KEIN Innen-Padding (Fix) */
   .main{
     background: rgba(255,255,255,.32);
