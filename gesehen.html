@@ -34,10 +34,9 @@
     .scroll-panel p{margin:0 0 1rem}
     .grid-seen{display:flex;justify-content:flex-start;align-items:stretch;gap:14px;margin-top:.5rem;flex-wrap:wrap}
     .grid-seen .card{flex:0 1 280px;max-width:280px;cursor:pointer;position:relative}
-    /* Zeile für das große Video direkt unter einer Karte */
     .video-row{flex:0 0 100%;width:100%;display:flex;justify-content:flex-start}
     .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-top:12px;border-radius:12px;background:#000;border:1px solid rgba(0,0,0,0.06);width:100%}
-    .video-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .video-wrapper iframe,.video-wrapper video{position:absolute;inset:0;width:100%;height:100%;border:0}
     .card .thumb{width:100%;aspect-ratio:16/9;display:block;border-radius:12px;object-fit:cover;background:#000;margin-bottom:8px}
     .video-close{position:absolute;top:6px;right:10px;font-size:24px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:4px;cursor:pointer;z-index:10;line-height:1;padding:2px 8px}
     .video-close:hover{background:rgba(255,255,255,0.9);color:#000}
@@ -77,7 +76,7 @@
 
       <!-- Intro -->
       <section class="grid grid-seen" aria-label="Intro">
-        <div class="card" id="introVideo" data-embed-src="https://www.youtube.com/embed/DEIN_INTRO_VIDEO_ID">
+        <div class="card" id="introVideo" data-embed-src="assets/B3NN3T.mp4">
           ▶︎ Intro-Video
           <small>Intro & Start</small>
         </div>
@@ -123,14 +122,10 @@
 
     cards.forEach(card => {
       card.addEventListener('click', () => {
-        // falls bereits unter dieser Karte geöffnet -> schließen (toggle)
         const next = card.nextElementSibling;
         if (next && next.classList.contains('video-row')) { next.remove(); return; }
-
-        // andere schließen
         closeAllVideos();
 
-        // neue Zeile (volle Breite) direkt NACH der Karte
         const row = document.createElement('div');
         row.className = 'video-row';
 
@@ -142,26 +137,36 @@
         closeBtn.className = 'video-close';
         closeBtn.addEventListener('click', (e) => { e.stopPropagation(); row.remove(); });
 
-        const iframe = document.createElement('iframe');
-        iframe.src = card.getAttribute('data-embed-src');
-        iframe.allowFullscreen = true;
-        iframe.loading = 'lazy';
-        iframe.title = 'Video';
+        const src = card.getAttribute('data-embed-src');
+        if (src.endsWith('.mp4')) {
+          const video = document.createElement('video');
+          video.src = src;
+          video.controls = true;
+          video.autoplay = true;
+          video.style.width = '100%';
+          video.style.height = '100%';
+          wrapper.appendChild(closeBtn);
+          wrapper.appendChild(video);
+        } else {
+          const iframe = document.createElement('iframe');
+          iframe.src = src;
+          iframe.allowFullscreen = true;
+          iframe.loading = 'lazy';
+          iframe.title = 'Video';
+          wrapper.appendChild(closeBtn);
+          wrapper.appendChild(iframe);
+        }
 
-        wrapper.appendChild(closeBtn);
-        wrapper.appendChild(iframe);
         row.appendChild(wrapper);
-
         card.parentNode.insertBefore(row, card.nextSibling);
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     });
 
-    // ESC schließt
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllVideos(); });
   </script>
 
-  <!-- Instagram Thumbnails: per ID auf insta1.png..insta6.png, Fallback -->
+  <!-- Instagram Thumbnails -->
   <script>
     (function () {
       const map = {
@@ -185,14 +190,14 @@
     })();
   </script>
 
-  <!-- YouTube Thumbnails: per ID; yt4 nutzt reel4.jpg, andere reelN.avif; Fallback -> YouTube hqdefault -->
+  <!-- YouTube Thumbnails -->
   <script>
     (function () {
       const map = {
         yt1: { file: 'assets/reel1.avif', id: 'ZSaj_FuqPN8' },
         yt2: { file: 'assets/reel2.avif', id: 'DMNl40Tip1w' },
         yt3: { file: 'assets/reel3.avif', id: 'K5pKG0Smdfc' },
-        yt4: { file: 'assets/reel4.jpg',  id: '4I9vlcGvFGQ' }, // <-- jpg
+        yt4: { file: 'assets/reel4.jpg',  id: '4I9vlcGvFGQ' },
         yt5: { file: 'assets/reel5.avif', id: 'w0pNdnlb96M' },
         yt6: { file: 'assets/reel6.avif', id: 'rV1U891RKLo' },
         yt7: { file: 'assets/reel7.avif', id: 'fq8zhAQMam0' }
@@ -206,7 +211,7 @@
         img.loading = 'lazy'; img.decoding = 'async';
         img.className = 'thumb'; img.alt = 'YouTube-Vorschau';
         img.src = cfg.file;
-        img.onerror = () => { // Fallback auf YouTube-Thumbnail
+        img.onerror = () => {
           img.onerror = null;
           img.src = `https://img.youtube.com/vi/${cfg.id}/hqdefault.jpg`;
         };
@@ -215,7 +220,7 @@
     })();
   </script>
 
-  <!-- Intro Thumbnail (Case-Fallback) -->
+  <!-- Intro Thumbnail -->
   <script>
     (function () {
       const intro = document.getElementById('introVideo');
