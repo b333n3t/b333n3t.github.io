@@ -14,10 +14,10 @@
   html { font-size: 16px; }
   :root{ --frame-pad: clamp(18px, 3vw, 28px); }
 
-  /* NEU: Seiten-Scrollbalken entfernen, Panel/Felder behalten Scroll */
+  /* 🔧 NEU: Seiten-Scrollbalken entfernen, Panel/Felder behalten Scroll */
   html, body {
     height: 100%;
-    overflow: hidden;
+    overflow: hidden; /* kein globaler Scrollbalken */
   }
   textarea { overflow: auto; } /* Scroll im Nachrichtenfeld bleibt */
 
@@ -37,8 +37,8 @@
     -webkit-overflow-scrolling: touch;
     background: transparent;
     box-shadow: none;
-    padding: var(--frame-pad);                      /* ← neu */
-    margin: 0 0 calc(var(--frame-pad) - 6px) 0;     /* ← neu */
+    padding: var(--frame-pad);
+    margin: 0 0 calc(var(--frame-pad) - 6px) 0;
     max-width: 650px;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -257,6 +257,20 @@
   rightZone.addEventListener('touchstart', function(e){ onStart(e,'right'); }, {passive:true});
   window.addEventListener('touchmove', onMove, {passive:false});
   window.addEventListener('touchend',  onEnd,  {passive:true});
+})();
+</script>
+
+<!-- 🔧 Schnellfix: verhindert Shortcuts beim Tippen in Formularfeldern -->
+<script>
+(function () {
+  const inForm = el =>
+    el && (el.matches?.('input, textarea, select, [contenteditable="true"]')
+      || el.closest?.('input, textarea, select, [contenteditable="true"]'));
+
+  // Stoppt globale Keydown-Handler, wenn man in Formularfeldern tippt
+  window.addEventListener('keydown', function(e){
+    if (inForm(e.target)) e.stopPropagation();
+  }, true);
 })();
 </script>
 </body>
