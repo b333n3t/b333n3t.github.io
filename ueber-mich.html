@@ -11,180 +11,93 @@
 <link href="swipe-helper.css" rel="stylesheet"/>
 
 <style>
-/* === Scroll-Panel (transparent über halbtransparentem Hintergrund) === */
-.scroll-panel {
-  overflow: auto;
-  max-height: 75vh;
-  -webkit-overflow-scrolling: touch;
-  background: transparent;
-  border-radius: 12px;
-  box-shadow: none;
-  padding: 1.25rem 1rem;
-  margin-top: 1rem;
-  margin-left: 0;
-  max-width: 650px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  line-height: 1.75;              /* mehr luft */
+:root{
+  --gutter: clamp(16px, 3vw, 32px);
+  --frame-pad: clamp(18px, 3vw, 28px);
+  --panel-max: 980px;
 }
-.scroll-panel::-webkit-scrollbar { display: none; }
 
-/* === Hamburger-Menü === */
-.hamburger {
-  position: fixed;
-  top: 14px;
-  right: 18px;
-  width: 20px;
-  height: 20px;
-  border: none;
-  background: transparent;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  z-index: 1200;
-  padding: 0;
-}
-.hamburger span {
-  display: block;
-  width: 12px;
-  height: 1.4px;
-  margin: 1.5px 0;
-  background: #000;
-  border-radius: 2px;
-  transition: transform .2s ease, opacity .2s ease;
-}
-body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
-body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
-body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
-
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.08);
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
-  z-index: 1099;
-}
-body.menu-open #menu-overlay { display: block; }
-#menu-overlay[hidden]{ display:none; }
-
-.site-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: auto;
-  max-height: 90vh;
-  width: min(40vw, 150px);
+/* Glasiger Rahmen */
+.main{
   background: rgba(255,255,255,.32);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
-  box-shadow: 0 20px 50px rgba(0,0,0,.08);
-  transform: translateX(100%);
-  transition: transform .25s ease;
-  z-index: 1101;
-  padding: 46px 10px 14px;
-}
-body.menu-open .site-menu { transform: translateX(0); }
-
-.site-menu ul { list-style: none; margin: 0; padding: 0; }
-.site-menu li { margin: 0 0 10px 0; }
-.site-menu li.sep {
-  margin-top: 18px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(0,0,0,.08);
-}
-.site-menu a {
-  display: block;
-  padding: 8px 6px;
-  border-radius: 10px;
-  color: #000;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-}
-.site-menu a:hover { background: rgba(0,0,0,.05); }
-.nav-arrow { z-index: 1000; }
-</style>
-
-<!-- Align like 'aktuell.html' (glasiger Rahmen übernimmt die Einrückung) -->
-<style id="align-like-aktuell">
-  :root{
-    --frame-pad: clamp(18px, 3vw, 28px);
-    --gutter: clamp(16px, 3vw, 32px);
-  }
-
-  .main{
-    background: rgba(255,255,255,.32);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    border-radius: 12px;
-    padding: var(--frame-pad);
-    margin-left: var(--gutter);
-    /* rechts lassen wir bewusst KEINen festen rand mehr –
-       die arm-kontur erledigt das fließend */
-  }
-
-  .main .scroll-panel{
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 650px;
-  }
-
-  .scroll-panel h1{ margin: 0 0 .6rem; }
-</style>
-
-<!-- *** ARM-KONTUR: TEXT FLIESST DEM ARM ENTLANG *** -->
-<style>
-/* .arm-wrap sorgt für den organischen rechten Rand via shape-outside */
-.scroll-panel.arm-wrap{
-  position: relative;
+  border-radius: 12px;
+  padding: var(--frame-pad);
+  margin-left: var(--gutter);
 }
 
-/* Unsichtbare, rechts schwebende Form, die den Textfluss bestimmt */
-.scroll-panel.arm-wrap::after{
-  content: "";
-  float: right;                           /* wichtig: shape-outside wirkt nur bei float */
-  width: clamp(220px, 28vw, 380px);       /* ~breite des arm-bereichs */
-  height: 90vh;                           /* hoch genug, damit die form über die text-höhe reicht */
+/* Scrollbarer Textbereich */
+.main .scroll-panel{
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: var(--panel-max);
+  overflow: auto;
+  max-height: 75vh;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  line-height: 1.75;
+}
+.scroll-panel::-webkit-scrollbar{ display:none; }
+
+.scroll-panel h1{ margin: 0 0 .8rem; text-transform: lowercase; }
+.scroll-panel p{ margin: 0 0 0.9em 0; }
+
+/* =========================
+   ARM-KONTUR – TEXT FLIESST ENTSPRECHEND
+   ========================= */
+.arm-shape{
+  float: right;
+  width: clamp(240px, 27vw, 380px);
+  height: 90vh;
+  shape-margin: 18px;
   pointer-events: none;
+  background: transparent;
 
-  /* ARM-KONTUR – HIER FEINTUNEN:
-     Die Punkte beschreiben die Form innerhalb des pseudo-elements.
-     Links/rechts in % der Box-Breite, oben/unten in % der Box-Höhe.
-     So entsteht eine Wölbung nach links (Arm), an der der Text entlangläuft. */
+  /* 20 % Einzug bei 50 % Höhe */
   shape-outside: polygon(
-    100% 0%,    /* oben rechts */
+    100% 0%,
     100% 12%,
-    88% 24%,
-    84% 36%,
-    82% 48%,    /* stärkste einbuchtung etwa auf halber höhe */
-    85% 62%,
+    92% 24%,
+    86% 36%,
+    80% 50%,     /* tiefster Punkt */
+    86% 64%,
     92% 78%,
-    100% 100%,  /* unten rechts */
-    0% 100%,    /* den rest schließen wir rechtwinklig ab */
+    100% 100%,
+    0% 100%,
     0% 0%
   );
   -webkit-shape-outside: polygon(
-    100% 0%, 100% 12%, 88% 24%, 84% 36%, 82% 48%, 85% 62%, 92% 78%, 100% 100%, 0% 100%, 0% 0%
+    100% 0%, 100% 12%, 92% 24%, 86% 36%, 80% 50%, 86% 64%, 92% 78%, 100% 100%, 0% 100%, 0% 0%
   );
-
-  /* feiner abstand zwischen text und arm */
-  shape-margin: 18px;
 }
 
-/* Optional: fallback für sehr alte browser – rechte “no-go”-zone */
-@supports not (shape-outside: polygon(0 0)){
-  .scroll-panel.arm-wrap{ padding-right: 360px; } /* grobe reserve */
-}
-
-/* mobil: organische form abschalten, volle breite nutzen */
+/* mobil: form deaktivieren */
 @media (max-width: 900px){
-  .scroll-panel.arm-wrap::after{
-    display: none;
-  }
+  .arm-shape{ display:none; }
+  .main .scroll-panel{ max-width: min(840px, calc(100% - 2*var(--frame-pad))); }
 }
+
+/* Menü und Navigation (deine vorhandenen Regeln) */
+.hamburger {
+  position: fixed;
+  top: 14px; right: 18px;
+  width: 20px; height: 20px;
+  border: none; background: transparent;
+  display: grid; place-items: center;
+  cursor: pointer; z-index: 1200; padding: 0;
+}
+.hamburger span {
+  display:block; width:12px; height:1.4px;
+  margin:1.5px 0; background:#000; border-radius:2px;
+  transition:transform .2s ease, opacity .2s ease;
+}
+body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg);}
+body.menu-open .hamburger span:nth-child(2){opacity:0;}
+body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg);}
 </style>
 </head>
 
@@ -200,26 +113,13 @@ body.menu-open .site-menu { transform: translateX(0); }
 <button aria-controls="site-menu" aria-expanded="false" aria-label="Menü öffnen" class="hamburger">
   <span></span><span></span><span></span>
 </button>
-<div class="menu-overlay" hidden id="menu-overlay"></div>
-<nav aria-hidden="true" class="site-menu" id="site-menu">
-  <ul>
-    <li><a href="ueber-mich.html">über mich</a></li>
-    <li><a href="diskografie.html">diskografie</a></li>
-    <li><a href="kontakt.html">kontakt</a></li>
-    <li><a href="aktuell.html">aktuell</a></li>
-    <li><a href="gesehen.html">gesehen</a></li>
-    <li><a href="plattformen.html">plattformen</a></li>
-    <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-  </ul>
-</nav>
 
-<!-- Pfeile -->
-<a aria-label="Vorherige Seite" class="nav-arrow left" href="index.html">←</a>
-<a aria-label="Nächste Seite" class="nav-arrow right" href="diskografie.html">→</a>
-
+<!-- Seiteninhalt -->
 <main class="main">
-  <!-- WICHTIG: arm-wrap hinzufügen -->
-  <div class="scroll-panel arm-wrap">
+  <div class="scroll-panel">
+    <!-- Formelement für den Arm -->
+    <div class="arm-shape" aria-hidden="true"></div>
+
     <h1>über mich</h1>
 
     <p>hey, ich bin b3nn3t – geboren 2006 im norden deutschlands, aufgewachsen zwischen schweizer bergen und gedanken, die manchmal lauter sind als worte.</p>
@@ -245,14 +145,9 @@ body.menu-open .site-menu { transform: translateX(0); }
   </div>
 </main>
 
-<a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
-
 <footer>
   © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
 </footer>
-
-<script src="script.js"></script>
-<script defer src="swipe-nav.js?v=6"></script>
 
 <script>
 (function() {
