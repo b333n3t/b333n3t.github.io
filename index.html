@@ -7,141 +7,109 @@
   <meta name="description" content="Start — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-  <!-- Preload: moderne Bilder -->
-  <link rel="preload" as="image" href="assets/bennet_index1.webp" type="image/webp">
-  <link rel="preload" as="image" href="assets/bennet_index2.webp" type="image/webp">
-  <link rel="preload" as="image" href="assets/bennet_index3.webp" type="image/webp">
-
+  <!-- Externe Styles (deine bestehenden) -->
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
   <style>
-    /* ===== Nur für Startseite ===== */
-    body.home .main {
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      border-radius: 12px;
-      position: relative;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      transform: translateZ(0);
-    }
-    body.home .main::-webkit-scrollbar { display: none; }
-    .content-offset { padding-top: 105vh; }
-    .main { padding-bottom: 2.5rem; }
+    /* ===== Header / Menü ===== */
+    .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
+    .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s,opacity .2s}
+    body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
+    body.menu-open .hamburger span:nth-child(2){opacity:0}
+    body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+    .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
+    body.menu-open #menu-overlay{display:block}
+    #menu-overlay[hidden]{display:none}
+    .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s;z-index:1101;padding:46px 10px 14px}
+    body.menu-open .site-menu{transform:translateX(0)}
+    .site-menu ul{list-style:none;margin:0;padding:0}
+    .site-menu li{margin:0 0 10px}
+    .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
+    .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
+    .site-menu a:hover{background:rgba(0,0,0,.05)}
 
-    /* ===== Glasverlauf (nur auf Startseite) ===== */
-    /* 100–110vh: sanfter Verlauf */
-    body.home .main::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 100vh;
-      height: 10vh;
-      background: linear-gradient(
-        to bottom,
+    /* ===== FIXED Glas-Overlay: exakt wie gesehen.html =====
+       0–100vh transparent, 100–110vh Übergang, ab 110vh konstant */
+    #page-glass{
+      position:fixed; left:0; right:0; top:0; bottom:0;
+      pointer-events:none;            /* Klicks/Swipe passieren durch */
+      z-index:0;                      /* unter dem Panel-Content */
+    }
+    /* Übergang 100 -> 110vh */
+    #page-glass .glass-fade{
+      position:absolute; left:0; right:0; top:100vh; height:10vh;
+      background:linear-gradient(to bottom,
         rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.32) 100%
-      );
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      pointer-events: none;
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
-      z-index: 0;
+        rgba(255,255,255,.32) 100%);
+      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+    }
+    /* ab 110vh: gleichmäßiger grauer Glas-Hintergrund */
+    #page-glass .glass-solid{
+      position:absolute; left:0; right:0; top:110vh; bottom:0;
+      background:rgba(255,255,255,.32);
+      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
     }
 
-    /* ab 110vh: dauerhaft grau-transparent mit Blur */
-    body.home .main::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 110vh;
-      bottom: 0;
-      background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      pointer-events: none;
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
-      z-index: 0;
+    /* ===== Panel (oben 100% transparent, keine Filter) ===== */
+    body .main,
+    body .main::before,
+    body .main::after{
+      background:transparent !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+      box-shadow:none !important;
     }
+    .main{
+      border-radius:12px;
+      padding:1.25rem 1rem;
+      position:relative;
+      z-index:1;                     /* über dem #page-glass */
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none; -ms-overflow-style:none;
+    }
+    .main::-webkit-scrollbar{display:none}
+    .main .content-offset{padding-top:105vh} /* Inhalt setzt unterhalb 0–100vh an */
+    .main{padding-bottom:2.5rem}
 
-    /* Inhalt sichtbar über dem Glas */
-    body.home .main > * {
-      position: relative;
-      z-index: 1;
-    }
+    /* ===== Pfeile / Cue ===== */
+    .nav-arrow{z-index:1000 !important}
+    .scroll-cue{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.4);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 4px 12px rgba(0,0,0,.08);display:grid;place-items:center;z-index:900;opacity:0;transition:opacity .2s;pointer-events:none}
+    .scroll-cue svg{width:16px;height:16px}
+    .scroll-cue.visible{opacity:1}
+    .scroll-cue.hidden{opacity:0}
 
-    /* ===== Layout ===== */
-    .grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .grid .card { width: 100%; }
+    /* ===== Inhalt: Buttons + Panel-Bilder ===== */
+    .grid{display:flex;flex-direction:column;gap:1rem}
+    .grid .card{width:100%}
+    .panel-photo{margin:1rem -1rem 0;border-radius:12px;overflow:hidden;line-height:0;box-shadow:0 6px 24px rgba(0,0,0,.15)}
+    .panel-photo img{display:block;width:100%;height:auto;object-fit:cover;object-position:center}
 
-    /* ===== Bilder ===== */
-    .panel-photo {
-      margin: 1rem -1rem 0;
-      border-radius: 12px;
-      overflow: hidden;
-      line-height: 0;
-      box-shadow: 0 3px 12px rgba(0,0,0,.1);
-    }
-    .panel-photo img {
-      display: block;
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      object-position: top center;
-      border-radius: 12px;
-    }
-
-    /* ===== Down-Pfeil ===== */
-    .scroll-cue {
-      position: fixed;
-      left: 50%;
-      bottom: 60px;
-      transform: translateX(-50%);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.4);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      box-shadow: 0 4px 10px rgba(0,0,0,.08);
-      display: grid;
-      place-items: center;
-      z-index: 1200;
-      opacity: 0;
-      transition: opacity .2s ease;
-      pointer-events: none;
-    }
-    .scroll-cue.visible { opacity: 1; }
-    .scroll-cue.hidden { opacity: 0; }
-    .scroll-cue svg { width: 16px; height: 16px; display: block; }
+    footer{text-align:center;margin-top:2rem;font-size:.9rem}
   </style>
 </head>
 
-<body class="home">
+<body ontouchstart="">
   <header class="header">
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
       <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
     </a>
   </header>
 
-  <!-- Menü -->
+  <!-- ✨ Glas-Layer (wird per JS seitlich an das Panel geclippt) -->
+  <div id="page-glass" aria-hidden="true">
+    <div class="glass-fade"></div>
+    <div class="glass-solid"></div>
+  </div>
+
+  <!-- Hamburger-Menü -->
   <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
     <span></span><span></span><span></span>
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
+
   <nav id="site-menu" class="site-menu" aria-hidden="true">
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
@@ -163,30 +131,18 @@
       <section class="grid" aria-label="Seitenübersicht">
         <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
         <figure class="panel-photo">
-          <picture>
-            <source srcset="assets/bennet_index1.avif" type="image/avif">
-            <source srcset="assets/bennet_index1.webp" type="image/webp">
-            <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="eager" decoding="async">
-          </picture>
+          <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet">
         </figure>
 
         <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
         <figure class="panel-photo">
-          <picture>
-            <source srcset="assets/bennet_index2.avif" type="image/avif">
-            <source srcset="assets/bennet_index2.webp" type="image/webp">
-            <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="eager" decoding="async">
-          </picture>
+          <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio">
         </figure>
 
         <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
         <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
         <figure class="panel-photo">
-          <picture>
-            <source srcset="assets/bennet_index3.avif" type="image/avif">
-            <source srcset="assets/bennet_index3.webp" type="image/webp">
-            <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell" loading="eager" decoding="async">
-          </picture>
+          <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell">
         </figure>
 
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
@@ -197,9 +153,9 @@
 
   <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
 
-  <!-- Pfeil -->
+  <!-- Pfeil unten -->
   <div class="scroll-cue" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <polyline points="6 9 12 15 18 9"></polyline>
     </svg>
   </div>
@@ -208,12 +164,37 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
+  <!-- Pfeil-Logik -->
   <script>
-    (function(){
-      const cue=document.querySelector('.scroll-cue');
-      const scroller=document.querySelector('.main');
-      window.addEventListener('load',()=>cue.classList.add('visible'));
-      scroller.addEventListener('scroll',()=>{cue.classList.toggle('hidden',scroller.scrollTop>50);},{passive:true});
+    const cue = document.querySelector('.scroll-cue');
+    const scroller = document.querySelector('.main');
+    window.addEventListener('load', () => cue.classList.add('visible'));
+    scroller.addEventListener('scroll', () => {
+      cue.classList.toggle('hidden', scroller.scrollTop > 50);
+    }, {passive:true});
+  </script>
+
+  <!-- ✨ Glas exakt auf Panelbreite clippen -->
+  <script>
+    (function () {
+      const glass = document.getElementById('page-glass');
+      const panel = document.querySelector('.main');
+      if (!glass || !panel) return;
+
+      function positionGlass() {
+        const r = panel.getBoundingClientRect();
+        glass.style.left  = r.left + 'px';
+        glass.style.right = (window.innerWidth - r.right) + 'px';
+        const cs = getComputedStyle(panel);
+        glass.style.borderRadius = cs.borderRadius || '12px';
+      }
+      window.addEventListener('load', positionGlass);
+      window.addEventListener('resize', positionGlass);
+      window.addEventListener('scroll', positionGlass, { passive: true });
+
+      // kurzes Reflow-Polling, um Layout-Shifts abzufangen
+      let raf; function tick(){ positionGlass(); raf = requestAnimationFrame(tick); }
+      tick(); setTimeout(()=>cancelAnimationFrame(raf), 800);
     })();
   </script>
 </body>
