@@ -1,49 +1,163 @@
-:root{
-  /* passe diesen wert so an, bis der rechte rand sauber vor dem arm endet */
-  --safe-right: 340px;      /* z.B. 300–420px testen */
-  --gutter: clamp(16px,3vw,32px);
-}
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>b3nn3t – über mich</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    /* =========================
+       globale variablen
+       ========================= */
+    :root{
+      /* no-go-zone rechts (arm-bereich) – nach dem einbinden anpassen, bis der text sauber stoppt */
+      --safe-right: 360px;          /* z. b. 300–420 px testen */
+      --gutter: clamp(16px,3vw,32px);
+      --card-bg: rgba(255,255,255,0.6);
+      --card-radius: 24px;
+      --max-text-width: 980px;
+    }
 
-.about-card{
-  /* sorgt dafür, dass der block NICHT in den „arm-bereich“ ragt */
-  max-width: calc(100vw - var(--safe-right) - var(--gutter));
-  margin: 6vh var(--gutter);
-  padding: clamp(16px,3vw,28px);
-  border-radius: 24px;
+    /* =========================
+       reset & basis
+       ========================= */
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:#1a1a1a;
+      background:#f5f5f5;
+    }
 
-  /* dein glas-/nebel-look, nur etwas ruhiger */
-  background: rgba(255,255,255,0.6);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+    /* =========================
+       hero: hintergrundbild + overlay
+       ========================= */
+    .hero{
+      min-height:100vh;
+      position:relative;
+      display:flex;
+      align-items:flex-start;
+      justify-content:flex-start;
+      overflow:hidden;
+      /* HINTERGRUNDBILD HIER ANPASSEN */
+      background-image: url('dein-bild.jpg'); /* <-- ersetzen */
+      background-size: cover;
+      background-position: center right;
+    }
+    .hero::before{
+      /* milder glas/nebelschleier für bessere lesbarkeit */
+      content:"";
+      position:absolute; inset:0;
+      background: rgba(255,255,255,0.45);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
 
-  /* luft & lesbarkeit */
-  line-height: 1.75;
-  letter-spacing: 0.01em;
+    /* =========================
+       content-card mit rechter no-go-zone
+       ========================= */
+    body .about-card{
+      position:relative;
+      z-index:1;               /* über dem overlay */
+      margin-left: var(--gutter);
+      margin-top: 6vh;
 
-  /* ermöglicht scrollen im kasten, statt alles zu quetschen */
-  max-height: 72vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+      /* HARTE GRENZE: nie in den arm-bereich ragen */
+      width: min(var(--max-text-width), calc(100vw - (var(--safe-right) + var(--gutter))));
+      margin-right: calc(var(--safe-right) + var(--gutter));
 
-  /* dezente schatten für abhebung */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-}
+      padding: clamp(18px,3vw,28px);
+      border-radius: var(--card-radius);
+      background: var(--card-bg);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 
-/* typografie: mehr abstände zwischen absätzen */
-.about-card h2{
-  margin: 0 0 0.8em 0;
-  font-size: clamp(28px,4vw,44px);
-}
-.about-card p{
-  margin: 0 0 0.9em 0;   /* absatzabstand */
-}
+      /* lesbarkeit */
+      line-height: 1.75;
+      letter-spacing: 0.01em;
 
-/* auf kleinen screens: sicherheitsrand aus, volle breite nutzen */
-@media (max-width: 900px){
-  :root{ --safe-right: 0px; }
-  .about-card{
-    max-width: min(840px, 100% - 2*var(--gutter));
-    margin: 4vh var(--gutter);
-    max-height: unset;   /* mobil meist kein scroll-kasten nötig */
-  }
-}
+      /* optional: text scrollt im kasten, statt alles zu quetschen */
+      max-height: 72vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* typografie & luft */
+    body .about-card h2{
+      margin: 0 0 0.8em 0;
+      font-size: clamp(28px,4vw,44px);
+      font-weight: 700;
+      color:#111;
+      text-transform: lowercase;
+    }
+    body .about-card h3{
+      margin: 1.6em 0 0.6em;
+      font-size: clamp(18px,2.2vw,22px);
+      font-weight: 700;
+      text-transform: lowercase;
+    }
+    body .about-card p{
+      margin: 0 0 0.9em 0;  /* absatzabstand */
+      font-weight: 400;
+    }
+    body .about-card strong{ font-weight:700; }
+
+    /* kleine zentrierte fußzeile (optional) */
+    .footer{
+      position: relative;
+      z-index:1;
+      margin: 12px var(--gutter) 24px;
+      font-size: 12px;
+      color:#5a5a5a;
+      text-align: center;
+    }
+
+    /* =========================
+       responsive: mobil -> volle breite, no-go-zone aus
+       ========================= */
+    @media (max-width: 900px){
+      :root{ --safe-right: 0px; }
+      body .about-card{
+        width: min(840px, calc(100% - 2*var(--gutter)));
+        margin: 4vh var(--gutter);
+        max-height: unset; /* mobil meist kein scrollkasten nötig */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="hero">
+    <section class="about-card" aria-label="über mich">
+      <h2>über mich</h2>
+
+      <p>hey, ich bin <strong>b3nn3t</strong> – geboren 2006 im norden deutschlands, aufgewachsen zwischen schweizer bergen und gedanken, die manchmal lauter sind als worte.</p>
+
+      <p>musik ist für mich mehr als klang – sie ist mein tagebuch, mein spiegel, mein zuhause.</p>
+      <p>ich schreibe über das, was bleibt, wenn alles andere still wird: zweifel, sehnsucht, hoffnung, liebe.</p>
+      <p>über nächte, in denen die welt zu groß wirkt, und momente, in denen musik für mich spricht.</p>
+
+      <p>jeder song ist ein stück von mir – ehrlich, ungeschliffen, echt.</p>
+      <p>vielleicht findest du dich darin wieder.</p>
+      <p>vielleicht hilft dir ein satz, den ich eigentlich für mich geschrieben habe.</p>
+      <p>dann hat alles sinn gemacht.</p>
+
+      <p>danke, dass du da bist und meine welt mit deiner zeit berührst. 🖤</p>
+
+      <h3>noch etwas, das mir am herzen liegt</h3>
+
+      <p><strong>b3nn3t</strong> ist für mich mehr als nur ein künstlername – er steht für alles, was ich bin, was ich fühle und erschaffe.</p>
+      <p>aus einer idee wurde etwas echtes, etwas, das mit mir gewachsen ist.</p>
+      <p>heute ist <strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen – ein kleiner meilenstein, der für mich wie ein versprechen ist: weiterzumachen, zu wachsen und echt zu bleiben.</p>
+
+      <p>danke, dass ihr mich auf diesem weg begleitet. ohne euch wäre all das nicht möglich. 🖤</p>
+    </section>
+  </main>
+
+  <div class="footer">© b3nn3t</div>
+
+</body>
+</html>
