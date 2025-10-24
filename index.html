@@ -1,201 +1,160 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Start — b3nn3t</title>
-  <meta name="description" content="Start — b3nn3t" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>b3nn3t – Start</title>
 
-  <!-- Externe Styles (deine bestehenden) -->
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="styles_nav_arrows.css" />
-  <link rel="stylesheet" href="swipe-helper.css" />
+  <!-- Kritische Styles zuerst -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles_nav_arrows.css">
 
+  <!-- Non-critical CSS: lädt asynchron -->
+  <link rel="preload" href="swipe-helper.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="swipe-helper.css"></noscript>
+
+  <!-- Hero-Bild vorladen (AVIF bevorzugt) -->
+  <link
+    rel="preload"
+    as="image"
+    href="assets/bennet_index1_1600.avif"
+    imagesrcset="assets/bennet_index1_800.avif 800w, assets/bennet_index1_1200.avif 1200w, assets/bennet_index1_1600.avif 1600w"
+    imagesizes="(max-width: 768px) 100vw, 768px"
+    type="image/avif"
+    fetchpriority="high">
+
+  <!-- Kleine Performance-Optimierungen / Overrides -->
   <style>
-    /* ===== Header / Menü ===== */
-    .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
-    .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s,opacity .2s}
-    body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
-    body.menu-open .hamburger span:nth-child(2){opacity:0}
-    body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
-    .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
-    body.menu-open #menu-overlay{display:block}
-    #menu-overlay[hidden]{display:none}
-    .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s;z-index:1101;padding:46px 10px 14px}
-    body.menu-open .site-menu{transform:translateX(0)}
-    .site-menu ul{list-style:none;margin:0;padding:0}
-    .site-menu li{margin:0 0 10px}
-    .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
-    .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
-    .site-menu a:hover{background:rgba(0,0,0,.05)}
-
-    /* ===== FIXED Glas-Overlay: exakt wie gesehen.html =====
-       0–100vh transparent, 100–110vh Übergang, ab 110vh konstant */
-    #page-glass{
-      position:fixed; left:0; right:0; top:0; bottom:0;
-      pointer-events:none;            /* Klicks/Swipe passieren durch */
-      z-index:0;                      /* unter dem Panel-Content */
+    /* Teure Filter standardmäßig aus, nur aktiv wenn nötig */
+    .menu-overlay,
+    #page-glass .glass-fade,
+    #page-glass .glass-solid {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
-    /* Übergang 100 -> 110vh */
-    #page-glass .glass-fade{
-      position:absolute; left:0; right:0; top:100vh; height:10vh;
-      background:linear-gradient(to bottom,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.32) 100%);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-    }
-    /* ab 110vh: gleichmäßiger grauer Glas-Hintergrund */
-    #page-glass .glass-solid{
-      position:absolute; left:0; right:0; top:110vh; bottom:0;
-      background:rgba(255,255,255,.32);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+    body.menu-open .menu-overlay { 
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
     }
 
-    /* ===== Panel (oben 100% transparent, keine Filter) ===== */
-    body .main,
-    body .main::before,
-    body .main::after{
-      background:transparent !important;
-      backdrop-filter:none !important;
-      -webkit-backdrop-filter:none !important;
-      box-shadow:none !important;
+    /* Verhindert Layout-Shift und spart Arbeit unterhalb des Folds */
+    .panel-photo { 
+      content-visibility: auto;
+      contain-intrinsic-size: 600px 400px; /* grober Platzhalter */
     }
-    .main{
-      border-radius:12px;
-      padding:1.25rem 1rem;
-      position:relative;
-      z-index:1;                     /* über dem #page-glass */
-      overflow:auto;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-width:none; -ms-overflow-style:none;
-    }
-    .main::-webkit-scrollbar{display:none}
-    .main .content-offset{padding-top:105vh} /* Inhalt setzt unterhalb 0–100vh an */
-    .main{padding-bottom:2.5rem}
 
-    /* ===== Pfeile / Cue ===== */
-    .nav-arrow{z-index:1000 !important}
-    .scroll-cue{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.4);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 4px 12px rgba(0,0,0,.08);display:grid;place-items:center;z-index:900;opacity:0;transition:opacity .2s;pointer-events:none}
-    .scroll-cue svg{width:16px;height:16px}
-    .scroll-cue.visible{opacity:1}
-    .scroll-cue.hidden{opacity:0}
-
-    /* ===== Inhalt: Buttons + Panel-Bilder ===== */
-    .grid{display:flex;flex-direction:column;gap:1rem}
-    .grid .card{width:100%}
-    .panel-photo{margin:1rem -1rem 0;border-radius:12px;overflow:hidden;line-height:0;box-shadow:0 6px 24px rgba(0,0,0,.15)}
-    .panel-photo img{display:block;width:100%;height:auto;object-fit:cover;object-position:center}
-
-    footer{text-align:center;margin-top:2rem;font-size:.9rem}
+    /* Kleines optisches Detail beim ersten Paint */
+    .scroll-cue { opacity: 0; transition: opacity .3s ease; }
+    .scroll-cue.visible { opacity: 1; }
   </style>
 </head>
+<body>
+  <div id="page-glass">
+    <!-- Menü / Overlay -->
+    <div class="menu-overlay" aria-hidden="true"></div>
 
-<body ontouchstart="">
-  <header class="header">
-    <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
-    </a>
-  </header>
+    <!-- Header / Navigation -->
+    <header class="site-header">
+      <button class="menu-toggle" aria-controls="main-nav" aria-expanded="false">Menü</button>
+      <nav id="main-nav" class="main-nav" hidden>
+        <a class="btn" href="#work">Arbeiten</a>
+        <a class="btn" href="#about">Über</a>
+        <a class="btn" href="#contact">Kontakt</a>
+      </nav>
+    </header>
 
-  <!-- ✨ Glas-Layer (wird per JS seitlich an das Panel geclippt) -->
-  <div id="page-glass" aria-hidden="true">
-    <div class="glass-fade"></div>
-    <div class="glass-solid"></div>
-  </div>
-
-  <!-- Hamburger-Menü -->
-  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div id="menu-overlay" class="menu-overlay" hidden></div>
-
-  <nav id="site-menu" class="site-menu" aria-hidden="true">
-    <ul>
-      <li><a href="ueber-mich.html">über mich</a></li>
-      <li><a href="diskografie.html">diskografie</a></li>
-      <li><a href="kontakt.html">kontakt</a></li>
-      <li><a href="aktuell.html">aktuell</a></li>
-      <li><a href="gesehen.html">gesehen</a></li>
-      <li><a href="plattformen.html">plattformen</a></li>
-      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-    </ul>
-  </nav>
-
-  <!-- Hauptinhalt -->
-  <main class="main">
-    <div class="content-offset">
-      <h1>moin und willkommen</h1>
-      <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
-
-      <section class="grid" aria-label="Seitenübersicht">
-        <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-        <figure class="panel-photo">
-          <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet">
-        </figure>
-
-        <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
-        <figure class="panel-photo">
-          <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio">
-        </figure>
-
-        <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
-        <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
-        <figure class="panel-photo">
-          <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell">
-        </figure>
-
-        <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
-        <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
+    <!-- Hero -->
+    <main id="content" class="grid">
+      <section class="hero panel-photo">
+        <picture>
+          <source type="image/avif" 
+                  srcset="assets/bennet_index1_800.avif 800w, assets/bennet_index1_1200.avif 1200w, assets/bennet_index1_1600.avif 1600w">
+          <source type="image/webp" 
+                  srcset="assets/bennet_index1_800.webp 800w, assets/bennet_index1_1200.webp 1200w, assets/bennet_index1_1600.webp 1600w">
+          <img
+            src="assets/bennet_index1.jpg"
+            srcset="assets/bennet_index1_800.jpg 800w, assets/bennet_index1_1200.jpg 1200w, assets/bennet_index1_1600.jpg 1600w"
+            sizes="(max-width: 768px) 100vw, 768px"
+            width="1600" height="1067"
+            alt="b3nn3t – Bennet"
+            loading="eager" fetchpriority="high" decoding="async">
+        </picture>
+        <div class="scroll-cue" aria-hidden="true">Scroll</div>
       </section>
-    </div>
-  </main>
 
-  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+      <!-- Zweites Panel (lazy) -->
+      <section class="panel-photo">
+        <picture>
+          <source type="image/avif" 
+                  srcset="assets/bennet_index2_800.avif 800w, assets/bennet_index2_1200.avif 1200w, assets/bennet_index2_1600.avif 1600w">
+          <source type="image/webp" 
+                  srcset="assets/bennet_index2_800.webp 800w, assets/bennet_index2_1200.webp 1200w, assets/bennet_index2_1600.webp 1600w">
+          <img
+            src="assets/bennet_index2.jpg"
+            srcset="assets/bennet_index2_800.jpg 800w, assets/bennet_index2_1200.jpg 1200w, assets/bennet_index2_1600.jpg 1600w"
+            sizes="(max-width: 768px) 100vw, 768px"
+            width="1600" height="1067"
+            alt="b3nn3t – Studio"
+            loading="lazy" fetchpriority="low" decoding="async">
+        </picture>
+      </section>
 
-  <!-- Pfeil unten -->
-  <div class="scroll-cue" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
+      <!-- Beispiel für weitere Panels: duplizieren und Index anpassen (3,4,...) -->
+      <!--
+      <section class="panel-photo">
+        <picture>
+          <source type="image/avif" 
+                  srcset="assets/bennet_index3_800.avif 800w, assets/bennet_index3_1200.avif 1200w, assets/bennet_index3_1600.avif 1600w">
+          <source type="image/webp" 
+                  srcset="assets/bennet_index3_800.webp 800w, assets/bennet_index3_1200.webp 1200w, assets/bennet_index3_1600.webp 1600w">
+          <img
+            src="assets/bennet_index3.jpg"
+            srcset="assets/bennet_index3_800.jpg 800w, assets/bennet_index3_1200.jpg 1200w, assets/bennet_index3_1600.jpg 1600w"
+            sizes="(max-width: 768px) 100vw, 768px"
+            width="1600" height="1067"
+            alt="b3nn3t – Projekt"
+            loading="lazy" fetchpriority="low" decoding="async">
+          </picture>
+      </section>
+      -->
+
+      <!-- Call-to-Action / Links-Buttons -->
+      <section id="work" class="cta">
+        <a class="btn primary" href="/work">Projekte ansehen</a>
+        <a class="btn" href="/contact">Kontakt aufnehmen</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <small>&copy; <span id="year"></span> b3nn3t</small>
+    </footer>
   </div>
 
-  <!-- Skripte -->
-  <script src="script.js"></script>
+  <!-- Skripte: nicht blockierend -->
+  <script defer>
+    // DOM sofort nutzbar machen (nicht auf alle Bilder warten)
+    document.addEventListener('DOMContentLoaded', function () {
+      document.documentElement.classList.add('ready');
+
+      // Menü-Handling (Beispiel)
+      const toggle = document.querySelector('.menu-toggle');
+      const nav = document.getElementById('main-nav');
+      toggle?.addEventListener('click', () => {
+        const open = document.body.classList.toggle('menu-open');
+        nav.hidden = !open;
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+
+      // Scroll-Cue früh sichtbar
+      const cue = document.querySelector('.scroll-cue');
+      cue?.classList.add('visible');
+
+      // Aktuelles Jahr im Footer
+      const y = document.getElementById('year');
+      if (y) y.textContent = String(new Date().getFullYear());
+    });
+  </script>
+  <script src="script.js" defer></script>
   <script src="swipe-nav.js?v=12" defer></script>
-
-  <!-- Pfeil-Logik -->
-  <script>
-    const cue = document.querySelector('.scroll-cue');
-    const scroller = document.querySelector('.main');
-    window.addEventListener('load', () => cue.classList.add('visible'));
-    scroller.addEventListener('scroll', () => {
-      cue.classList.toggle('hidden', scroller.scrollTop > 50);
-    }, {passive:true});
-  </script>
-
-  <!-- ✨ Glas exakt auf Panelbreite clippen -->
-  <script>
-    (function () {
-      const glass = document.getElementById('page-glass');
-      const panel = document.querySelector('.main');
-      if (!glass || !panel) return;
-
-      function positionGlass() {
-        const r = panel.getBoundingClientRect();
-        glass.style.left  = r.left + 'px';
-        glass.style.right = (window.innerWidth - r.right) + 'px';
-        const cs = getComputedStyle(panel);
-        glass.style.borderRadius = cs.borderRadius || '12px';
-      }
-      window.addEventListener('load', positionGlass);
-      window.addEventListener('resize', positionGlass);
-      window.addEventListener('scroll', positionGlass, { passive: true });
-
-      // kurzes Reflow-Polling, um Layout-Shifts abzufangen
-      let raf; function tick(){ positionGlass(); raf = requestAnimationFrame(tick); }
-      tick(); setTimeout(()=>cancelAnimationFrame(raf), 800);
-    })();
-  </script>
 </body>
 </html>
