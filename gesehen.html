@@ -116,62 +116,40 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- Öffnet Video direkt unter der Karte (volle Breite) + Schließen -->
+  <!-- Öffnet Video direkt unter der Karte -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.card[data-embed-src]');
-
-    function closeAllVideos() {
-      document.querySelectorAll('.video-row').forEach(row => row.remove());
-    }
-
+    function closeAllVideos(){ document.querySelectorAll('.video-row').forEach(r => r.remove()); }
     cards.forEach(card => {
       card.addEventListener('click', () => {
         const next = card.nextElementSibling;
         if (next && next.classList.contains('video-row')) { next.remove(); return; }
         closeAllVideos();
 
-        const row = document.createElement('div');
-        row.className = 'video-row';
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'video-wrapper';
-
-        const closeBtn = document.createElement('button');
-        closeBtn.textContent = '×';
-        closeBtn.className = 'video-close';
+        const row = document.createElement('div'); row.className = 'video-row';
+        const wrapper = document.createElement('div'); wrapper.className = 'video-wrapper';
+        const closeBtn = document.createElement('button'); closeBtn.textContent = '×'; closeBtn.className = 'video-close';
         closeBtn.addEventListener('click', (e) => { e.stopPropagation(); row.remove(); });
 
         const src = card.getAttribute('data-embed-src') || '';
         if (src.toLowerCase().endsWith('.mp4')) {
-          const video = document.createElement('video');
-          video.src = src;
-          video.controls = true;
-          video.autoplay = true;
-          video.playsInline = true;
-          video.style.width = '100%';
-          video.style.height = '100%';
-          wrapper.append(closeBtn, video);
+          const v = document.createElement('video');
+          v.src = src; v.controls = true; v.autoplay = true; v.playsInline = true;
+          v.style.width = '100%'; v.style.height = '100%';
+          wrapper.append(closeBtn, v);
         } else {
-          const iframe = document.createElement('iframe');
-          iframe.src = src;
-          iframe.allowFullscreen = true;
-          iframe.loading = 'lazy';
-          iframe.title = 'Video';
-          // Falls YouTube, echten Titel setzen
+          const i = document.createElement('iframe');
+          i.src = src; i.allowFullscreen = true; i.loading = 'lazy'; i.title = 'Video';
           const m = src.match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
-          if (m && window.YT_TITLES && window.YT_TITLES[m[1]]) {
-            iframe.title = window.YT_TITLES[m[1]];
-          }
-          wrapper.append(closeBtn, iframe);
+          if (m && window.YT_TITLES && window.YT_TITLES[m[1]]) i.title = window.YT_TITLES[m[1]];
+          wrapper.append(closeBtn, i);
         }
-
-        row.appendChild(wrapper);
+        row.append(wrapper);
         card.parentNode.insertBefore(row, card.nextSibling);
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     });
-
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllVideos(); });
   });
   </script>
@@ -194,4 +172,137 @@
       img.loading = 'lazy'; img.decoding = 'async';
       img.className = 'thumb'; img.alt = 'Instagram-Vorschau';
       img.src = src;
-      img.onerror = () => { img.onerror = null; img
+      img.onerror = () => { img.onerror = null; img.src = 'assets/instagram_poster.jpg'; };
+      card.insertBefore(img, card.firstChild);
+    });
+  });
+  </script>
+
+  <!-- YouTube Thumbnails -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const map = {
+      yt1: { file: 'assets/reel1.avif', id: 'ZSaj_FuqPN8' },
+      yt2: { file: 'assets/reel2.avif', id: 'DMNl40Tip1w' },
+      yt3: { file: 'assets/reel3.avif', id: 'K5pKG0Smdfc' },
+      yt4: { file: 'assets/reel4.jpg',  id: '4I9vlcGvFGQ' },
+      yt5: { file: 'assets/reel5.avif', id: 'w0pNdnlb96M' },
+      yt6: { file: 'assets/reel6.avif', id: 'rV1U891RKLo' },
+      yt7: { file: 'assets/reel7.avif', id: 'fq8zhAQMam0' }
+    };
+
+    Object.entries(map).forEach(([id, cfg]) => {
+      const card = document.getElementById(id);
+      if (!card || card.querySelector('img.thumb')) return;
+
+      const img = new Image();
+      img.loading = 'lazy'; img.decoding = 'async';
+      img.className = 'thumb'; img.alt = 'YouTube-Vorschau';
+      img.src = cfg.file;
+      img.onerror = () => {
+        img.onerror = null;
+        img.src = `https://img.youtube.com/vi/${cfg.id}/hqdefault.jpg`;
+      };
+      card.insertBefore(img, card.firstChild);
+    });
+  });
+  </script>
+
+  <!-- *** ROBUSTE NORMALISIERUNG DER TEXTE AUF ALLEN KARTEN *** -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Instagram-Titel, wenn du eigene Namen vergeben willst:
+    const IG_TITLES = {
+      // video1: '…',
+      // video2: '…'
+    };
+
+    function ensureSmall(card, labelText){
+      let small = card.querySelector('small');
+      if(!small){ small = document.createElement('small'); card.appendChild(small); }
+      small.textContent = labelText;
+      return small;
+    }
+
+    function removeAllTextNodes(card){
+      Array.from(card.childNodes).forEach(n => {
+        if(n.nodeType === Node.TEXT_NODE && n.textContent.trim().length) n.remove();
+      });
+    }
+
+    // --- Instagram Karten ---
+    document.querySelectorAll('.grid-seen .card[id^="video"]').forEach(card => {
+      removeAllTextNodes(card);
+      const title = card.getAttribute('data-title') || IG_TITLES[card.id] || 'Instagram Reel';
+      const small = ensureSmall(card, 'Instagram');
+
+      let t = card.querySelector('.ig-title');
+      if(!t){ t = document.createElement('span'); t.className = 'ig-title'; }
+      t.textContent = `▶︎ ${title}`;
+
+      // Titel vor <small> platzieren
+      card.insertBefore(t, small);
+    });
+
+    // --- YouTube Karten: Platzhalter einsetzen (Titel wird später via oEmbed ersetzt) ---
+    document.querySelectorAll('.grid-seen .card[id^="yt"]').forEach(card => {
+      removeAllTextNodes(card);
+      const small = ensureSmall(card, 'YouTube');
+
+      let t = card.querySelector('.yt-title');
+      if(!t){ t = document.createElement('span'); t.className = 'yt-title'; }
+      t.textContent = '▶︎ lädt …';
+      card.insertBefore(t, small);
+    });
+  });
+  </script>
+
+  <!-- YouTube Titel automatisch holen (oEmbed) und Platzhalter ersetzen -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.YT_TITLES = window.YT_TITLES || {};
+    const ytCards = [...document.querySelectorAll('.card[data-embed-src*="youtube.com/embed/"]')];
+
+    function idFrom(src){
+      const m = (src||'').match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
+      return m ? m[1] : null;
+    }
+
+    ytCards.forEach(card => {
+      const src = card.getAttribute('data-embed-src');
+      const id  = idFrom(src);
+      if(!id) return;
+
+      const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`;
+      fetch(url, { mode: 'cors' })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(d => {
+          const title = d?.title || '';
+          if(!title) return;
+          window.YT_TITLES[id] = title;
+
+          // vorhandenen Platzhalter ersetzen
+          let t = card.querySelector('.yt-title');
+          if(!t){ t = document.createElement('span'); t.className='yt-title'; card.insertBefore(t, card.querySelector('small')); }
+          t.textContent = `▶︎ ${title}`;
+        })
+        .catch(() => { /* still bleiben */ });
+    });
+  });
+  </script>
+
+  <!-- Intro Thumbnail -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const intro = document.getElementById('introVideo');
+    if (!intro || intro.querySelector('img.thumb')) return;
+    const img = new Image();
+    img.loading = 'lazy'; img.decoding = 'async';
+    img.className = 'thumb'; img.alt = 'Intro-Vorschau';
+    img.src = 'assets/Intro.jpg';
+    img.onerror = () => { img.onerror = null; img.src = 'assets/intro.jpg'; };
+    intro.insertBefore(img, intro.firstChild);
+  });
+  </script>
+</body>
+</html>
