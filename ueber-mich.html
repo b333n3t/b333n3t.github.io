@@ -127,11 +127,28 @@ body.menu-open .site-menu { transform: translateX(0); }
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    max-width: 650px; /* deine gewünschte Textbreite hier beibehalten */
+    max-width: 650px; /* gewünschte Textbreite */
   }
 
-  /* kleine Typo-Kosmetik */
   .scroll-panel h1{ margin: 0 0 .6rem; }
+</style>
+
+<!-- Scrollbalken komplett entfernen -->
+<style>
+/* Entfernt den rechten vertikalen Scrollbalken der Seite */
+html, body {
+  overflow-y: hidden;
+}
+
+/* Scroll nur im Textbereich, ohne sichtbaren Balken */
+.scroll-panel {
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE und Edge */
+}
+.scroll-panel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
 </style>
 </head>
 
@@ -169,29 +186,24 @@ body.menu-open .site-menu { transform: translateX(0); }
     <h1>über mich</h1>
     <p>hey, ich bin <strong>b3nn3t</strong> – geboren 2006 im norden deutschlands, aufgewachsen zwischen schweizer bergen und gedanken, die manchmal lauter sind als worte.</p>
 
-  <p>musik ist für mich mehr als klang – sie ist mein tagebuch, mein spiegel, mein zuhause.</p>
-  ich schreibe über das, was bleibt, wenn alles andere still wird: zweifel, sehnsucht, hoffnung, liebe.
-  über nächte, in denen die welt zu groß wirkt, und momente, in denen musik für mich spricht.</p>
+    <p>musik ist für mich mehr als klang – sie ist mein tagebuch, mein spiegel, mein zuhause.</p>
+    <p>ich schreibe über das, was bleibt, wenn alles andere still wird: zweifel, sehnsucht, hoffnung, liebe.
+    über nächte, in denen die welt zu groß wirkt, und momente, in denen musik für mich spricht.</p>
 
-  <p>jeder song ist ein stück von mir – ehrlich, ungeschliffen, echt.
-  vielleicht findest du dich darin wieder.
-  <p>vielleicht hilft dir ein satz, den ich eigentlich für mich geschrieben habe.
-  dann hat alles sinn gemacht.</p>
+    <p>jeder song ist ein stück von mir – ehrlich, ungeschliffen, echt.
+    vielleicht findest du dich darin wieder.
+    <p>vielleicht hilft dir ein satz, den ich eigentlich für mich geschrieben habe.
+    dann hat alles sinn gemacht.</p>
 
-  <p>danke, dass du da bist und meine welt mit deiner zeit berührst. 🖤</p> </p> </p> </p>
-</p> </p> </p>
-    
-  <h3>noch etwas, das mir am herzen liegt</h3>
+    <p>danke, dass du da bist und meine welt mit deiner zeit berührst. 🖤</p>
 
-  <p><strong>b3nn3t</strong> ist für mich mehr als nur ein künstlername – er steht für alles, was ich bin, was ich fühle und erschaffe.</p>
-  <p>aus einer idee wurde etwas echtes, etwas, das mit mir gewachsen ist.</p>
-  <p>heute ist <strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen – ein kleiner meilenstein, der für mich wie ein versprechen ist: weiterzumachen, zu wachsen und echt zu bleiben.</p>
+    <h3>noch etwas, das mir am herzen liegt</h3>
 
-  <p>danke, dass ihr mich auf diesem weg begleitet. ohne euch wäre all das nicht möglich. 🖤</p>
-    </p>
-    </p>
-</section>
-    </p>
+    <p><strong>b3nn3t</strong> ist für mich mehr als nur ein künstlername – er steht für alles, was ich bin, was ich fühle und erschaffe.</p>
+    <p>aus einer idee wurde etwas echtes, etwas, das mit mir gewachsen ist.</p>
+    <p>heute ist <strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen – ein kleiner meilenstein, der für mich wie ein versprechen ist: weiterzumachen, zu wachsen und echt zu bleiben.</p>
+
+    <p>danke, dass ihr mich auf diesem weg begleitet. ohne euch wäre all das nicht möglich. 🖤</p>
   </div>
 </main>
 
