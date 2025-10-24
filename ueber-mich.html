@@ -25,6 +25,7 @@
   max-width: 650px;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  line-height: 1.75;              /* mehr luft */
 }
 .scroll-panel::-webkit-scrollbar { display: none; }
 
@@ -108,30 +109,82 @@ body.menu-open .site-menu { transform: translateX(0); }
 <!-- Align like 'aktuell.html' (glasiger Rahmen übernimmt die Einrückung) -->
 <style id="align-like-aktuell">
   :root{
-    /* gleiche Einrückung wie auf 'aktuell' und 'diskografie' */
     --frame-pad: clamp(18px, 3vw, 28px);
+    --gutter: clamp(16px, 3vw, 32px);
   }
 
-  /* Glasiger Container übernimmt den Abstand nach oben/links */
   .main{
     background: rgba(255,255,255,.32);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     border-radius: 12px;
     padding: var(--frame-pad);
+    margin-left: var(--gutter);
+    /* rechts lassen wir bewusst KEINen festen rand mehr –
+       die arm-kontur erledigt das fließend */
   }
 
-  /* Inhalt selbst bleibt transparent und ohne eigene Außenabstände */
   .main .scroll-panel{
     background: transparent !important;
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    max-width: 650px; /* deine gewünschte Textbreite hier beibehalten */
+    max-width: 650px;
   }
 
-  /* kleine Typo-Kosmetik */
   .scroll-panel h1{ margin: 0 0 .6rem; }
+</style>
+
+<!-- *** ARM-KONTUR: TEXT FLIESST DEM ARM ENTLANG *** -->
+<style>
+/* .arm-wrap sorgt für den organischen rechten Rand via shape-outside */
+.scroll-panel.arm-wrap{
+  position: relative;
+}
+
+/* Unsichtbare, rechts schwebende Form, die den Textfluss bestimmt */
+.scroll-panel.arm-wrap::after{
+  content: "";
+  float: right;                           /* wichtig: shape-outside wirkt nur bei float */
+  width: clamp(220px, 28vw, 380px);       /* ~breite des arm-bereichs */
+  height: 90vh;                           /* hoch genug, damit die form über die text-höhe reicht */
+  pointer-events: none;
+
+  /* ARM-KONTUR – HIER FEINTUNEN:
+     Die Punkte beschreiben die Form innerhalb des pseudo-elements.
+     Links/rechts in % der Box-Breite, oben/unten in % der Box-Höhe.
+     So entsteht eine Wölbung nach links (Arm), an der der Text entlangläuft. */
+  shape-outside: polygon(
+    100% 0%,    /* oben rechts */
+    100% 12%,
+    88% 24%,
+    84% 36%,
+    82% 48%,    /* stärkste einbuchtung etwa auf halber höhe */
+    85% 62%,
+    92% 78%,
+    100% 100%,  /* unten rechts */
+    0% 100%,    /* den rest schließen wir rechtwinklig ab */
+    0% 0%
+  );
+  -webkit-shape-outside: polygon(
+    100% 0%, 100% 12%, 88% 24%, 84% 36%, 82% 48%, 85% 62%, 92% 78%, 100% 100%, 0% 100%, 0% 0%
+  );
+
+  /* feiner abstand zwischen text und arm */
+  shape-margin: 18px;
+}
+
+/* Optional: fallback für sehr alte browser – rechte “no-go”-zone */
+@supports not (shape-outside: polygon(0 0)){
+  .scroll-panel.arm-wrap{ padding-right: 360px; } /* grobe reserve */
+}
+
+/* mobil: organische form abschalten, volle breite nutzen */
+@media (max-width: 900px){
+  .scroll-panel.arm-wrap::after{
+    display: none;
+  }
+}
 </style>
 </head>
 
@@ -165,32 +218,30 @@ body.menu-open .site-menu { transform: translateX(0); }
 <a aria-label="Nächste Seite" class="nav-arrow right" href="diskografie.html">→</a>
 
 <main class="main">
-  <div class="scroll-panel">
+  <!-- WICHTIG: arm-wrap hinzufügen -->
+  <div class="scroll-panel arm-wrap">
     <h1>über mich</h1>
-    <p>hey, ich bin b3nn3t – geboren 2006 im norden deutschlands, aufgewachsen zwischen schweizer bergen und gedanken, die manchmal lauter sind als worte.
 
-musik ist für mich mehr als klang – sie ist mein tagebuch, mein spiegel, mein zuhause.
-ich schreibe über das, was bleibt, wenn alles andere still wird: zweifel, sehnsucht, hoffnung, liebe.
-über nächte, in denen die welt zu groß wirkt, und momente, in denen musik für mich spricht.
+    <p>hey, ich bin b3nn3t – geboren 2006 im norden deutschlands, aufgewachsen zwischen schweizer bergen und gedanken, die manchmal lauter sind als worte.</p>
 
-jeder song ist ein stück von mir – ehrlich, ungeschliffen, echt.
-vielleicht findest du dich darin wieder.
-vielleicht hilft dir ein satz, den ich eigentlich für mich geschrieben habe.
-dann hat alles sinn gemacht.
+    <p>musik ist für mich mehr als klang – sie ist mein tagebuch, mein spiegel, mein zuhause.</p>
+    <p>ich schreibe über das, was bleibt, wenn alles andere still wird: zweifel, sehnsucht, hoffnung, liebe.</p>
+    <p>über nächte, in denen die welt zu groß wirkt, und momente, in denen musik für mich spricht.</p>
 
-danke, dass du da bist und meine welt mit deiner zeit berührst. 🖤.</p>
+    <p>jeder song ist ein stück von mir – ehrlich, ungeschliffen, echt.</p>
+    <p>vielleicht findest du dich darin wieder.</p>
+    <p>vielleicht hilft dir ein satz, den ich eigentlich für mich geschrieben habe.</p>
+    <p>dann hat alles sinn gemacht.</p>
 
-    <p>
-      noch etwas, das mir am herzen liegt<br/>
-      <strong>b3nn3t</strong> ist für mich mehr als nur ein künstlername – er steht für alles, was ich bin, was ich fühle und erschaffe.
-aus einer idee wurde etwas echtes, etwas, das mit mir gewachsen ist.
-heute ist<strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen –
-ein kleiner meilenstein, der für mich wie ein versprechen ist:
-weiterzumachen, zu wachsen und echt zu bleiben.
+    <p>danke, dass du da bist und meine welt mit deiner zeit berührst. 🖤</p>
 
-danke, dass ihr mich auf diesem weg begleitet.
-ohne euch wäre all das nicht möglich. 🖤
-    </p>
+    <p><strong>noch etwas, das mir am herzen liegt</strong></p>
+
+    <p><strong>b3nn3t</strong> ist für mich mehr als nur ein künstlername – er steht für alles, was ich bin, was ich fühle und erschaffe.</p>
+    <p>aus einer idee wurde etwas echtes, etwas, das mit mir gewachsen ist.</p>
+    <p>heute ist <strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen – ein kleiner meilenstein, der für mich wie ein versprechen ist: weiterzumachen, zu wachsen und echt zu bleiben.</p>
+
+    <p>danke, dass ihr mich auf diesem weg begleitet. ohne euch wäre all das nicht möglich. 🖤</p>
   </div>
 </main>
 
