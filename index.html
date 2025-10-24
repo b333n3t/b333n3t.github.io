@@ -7,34 +7,26 @@
   <meta name="description" content="Start — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-  <!-- Preload: wichtigste JPGs -->
-  <link rel="preload" as="image" href="assets/bennet_index1.jpg">
-  <link rel="preload" as="image" href="assets/bennet_index2.jpg">
-  <link rel="preload" as="image" href="assets/bennet_index3.jpg">
+  <!-- Preload moderne Formate -->
+  <link rel="preload" as="image" href="assets/bennet_index1.webp" type="image/webp">
+  <link rel="preload" as="image" href="assets/bennet_index2.webp" type="image/webp">
+  <link rel="preload" as="image" href="assets/bennet_index3.webp" type="image/webp">
 
-  <!-- Deine externen Styles -->
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
   <style>
-    /* ===== Header / Menü ===== */
+    /* ===== Menü ===== */
     .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1300;padding:0}
     .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s,opacity .2s}
     body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
     body.menu-open .hamburger span:nth-child(2){opacity:0}
     body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
-
     .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1200}
     body.menu-open #menu-overlay{display:block}
     #menu-overlay[hidden]{display:none}
-
-    .site-menu{
-      position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);
-      background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
-      box-shadow:0 20px 50px rgba(0,0,0,.08);
-      transform:translateX(100%);transition:transform .25s;z-index:1250;padding:46px 10px 14px
-    }
+    .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s;z-index:1250;padding:46px 10px 14px}
     body.menu-open .site-menu{transform:translateX(0)}
     .site-menu ul{list-style:none;margin:0;padding:0}
     .site-menu li{margin:0 0 10px}
@@ -42,79 +34,53 @@
     .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
     .site-menu a:hover{background:rgba(0,0,0,.05)}
 
-    /* ===== Hauptpanel (.main) ===== */
+    /* ===== Textbereich mit Glas-Effekt ===== */
     .main{
-      position:relative;            /* für die Pseudoelemente */
+      position:relative;
       border-radius:12px;
       padding:1.25rem 1rem;
-      z-index:0;                    /* unter Inhalt, über Seiten-BG */
-      overflow:auto; -webkit-overflow-scrolling:touch;
-      scrollbar-width:none; -ms-overflow-style:none;
-      transform:translateZ(0); will-change:scroll-position;
+      overflow:auto;-webkit-overflow-scrolling:touch;
+      scrollbar-width:none;-ms-overflow-style:none;
+      z-index:0;
+      transform:translateZ(0);
     }
     .main::-webkit-scrollbar{display:none}
-
-    /* Inhalt startet unterhalb des transparenten Bereichs */
     .content-offset{padding-top:105vh}
     .main{padding-bottom:2.5rem}
 
-    /* ===== Glas-Übergang IM Textbereich (empfohlen) ===== */
-    /* 100–110vh: Verlauf (transparent -> Glas) */
+    /* Verlauf + Glas */
     .main::before{
       content:"";
-      position:absolute; left:0; right:0; top:100vh; height:10vh;
-      background:linear-gradient(to bottom,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.32) 100%);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-      border-bottom-left-radius:12px; border-bottom-right-radius:12px;
-      z-index:0; pointer-events:none; transform:translateZ(0);
+      position:absolute;left:0;right:0;top:100vh;height:10vh;
+      background:linear-gradient(to bottom,rgba(255,255,255,0)0%,rgba(255,255,255,.32)100%);
+      backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+      border-bottom-left-radius:12px;border-bottom-right-radius:12px;
+      pointer-events:none;z-index:0;
     }
-    /* ab 110vh: dauerhaft grau-transparent mit Blur */
     .main::after{
       content:"";
-      position:absolute; left:0; right:0; top:110vh; bottom:0;
+      position:absolute;left:0;right:0;top:110vh;bottom:0;
       background:rgba(255,255,255,.32);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-      border-bottom-left-radius:12px; border-bottom-right-radius:12px;
-      z-index:0; pointer-events:none; transform:translateZ(0);
+      backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+      border-bottom-left-radius:12px;border-bottom-right-radius:12px;
+      pointer-events:none;z-index:0;
     }
+    .main>*{position:relative;z-index:1}
 
-    /* Sicherstellen, dass der eigentliche Inhalt über dem Glas liegt */
-    .main > *{ position:relative; z-index:1; }
-
-    /* ===== Pfeile & Scroll-Cue ===== */
-    .nav-arrow{z-index:1100 !important}
-    .scroll-cue{
-      position:fixed; left:50%; bottom:60px; transform:translateX(-50%);
-      width:36px; height:36px; border-radius:50%;
-      background:rgba(255,255,255,.4);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-      box-shadow:0 4px 10px rgba(0,0,0,.08);
-      display:grid; place-items:center;
-      z-index:1200; opacity:0; transition:opacity .2s ease; pointer-events:none;
-      will-change:opacity; transform:translateZ(0);
-    }
+    /* ===== Pfeile / Scroll-Hinweis ===== */
+    .nav-arrow{z-index:1100!important}
+    .scroll-cue{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.4);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 4px 10px rgba(0,0,0,.08);display:grid;place-items:center;z-index:1200;opacity:0;transition:opacity .2s ease;pointer-events:none}
     .scroll-cue.visible{opacity:1}
     .scroll-cue.hidden{opacity:0}
     .scroll-cue svg{width:16px;height:16px;display:block}
 
-    /* ===== Links untereinander ===== */
-    .grid{display:flex;flex-direction:column;gap:1rem;contain:paint}
+    /* ===== Inhalt ===== */
+    .grid{display:flex;flex-direction:column;gap:1rem}
     .grid .card{width:100%}
 
-    /* ===== Panel-Bilder ===== */
-    .panel-photo{
-      margin:1rem -1rem 0; border-radius:12px; overflow:hidden; line-height:0;
-      box-shadow:0 3px 12px rgba(0,0,0,.10);
-      transform:translateZ(0); will-change:transform; contain:layout paint;
-      background:transparent;
-    }
-    .panel-photo img{
-      display:block; width:100%; height:auto;
-      object-fit:cover; object-position:top center;
-      border-radius:12px;
-    }
+    /* ===== Bilder ===== */
+    .panel-photo{margin:1rem -1rem 0;border-radius:12px;overflow:hidden;line-height:0;box-shadow:0 3px 12px rgba(0,0,0,.1)}
+    .panel-photo img{display:block;width:100%;height:auto;object-fit:cover;object-position:top center;border-radius:12px}
   </style>
 </head>
 
@@ -142,7 +108,7 @@
     </ul>
   </nav>
 
-  <!-- Hauptinhalt -->
+  <!-- Inhalt -->
   <main class="main">
     <div class="content-offset">
       <h1>moin und willkommen</h1>
@@ -151,18 +117,30 @@
       <section class="grid" aria-label="Seitenübersicht">
         <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
         <figure class="panel-photo">
-          <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="eager" decoding="async" width="1600" height="900">
+          <picture>
+            <source srcset="assets/bennet_index1.avif" type="image/avif">
+            <source srcset="assets/bennet_index1.webp" type="image/webp">
+            <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="eager" decoding="async">
+          </picture>
         </figure>
 
         <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
         <figure class="panel-photo">
-          <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="eager" decoding="async" width="1600" height="900">
+          <picture>
+            <source srcset="assets/bennet_index2.avif" type="image/avif">
+            <source srcset="assets/bennet_index2.webp" type="image/webp">
+            <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="eager" decoding="async">
+          </picture>
         </figure>
 
         <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
         <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
         <figure class="panel-photo">
-          <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell" loading="eager" decoding="async" width="1600" height="900">
+          <picture>
+            <source srcset="assets/bennet_index3.avif" type="image/avif">
+            <source srcset="assets/bennet_index3.webp" type="image/webp">
+            <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell" loading="eager" decoding="async">
+          </picture>
         </figure>
 
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
@@ -183,8 +161,6 @@
   <!-- Skripte -->
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
-
-  <!-- Pfeil-Visibility -->
   <script>
     (function(){
       const cue=document.querySelector('.scroll-cue');
