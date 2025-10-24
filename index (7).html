@@ -18,14 +18,13 @@
   <link rel="stylesheet" href="swipe-helper.css" />
 
   <style>
-    /* ===== FOUC verhindern & evtl. alte Overlays deaktivieren ===== */
+    /* ==== FOUC verhindern & evtl. Alt-Overlay neutralisieren ==== */
     #site-menu[aria-hidden="true"] { display: none !important; }
     body.home #page-glass,
     body.home .glass-fade,
-    body.home .glass-solid,
     body.home .glass-solid-old { display:none !important; }
 
-    /* ===== Hamburger / Menü (kurz) ===== */
+    /* ==== Hamburger / Menü (kurz) ==== */
     .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1300;padding:0}
     .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s,opacity .2s}
     body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
@@ -47,44 +46,53 @@
     .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
     .site-menu a:hover{background:rgba(0,0,0,.05)}
 
-    /* ===== STARTSEITE: Glas via Hintergrund-Gradient auf .main =====
-       0–100vh: komplett transparent
-       100–110vh: sanfter Übergang
-       ab 110vh: rgba(255,255,255,.32) + Blur (dauerhaft)             */
+    /* ==== Startseite: Panel & Glas nur über echte Layer ==== */
     body.home .main{
-      /* harte Overrides gegen globale Regeln */
-      background: linear-gradient(
-        to bottom,
-        rgba(255,255,255,0) 0,            /* klar */
-        rgba(255,255,255,0) 100vh,        /* bis 100vh klar */
-        rgba(255,255,255,.32) 110vh,      /* ab 110vh milchig */
-        rgba(255,255,255,.32) 100%        /* rest milchig */
-      ) !important;
-      backdrop-filter: blur(2px) !important;
-      -webkit-backdrop-filter: blur(2px) !important;
-
+      background:transparent !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
       position:relative; border-radius:12px;
       overflow:auto; -webkit-overflow-scrolling:touch;
       scrollbar-width:none; -ms-overflow-style:none;
-      transform:translateZ(0);
-      padding:1.25rem 1rem 2.5rem;
-      z-index:0;
+      transform:translateZ(0); will-change:scroll-position;
+      padding:1.25rem 1rem 2.5rem; z-index:0;
     }
     body.home .main::-webkit-scrollbar{display:none}
-
-    /* Der Inhalt beginnt unterhalb der 100vh-Zone + 5vh Puffer */
     .content-offset{padding-top:105vh}
 
-    /* Inhalt über dem Background zeichnen (sicher) */
-    body.home .main > *{ position:relative; z-index:1 }
+    /* Die beiden Glas-Layer */
+    body.home .glass-gradient,
+    body.home .glass-solid{
+      position:absolute; left:0; right:0;
+      border-bottom-left-radius:12px; border-bottom-right-radius:12px;
+      pointer-events:none; z-index:0;
+      /* Glas-Look */
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+    /* 100–110vh: Übergang */
+    body.home .glass-gradient{
+      top:100vh; height:10vh;
+      background:linear-gradient(to bottom,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.32) 100%);
+    }
+    /* ab 110vh: dauerhaft milchig */
+    body.home .glass-solid{
+      top:110vh; bottom:0;
+      background:rgba(255,255,255,.32);
+    }
 
-    /* ===== Inhalt/Buttons/Bilder ===== */
+    /* Inhalt über dem Glas zeichnen */
+    body.home .main > *{position:relative;z-index:1}
+
+    /* ==== Inhalt/Buttons/Bilder ==== */
     .grid{display:flex;flex-direction:column;gap:1rem}
     .grid .card{width:100%}
     .panel-photo{margin:1rem -1rem 0;border-radius:12px;overflow:hidden;line-height:0;box-shadow:0 3px 12px rgba(0,0,0,.10)}
     .panel-photo img{display:block;width:100%;height:auto;object-fit:cover;object-position:top center;border-radius:12px}
 
-    /* ===== Down-Pfeil ===== */
+    /* ==== Down-Pfeil ==== */
     .scroll-cue{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.4);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 4px 10px rgba(0,0,0,.08);display:grid;place-items:center;z-index:1200;opacity:0;transition:opacity .2s ease;pointer-events:none}
     .scroll-cue.visible{opacity:1}
     .scroll-cue.hidden{opacity:0}
@@ -118,6 +126,7 @@
 
   <!-- Hauptinhalt -->
   <main class="main">
+    <!-- ab hier ist 0–100vh transparent; Layer kommen unten -->
     <div class="content-offset">
       <h1>moin und willkommen</h1>
       <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
@@ -155,6 +164,10 @@
         <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
       </section>
     </div>
+
+    <!-- Die beiden Glas-Layer (rendern hinter dem Inhalt) -->
+    <div class="glass-gradient" aria-hidden="true"></div>
+    <div class="glass-solid" aria-hidden="true"></div>
   </main>
 
   <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
@@ -170,7 +183,7 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
   <script>
-    // Pfeil: beim Scrollen ausblenden
+    // Pfeil fade-out beim Scrollen
     (function(){
       const cue=document.querySelector('.scroll-cue');
       const scroller=document.querySelector('.main');
@@ -178,7 +191,7 @@
       scroller.addEventListener('scroll',()=>{cue.classList.toggle('hidden',scroller.scrollTop>50);},{passive:true});
     })();
 
-    // Menü öffnen/schließen
+    // Menü öffnen/schließen (kein FOUC)
     (function(){
       const btn=document.querySelector('.hamburger');
       const menu=document.getElementById('site-menu');
