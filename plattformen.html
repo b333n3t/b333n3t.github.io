@@ -93,7 +93,7 @@
     }
     .site-menu a:hover { background: rgba(0,0,0,.05); }
 
-    /* Plattform-Icons: Standardgröße wiederherstellen */
+    /* Plattform-Icons */
     .platform-list {
       list-style: none;
       padding: 0;
@@ -127,9 +127,8 @@
     .nav-arrow { z-index: 1000; }
   </style>
 
-  <!-- === OVERRIDE: Transparenter Textbereich über glasigem Hintergrund === -->
+  <!-- OVERRIDE: Transparenter Textbereich über glasigem Hintergrund -->
   <style id="transparent-panel-overrides">
-    /* Glasiger Hintergrund unter dem Inhalt */
     .main{
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
@@ -139,23 +138,19 @@
       position: relative;
       z-index: 1;
     }
-
-    /* Inhalt komplett transparent */
     .main h1,
     .main p,
     .main ul{
       background: transparent !important;
       box-shadow: none !important;
     }
-
-    /* Scrollleisten ausblenden, Scrollen bleibt möglich */
     .main{
       overflow: auto;
       -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;      /* Firefox */
-      -ms-overflow-style: none;   /* IE/Edge */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-    .main::-webkit-scrollbar{ display: none; } /* WebKit */
+    .main::-webkit-scrollbar{ display: none; }
   </style>
 </head>
 
@@ -193,6 +188,15 @@
     <p>Hier findest du mich online:</p>
 
     <ul class="platform-list">
+      <!-- Neuer Genius-Eintrag -->
+      <li style="margin-bottom: 32px;"></li> <!-- 2 Zeilen Abstand -->
+      <li>
+        <img src="assets/genius.png" alt="Genius Logo">
+        <a href="https://genius.com/artists/B3nn3t" target="_blank" rel="noopener">
+          Genius – b3nn3t
+        </a>
+      </li>
+
       <li>
         <img src="assets/spotify.png" alt="Spotify Logo">
         <a href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A" target="_blank" rel="noopener">
