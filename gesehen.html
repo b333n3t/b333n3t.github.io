@@ -247,6 +247,20 @@
   });
   </script>
 
+  <!-- 🆕 YouTube-Label "▶︎ YouTube 1/2/…" entfernen, Karten bleiben klickbar -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.grid-seen .card[id^="yt"]').forEach(card => {
+      // reine Textknoten (z.B. "▶︎ YouTube 1") entfernen
+      Array.from(card.childNodes).forEach(n => {
+        if (n.nodeType === Node.TEXT_NODE && n.textContent.trim().length) {
+          n.remove();
+        }
+      });
+    });
+  });
+  </script>
+
   <!-- NEW: YouTube Titel automatisch holen (oEmbed, ohne API-Key) -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
