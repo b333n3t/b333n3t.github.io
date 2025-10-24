@@ -339,3 +339,31 @@ body.home .main {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+/* ===== Pfeil nach unten im Stil der Seitenpfeile ===== */
+.nav-arrow.down {
+  position: fixed;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%) rotate(90deg); /* zeigt nach unten */
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 28px;          /* gleiche Größe wie die Seitenpfeile */
+  line-height: 1;
+  color: #000;
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+/* Ausblenden beim Scrollen */
+body.scrolled .nav-arrow.down {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) rotate(90deg) translateY(10px);
+}
