@@ -7,12 +7,18 @@
   <meta name="description" content="Start — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
+  <!-- Preload: wichtige Bilder sofort in den Cache -->
+  <link rel="preload" as="image" href="assets/bennet_index1.jpg">
+  <link rel="preload" as="image" href="assets/bennet_index2.jpg">
+  <link rel="preload" as="image" href="assets/bennet_index3.jpg">
+
+  <!-- Deine bestehenden Styles -->
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
   <style>
-    /* === Menü === */
+    /* ===== Menü / Header ===== */
     .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1300;padding:0}
     .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s,opacity .2s}
     body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
@@ -29,7 +35,7 @@
     .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
     .site-menu a:hover{background:rgba(0,0,0,.05)}
 
-    /* === Panel oben transparent === */
+    /* ===== Panel oben 100% transparent ===== */
     body .main, body .main::before, body .main::after{
       background:transparent !important;
       backdrop-filter:none !important;
@@ -40,65 +46,81 @@
       border-radius:12px;
       padding:1.25rem 1rem;
       position:relative;
-      z-index:100;
+      z-index:100;                   /* über dem Glas-Layer */
       overflow:auto;
       -webkit-overflow-scrolling:touch;
       scrollbar-width:none; -ms-overflow-style:none;
+      transform:translateZ(0);       /* GPU-Layer */
+      will-change: scroll-position;
     }
     .main::-webkit-scrollbar{display:none}
     .content-offset{padding-top:105vh}
     .main{padding-bottom:2.5rem}
 
-    /* ===== Glas-Layer ===== */
+    /* ===== Glas-Layer: 0–100vh klar, 100–110vh Fade, ab 110vh konstant ===== */
     #page-glass{
-      position:fixed; top:0; bottom:0;
-      left:0; right:0;
+      position:fixed; top:0; bottom:0; left:0; right:0;
       pointer-events:none;
-      z-index:50;
+      z-index:50;                    /* unter Panel(100), über BG */
       border-radius:12px;
+      transform:translateZ(0);       /* GPU-Layer */
+      will-change:opacity, backdrop-filter;
     }
-    /* 100 -> 110vh Verlauf */
     #page-glass .glass-fade{
       position:absolute; left:0; right:0; top:100vh; height:10vh;
       background:linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.32) 100%);
       backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+      transform:translateZ(0);
     }
-    /* ab 110vh dauerhaft grau-transparent */
     #page-glass .glass-solid{
       position:absolute; left:0; right:0; top:110vh; bottom:0;
       background:rgba(255,255,255,.32);
       backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+      transform:translateZ(0);
     }
 
-    /* === Pfeile sichtbar === */
+    /* ===== Pfeile & Scroll-Cue ===== */
     .nav-arrow{z-index:1100 !important}
-
-    /* === Down-Pfeil === */
-    .scroll-cue{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.4);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 4px 12px rgba(0,0,0,.08);display:grid;place-items:center;z-index:1200;opacity:0;transition:opacity .25s ease;pointer-events:none}
+    .scroll-cue{
+      position:fixed; left:50%; bottom:60px; transform:translateX(-50%);
+      width:36px; height:36px; border-radius:50%;
+      background:rgba(255,255,255,.4);
+      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+      box-shadow:0 4px 10px rgba(0,0,0,.08);  /* etwas leichter */
+      display:grid; place-items:center; z-index:1200;
+      opacity:0; transition:opacity .2s ease; pointer-events:none;
+      transform:translateZ(0); will-change:opacity;
+    }
     .scroll-cue.visible{opacity:1}
     .scroll-cue.hidden{opacity:0}
     .scroll-cue svg{width:16px;height:16px;display:block}
 
-    /* === Links untereinander === */
+    /* ===== Inhalt: Links untereinander ===== */
     .grid{
       display:flex;
-      flex-direction:column;
+      flex-direction:column; /* Buttons vertikal */
       gap:1rem;
+      contain:paint;          /* weniger Repaints */
     }
-    .grid .card{width:100%;}
+    .grid .card{width:100%}
 
-    /* === Bilder innerhalb des Panels === */
+    /* ===== Panel-Bilder: stabil & performant ===== */
     .panel-photo{
       margin:1rem -1rem 0;
       border-radius:12px;
       overflow:hidden;
       line-height:0;
-      box-shadow:0 6px 24px rgba(0,0,0,.15);
+      /* Schatten etwas reduziert (Performanz) */
+      box-shadow:0 3px 12px rgba(0,0,0,.10);
+      transform:translateZ(0);        /* GPU */
+      will-change:transform;
+      contain:layout paint;           /* isoliert Repaints */
     }
     .panel-photo img{
       display:block;
       width:100%;
       height:auto;
+      aspect-ratio:16 / 9;            /* reserviert Platz → kein Pop-in */
       object-fit:cover;
       object-position:center;
     }
@@ -112,7 +134,7 @@
     </a>
   </header>
 
-  <!-- Glas-Layer -->
+  <!-- Glas-Layer (Breite wird per JS ans Panel geclippt) -->
   <div id="page-glass" aria-hidden="true">
     <div class="glass-fade"></div>
     <div class="glass-solid"></div>
@@ -143,14 +165,20 @@
 
       <section class="grid" aria-label="Seitenübersicht">
         <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-        <figure class="panel-photo"><img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet"></figure>
+        <figure class="panel-photo">
+          <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="eager" decoding="async" width="1600" height="900">
+        </figure>
 
         <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
-        <figure class="panel-photo"><img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio"></figure>
+        <figure class="panel-photo">
+          <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="eager" decoding="async" width="1600" height="900">
+        </figure>
 
         <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
         <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
-        <figure class="panel-photo"><img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell"></figure>
+        <figure class="panel-photo">
+          <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell" loading="eager" decoding="async" width="1600" height="900">
+        </figure>
 
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
         <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
@@ -174,11 +202,13 @@
   <!-- Pfeil + Glas-Clipping -->
   <script>
     (function(){
+      // Pfeil ein-/ausblenden
       const cue=document.querySelector('.scroll-cue');
       const scroller=document.querySelector('.main');
       window.addEventListener('load',()=>cue.classList.add('visible'));
       scroller.addEventListener('scroll',()=>{cue.classList.toggle('hidden',scroller.scrollTop>50);},{passive:true});
 
+      // Glas exakt auf Panelbreite clippen
       const glass=document.getElementById('page-glass');
       const panel=document.querySelector('.main');
       function positionGlass(){
