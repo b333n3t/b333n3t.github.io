@@ -1,224 +1,49 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>über mich — b3nn3t</title>
-<meta content="über mich — b3nn3t" name="description"/>
-<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="styles.css" rel="stylesheet">
-<link href="styles_nav_arrows.css" rel="stylesheet"/>
-<link href="swipe-helper.css" rel="stylesheet"/>
+:root{
+  /* passe diesen wert so an, bis der rechte rand sauber vor dem arm endet */
+  --safe-right: 340px;      /* z.B. 300–420px testen */
+  --gutter: clamp(16px,3vw,32px);
+}
 
-<style>
-/* === Scroll-Panel (transparent über halbtransparentem Hintergrund) === */
-.scroll-panel {
-  overflow: auto;
-  max-height: 75vh;
+.about-card{
+  /* sorgt dafür, dass der block NICHT in den „arm-bereich“ ragt */
+  max-width: calc(100vw - var(--safe-right) - var(--gutter));
+  margin: 6vh var(--gutter);
+  padding: clamp(16px,3vw,28px);
+  border-radius: 24px;
+
+  /* dein glas-/nebel-look, nur etwas ruhiger */
+  background: rgba(255,255,255,0.6);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+
+  /* luft & lesbarkeit */
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+
+  /* ermöglicht scrollen im kasten, statt alles zu quetschen */
+  max-height: 72vh;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  background: transparent;
-  border-radius: 12px;
-  box-shadow: none;
-  padding: 1.25rem 1rem;
-  margin-top: 1rem;
-  margin-left: 0;
-  max-width: 650px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.scroll-panel::-webkit-scrollbar { display: none; }
 
-/* === Hamburger-Menü === */
-.hamburger {
-  position: fixed;
-  top: 14px;
-  right: 18px;
-  width: 20px;
-  height: 20px;
-  border: none;
-  background: transparent;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  z-index: 1200;
-  padding: 0;
+  /* dezente schatten für abhebung */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
-.hamburger span {
-  display: block;
-  width: 12px;
-  height: 1.4px;
-  margin: 1.5px 0;
-  background: #000;
-  border-radius: 2px;
-  transition: transform .2s ease, opacity .2s ease;
-}
-body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
-body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
-body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
 
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.08);
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
-  z-index: 1099;
+/* typografie: mehr abstände zwischen absätzen */
+.about-card h2{
+  margin: 0 0 0.8em 0;
+  font-size: clamp(28px,4vw,44px);
 }
-body.menu-open #menu-overlay { display: block; }
-#menu-overlay[hidden]{ display:none; }
+.about-card p{
+  margin: 0 0 0.9em 0;   /* absatzabstand */
+}
 
-.site-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: auto;
-  max-height: 90vh;
-  width: min(40vw, 150px);
-  background: rgba(255,255,255,.32);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  box-shadow: 0 20px 50px rgba(0,0,0,.08);
-  transform: translateX(100%);
-  transition: transform .25s ease;
-  z-index: 1101;
-  padding: 46px 10px 14px;
-}
-body.menu-open .site-menu { transform: translateX(0); }
-
-.site-menu ul { list-style: none; margin: 0; padding: 0; }
-.site-menu li { margin: 0 0 10px 0; }
-.site-menu li.sep {
-  margin-top: 18px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(0,0,0,.08);
-}
-.site-menu a {
-  display: block;
-  padding: 8px 6px;
-  border-radius: 10px;
-  color: #000;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-}
-.site-menu a:hover { background: rgba(0,0,0,.05); }
-.nav-arrow { z-index: 1000; }
-</style>
-
-<!-- Align like 'aktuell.html' (glasiger Rahmen übernimmt die Einrückung) -->
-<style id="align-like-aktuell">
-  :root{
-    /* gleiche Einrückung wie auf 'aktuell' und 'diskografie' */
-    --frame-pad: clamp(18px, 3vw, 28px);
+/* auf kleinen screens: sicherheitsrand aus, volle breite nutzen */
+@media (max-width: 900px){
+  :root{ --safe-right: 0px; }
+  .about-card{
+    max-width: min(840px, 100% - 2*var(--gutter));
+    margin: 4vh var(--gutter);
+    max-height: unset;   /* mobil meist kein scroll-kasten nötig */
   }
-
-  /* Glasiger Container übernimmt den Abstand nach oben/links */
-  .main{
-    background: rgba(255,255,255,.32);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    border-radius: 12px;
-    padding: var(--frame-pad);
-  }
-
-  /* Inhalt selbst bleibt transparent und ohne eigene Außenabstände */
-  .main .scroll-panel{
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 650px; /* deine gewünschte Textbreite hier beibehalten */
-  }
-
-  /* kleine Typo-Kosmetik */
-  .scroll-panel h1{ margin: 0 0 .6rem; }
-</style>
-</head>
-
-<body>
-<header class="header">
-  <a aria-label="b3nn3t Home" class="brand" href="index.html">
-    <img alt="" src="favicon.svg"/>
-    <strong>b3nn3t</strong>
-  </a>
-</header>
-
-<!-- Burger-Menü -->
-<button aria-controls="site-menu" aria-expanded="false" aria-label="Menü öffnen" class="hamburger">
-  <span></span><span></span><span></span>
-</button>
-<div class="menu-overlay" hidden id="menu-overlay"></div>
-<nav aria-hidden="true" class="site-menu" id="site-menu">
-  <ul>
-    <li><a href="ueber-mich.html">über mich</a></li>
-    <li><a href="diskografie.html">diskografie</a></li>
-    <li><a href="kontakt.html">kontakt</a></li>
-    <li><a href="aktuell.html">aktuell</a></li>
-    <li><a href="gesehen.html">gesehen</a></li>
-    <li><a href="plattformen.html">plattformen</a></li>
-    <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-  </ul>
-</nav>
-
-<!-- Pfeile -->
-<a aria-label="Vorherige Seite" class="nav-arrow left" href="index.html">←</a>
-<a aria-label="Nächste Seite" class="nav-arrow right" href="diskografie.html">→</a>
-
-<main class="main">
-  <div class="scroll-panel">
-    <h1>über mich</h1>
-    <p>hey, ich bin b3nn3t – geboren 2006 im norden deutschlands, aufgewachsen zwischen schweizer bergen und gedanken, die manchmal lauter sind als worte.
-
-musik ist für mich mehr als klang – sie ist mein tagebuch, mein spiegel, mein zuhause.
-ich schreibe über das, was bleibt, wenn alles andere still wird: zweifel, sehnsucht, hoffnung, liebe.
-über nächte, in denen die welt zu groß wirkt, und momente, in denen musik für mich spricht.
-
-jeder song ist ein stück von mir – ehrlich, ungeschliffen, echt.
-vielleicht findest du dich darin wieder.
-vielleicht hilft dir ein satz, den ich eigentlich für mich geschrieben habe.
-dann hat alles sinn gemacht.
-
-danke, dass du da bist und meine welt mit deiner zeit berührst. 🖤.</p>
-
-    <p>
-      noch etwas, das mir am herzen liegt<br/>
-      <strong>b3nn3t</strong> ist für mich mehr als nur ein künstlername – er steht für alles, was ich bin, was ich fühle und erschaffe.
-aus einer idee wurde etwas echtes, etwas, das mit mir gewachsen ist.
-heute ist<strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen –
-ein kleiner meilenstein, der für mich wie ein versprechen ist:
-weiterzumachen, zu wachsen und echt zu bleiben.
-
-danke, dass ihr mich auf diesem weg begleitet.
-ohne euch wäre all das nicht möglich. 🖤
-    </p>
-  </div>
-</main>
-
-<a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
-
-<footer>
-  © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-</footer>
-
-<script src="script.js"></script>
-<script defer src="swipe-nav.js?v=6"></script>
-
-<script>
-(function() {
-  function resizePanel() {
-    var panel = document.querySelector('.scroll-panel');
-    if (!panel) return;
-    var header = document.querySelector('.header');
-    var footer = document.querySelector('footer');
-    var hh = header ? header.offsetHeight : 0;
-    var fh = footer ? footer.offsetHeight : 0;
-    var extra = 32;
-    var max = window.innerHeight - hh - fh - extra;
-    if (max > 240) panel.style.maxHeight = max + 'px';
-  }
-  window.addEventListener('load', resizePanel);
-  window.addEventListener('resize', resizePanel);
-})();
-</script>
-</body>
-</html>
+}
