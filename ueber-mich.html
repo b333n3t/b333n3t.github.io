@@ -1,191 +1,109 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1"/>
-<title>über mich — b3nn3t</title>
-<meta content="über mich — b3nn3t" name="description"/>
-<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="styles.css" rel="stylesheet">
-<link href="styles_nav_arrows.css" rel="stylesheet"/>
-<link href="swipe-helper.css" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Über mich</title>
+  <style>
+    :root {
+      --bottom-gap: 60px;
+    }
 
-<style>
-/* === Scroll-Panel (transparent über halbtransparentem Hintergrund) === */
-.scroll-panel {
-  overflow: auto;
-  max-height: 75vh; /* Basislimit – wird per JS überschrieben */
-  -webkit-overflow-scrolling: touch;
-  background: transparent;
-  border-radius: 12px;
-  box-shadow: none;
-  padding: 1.25rem 1rem;
-  margin-top: 1rem;
-  margin-left: 0;
-  max-width: 650px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.scroll-panel::-webkit-scrollbar { display: none; }
+    /* Desktop/Landscape → geringerer Abstand */
+    @media (min-width: 1024px) and (orientation: landscape) {
+      :root { --bottom-gap: 28px; }
+    }
 
-/* === Hamburger-Menü === */
-.hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
-.hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
-body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
-body.menu-open .hamburger span:nth-child(2){opacity:0}
-body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      background-color: #f5f5f5;
+      overflow-y: auto; /* Standard: Seite darf scrollen */
+    }
 
-.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
-body.menu-open #menu-overlay{display:block}
-#menu-overlay[hidden]{display:none}
+    /* Nur ab Tablet/Laptop: Scroll nur im Panel */
+    @media (min-width: 768px) {
+      html, body { overflow-y: hidden; }
+    }
 
-.site-menu{
-  position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);
-  background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
-  box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s ease;
-  z-index:1101;padding:46px 10px 14px
-}
-body.menu-open .site-menu{transform:translateX(0)}
-.site-menu ul{list-style:none;margin:0;padding:0}
-.site-menu li{margin:0 0 10px 0}
-.site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
-.site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
-.site-menu a:hover{background:rgba(0,0,0,.05)}
-.nav-arrow{z-index:1000}
-</style>
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #ddd, #ccc);
+    }
 
-<!-- Glasiger Rahmen + fester Abstand unten -->
-<style id="align-like-aktuell">
-  :root{
-    --frame-pad: clamp(18px, 3vw, 28px);
-    --bottom-gap: 60px; /* Abstand zum unteren Rand */
-  }
+    .header {
+      background-color: #333;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
 
-  .main{
-    background: rgba(255,255,255,.32);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    border-radius: 12px;
-    padding: var(--frame-pad);
-    margin-bottom: var(--bottom-gap); /* Abstand sichtbar */
-  }
+    .scroll-panel {
+      flex: 1;
+      overflow-y: auto;
+      background-color: #e0e0e0;
+      padding: 2rem;
+      box-sizing: border-box;
+      max-height: calc(100vh - var(--bottom-gap));
+    }
 
-  .main .scroll-panel{
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 650px;
-  }
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+      font-size: 1rem;
+      color: #222;
+    }
 
-  .scroll-panel h1{ margin: 0 0 .6rem; }
-</style>
+    .footer {
+      background-color: #444;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: auto;
+      height: var(--bottom-gap);
+    }
 
-<!-- Seiten-Scroll verbergen, Scroll nur im Panel -->
-<style>
-html, body { overflow-y: hidden; }
-.scroll-panel {
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.scroll-panel::-webkit-scrollbar { display: none; }
-</style>
+    /* Optional: Safe Area Support (z. B. iPhone-Notch) */
+    @media (max-width: 767px) {
+      .main {
+        margin-bottom: max(12px, env(safe-area-inset-bottom));
+      }
+    }
+  </style>
 </head>
-
 <body>
-<header class="header">
-  <a aria-label="b3nn3t Home" class="brand" href="index.html">
-    <img alt="" src="favicon.svg"/><strong>b3nn3t</strong>
-  </a>
-</header>
+  <div class="main">
+    <header class="header">
+      <h1>Über mich</h1>
+    </header>
 
-<!-- Burger-Menü -->
-<button aria-controls="site-menu" aria-expanded="false" aria-label="Menü öffnen" class="hamburger">
-  <span></span><span></span><span></span>
-</button>
-<div class="menu-overlay" hidden id="menu-overlay"></div>
-<nav aria-hidden="true" class="site-menu" id="site-menu">
-  <ul>
-    <li><a href="ueber-mich.html">über mich</a></li>
-    <li><a href="diskografie.html">diskografie</a></li>
-    <li><a href="kontakt.html">kontakt</a></li>
-    <li><a href="aktuell.html">aktuell</a></li>
-    <li><a href="gesehen.html">gesehen</a></li>
-    <li><a href="plattformen.html">plattformen</a></li>
-    <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-  </ul>
-</nav>
+    <div class="scroll-panel">
+      <div class="content">
+        <p>
+          Willkommen! Ich bin Björn Kohnke und arbeite mit Leidenschaft an
+          digitalen Projekten. Meine Schwerpunkte liegen in Webentwicklung,
+          Design und Kommunikation.
+        </p>
+        <p>
+          Ich glaube, dass gute Gestaltung Funktion und Emotion vereint. In
+          meiner Freizeit beschäftige ich mich gerne mit Fotografie,
+          Architektur und neuen Technologien.
+        </p>
+        <p>
+          Auf dieser Seite erfährst du mehr über meine Arbeit, Projekte und
+          Interessen. Vielen Dank für deinen Besuch!
+        </p>
+      </div>
+    </div>
 
-<!-- Pfeile -->
-<a aria-label="Vorherige Seite" class="nav-arrow left" href="index.html">←</a>
-<a aria-label="Nächste Seite" class="nav-arrow right" href="diskografie.html">→</a>
-
-<main class="main">
-  <div class="scroll-panel">
-    <h1>über mich</h1>
-    <p>hey, ich bin <strong>b3nn3t</strong> – geboren 2006 im norden deutschlands, aufgewachsen zwischen schweizer bergen und gedanken, die manchmal lauter sind als worte.</p>
-
-    <p>musik ist für mich mehr als klang – sie ist mein tagebuch, mein spiegel, mein zuhause.</p>
-    <p>ich schreibe über das, was bleibt, wenn alles andere still wird: zweifel, sehnsucht, hoffnung, liebe.
-    über nächte, in denen die welt zu groß wirkt, und momente, in denen musik für mich spricht.</p>
-
-    <p>jeder song ist ein stück von mir – ehrlich, ungeschliffen, echt.
-    vielleicht findest du dich darin wieder.
-    <p>vielleicht hilft dir ein satz, den ich eigentlich für mich geschrieben habe.
-    dann hat alles sinn gemacht.</p>
-
-    <p>danke, dass du da bist und meine welt mit deiner zeit berührst. 🖤</p>
-
-    <h3>noch etwas, das mir am herzen liegt</h3>
-
-    <p><strong>b3nn3t</strong> ist für mich mehr als nur ein künstlername – er steht für alles, was ich bin, was ich fühle und erschaffe.</p>
-    <p>aus einer idee wurde etwas echtes, etwas, das mit mir gewachsen ist.</p>
-    <p>heute ist <strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen – ein kleiner meilenstein, der für mich wie ein versprechen ist: weiterzumachen, zu wachsen und echt zu bleiben.</p>
-
-    <p>danke, dass ihr mich auf diesem weg begleitet. ohne euch wäre all das nicht möglich. 🖤</p>
+    <footer class="footer">
+      <p>&copy; 2025 Björn Kohnke</p>
+    </footer>
   </div>
-</main>
-
-<a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
-
-<footer>
-  © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-</footer>
-
-<script src="script.js"></script>
-<script defer src="swipe-nav.js?v=6"></script>
-
-<!-- Mobile- & Desktop-sichere Höhenlogik -->
-<script>
-(function() {
-  function resizePanel() {
-    const panel  = document.querySelector('.scroll-panel');
-    if (!panel) return;
-
-    const header = document.querySelector('.header');
-    const footer = document.querySelector('footer');
-    const hh = header ? header.offsetHeight : 0;
-    const fh = footer ? footer.offsetHeight : 0;
-    const extra = 32; // Sicherheitsabzug
-    const gap = parseInt(getComputedStyle(document.documentElement)
-                 .getPropertyValue('--bottom-gap')) || 60;
-
-    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-
-    // Höhe um den Abstand kürzen, damit Margin sichtbar bleibt
-    let max = vh - hh - fh - extra - gap;
-    if (max < 260) max = 260;
-
-    panel.style.maxHeight = max + 'px';
-    panel.style.overflowY = 'auto';
-    panel.style.webkitOverflowScrolling = 'touch';
-  }
-
-  window.addEventListener('load', resizePanel);
-  window.addEventListener('resize', resizePanel);
-  if (window.visualViewport) window.visualViewport.addEventListener('resize', resizePanel);
-})();
-</script>
 </body>
 </html>
