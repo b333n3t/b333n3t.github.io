@@ -110,6 +110,7 @@ body.menu-open .site-menu { transform: translateX(0); }
   :root{
     /* gleiche Einrückung wie auf 'aktuell' und 'diskografie' */
     --frame-pad: clamp(18px, 3vw, 28px);
+    --bottom-gap: 100px; /* 🔧 zusätzlicher Abstand zum unteren Rand */
   }
 
   /* Glasiger Container übernimmt den Abstand nach oben/links */
@@ -119,6 +120,7 @@ body.menu-open .site-menu { transform: translateX(0); }
     -webkit-backdrop-filter: blur(2px);
     border-radius: 12px;
     padding: var(--frame-pad);
+    margin-bottom: var(--bottom-gap); /* Abstand sichtbar */
   }
 
   /* Inhalt selbst bleibt transparent und ohne eigene Außenabstände */
