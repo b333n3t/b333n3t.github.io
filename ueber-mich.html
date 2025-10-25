@@ -183,18 +183,29 @@ html, body { overflow-y: hidden; }
 
     const header = document.querySelector('.header');
     const footer = document.querySelector('footer');
+    const main   = document.querySelector('.main');
+
     const hh = header ? header.offsetHeight : 0;
     const fh = footer ? footer.offsetHeight : 0;
-    const extra = 32; // Sicherheitsabzug oben/unten
+
+    // tatsächliche Padding-Werte der .main berücksichtigen
+    let pt = 0, pb = 0;
+    if (main) {
+      const cs = getComputedStyle(main);
+      pt = parseFloat(cs.paddingTop)  || 0;
+      pb = parseFloat(cs.paddingBottom) || 0;
+    }
+
     const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
 
-    // Sichtbare Höhe zuverlässig bestimmen (iOS/Android/Desk)
+    // Sichtbare Höhe zuverlässig bestimmen (iOS/Android/Desktop)
     const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
 
-    // Reale Max-Höhe für das Scroll-Panel berechnen
-    let max = vh - hh - fh - extra - gap;
+    // Reale Max-Höhe für das Scroll-Panel:
+    // viewport - header - footer - main padding (oben+unten) - unterer Abstand
+    let max = vh - hh - fh - pt - pb - gap;
 
-    // sinnvolle Untergrenze, damit auf sehr kleinen Screens noch gescrollt werden kann
+    // Untergrenze, damit auf sehr kleinen Screens immer gescrollt werden kann
     if (max < 260) max = 260;
 
     panel.style.maxHeight = max + 'px';
