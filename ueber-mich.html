@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>über mich — b3nn3t</title>
 <meta content="über mich — b3nn3t" name="description"/>
 <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
@@ -108,8 +108,10 @@ body.menu-open .site-menu { transform: translateX(0); }
 <!-- Glasiger Rahmen + Abstand unten -->
 <style id="align-like-aktuell">
   :root{
+    /* Einrückung */
     --frame-pad: clamp(18px, 3vw, 28px);
-    --bottom-gap: 100px; /* Abstand zum unteren Rand */
+    /* Abstand des grauen Containers zum unteren Rand */
+    --bottom-gap: 100px;
   }
 
   .main{
@@ -126,7 +128,7 @@ body.menu-open .site-menu { transform: translateX(0); }
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    max-width: 650px;
+    max-width: 650px; /* gewünschte Textbreite */
   }
 
   .scroll-panel h1{ margin: 0 0 .6rem; }
@@ -134,13 +136,16 @@ body.menu-open .site-menu { transform: translateX(0); }
 
 <!-- Scrollbalken komplett entfernen -->
 <style>
+/* Entfernt den rechten vertikalen Scrollbalken der Seite */
 html, body { overflow-y: hidden; }
+
+/* Scroll nur im Textbereich, ohne sichtbaren Balken */
 .scroll-panel {
   overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE und Edge */
 }
-.scroll-panel::-webkit-scrollbar { display: none; }
+.scroll-panel::-webkit-scrollbar { display: none; /* Chrome, Safari */ }
 </style>
 </head>
 
@@ -208,20 +213,31 @@ html, body { overflow-y: hidden; }
 <script src="script.js"></script>
 <script defer src="swipe-nav.js?v=6"></script>
 
+<!-- Mobile-freundliche Höhenlogik: auf Phones keine Begrenzung -->
 <script>
 (function() {
   function resizePanel() {
-    var panel = document.querySelector('.scroll-panel');
+    const panel = document.querySelector('.scroll-panel');
     if (!panel) return;
-    var header = document.querySelector('.header');
-    var footer = document.querySelector('footer');
-    var hh = header ? header.offsetHeight : 0;
-    var fh = footer ? footer.offsetHeight : 0;
-    var extra = 32;
-    var gap = parseInt(getComputedStyle(document.documentElement)
-              .getPropertyValue('--bottom-gap')) || 0;
-    var vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    var max = vh - hh - fh - extra - gap;
+
+    const header = document.querySelector('.header');
+    const footer = document.querySelector('footer');
+    const hh = header ? header.offsetHeight : 0;
+    const fh = footer ? footer.offsetHeight : 0;
+    const extra = 32;
+    const gap = parseInt(getComputedStyle(document.documentElement)
+                  .getPropertyValue('--bottom-gap')) || 0;
+
+    // 📱 Auf kleinen Screens keine max-height setzen -> Schrift normal, Scroll aktiv
+    if (window.innerWidth < 768) {
+      panel.style.maxHeight = 'none';
+      panel.style.overflowY = 'auto';
+      return;
+    }
+
+    // Desktop/Tablet: dynamische Höhe beibehalten
+    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    const max = vh - hh - fh - extra - gap;
     if (max > 240) panel.style.maxHeight = max + 'px';
   }
   window.addEventListener('load', resizePanel);
