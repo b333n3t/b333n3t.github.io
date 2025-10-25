@@ -135,7 +135,6 @@ body.menu-open .site-menu { transform: translateX(0); }
 
 <!-- Scrollbalken komplett entfernen -->
 <style>
-/* Entfernt den rechten vertikalen Scrollbalken der Seite */
 html, body {
   overflow-y: hidden;
 }
@@ -143,16 +142,24 @@ html, body {
 /* Scroll nur im Textbereich, ohne sichtbaren Balken */
 .scroll-panel {
   overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE und Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .scroll-panel::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
 }
 </style>
+
+<!-- Nur für diese Seite: Abstand nach unten -->
+<style>
+  body.ueber-mich .main {
+    margin-bottom: 60px; /* Abstand zum unteren Rand */
+  }
+</style>
+
 </head>
 
-<body>
+<body class="ueber-mich">
 <header class="header">
   <a aria-label="b3nn3t Home" class="brand" href="index.html">
     <img alt="" src="favicon.svg"/>
