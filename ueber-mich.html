@@ -14,7 +14,7 @@
 /* === Scroll-Panel (transparent über halbtransparentem Hintergrund) === */
 .scroll-panel {
   overflow: auto;
-  max-height: 75vh;
+  max-height: 75vh;                 /* Basislimit – wird per JS überschrieben */
   -webkit-overflow-scrolling: touch;
   background: transparent;
   border-radius: 12px;
@@ -29,89 +29,36 @@
 .scroll-panel::-webkit-scrollbar { display: none; }
 
 /* === Hamburger-Menü === */
-.hamburger {
-  position: fixed;
-  top: 14px;
-  right: 18px;
-  width: 20px;
-  height: 20px;
-  border: none;
-  background: transparent;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  z-index: 1200;
-  padding: 0;
-}
-.hamburger span {
-  display: block;
-  width: 12px;
-  height: 1.4px;
-  margin: 1.5px 0;
-  background: #000;
-  border-radius: 2px;
-  transition: transform .2s ease, opacity .2s ease;
-}
-body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
-body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
-body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
+.hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
+.hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
+body.menu-open .hamburger span:nth-child(2){opacity:0}
+body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
 
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.08);
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
-  z-index: 1099;
-}
-body.menu-open #menu-overlay { display: block; }
-#menu-overlay[hidden]{ display:none; }
+.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
+body.menu-open #menu-overlay{display:block}
+#menu-overlay[hidden]{display:none}
 
-.site-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: auto;
-  max-height: 90vh;
-  width: min(40vw, 150px);
-  background: rgba(255,255,255,.32);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  box-shadow: 0 20px 50px rgba(0,0,0,.08);
-  transform: translateX(100%);
-  transition: transform .25s ease;
-  z-index: 1101;
-  padding: 46px 10px 14px;
+.site-menu{
+  position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);
+  background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s ease;
+  z-index:1101;padding:46px 10px 14px
 }
-body.menu-open .site-menu { transform: translateX(0); }
-
-.site-menu ul { list-style: none; margin: 0; padding: 0; }
-.site-menu li { margin: 0 0 10px 0; }
-.site-menu li.sep {
-  margin-top: 18px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(0,0,0,.08);
-}
-.site-menu a {
-  display: block;
-  padding: 8px 6px;
-  border-radius: 10px;
-  color: #000;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-}
-.site-menu a:hover { background: rgba(0,0,0,.05); }
-.nav-arrow { z-index: 1000; }
+body.menu-open .site-menu{transform:translateX(0)}
+.site-menu ul{list-style:none;margin:0;padding:0}
+.site-menu li{margin:0 0 10px 0}
+.site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
+.site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
+.site-menu a:hover{background:rgba(0,0,0,.05)}
+.nav-arrow{z-index:1000}
 </style>
 
-<!-- Glasiger Rahmen + Abstand unten -->
+<!-- Glasiger Rahmen + fester Abstand unten -->
 <style id="align-like-aktuell">
   :root{
-    /* Einrückung */
     --frame-pad: clamp(18px, 3vw, 28px);
-    /* Abstand des grauen Containers zum unteren Rand */
-    --bottom-gap: 100px;
+    --bottom-gap: 100px;              /* Abstand zum unteren Rand (anpassen) */
   }
 
   .main{
@@ -120,7 +67,7 @@ body.menu-open .site-menu { transform: translateX(0); }
     -webkit-backdrop-filter: blur(2px);
     border-radius: 12px;
     padding: var(--frame-pad);
-    margin-bottom: var(--bottom-gap); /* Abstand sichtbar zum unteren Rand */
+    margin-bottom: var(--bottom-gap);  /* sichtbarer Abstand */
   }
 
   .main .scroll-panel{
@@ -128,32 +75,28 @@ body.menu-open .site-menu { transform: translateX(0); }
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    max-width: 650px; /* gewünschte Textbreite */
+    max-width: 650px;
   }
 
   .scroll-panel h1{ margin: 0 0 .6rem; }
 </style>
 
-<!-- Scrollbalken komplett entfernen -->
+<!-- Seiten-Scroll verbergen, Scroll nur im Panel -->
 <style>
-/* Entfernt den rechten vertikalen Scrollbalken der Seite */
 html, body { overflow-y: hidden; }
-
-/* Scroll nur im Textbereich, ohne sichtbaren Balken */
 .scroll-panel {
   overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE und Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.scroll-panel::-webkit-scrollbar { display: none; /* Chrome, Safari */ }
+.scroll-panel::-webkit-scrollbar { display: none; }
 </style>
 </head>
 
 <body>
 <header class="header">
   <a aria-label="b3nn3t Home" class="brand" href="index.html">
-    <img alt="" src="favicon.svg"/>
-    <strong>b3nn3t</strong>
+    <img alt="" src="favicon.svg"/><strong>b3nn3t</strong>
   </a>
 </header>
 
@@ -213,33 +156,34 @@ html, body { overflow-y: hidden; }
 <script src="script.js"></script>
 <script defer src="swipe-nav.js?v=6"></script>
 
-<!-- Mobile-freundliche Höhenlogik: auf Phones keine Begrenzung -->
+<!-- Mobile- & Desktop-sichere Höhenlogik -->
 <script>
 (function() {
   function resizePanel() {
-    const panel = document.querySelector('.scroll-panel');
+    const panel  = document.querySelector('.scroll-panel');
     if (!panel) return;
 
     const header = document.querySelector('.header');
     const footer = document.querySelector('footer');
     const hh = header ? header.offsetHeight : 0;
     const fh = footer ? footer.offsetHeight : 0;
-    const extra = 32;
-    const gap = parseInt(getComputedStyle(document.documentElement)
-                  .getPropertyValue('--bottom-gap')) || 0;
+    const extra = 32; // Sicherheitsabzug oben/unten
+    const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
 
-    // 📱 Auf kleinen Screens keine max-height setzen -> Schrift normal, Scroll aktiv
-    if (window.innerWidth < 768) {
-      panel.style.maxHeight = 'none';
-      panel.style.overflowY = 'auto';
-      return;
-    }
-
-    // Desktop/Tablet: dynamische Höhe beibehalten
+    // Sichtbare Höhe zuverlässig bestimmen (iOS/Android/Desk)
     const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    const max = vh - hh - fh - extra - gap;
-    if (max > 240) panel.style.maxHeight = max + 'px';
+
+    // Reale Max-Höhe für das Scroll-Panel berechnen
+    let max = vh - hh - fh - extra - gap;
+
+    // sinnvolle Untergrenze, damit auf sehr kleinen Screens noch gescrollt werden kann
+    if (max < 260) max = 260;
+
+    panel.style.maxHeight = max + 'px';
+    panel.style.overflowY = 'auto';
+    panel.style.webkitOverflowScrolling = 'touch';
   }
+
   window.addEventListener('load', resizePanel);
   window.addEventListener('resize', resizePanel);
   if (window.visualViewport) window.visualViewport.addEventListener('resize', resizePanel);
