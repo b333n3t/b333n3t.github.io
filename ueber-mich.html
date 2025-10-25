@@ -1,137 +1,170 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>gesehen — b3nn3t</title>
-  <meta name="description" content="gesehen — b3nn3t" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="styles_nav_arrows.css" />
-  <link rel="stylesheet" href="swipe-helper.css" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>über mich — b3nn3t</title>
+<meta content="über mich — b3nn3t" name="description"/>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="styles.css" rel="stylesheet">
+<link href="styles_nav_arrows.css" rel="stylesheet"/>
+<link href="swipe-helper.css" rel="stylesheet"/>
 
-  <style>
-    /* Abstand nach unten hinzufügen */
-    :root {
-      --bottom-gap: 80px; /* <— Abstand zum unteren Bildrand anpassen */
-    }
+<style>
+:root{
+  --gutter: clamp(16px, 3vw, 32px);
+  --frame-pad: clamp(18px, 3vw, 28px);
+  --panel-max: 980px;
+}
 
-    .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
-    .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
-    body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
-    body.menu-open .hamburger span:nth-child(2){opacity:0}
-    body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
-    .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
-    body.menu-open #menu-overlay{display:block}
-    #menu-overlay[hidden]{display:none}
-    .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s ease;z-index:1101;padding:46px 10px 14px}
-    body.menu-open .site-menu{transform:translateX(0)}
-    .site-menu ul{list-style:none;margin:0;padding:0}
-    .site-menu li{margin:0 0 10px 0}
-    .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
-    .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
-    .site-menu a:hover{background:rgba(0,0,0,.05)}
-    .nav-arrow{z-index:1000}
-    :root{--frame-pad:clamp(18px,3vw,28px)}
-    .main{
-      background:rgba(255,255,255,.32);
-      backdrop-filter:blur(2px);
-      -webkit-backdrop-filter:blur(2px);
-      border-radius:12px;
-      padding:var(--frame-pad);
-      margin-bottom:var(--bottom-gap); /* <— sorgt für den sichtbaren Abstand nach unten */
-    }
-    .scroll-panel{overflow:auto;max-height:75vh;-webkit-overflow-scrolling:touch;background:transparent;border-radius:12px;box-shadow:none;padding:0;margin:0;max-width:650px;scrollbar-width:none;-ms-overflow-style:none}
-    .scroll-panel::-webkit-scrollbar{display:none}
-    .scroll-panel h1{margin:0 0 .6rem}
-    .scroll-panel p{margin:0 0 1rem}
-    .grid-seen{display:flex;justify-content:flex-start;align-items:stretch;gap:14px;margin-top:.5rem;flex-wrap:wrap}
-    .grid-seen .card{flex:0 1 280px;max-width:280px;cursor:pointer;position:relative}
-    .video-row{flex:0 0 100%;width:100%;display:flex;justify-content:flex-start}
-    .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-top:12px;border-radius:12px;background:#000;border:1px solid rgba(0,0,0,0.06);width:100%}
-    .video-wrapper iframe,.video-wrapper video{position:absolute;inset:0;width:100%;height:100%;border:0}
-    .card .thumb{width:100%;aspect-ratio:16/9;display:block;border-radius:12px;object-fit:cover;background:#000;margin-bottom:8px}
-    .video-close{position:absolute;top:6px;right:10px;font-size:24px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:4px;cursor:pointer;z-index:10;line-height:1;padding:2px 8px}
-    .video-close:hover{background:rgba(255,255,255,0.9);color:#000}
-    .grid-seen .card .yt-title,
-    .grid-seen .card .ig-title{display:block;margin-top:4px;font-size:.95rem;font-weight:600}
-    .grid-seen .card small{display:block;margin-top:4px}
-  </style>
+/* Glasiger Rahmen */
+.main{
+  background: rgba(255,255,255,.32);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 12px;
+  padding: var(--frame-pad);
+  margin-left: var(--gutter);
+}
+
+/* Scrollbarer Textbereich */
+.main .scroll-panel{
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: var(--panel-max);
+  overflow: auto;
+  max-height: 75vh;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  line-height: 1.75;
+}
+.scroll-panel::-webkit-scrollbar{ display:none; }
+
+.scroll-panel h1{ margin: 0 0 .8rem; text-transform: lowercase; }
+.scroll-panel p{ margin: 0 0 0.9em 0; }
+
+/* =========================
+   ARM-KONTUR – TEXT FLIESST ENTSPRECHEND
+   ========================= */
+.arm-shape{
+  float: right;
+  width: clamp(240px, 27vw, 380px);
+  height: 90vh;
+  shape-margin: 18px;
+  pointer-events: none;
+  background: transparent;
+
+  /* 20 % Einzug bei 50 % Höhe */
+  shape-outside: polygon(
+    100% 0%,
+    100% 12%,
+    92% 24%,
+    86% 36%,
+    80% 50%,     /* tiefster Punkt */
+    86% 64%,
+    92% 78%,
+    100% 100%,
+    0% 100%,
+    0% 0%
+  );
+  -webkit-shape-outside: polygon(
+    100% 0%, 100% 12%, 92% 24%, 86% 36%, 80% 50%, 86% 64%, 92% 78%, 100% 100%, 0% 100%, 0% 0%
+  );
+}
+
+/* mobil: form deaktivieren */
+@media (max-width: 900px){
+  .arm-shape{ display:none; }
+  .main .scroll-panel{ max-width: min(840px, calc(100% - 2*var(--frame-pad))); }
+}
+
+/* Menü und Navigation (deine vorhandenen Regeln) */
+.hamburger {
+  position: fixed;
+  top: 14px; right: 18px;
+  width: 20px; height: 20px;
+  border: none; background: transparent;
+  display: grid; place-items: center;
+  cursor: pointer; z-index: 1200; padding: 0;
+}
+.hamburger span {
+  display:block; width:12px; height:1.4px;
+  margin:1.5px 0; background:#000; border-radius:2px;
+  transition:transform .2s ease, opacity .2s ease;
+}
+body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg);}
+body.menu-open .hamburger span:nth-child(2){opacity:0;}
+body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg);}
+</style>
 </head>
+
 <body>
-  <header class="header">
-    <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg">
-      <strong>b3nn3t</strong>
-    </a>
-  </header>
+<header class="header">
+  <a aria-label="b3nn3t Home" class="brand" href="index.html">
+    <img alt="" src="favicon.svg"/>
+    <strong>b3nn3t</strong>
+  </a>
+</header>
 
-  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div id="menu-overlay" class="menu-overlay" hidden></div>
-  <nav id="site-menu" class="site-menu" aria-hidden="true">
-    <ul>
-      <li><a href="ueber-mich.html">über mich</a></li>
-      <li><a href="diskografie.html">diskografie</a></li>
-      <li><a href="kontakt.html">kontakt</a></li>
-      <li><a href="aktuell.html">aktuell</a></li>
-      <li><a href="gesehen.html">gesehen</a></li>
-      <li><a href="plattformen.html">plattformen</a></li>
-      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-    </ul>
-  </nav>
+<!-- Burger-Menü -->
+<button aria-controls="site-menu" aria-expanded="false" aria-label="Menü öffnen" class="hamburger">
+  <span></span><span></span><span></span>
+</button>
 
-  <a class="nav-arrow left" aria-label="Vorherige Seite" href="aktuell.html">←</a>
-  <a class="nav-arrow right" aria-label="Nächste Seite" href="plattformen.html">→</a>
+<!-- Seiteninhalt -->
+<main class="main">
+  <div class="scroll-panel">
+    <!-- Formelement für den Arm -->
+    <div class="arm-shape" aria-hidden="true"></div>
 
-  <main class="main">
-    <div class="scroll-panel">
-      <h1>gesehen</h1>
-      <p>schon mal reingeschaut</p>
+    <h1>über mich</h1>
 
-      <section class="grid grid-seen" aria-label="Intro">
-        <div class="card" id="introVideo" data-embed-src="assets/B3NN3T.mp4">
-          ▶︎ Intro-Video
-          <small>Intro & Start</small>
-        </div>
-      </section>
+    <p>hey, ich bin b3nn3t – geboren 2006 im norden deutschlands, aufgewachsen zwischen schweizer bergen und gedanken, die manchmal lauter sind als 
+worte.</p>
+    <p>musik ist für mich mehr als klang – sie ist mein tagebuch, mein spiegel, mein zuhause.</p>
+    <p>ich schreibe über das, was bleibt, wenn alles andere still wird: zweifel, sehnsucht, hoffnung, liebe.</p>
+    <p>über nächte, in denen die welt zu groß wirkt, und momente, in denen musik für mich spricht.</p>
 
-      <section class="grid grid-seen" aria-label="Videos">
-        <!-- (Videos bleiben unverändert) -->
-      </section>
-    </div>
-  </main>
+    <p>jeder song ist ein stück von mir – ehrlich, ungeschliffen, echt.</p>
+    <p>vielleicht findest du dich darin wieder.</p>
+    <p>vielleicht hilft dir ein satz, den ich eigentlich für mich geschrieben habe.</p>
+    <p>dann hat alles sinn gemacht.</p>
 
-  <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
+    <p>danke, dass du da bist und meine welt mit deiner zeit berührst. 🖤</p>
 
-  <footer>
-    © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-  </footer>
+    <p><strong>noch etwas, das mir am herzen liegt</strong></p>
 
-  <script src="script.js"></script>
-  <script src="swipe-nav.js?v=12" defer></script>
+    <p><strong>b3nn3t</strong> ist für mich mehr als nur ein künstlername – er steht für alles, was ich bin, was ich fühle und erschaffe.</p>
+    <p>aus einer idee wurde etwas echtes, etwas, das mit mir gewachsen ist.</p>
+    <p>heute ist <strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen – ein kleiner meilenstein, der für mich wie ein versprechen ist: weiterzumachen, zu wachsen und echt zu bleiben.</p>
 
-  <!-- Script für dynamischen Abstand -->
-  <script>
-  (function() {
-    function resizePanel() {
-      const panel = document.querySelector('.scroll-panel');
-      if (!panel) return;
-      const header = document.querySelector('.header');
-      const footer = document.querySelector('footer');
-      const hh = header ? header.offsetHeight : 0;
-      const fh = footer ? footer.offsetHeight : 0;
-      const extra = 32;
-      const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
-      const max = window.innerHeight - hh - fh - extra - gap;
-      if (max > 240) panel.style.maxHeight = max + 'px';
-    }
-    window.addEventListener('load', resizePanel);
-    window.addEventListener('resize', resizePanel);
-  })();
-  </script>
+    <p>danke, dass ihr mich auf diesem weg begleitet. ohne euch wäre all das nicht möglich. 🖤</p>
+  </div>
+</main>
 
-  <!-- (Deine anderen bestehenden Skripte bleiben unverändert) -->
+<footer>
+  © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+</footer>
+
+<script>
+(function() {
+  function resizePanel() {
+    var panel = document.querySelector('.scroll-panel');
+    if (!panel) return;
+    var header = document.querySelector('.header');
+    var footer = document.querySelector('footer');
+    var hh = header ? header.offsetHeight : 0;
+    var fh = footer ? footer.offsetHeight : 0;
+    var extra = 32;
+    var max = window.innerHeight - hh - fh - extra;
+    if (max > 240) panel.style.maxHeight = max + 'px';
+  }
+  window.addEventListener('load', resizePanel);
+  window.addEventListener('resize', resizePanel);
+})();
+</script>
 </body>
 </html>
