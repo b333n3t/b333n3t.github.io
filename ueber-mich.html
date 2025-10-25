@@ -1,8 +1,3 @@
-über mich
-
-
-
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -63,7 +58,7 @@ body.menu-open .site-menu{transform:translateX(0)}
 <style id="align-like-aktuell">
   :root{
     --frame-pad: clamp(18px, 3vw, 28px);
-    --bottom-gap: 60px;              /* Abstand zum unteren Rand (anpassen) */
+    --bottom-gap: 60px;              /* gewünschter Abstand zum unteren Rand */
   }
 
   .main{
@@ -86,15 +81,33 @@ body.menu-open .site-menu{transform:translateX(0)}
   .scroll-panel h1{ margin: 0 0 .6rem; }
 </style>
 
-<!-- Seiten-Scroll verbergen, Scroll nur im Panel -->
+<!-- Seiten-Scroll verbergen, Scroll nur im Panel (Desktop) / Mobile freigeben -->
 <style>
+/* Standard: Desktop – kein Body-Scroll, scrollen im Panel */
 html, body { overflow-y: hidden; }
+
 .scroll-panel {
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 .scroll-panel::-webkit-scrollbar { display: none; }
+
+/* Mobile: Body darf scrollen + unten garantiert 60px Abstand */
+@media (max-width: 767px) {
+  html, body {
+    overflow-y: auto;                 /* Seite scrollbar */
+    -webkit-overflow-scrolling: touch;
+    font-size: 1.05rem;               /* bessere Lesbarkeit */
+  }
+  .main {
+    margin-bottom: var(--bottom-gap) !important;  /* exakt 60px */
+  }
+  .scroll-panel {
+    max-height: unset;                /* kein künstliches Limit */
+    padding-bottom: var(--bottom-gap);/* Extra-„Luft“ innen, falls Content sehr lang */
+  }
+}
 </style>
 </head>
 
