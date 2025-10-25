@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="width=device-width, initial-scale=1"/>
 <title>über mich — b3nn3t</title>
 <meta content="über mich — b3nn3t" name="description"/>
 <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
@@ -29,15 +29,43 @@
 .scroll-panel::-webkit-scrollbar { display: none; }
 
 /* === Hamburger-Menü === */
-.hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
-.hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
-body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
-body.menu-open .hamburger span:nth-child(2){opacity:0}
-body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+.hamburger {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 1200;
+  padding: 0;
+}
+.hamburger span {
+  display: block;
+  width: 12px;
+  height: 1.4px;
+  margin: 1.5px 0;
+  background: #000;
+  border-radius: 2px;
+  transition: transform .2s ease, opacity .2s ease;
+}
+body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
+body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
+body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
 
-.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
-body.menu-open #menu-overlay{display:block}
-#menu-overlay[hidden]{display:none}
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.08);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  z-index: 1099;
+}
+body.menu-open #menu-overlay { display: block; }
+#menu-overlay[hidden]{ display:none; }
 
 .site-menu{
   position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);
@@ -58,7 +86,7 @@ body.menu-open .site-menu{transform:translateX(0)}
 <style id="align-like-aktuell">
   :root{
     --frame-pad: clamp(18px, 3vw, 28px);
-    --bottom-gap: 60px;              /* Abstand zum unteren Rand (anpassen) */
+    --bottom-gap: 60px;              /* Abstand zum unteren Rand */
   }
 
   .main{
@@ -168,13 +196,12 @@ html, body { overflow-y: hidden; }
     const hh = header ? header.offsetHeight : 0;
     const fh = footer ? footer.offsetHeight : 0;
     const extra = 32; // Sicherheitsabzug oben/unten
-    const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
 
     // Sichtbare Höhe zuverlässig bestimmen (iOS/Android/Desk)
     const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
 
-    // Reale Max-Höhe für das Scroll-Panel berechnen
-    let max = vh - hh - fh - extra - gap;
+    // Reale Max-Höhe für das Scroll-Panel berechnen (ohne bottom-gap)
+    let max = vh - hh - fh - extra;
 
     // sinnvolle Untergrenze, damit auf sehr kleinen Screens noch gescrollt werden kann
     if (max < 260) max = 260;
