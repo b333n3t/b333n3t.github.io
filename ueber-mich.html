@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="width=device-width, initial-scale=1"/>
 <title>über mich — b3nn3t</title>
 <meta content="über mich — b3nn3t" name="description"/>
 <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
@@ -105,31 +105,28 @@ body.menu-open .site-menu { transform: translateX(0); }
 .nav-arrow { z-index: 1000; }
 </style>
 
-<!-- Align like 'aktuell.html' (glasiger Rahmen übernimmt die Einrückung) -->
+<!-- Glasiger Rahmen + Abstand unten -->
 <style id="align-like-aktuell">
   :root{
-    /* gleiche Einrückung wie auf 'aktuell' und 'diskografie' */
     --frame-pad: clamp(18px, 3vw, 28px);
-    --bottom-gap: 100px; /* 🔧 zusätzlicher Abstand zum unteren Rand */
+    --bottom-gap: 100px; /* Abstand zum unteren Rand */
   }
 
-  /* Glasiger Container übernimmt den Abstand nach oben/links */
   .main{
     background: rgba(255,255,255,.32);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     border-radius: 12px;
     padding: var(--frame-pad);
-    margin-bottom: var(--bottom-gap); /* Abstand sichtbar */
+    margin-bottom: var(--bottom-gap); /* Abstand sichtbar zum unteren Rand */
   }
 
-  /* Inhalt selbst bleibt transparent und ohne eigene Außenabstände */
   .main .scroll-panel{
     background: transparent !important;
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    max-width: 650px; /* gewünschte Textbreite */
+    max-width: 650px;
   }
 
   .scroll-panel h1{ margin: 0 0 .6rem; }
@@ -137,20 +134,13 @@ body.menu-open .site-menu { transform: translateX(0); }
 
 <!-- Scrollbalken komplett entfernen -->
 <style>
-/* Entfernt den rechten vertikalen Scrollbalken der Seite */
-html, body {
-  overflow-y: hidden;
-}
-
-/* Scroll nur im Textbereich, ohne sichtbaren Balken */
+html, body { overflow-y: hidden; }
 .scroll-panel {
   overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE und Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.scroll-panel::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
-}
+.scroll-panel::-webkit-scrollbar { display: none; }
 </style>
 </head>
 
@@ -228,11 +218,15 @@ html, body {
     var hh = header ? header.offsetHeight : 0;
     var fh = footer ? footer.offsetHeight : 0;
     var extra = 32;
-    var max = window.innerHeight - hh - fh - extra;
+    var gap = parseInt(getComputedStyle(document.documentElement)
+              .getPropertyValue('--bottom-gap')) || 0;
+    var vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    var max = vh - hh - fh - extra - gap;
     if (max > 240) panel.style.maxHeight = max + 'px';
   }
   window.addEventListener('load', resizePanel);
   window.addEventListener('resize', resizePanel);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', resizePanel);
 })();
 </script>
 </body>
