@@ -110,6 +110,8 @@ body.menu-open .site-menu { transform: translateX(0); }
   :root{
     /* gleiche Einrückung wie auf 'aktuell' und 'diskografie' */
     --frame-pad: clamp(18px, 3vw, 28px);
+    /* NEU: fester Abstand, damit der Container VOR dem unteren Rand endet */
+    --bottom-gap: 60px;
   }
 
   /* Glasiger Container übernimmt den Abstand nach oben/links */
@@ -135,6 +137,7 @@ body.menu-open .site-menu { transform: translateX(0); }
 
 <!-- Scrollbalken komplett entfernen -->
 <style>
+/* Entfernt den rechten vertikalen Scrollbalken der Seite */
 html, body {
   overflow-y: hidden;
 }
@@ -142,24 +145,16 @@ html, body {
 /* Scroll nur im Textbereich, ohne sichtbaren Balken */
 .scroll-panel {
   overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE und Edge */
 }
 .scroll-panel::-webkit-scrollbar {
-  display: none;
+  display: none; /* Chrome, Safari */
 }
 </style>
-
-<!-- Nur für diese Seite: Abstand nach unten -->
-<style>
-  body.ueber-mich .main {
-    margin-bottom: 60px; /* Abstand zum unteren Rand */
-  }
-</style>
-
 </head>
 
-<body class="ueber-mich">
+<body>
 <header class="header">
   <a aria-label="b3nn3t Home" class="brand" href="index.html">
     <img alt="" src="favicon.svg"/>
@@ -232,8 +227,11 @@ html, body {
     var footer = document.querySelector('footer');
     var hh = header ? header.offsetHeight : 0;
     var fh = footer ? footer.offsetHeight : 0;
-    var extra = 32;
-    var max = window.innerHeight - hh - fh - extra;
+    var extra = 32; // vorhandener Sicherheitsabzug
+    // NEU: zusätzlicher Unterkanten-Abstand aus CSS-Variable
+    var gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
+
+    var max = window.innerHeight - hh - fh - extra - gap;
     if (max > 240) panel.style.maxHeight = max + 'px';
   }
   window.addEventListener('load', resizePanel);
