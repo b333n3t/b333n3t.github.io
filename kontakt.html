@@ -208,6 +208,19 @@
 })();
 </script>
 
-<!-- (bestehende Swipe-/Shortcut-Skripte bleiben unverändert) -->
+<!-- 🔒 Quickfix: blockiert globale Shortcuts in Formularfeldern -->
+<script>
+(function () {
+  const inForm = el =>
+    el && (el.matches?.('input, textarea, select, [contenteditable="true"]')
+      || el.closest?.('input, textarea, select, [contenteditable="true"]'));
+
+  // verhindert, dass globale Keydown-Handler (Pfeile/H) beim Tippen im Feld feuern
+  window.addEventListener('keydown', function (e) {
+    if (inForm(e.target)) e.stopPropagation();
+  }, true);
+})();
+</script>
+
 </body>
 </html>
