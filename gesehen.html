@@ -419,40 +419,44 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
           const title = (data && data.title) ? data.title : '';
           if (!title) return;
+
+          // Für den iframe-title in deinem Click-Handler:
+          // (wird dort aus window.YT_TITLES gelesen)
           window.YT_TITLES[id] = title;
 
-          // 1) <small>YouTube</small> sicherstellen
-          let small = card.querySelector('small');
+          // DOM aufräumen: alles außer Thumbnail + <small> entfernen
+          const thumb = card.querySelector('img.thumb');
+          let small  = card.querySelector('small');
+
+          // Wenn kein <small> existiert, anlegen (kommt in deinem HTML aber vor)
           if (!small) {
             small = document.createElement('small');
             small.textContent = 'YouTube';
             card.appendChild(small);
           }
 
-          // 2) Label-Span (▶︎ Titel) erzeugen/aktualisieren – ohne innerHTML zu nutzen
-          let label = card.querySelector('.play-label');
-          if (!label) {
-            label = document.createElement('span');
-            label.className = 'play-label';
-            // nach dem Thumbnail, aber vor <small> einfügen
-            const thumb = card.querySelector('img.thumb');
-            if (thumb) {
-              // wenn es ein Thumbnail gibt, Label dahinter platzieren
-              card.insertBefore(label, small);
-            } else {
-              // sonst vor <small> setzen
-              card.insertBefore(label, small);
-            }
-          }
+          // Alle Knoten außer Thumbnail und <small> entfernen
+          Array.from(card.childNodes).forEach(node => {
+            if (node === thumb || node === small) return;
+            if (thumb && node === thumb.previousSibling) return;
+            if (thumb && thumb.contains && thumb.contains(node)) return;
+            card.removeChild(node);
+          });
+
+          // Label „▶︎ <Titel>“ direkt vor <small> einfügen
+          const label = document.createElement('span');
+          label.className = 'play-label';
           label.textContent = `▶︎ ${title}`;
+          card.insertBefore(label, small);
         })
-        .catch(() => {/* ok, wenn oEmbed geblockt ist */});
+        .catch(() => { /* ok, falls oEmbed blockiert */});
     });
   } catch (err) {
     console.error('YT oEmbed error:', err);
   }
 });
 </script>
+
 
 
 </body>
