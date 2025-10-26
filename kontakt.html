@@ -13,10 +13,9 @@
 <style>
   html { font-size: 16px; }
 
-  /* 🔧 NEU: zusätzlicher Abstand nach unten */
   :root{
     --frame-pad: clamp(18px, 3vw, 28px);
-    --bottom-gap: 35px; /* Abstand zum unteren Rand (anpassbar) */
+    --bottom-gap: 35px;
   }
 
   html, body {
@@ -31,7 +30,7 @@
     -webkit-backdrop-filter: blur(2px);
     border-radius: 12px;
     padding: 0;
-    margin-bottom: var(--bottom-gap); /* Abstand sichtbar machen */
+    margin-bottom: var(--bottom-gap);
   }
 
   .scroll-panel{
@@ -96,6 +95,20 @@
   .site-menu a:hover{background:rgba(0,0,0,.05)}
 
   .nav-arrow{ z-index: 1400 !important; }
+
+  /* ===== Inline-Footer ===== */
+  .footer-inline{
+    text-align:center;
+    font-size:.82rem;
+    margin: 0 0 1rem 0;
+  }
+  .footer-inline a{
+    color:#000;
+    text-decoration:none;
+  }
+  .footer-inline a:hover{
+    text-decoration:underline;
+  }
 
   .edge-swipe {
     position: fixed;
@@ -173,54 +186,9 @@
 
       <button type="submit">Nachricht senden</button>
     </form>
-  </div>
-</main>
 
-<a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
+    <!-- Button -->
+    <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
 
-<footer>
-  © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-</footer>
-
-<div class="edge-swipe left"  aria-hidden="true"></div>
-<div class="edge-swipe right" aria-hidden="true"></div>
-
-<script src="script.js"></script>
-<script src="swipe-nav.js?v=12" defer></script>
-
-<!-- 🔧 Dynamische Höhenanpassung mit zusätzlichem Abstand -->
-<script>
-(function() {
-  function resizePanel() {
-    var panel = document.querySelector('.scroll-panel');
-    if (!panel) return;
-    var header = document.querySelector('.header');
-    var footer = document.querySelector('footer');
-    var hh = header ? header.offsetHeight : 0;
-    var fh = footer ? footer.offsetHeight : 0;
-    var extra = 32;
-    var gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
-    var max = window.innerHeight - hh - fh - extra - gap;
-    if (max > 240) panel.style.maxHeight = max + 'px';
-  }
-  window.addEventListener('load', resizePanel);
-  window.addEventListener('resize', resizePanel);
-})();
-</script>
-
-<!-- 🔒 Quickfix: blockiert globale Shortcuts in Formularfeldern -->
-<script>
-(function () {
-  const inForm = el =>
-    el && (el.matches?.('input, textarea, select, [contenteditable="true"]')
-      || el.closest?.('input, textarea, select, [contenteditable="true"]'));
-
-  // verhindert, dass globale Keydown-Handler (Pfeile/H) beim Tippen im Feld feuern
-  window.addEventListener('keydown', function (e) {
-    if (inForm(e.target)) e.stopPropagation();
-  }, true);
-})();
-</script>
-
-</body>
-</html>
+    <!-- Drei Zeilen Abstand -->
+    <br><br><br>
