@@ -73,7 +73,37 @@
   }
   .scroll-panel::-webkit-scrollbar{ display:none; }
 
-  .panel-block{ background:var(--panel-bg); border-radius:12px; padding:1rem 1rem; margin-bottom:1rem; }
+  <style>
+  /* Überschrift links oben platzieren */
+  .panel-block:first-of-type {
+    position: absolute;
+    top: 30px;
+    left: 50px;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .panel-block:first-of-type h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    color: #111;
+  }
+
+  .panel-block:first-of-type p {
+    margin: 4px 0 0 0;
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  /* Platz für Inhalt darunter schaffen */
+  main.main {
+    padding-top: 120px;
+  }
+</style>
+
 
   .disco-grid{
     display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
