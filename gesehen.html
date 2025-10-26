@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -10,6 +9,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
+
   <style>
     .hamburger {
       position: fixed;
@@ -37,6 +37,7 @@
     body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
     body.menu-open .hamburger span:nth-child(2){opacity:0}
     body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+
     .menu-overlay {
       position: fixed;
       inset: 0;
@@ -47,6 +48,7 @@
     }
     body.menu-open #menu-overlay {display:block}
     #menu-overlay[hidden]{display:none}
+
     .site-menu {
       position: fixed;
       top: 0;
@@ -78,6 +80,7 @@
     }
     .site-menu a:hover{background:rgba(0,0,0,.05)}
     .nav-arrow{z-index:1000}
+
     :root{--frame-pad:clamp(18px,3vw,28px)}
     .main{
       background:rgba(255,255,255,.32);
@@ -103,6 +106,7 @@
     .scroll-panel::-webkit-scrollbar{display:none}
     .scroll-panel h1{margin:0 0 .6rem}
     .scroll-panel p{margin:0 0 1rem}
+
     .grid-seen{
       display:flex;
       justify-content:flex-start;
@@ -117,6 +121,16 @@
       cursor:pointer;
       position:relative
     }
+    .card .thumb{
+      width:100%;
+      aspect-ratio:16/9;
+      display:block;
+      border-radius:12px;
+      object-fit:cover;
+      background:#000;
+      margin-bottom:8px
+    }
+
     .video-row{
       flex:0 0 100%;
       width:100%;
@@ -142,15 +156,6 @@
       height:100%;
       border:0
     }
-    .card .thumb{
-      width:100%;
-      aspect-ratio:16/9;
-      display:block;
-      border-radius:12px;
-      object-fit:cover;
-      background:#000;
-      margin-bottom:8px
-    }
     .video-close{
       position:absolute;
       top:6px;
@@ -172,6 +177,20 @@
       font-size:.95rem;
       font-weight:600
     }
+
+    /* ===== Inline-Footer (neu) ===== */
+    .footer-inline{
+      text-align:center;
+      font-size:.82rem;
+      margin:2rem 0 1rem 0; /* 3 Zeilen Abstand erzeugen wir unten zusätzlich mit <br> */
+    }
+    .footer-inline a{
+      color:#000;           /* schwarze Linkfarbe */
+      text-decoration:none;
+    }
+    .footer-inline a:hover{
+      text-decoration:underline;
+    }
   </style>
 </head>
 <body>
@@ -186,6 +205,7 @@
     <span></span><span></span><span></span>
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
+
   <nav id="site-menu" class="site-menu" aria-hidden="true">
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
@@ -214,6 +234,7 @@
         </div>
       </section>
 
+      <!-- Videos -->
       <section class="grid grid-seen" aria-label="Videos">
         <!-- Instagram -->
         <div class="card" id="video1" data-embed-src="https://www.instagram.com/reel/DKHa8SoMzQ-/embed">▶︎ Video 1<small>Instagram</small></div>
@@ -232,14 +253,22 @@
         <div class="card" id="yt6" data-embed-src="https://www.youtube.com/embed/rV1U891RKLo">▶︎ YouTube 6<small>YouTube</small></div>
         <div class="card" id="yt7" data-embed-src="https://www.youtube.com/embed/fq8zhAQMam0">▶︎ YouTube 7<small>YouTube</small></div>
       </section>
+
+      <!-- Drei Zeilen Abstand -->
+      <br><br><br>
+
+      <!-- Inline-Footer im Container -->
+      <div class="footer-inline">
+        © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+      </div>
     </div>
   </main>
 
+  <!-- „Startseite“-Button wie gehabt außerhalb des Containers -->
   <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
 
-  <footer>
-    © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-  </footer>
+  <!-- Entfernt: alter Seiten-Footer -->
+  <!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
 
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
@@ -366,7 +395,7 @@
   });
   </script>
 
-  <!-- NEW: YouTube Titel automatisch holen (oEmbed, ohne API-Key) -->
+  <!-- YouTube Titel automatisch (oEmbed, optional) -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -375,7 +404,7 @@
       function extractId(src){
         const m = (src||'').match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
         return m ? m[1] : null;
-      }
+        }
       ytCards.forEach((card) => {
         const src = card.getAttribute('data-embed-src');
         const id  = extractId(src);
@@ -387,4 +416,20 @@
             const title = (data && data.title) ? data.title : '';
             if (!title) return;
             window.YT_TITLES[id] = title;
-            let t = card.querySelector('.yt-title
+            let t = card.querySelector('.yt-title');
+            if (!t) {
+              t = document.createElement('span');
+              t.className = 'yt-title';
+              card.appendChild(t);
+            }
+            t.textContent = title;
+          })
+          .catch(() => {/* still okay if blocked */});
+      });
+    } catch (err) {
+      console.error('YT oEmbed error:', err);
+    }
+  });
+  </script>
+</body>
+</html>
