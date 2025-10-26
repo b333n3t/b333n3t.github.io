@@ -7,7 +7,7 @@
   <meta name="description" content="Start — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-  <!-- Externe Styles (deine bestehenden) -->
+  <!-- Externe Styles -->
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
@@ -30,7 +30,7 @@
     .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
     .site-menu a:hover{background:rgba(0,0,0,.05)}
 
-    /* ===== FIXED Glas-Overlay: exakt wie gesehen.html ===== */
+    /* ===== FIXED Glas-Overlay ===== */
     #page-glass{
       position:fixed; left:0; right:0; top:0; bottom:0;
       pointer-events:none;
@@ -82,6 +82,7 @@
     .panel-photo img{display:block;width:100%;height:auto;object-fit:cover;object-position:center}
 
     footer{text-align:center;margin-top:2rem;font-size:.82rem}
+    .footer-inline{text-align:center;font-size:.82rem;margin-bottom:1rem}
   </style>
 </head>
 
@@ -150,11 +151,20 @@
 
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
         <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
+
+        <!-- Drei Zeilen Abstand -->
+        <br><br><br>
+
+        <!-- Neuer Text -->
+        <div class="footer-inline">
+          © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+        </div>
       </section>
     </div>
   </main>
 
-  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+  <!-- Entfernt: ursprünglicher Footer -->
+  <!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
 
   <div class="scroll-cue" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
