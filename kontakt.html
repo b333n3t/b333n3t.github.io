@@ -15,7 +15,7 @@
 
   :root{
     --frame-pad: clamp(18px, 3vw, 28px);
-    --bottom-gap: 35px;
+    --bottom-gap: 35px; /* Abstand zum unteren Rand */
   }
 
   html, body {
@@ -96,14 +96,14 @@
 
   .nav-arrow{ z-index: 1400 !important; }
 
-  /* ===== Inline-Footer ===== */
+  /* ===== Inline-Footer im Container ===== */
   .footer-inline{
     text-align:center;
     font-size:.82rem;
     margin: 0 0 1rem 0;
   }
   .footer-inline a{
-    color:#000;
+    color:#000;          /* schwarze Linkfarbe */
     text-decoration:none;
   }
   .footer-inline a:hover{
@@ -187,8 +187,52 @@
       <button type="submit">Nachricht senden</button>
     </form>
 
-    <!-- Button -->
-    <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
-
-    <!-- Drei Zeilen Abstand -->
+    <!-- === Drei Zeilen Abstand und Inline-Footer innerhalb des Containers === -->
     <br><br><br>
+    <div class="footer-inline">
+      © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+    </div>
+    <!-- === Ende Inline-Footer === -->
+
+  </div>
+</main>
+
+<!-- Entfernt: ursprünglicher Seiten-Footer -->
+<!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
+
+<div class="edge-swipe left"  aria-hidden="true"></div>
+<div class="edge-swipe right" aria-hidden="true"></div>
+
+<script src="script.js"></script>
+<script src="swipe-nav.js?v=12" defer></script>
+
+<script>
+(function() {
+  function resizePanel() {
+    var panel = document.querySelector('.scroll-panel');
+    if (!panel) return;
+    var header = document.querySelector('.header');
+    var hh = header ? header.offsetHeight : 0;
+    var extra = 32;
+    var gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
+    var max = window.innerHeight - hh - extra - gap;
+    if (max > 240) panel.style.maxHeight = max + 'px';
+  }
+  window.addEventListener('load', resizePanel);
+  window.addEventListener('resize', resizePanel);
+})();
+</script>
+
+<script>
+(function () {
+  const inForm = el =>
+    el && (el.matches?.('input, textarea, select, [contenteditable="true"]')
+      || el.closest?.('input, textarea, select, [contenteditable="true"]'));
+  window.addEventListener('keydown', function (e) {
+    if (inForm(e.target)) e.stopPropagation();
+  }, true);
+})();
+</script>
+
+</body>
+</html>
