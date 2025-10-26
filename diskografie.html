@@ -499,6 +499,75 @@
   .panel-block h3[role="button"]:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(17,17,17,.2); }
   .disco-grid[hidden]{ display:none; }
 </style>
+<style>
+/* --- Abstand & Layout-Korrektur für diskografie.html --- */
 
+/* sorgt für gleiches Look&Feel wie "aktuell" */
+.main {
+  background: rgba(255,255,255,.32);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Überschrift + Untertitel enger zusammen */
+.main > h1 {
+  margin-bottom: 0.3rem !important;
+}
+.main > p {
+  margin-bottom: 0.4rem !important;
+}
+
+/* Scrollpanel rückt direkt unter Text */
+.scroll-panel {
+  margin-top: 0 !important;
+  padding-top: 0.25rem !important;
+}
+
+/* Ersten Bereich ("Alben") näher heranschieben */
+.scroll-panel section:first-of-type {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* H3-Buttons (Alben, EPs, Singles) etwas kompakter */
+.scroll-panel h3[role="button"] {
+  margin-top: 0.25rem !important;
+}
+
+/* Falls zusätzliche Panel-Blöcke vorhanden sind: keine doppelten Abstände */
+.scroll-panel > .panel-block:first-of-type {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Klickbarkeit fix: kein Overlay oder Z-Index-Problem */
+.scroll-panel, .panel-block, .disco-grid {
+  position: relative;
+  z-index: 10;
+}
+
+/* Restliche Layoutdetails beibehalten */
+.disco-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.panel-block {
+  background: rgba(255,255,255,0.92);
+  border-radius: 12px;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+</style>
+
+  
 </body>
 </html>
