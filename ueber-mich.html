@@ -153,6 +153,22 @@ html, body { overflow-y: hidden; }
   }
 }
 </style>
+
+<!-- ===== NEU: Inline-Footer-Styles (schwarze Linkfarbe) ===== -->
+<style>
+  .footer-inline{
+    text-align:center;
+    font-size:.82rem;
+    margin: 0 0 1rem 0;
+  }
+  .footer-inline a{
+    color:#000;
+    text-decoration:none;
+  }
+  .footer-inline a:hover{
+    text-decoration:underline;
+  }
+</style>
 </head>
 
 <body>
@@ -205,14 +221,23 @@ html, body { overflow-y: hidden; }
     <p>heute ist <strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen – ein kleiner meilenstein, der für mich wie ein versprechen ist: weiterzumachen, zu wachsen und echt zu bleiben.</p>
 
     <p>danke, dass ihr mich auf diesem weg begleitet. ohne euch wäre all das nicht möglich. 🖤</p>
+
+    <!-- ===== Button am Ende des Textes ===== -->
+    <a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
+
+    <!-- ===== Drei Zeilen Abstand ===== -->
+    <br><br><br>
+
+    <!-- ===== Inline-Footer im grauen Container ===== -->
+    <div class="footer-inline">
+      © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+    </div>
   </div>
 </main>
 
-<a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
-
-<footer>
-  © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-</footer>
+<!-- Entfernt: alter separater Button + Footer am Seitenende -->
+<!-- <a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a> -->
+<!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
 
 <script src="script.js"></script>
 <script defer src="swipe-nav.js?v=6"></script>
@@ -228,8 +253,7 @@ html, body { overflow-y: hidden; }
     const main   = document.querySelector('.main');
 
     const hh = header ? header.offsetHeight : 0;
-    const fh = footer ? footer.offsetHeight : 0;
-
+    const fh = footer ? footer.offsetHeight : 0; // bleibt 0, da Footer entfernt
     let pt = 0, pb = 0;
     if (main) {
       const cs = getComputedStyle(main);
