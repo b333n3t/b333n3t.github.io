@@ -396,41 +396,44 @@
   });
   </script>
 
-  <!-- YouTube Titel automatisch (oEmbed, optional) -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    try {
-      window.YT_TITLES = window.YT_TITLES || {};
-      const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src*="youtube.com/embed/"]'));
-      function extractId(src){
-        const m = (src||'').match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
-        return m ? m[1] : null;
-        }
-      ytCards.forEach((card) => {
-        const src = card.getAttribute('data-embed-src');
-        const id  = extractId(src);
-        if (!id) return;
-        const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`;
-        fetch(url, { mode: 'cors' })
-          .then(res => res.ok ? res.json() : Promise.reject('oEmbed failed'))
-          .then(data => {
-            const title = (data && data.title) ? data.title : '';
-            if (!title) return;
-            window.YT_TITLES[id] = title;
-            let t = card.querySelector('.yt-title');
-            if (!t) {
-              t = document.createElement('span');
-              t.className = 'yt-title';
-              card.appendChild(t);
-            }
-            t.textContent = title;
-          })
-          .catch(() => {/* still okay if blocked */});
-      });
-    } catch (err) {
-      console.error('YT oEmbed error:', err);
+<!-- YouTube Titel automatisch (oEmbed, ersetzt den bisherigen Block) -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    window.YT_TITLES = window.YT_TITLES || {};
+    const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src*="youtube.com/embed/"]'));
+
+    function extractId(src){
+      const m = (src||'').match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
+      return m ? m[1] : null;
     }
-  });
-  </script>
+
+    ytCards.forEach((card) => {
+      const src = card.getAttribute('data-embed-src');
+      const id  = extractId(src);
+      if (!id) return;
+      const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`;
+
+      fetch(url, { mode: 'cors' })
+        .then(res => res.ok ? res.json() : Promise.reject('oEmbed failed'))
+        .then(data => {
+          const title = (data && data.title) ? data.title : '';
+          if (!title) return;
+          window.YT_TITLES[id] = title;
+
+          // Text der Karte ersetzen:
+          // ▶︎ <Titel> <small>YouTube</small>
+          const small = card.querySelector('small');
+          if (small) small.remove(); // erst YouTube-Kennzeichnung löschen
+          card.innerHTML = `▶︎ ${title} <small>YouTube</small>`;
+        })
+        .catch(() => {/* ignorieren, falls oEmbed blockiert ist */});
+    });
+  } catch (err) {
+    console.error('YT oEmbed error:', err);
+  }
+});
+</script>
+
 </body>
 </html>
