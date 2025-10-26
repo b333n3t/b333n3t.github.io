@@ -10,6 +10,15 @@
   <!-- Haupt-Styles -->
   <link rel="stylesheet" href="styles.css" />
 
+  <!-- Abstand unten: Desktop/Mobile über Variable -->
+<style>
+  :root { --bottom-gap: 60px; }                 /* Desktop-Abstand */
+  @media (max-width: 767px){
+    :root { --bottom-gap: 50px; }               /* Mobile-Abstand */
+  }
+  .main { margin-bottom: var(--bottom-gap); }   /* auf grauen Container anwenden */
+</style>
+
   <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
   <link rel="stylesheet" href="styles_nav_arrows.css" />
 
