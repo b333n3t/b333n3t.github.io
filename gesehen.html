@@ -396,7 +396,7 @@
   });
   </script>
 
-<!-- YouTube Titel automatisch (oEmbed, ersetzt den bisherigen Block) -->
+<!-- YouTube Titel automatisch (oEmbed, DOM-sicher) -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   try {
@@ -412,8 +412,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const src = card.getAttribute('data-embed-src');
       const id  = extractId(src);
       if (!id) return;
-      const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`;
 
+      const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`;
       fetch(url, { mode: 'cors' })
         .then(res => res.ok ? res.json() : Promise.reject('oEmbed failed'))
         .then(data => {
@@ -421,19 +421,39 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!title) return;
           window.YT_TITLES[id] = title;
 
-          // Text der Karte ersetzen:
-          // ▶︎ <Titel> <small>YouTube</small>
-          const small = card.querySelector('small');
-          if (small) small.remove(); // erst YouTube-Kennzeichnung löschen
-          card.innerHTML = `▶︎ ${title} <small>YouTube</small>`;
+          // 1) <small>YouTube</small> sicherstellen
+          let small = card.querySelector('small');
+          if (!small) {
+            small = document.createElement('small');
+            small.textContent = 'YouTube';
+            card.appendChild(small);
+          }
+
+          // 2) Label-Span (▶︎ Titel) erzeugen/aktualisieren – ohne innerHTML zu nutzen
+          let label = card.querySelector('.play-label');
+          if (!label) {
+            label = document.createElement('span');
+            label.className = 'play-label';
+            // nach dem Thumbnail, aber vor <small> einfügen
+            const thumb = card.querySelector('img.thumb');
+            if (thumb) {
+              // wenn es ein Thumbnail gibt, Label dahinter platzieren
+              card.insertBefore(label, small);
+            } else {
+              // sonst vor <small> setzen
+              card.insertBefore(label, small);
+            }
+          }
+          label.textContent = `▶︎ ${title}`;
         })
-        .catch(() => {/* ignorieren, falls oEmbed blockiert ist */});
+        .catch(() => {/* ok, wenn oEmbed geblockt ist */});
     });
   } catch (err) {
     console.error('YT oEmbed error:', err);
   }
 });
 </script>
+
 
 </body>
 </html>
