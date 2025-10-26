@@ -171,6 +171,20 @@
       font-size:.95rem;
       font-weight:600
     }
+
+    /* ===== Inline-Footer ===== */
+    .footer-inline {
+      text-align:center;
+      font-size:.82rem;
+      margin: 2rem 0 1rem 0;
+    }
+    .footer-inline a {
+      color:#000;
+      text-decoration:none;
+    }
+    .footer-inline a:hover {
+      text-decoration:underline;
+    }
   </style>
 </head>
 <body>
@@ -231,159 +245,24 @@
         <div class="card" id="yt6" data-embed-src="https://www.youtube.com/embed/rV1U891RKLo">▶︎ YouTube 6<small>YouTube</small></div>
         <div class="card" id="yt7" data-embed-src="https://www.youtube.com/embed/fq8zhAQMam0">▶︎ YouTube 7<small>YouTube</small></div>
       </section>
+
+      <!-- Drei Zeilen Abstand -->
+      <br><br><br>
+
+      <!-- Neuer Inline-Footer -->
+      <div class="footer-inline">
+        © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+      </div>
+
     </div>
   </main>
 
   <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
 
-  <footer>
-    © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-  </footer>
+  <!-- Entfernt: alter Footer -->
+  <!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
 
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
-
-  <!-- Öffnet Video direkt unter der Karte (volle Breite) + Schließen -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    try {
-      const cards = document.querySelectorAll('.card[data-embed-src]');
-      function closeAllVideos() {
-        document.querySelectorAll('.video-row').forEach(row => row.remove());
-      }
-      cards.forEach(card => {
-        card.addEventListener('click', () => {
-          try {
-            const next = card.nextElementSibling;
-            if (next && next.classList.contains('video-row')) { next.remove(); return; }
-            closeAllVideos();
-            const row = document.createElement('div');
-            row.className = 'video-row';
-            const wrapper = document.createElement('div');
-            wrapper.className = 'video-wrapper';
-            const closeBtn = document.createElement('button');
-            closeBtn.textContent = '×';
-            closeBtn.className = 'video-close';
-            closeBtn.addEventListener('click', (e) => { e.stopPropagation(); row.remove(); });
-            const src = card.getAttribute('data-embed-src') || '';
-            if (src.toLowerCase().endsWith('.mp4')) {
-              const video = document.createElement('video');
-              video.src = src;
-              video.controls = true;
-              video.autoplay = true;
-              video.playsInline = true;
-              video.style.width = '100%';
-              video.style.height = '100%';
-              wrapper.appendChild(closeBtn);
-              wrapper.appendChild(video);
-            } else {
-              const iframe = document.createElement('iframe');
-              iframe.src = src;
-              iframe.allowFullscreen = true;
-              iframe.loading = 'lazy';
-              iframe.title = 'Video';
-              const m = src.match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
-              if (m && window.YT_TITLES && window.YT_TITLES[m[1]]) {
-                iframe.title = window.YT_TITLES[m[1]];
-              }
-              wrapper.appendChild(closeBtn);
-              wrapper.appendChild(iframe);
-            }
-            row.appendChild(wrapper);
-            card.parentNode.insertBefore(row, card.nextSibling);
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          } catch (err) {
-            console.error('Video open error:', err);
-          }
-        });
-      });
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllVideos(); });
-    } catch (err) {
-      console.error('Init error:', err);
-    }
-  });
-  </script>
-
-  <!-- Instagram Thumbnails -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    try {
-      const map = {
-        video1: 'assets/insta1.png',
-        video2: 'assets/insta2.png',
-        video3: 'assets/insta3.png',
-        video4: 'assets/insta4.png',
-        video5: 'assets/insta5.png',
-        video6: 'assets/insta6.png'
-      };
-      Object.entries(map).forEach(([id, src]) => {
-        const card = document.getElementById(id);
-        if (!card || card.querySelector('img.thumb')) return;
-        const img = new Image();
-        img.loading = 'lazy'; img.decoding = 'async';
-        img.className = 'thumb'; img.alt = 'Instagram-Vorschau';
-        img.src = src;
-        img.onerror = () => { img.onerror = null; img.src = 'assets/instagram_poster.jpg'; };
-        card.insertBefore(img, card.firstChild);
-      });
-    } catch (err) {
-      console.error('IG thumbs error:', err);
-    }
-  });
-  </script>
-
-  <!-- YouTube Thumbnails -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    try {
-      const map = {
-        yt1: { file: 'assets/reel1.avif', id: 'ZSaj_FuqPN8' },
-        yt2: { file: 'assets/reel2.avif', id: 'DMNl40Tip1w' },
-        yt3: { file: 'assets/reel3.avif', id: 'K5pKG0Smdfc' },
-        yt4: { file: 'assets/reel4.jpg',  id: '4I9vlcGvFGQ' },
-        yt5: { file: 'assets/reel5.avif', id: 'w0pNdnlb96M' },
-        yt6: { file: 'assets/reel6.avif', id: 'rV1U891RKLo' },
-        yt7: { file: 'assets/reel7.avif', id: 'fq8zhAQMam0' }
-      };
-      Object.entries(map).forEach(([id, cfg]) => {
-        const card = document.getElementById(id);
-        if (!card || card.querySelector('img.thumb')) return;
-        const img = new Image();
-        img.loading = 'lazy'; img.decoding = 'async';
-        img.className = 'thumb';
-        img.alt = 'YouTube-Vorschau';
-        img.src = cfg.file;
-        img.onerror = () => {
-          img.onerror = null;
-          img.src = `https://img.youtube.com/vi/${cfg.id}/hqdefault.jpg`;
-        };
-        card.insertBefore(img, card.firstChild);
-      });
-    } catch (err) {
-      console.error('YT thumbs error:', err);
-    }
-  });
-  </script>
-
-  <!-- NEW: YouTube Titel automatisch holen (oEmbed, ohne API-Key) -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    try {
-      window.YT_TITLES = window.YT_TITLES || {};
-      const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src*="youtube.com/embed/"]'));
-      function extractId(src){
-        const m = (src||'').match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
-        return m ? m[1] : null;
-      }
-      ytCards.forEach((card) => {
-        const src = card.getAttribute('data-embed-src');
-        const id  = extractId(src);
-        if (!id) return;
-        const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`;
-        fetch(url, { mode: 'cors' })
-          .then(res => res.ok ? res.json() : Promise.reject('oEmbed failed'))
-          .then(data => {
-            const title = (data && data.title) ? data.title : '';
-            if (!title) return;
-            window.YT_TITLES[id] = title;
-            let t = card.querySelector('.yt-title
+</body>
+</html>
