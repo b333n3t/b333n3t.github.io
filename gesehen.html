@@ -10,6 +10,17 @@
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
+<!-- 👇 Mobile: grauer Container näher am unteren Rand -->
+<style>
+  @media (max-width: 768px) {
+    main.main {
+      min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
+      height: calc(100dvh - 56px - 20px);
+    }
+  }
+</style>
+
+  
   <style>
     .hamburger {
       position: fixed;
