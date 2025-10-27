@@ -8,39 +8,35 @@
 <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="styles.css" rel="stylesheet"/>
 
-<!-- 👇 Mobile: Seite nicht scrollen, nur grauen Container scrollen lassen -->
+<!-- 👇 Mobile & Desktop: Abstand und Scrollverhalten korrigieren -->
 <style>
-  /* Seite selbst: kein Scrollbalken */
-  html, body {
-    height: 100%;
-    overflow: hidden;
+  /* Desktop: Seite darf normal scrollen */
+  @media (min-width: 769px) {
+    html, body { overflow-y: auto; }
   }
 
+  /* Mobile: Container korrekt mit 20px Abstand unten */
   @media (max-width: 768px) {
     :root { --frame-pad: clamp(18px, 3vw, 28px); }
 
-    /* Grauer Container: korrekt einpassen, nicht überlaufen */
     main.main{
       min-height: calc(100dvh - 56px - 20px - env(safe-area-inset-bottom));
-      height: auto;                    /* keine feste Höhe */
-      margin-bottom: 0 !important;     /* keine doppelte Außenluft */
+      height: auto;
+      margin-bottom: 20px !important;
       padding: var(--frame-pad);
       padding-bottom: calc(var(--frame-pad) + 10px);
       box-sizing: border-box;
-      overflow: auto;                  /* Container scrollt (statt Seite) */
-      -webkit-overflow-scrolling: touch;
       border-radius: 12px;
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
+      overflow: visible;
     }
 
-    /* Falls eine interne Scrollfläche existiert, unten bündig halten */
+    /* Falls vorhanden: interne Scrollfläche bündig halten */
     .scroll-panel{
       bottom: 0 !important;
       max-height: unset;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
       background: transparent !important;
       box-shadow: none !important;
     }
