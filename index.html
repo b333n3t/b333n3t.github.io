@@ -116,41 +116,61 @@
     @keyframes typeReveal { to { clip-path: inset(0 0 0 0); } }
   </style>
 
-  <!-- ==== INTRO-ANIMATION: unten links (groß) → oben links (klein), mit Tippen unten & oben ==== -->
-  <style>
-    .intro-text{
-      position: fixed;
-      left: 18px;
-      top: calc(100vh - 120px);    /* Start unten links */
-      z-index: 1300;
-      font-weight:700;
-      font-family: inherit;        /* identisch zur Brand */
-      font-size: clamp(56px, 10vw, 110px); /* groß starten */
-      line-height:1.05;
-      color:#000;
-      /* Tipp-Reveal */
-      clip-path: inset(0 100% 0 0);
-      /* Dauer hier einstellen: 6s → auf 5s/5.5s ändern, wenn gewünscht */
-      animation: revealMove 6s ease forwards;
-      pointer-events:none;
-    }
+<!-- ==== INTRO-ANIMATION: 10 Steps (unten groß → oben links klein) ==== -->
+<style>
+  /* Gesamtdauer der Intro (hier 6s). Änderbar auf 5s, 8s, 10s … */
+  :root { --introDur: 6s; }
 
-    /* Zwei Positionen:
-       0–40%   unten + tippen
-       50–100% oben (klein) + erneut tippen  */
-    @keyframes revealMove{
-      0%   { top: calc(100vh - 120px); font-size: clamp(56px,10vw,110px); clip-path: inset(0 100% 0 0); }
-      40%  { top: calc(100vh - 120px); font-size: clamp(56px,10vw,110px); clip-path: inset(0 0 0 0); }
-      50%  { top: 14px;                font-size: 24px;                    clip-path: inset(0 100% 0 0); }
-      100% { top: 14px;                font-size: 24px;                    clip-path: inset(0 0 0 0); }
-    }
+  .intro-text{
+    position: fixed;
+    left: 18px;
+    top: calc(100vh - 120px);          /* Start unten links */
+    z-index: 1300;
+    font-weight:700;
+    font-family: inherit;              /* exakt wie Header-Logo (plattformen.html) */
+    font-size: clamp(56px, 10vw, 110px);
+    line-height:1.05;
+    color:#000;
+    pointer-events:none;
 
-    /* Bewegung reduzieren: Intro überspringen, sofort Endlogo zeigen */
-    @media (prefers-reduced-motion: reduce) {
-      .intro-text { display:none !important; }
-      .brand.hidden { opacity:1 !important; pointer-events:auto; }
-    }
-  </style>
+    /* Tipp-Reveal + Step-Move laufen parallel.
+       Tipp-Reveal: 10 Wiederholungen (eine pro Step), Dauer = Gesamt/10
+       Move: 10 Sprünge (steps(10,end)) über die Gesamtdauer */
+    animation:
+      typeReveal calc(var(--introDur) / 10) ease 0s 10 normal both,
+      moveSteps   var(--introDur)           steps(10, end) forwards;
+    /* Start jeder Tipp-Iteration = Beginn eines Positions-Schritts */
+    clip-path: inset(0 100% 0 0);
+  }
+
+  /* Tipp-Effekt (Schreibmaschinen-Enthüllung) pro Step */
+  @keyframes typeReveal {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0    0 0); }
+  }
+
+  /* 10 Positions-/Größen-Schritte bei 0,10,…,100% */
+  @keyframes moveSteps {
+    /* 0  % */ 0%   { top: calc(100vh - 120px); font-size: clamp(56px,10vw,110px); }
+    /* 10 % */ 10%  { top: 82vh;               font-size: clamp(54px, 9.5vw,104px); }
+    /* 20 % */ 20%  { top: 74vh;               font-size: clamp(50px, 9vw,   98px); }
+    /* 30 % */ 30%  { top: 66vh;               font-size: clamp(46px, 8.5vw, 92px); }
+    /* 40 % */ 40%  { top: 58vh;               font-size: clamp(42px, 8vw,   86px); }
+    /* 50 % */ 50%  { top: 50vh;               font-size: clamp(38px, 7.5vw, 78px); }
+    /* 60 % */ 60%  { top: 42vh;               font-size: clamp(34px, 7vw,   68px); }
+    /* 70 % */ 70%  { top: 34vh;               font-size: clamp(30px, 6vw,   56px); }
+    /* 80 % */ 80%  { top: 26vh;               font-size: clamp(26px, 4vw,   40px); }
+    /* 90 % */ 90%  { top: 18vh;               font-size: 26px; }
+    /* 100% */ 100% { top: 14px;               font-size: 24px; } /* Endposition oben links */
+  }
+
+  /* Bewegung reduzieren: Intro überspringen, sofort Endlogo zeigen */
+  @media (prefers-reduced-motion: reduce) {
+    .intro-text { display:none !important; }
+    .brand.hidden { opacity:1 !important; pointer-events:auto; }
+  }
+</style>
+
 </head>
 
 <body ontouchstart="">
