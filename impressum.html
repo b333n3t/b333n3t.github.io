@@ -9,79 +9,83 @@
 <link href="styles_nav_arrows.css" rel="stylesheet"/>
 <link href="swipe-helper.css" rel="stylesheet"/>
 
-<!-- 👇 Mobile & Desktop: Abstand und Scrollverhalten korrigieren (dein bisheriger Block) -->
+<!-- Grund-Variablen -->
 <style>
-  /* Desktop: Seite darf normal scrollen (falls du stattdessen Container-Scroll willst, lassen wir das unten überschreiben) */
-  @media (min-width: 769px) {
-    html, body { overflow-y: auto; }
+  :root{
+    --header-height: 56px;     /* fixe Höhe deines Headers "b3nn3t" */
+    --frame-pad: clamp(18px, 3vw, 28px);
+    --bottom-gap: 20px;        /* gewünschter Abstand unten */
+  }
+</style>
+
+<!-- Entferne inneren Scroll & feste Höhen im Panel; Seite scrollt stattdessen -->
+<style>
+  /* Seite darf scrollen, Scrollbar optional ausblenden (bleibt aber scrollbar) */
+  html, body{
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;             /* Firefox: Scrollbar ausblenden */
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar{ display: none; } /* WebKit: Scrollbar ausblenden */
+
+  /* Grauer Container: kein eigener Scroll, sondern wächst mit Inhalt */
+  main.main{
+    height: auto; /* keine feste Höhe */
+    min-height: calc(100dvh - var(--header-height) - var(--bottom-gap));
+    margin: 0; /* keine doppelten Außenabstände */
+    padding: var(--frame-pad);
+    padding-bottom: calc(var(--frame-pad) + 10px);
+    box-sizing: border-box;
+
+    border-radius: 12px;
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
 
-  /* Mobile: Container korrekt mit 20px Abstand unten */
-  @media (max-width: 768px) {
-    :root { --frame-pad: clamp(18px, 3vw, 28px); }
+  /* Das innere Panel bekommt KEIN overflow/keine max-height mehr */
+  .scroll-panel{
+    overflow: visible !important;
+    max-height: none !important;
 
+    background: rgba(255,255,255,0.92);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 1.25rem 1rem;
+    margin-top: 1rem;
+    margin-left: 0;
+    max-width: 650px;
+
+    /* vorsichtshalber: auch hier Scrollbar unsichtbar machen */
+    scrollbar-width: none;
+  }
+  .scroll-panel::-webkit-scrollbar{ display:none; }
+
+  /* Mobile: identisches Verhalten, nur explizit festgelegt */
+  @media (max-width: 768px){
     main.main{
-      min-height: calc(100dvh - 56px - 20px - env(safe-area-inset-bottom));
-      height: auto;
-      margin-bottom: 20px !important;
-      padding: var(--frame-pad);
-      padding-bottom: calc(var(--frame-pad) + 10px);
-      box-sizing: border-box;
-      border-radius: 12px;
-      background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      overflow: visible;
-    }
-
-    /* Falls vorhanden: interne Scrollfläche bündig halten */
-    .scroll-panel{
-      bottom: 0 !important;
-      max-height: unset;
-      background: transparent !important;
-      box-shadow: none !important;
+      min-height: calc(100dvh - var(--header-height) - var(--bottom-gap));
     }
   }
 </style>
 
-<style>
-.scroll-panel {
-  overflow: auto;
-  max-height: 75vh;
-  -webkit-overflow-scrolling: touch;
-  background: rgba(255,255,255,0.92);
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  padding: 1.25rem 1rem;
-  margin-top: 1rem;
-  margin-left: 0; /* align left like kontakt.html */
-  max-width: 650px; /* consistent width with kontakt.html */
-  scrollbar-width: none; /* hide scrollbar (Firefox) */
-  -ms-overflow-style: none; /* hide scrollbar (IE/Edge legacy) */
-}
-.scroll-panel::-webkit-scrollbar { display: none; }
-</style>
-
+<!-- (Dein ursprünglicher Panel-Resizer bleibt, aber wird durch !important neutralisiert) -->
 <script>
 (function() {
   function resizePanel() {
     var panel = document.querySelector('.scroll-panel');
     if (!panel) return;
-    var header = document.querySelector('.header');
-    var footer = document.querySelector('footer');
-    var hh = header ? header.offsetHeight : 0;
-    var fh = footer ? footer.offsetHeight : 0;
-    var extra = 32; // small top/bottom margins
-    var max = window.innerHeight - hh - fh - extra;
-    if (max > 240) panel.style.maxHeight = max + 'px';
+    /* Wir setzen absichtlich KEINE maxHeight/overflow mehr,
+       weil das per CSS überschrieben wird (siehe oben). */
   }
   window.addEventListener('load', resizePanel);
   window.addEventListener('resize', resizePanel);
 })();
 </script>
 
+<!-- Burger / Menü (unverändert aus deinem Code) -->
 <style>
-/* --- Burger Navigation (like kontakt.html, without swipe arrows) --- */
 .menu-toggle {
   appearance: none;
   background: transparent;
@@ -153,44 +157,8 @@
   pointer-events: auto;
 }
 
-/* Ensure header layout aligns brand left, burger right */
 .header { display: flex; align-items: center; gap: 12px; }
 .header .brand { margin-right: auto; }
-</style>
-
-<!-- 🔧 FINALER FIX: keine Seiten-Scrollbar, 20px Luft unten, nur Container scrollt -->
-<style>
-  /* Seite selbst: kein globaler Scrollbalken; der graue Container übernimmt das Scrollen */
-  html, body {
-    height: 100%;
-    overflow: hidden !important; /* entfernt rechten Seiten-Scrollbar (Desktop) */
-  }
-
-  /* Der graue Container scrollt (Desktop & Mobile), mit 20px Luft unten */
-  main.main {
-    height: auto !important; /* evtl. feste Höhen neutralisieren */
-    min-height: calc(100dvh - 56px - 20px) !important; /* 56 = Header, 20 = Abstand unten */
-    margin-bottom: 20px !important;
-    overflow: auto !important; /* nur Container scrollt */
-    -webkit-overflow-scrolling: touch;
-    box-sizing: border-box;
-
-    /* Innenabstände & Optik konsistent */
-    padding: clamp(18px, 3vw, 28px) !important;
-    padding-bottom: calc(clamp(18px, 3vw, 28px) + 10px) !important;
-    border-radius: 12px;
-    background: rgba(255,255,255,.32);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-  }
-
-  /* Interne Scrollfläche (falls genutzt): bündig, keine Zusatz-Abstände */
-  .scroll-panel {
-    bottom: 0 !important;
-    max-height: unset !important;
-    background: transparent !important;
-    box-shadow: none !important;
-  }
 </style>
 </head>
 
@@ -310,8 +278,6 @@
     <p><a class="btn" href=</a></p>
   </div>
 </main>
-
-<!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
 
 <script>
 (function(){
