@@ -16,39 +16,35 @@
     --frame-pad: clamp(18px, 3vw, 28px);
     --bottom-gap: 20px;        /* gewünschter Abstand unten */
   }
-</style>
-
-<!-- Entferne inneren Scroll & feste Höhen im Panel; Seite scrollt stattdessen -->
+<!-- 🔧 FINALER FIX: korrekte Abstände, kein Scrollbalken, Seite scrollt -->
 <style>
-  /* Seite darf scrollen, Scrollbar optional ausblenden (bleibt aber scrollbar) */
-  html, body{
+  /* Body darf scrollen, aber Scrollbalken wird ausgeblendet */
+  html, body {
     height: 100%;
+    margin: 0;
     overflow-y: auto;
-    scrollbar-width: none;             /* Firefox: Scrollbar ausblenden */
+    scrollbar-width: none;              /* Firefox */
   }
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar{ display: none; } /* WebKit: Scrollbar ausblenden */
+  html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;                      /* Chrome, Safari */
+  }
 
-  /* Grauer Container: kein eigener Scroll, sondern wächst mit Inhalt */
-  main.main{
-    height: auto; /* keine feste Höhe */
-    min-height: calc(100dvh - var(--header-height) - var(--bottom-gap));
-    margin: 0; /* keine doppelten Außenabstände */
-    padding: var(--frame-pad);
-    padding-bottom: calc(var(--frame-pad) + 10px);
-    box-sizing: border-box;
-
+  /* Grauer Container: fester Innenabstand oben/unten */
+  main.main {
+    margin-top: 20px;                   /* Abstand unter Header */
+    margin-bottom: 20px;                /* Abstand zum unteren Rand */
+    padding: clamp(18px, 3vw, 28px);
     border-radius: 12px;
     background: rgba(255,255,255,.32);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
+    box-sizing: border-box;
   }
 
-  /* Das innere Panel bekommt KEIN overflow/keine max-height mehr */
-  .scroll-panel{
+  /* Scrollpanel: kein eigenes Scrollen, volle Breite */
+  .scroll-panel {
     overflow: visible !important;
     max-height: none !important;
-
     background: rgba(255,255,255,0.92);
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
@@ -56,19 +52,17 @@
     margin-top: 1rem;
     margin-left: 0;
     max-width: 650px;
-
-    /* vorsichtshalber: auch hier Scrollbar unsichtbar machen */
-    scrollbar-width: none;
   }
-  .scroll-panel::-webkit-scrollbar{ display:none; }
 
-  /* Mobile: identisches Verhalten, nur explizit festgelegt */
-  @media (max-width: 768px){
-    main.main{
-      min-height: calc(100dvh - var(--header-height) - var(--bottom-gap));
+  /* Mobile: gleiches Verhalten, etwas kompakter */
+  @media (max-width: 768px) {
+    main.main {
+      margin-top: 16px;
+      margin-bottom: 16px;
     }
   }
 </style>
+
 
 <!-- (Dein ursprünglicher Panel-Resizer bleibt, aber wird durch !important neutralisiert) -->
 <script>
