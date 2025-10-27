@@ -14,11 +14,9 @@
 
 <!-- Abstand unten: Desktop/Mobile über Variable -->
 <style>
-  :root { --bottom-gap: 60px; }                 /* Desktop-Abstand */
-  @media (max-width: 767px){
-    :root { --bottom-gap: 60px; }               /* Mobile-Abstand */
-  }
-  .main { margin-bottom: var(--bottom-gap); }   /* auf grauen Container anwenden */
+  :root { --bottom-gap: 60px; }
+  @media (max-width: 767px){ :root { --bottom-gap: 60px; } }
+  .main { margin-bottom: var(--bottom-gap); }
 </style>
 
 <!-- Burger-Menü (schmal & isoliert) -->
@@ -69,27 +67,11 @@
     overflow:auto; max-height:75vh; min-height:320px; -webkit-overflow-scrolling:touch;
     background:transparent; color:#111; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);
     padding:1.25rem 1rem; margin-top:1rem; margin-left:0; width:min(1100px,95%);
-    scrollbar-width:none; -ms-overflow-style:none;
+    scrollbar-width:none; -ms-overflow-style:none; position:relative;
   }
   .scroll-panel::-webkit-scrollbar{ display:none; }
 
   .panel-block{ background:var(--panel-bg); border-radius:12px; padding:1rem 1rem; margin-bottom:1rem; }
-
-  .disco-grid{
-    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-    gap:1rem; margin:0 0 2rem; align-items:start; background:transparent;
-  }
-  .disco-grid > .release{ align-self:start; }
-
-  .release{
-    border:1px solid #ddd; border-radius:12px; padding:12px;
-    box-shadow:0 1px 3px rgba(0,0,0,.06); background:#fff;
-  }
-  .release img{ width:100%; height:220px; object-fit:cover; border-radius:8px; background:#f2f2f2; }
-  .release .meta{ font-size:.9rem; color:#444; margin-top:.5rem }
-  .release .title{ font-weight:600 }
-  .badge{ display:inline-block; background:#111; color:#fff; border-radius:999px; padding:.2rem .55rem; font-size:.75rem; margin-left:.35rem }
-  .kollabo{ background:#6b7280 }
 </style>
 
 <!-- Transparenz-Overrides -->
@@ -98,33 +80,30 @@
   .panel-block{ background:transparent !important; box-shadow:none !important; }
 </style>
 
-<!-- Einklapp-Styles -->
+<!-- ✅ Fix: Titel oben links – ohne Überdecken (sticky) -->
 <style>
-  .panel-block h3[role="button"]{ cursor:pointer; user-select:none; }
-  .panel-block h3[aria-expanded="true"]::after{ content:" ↑"; font-weight:400; }
-  .panel-block h3[aria-expanded="false"]::after{ content:" ↓"; font-weight:400; }
-  .disco-grid[hidden]{ display:none; }
-  .badge{ display:none !important; } /* Badges ausblenden */
-</style>
-
-<!-- ✅ Neuer Block: Überschrift oben links im grauen Container -->
-<style>
-  .main { position: relative; }              /* Anker für absolute Position */
+  /* Titelblock (der erste .panel-block in .scroll-panel) oben links anheften */
   .scroll-panel .panel-block:first-of-type{
-    position: absolute;
-    top: 16px;                                /* bei Bedarf feintunen */
-    left: 24px;                               /* bei Bedarf feintunen */
+    position: sticky;     /* bleibt oben, statt überzulappen */
+    top: 14px;
+    left: 0;              /* natürliche Linksausrichtung */
+    margin: 0 0 12px 0;
     background: transparent !important;
     box-shadow: none !important;
     padding: 0 !important;
-    margin: 0 !important;
     z-index: 20;
   }
-  .scroll-panel .panel-block:first-of-type h1{ margin:0; font-size:2.6rem; font-weight:800; color:#111; }
-  .scroll-panel .panel-block:first-of-type p{ margin:6px 0 0 0; font-size:1.1rem; color:#333; }
-
-  /* Platz schaffen, damit der Inhalt nicht unter dem Titel steckt */
-  .scroll-panel{ padding-top:110px !important; }
+  .scroll-panel .panel-block:first-of-type h1{
+    margin: 0;
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #111;
+  }
+  .scroll-panel .panel-block:first-of-type p{
+    margin: 6px 0 0 0;
+    font-size: 1.1rem;
+    color: #333;
+  }
 </style>
 </head>
 
@@ -159,7 +138,7 @@
 <main class="main">
   <div class="scroll-panel">
 
-    <!-- Intro -->
+    <!-- Intro (Titelblock) -->
     <div class="panel-block">
       <h1>diskografie</h1>
       <p>meine releases & kollabos</p>
@@ -220,7 +199,6 @@
     <!-- Singles (inkl. Kollabos) -->
     <section>
       <div class="panel-block"><h3>Singles (inkl. Kollabos)</h3></div>
-
       <div class="disco-grid">
         <article class="release">
           <img alt="Cover: kreative perspektiven" class="cover" data-spotify="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" loading="lazy"/>
@@ -360,23 +338,13 @@
     const url = img.dataset.spotify;
     if (!url) { img.src = FALLBACK_SRC; return; }
     try {
-      let embedUrl = '';
-      if (/open\.spotify\.com/.test(url)) {
-        embedUrl = `https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`;
-      } else if (/music\.apple\.com/.test(url)) {
-        img.src = FALLBACK_SRC; return;
-      } else {
-        img.src = FALLBACK_SRC; return;
-      }
-      const res = await fetch(embedUrl, { mode: 'cors' });
+      const res = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`, { mode: 'cors' });
       if (!res.ok) { img.src = FALLBACK_SRC; return; }
       const data = await res.json();
       if (data.thumbnail_url) {
         const src = data.thumbnail_url.replace(/&?size=\d+/, '');
         img.src = src;
-      } else {
-        img.src = FALLBACK_SRC;
-      }
+      } else { img.src = FALLBACK_SRC; }
     } catch { img.src = FALLBACK_SRC; }
   }
   function initCovers(){ document.querySelectorAll('img.cover[data-spotify]').forEach(setCover); }
@@ -403,122 +371,6 @@
     el.classList.toggle('open');
   }
 </script>
-
-<!-- NEU: Ergänzt fehlende „Mehr“-Buttons + Player für Singles automatisch -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Überschrift "Singles" finden
-    const singlesHeading = Array.from(document.querySelectorAll('main h3'))
-      .find(h => h.textContent.trim().toLowerCase().startsWith('singles'));
-    if (!singlesHeading) return;
-
-    // Grid nach der Überschrift holen
-    const singlesGrid = singlesHeading.closest('.panel-block')?.nextElementSibling;
-    if (!singlesGrid || !singlesGrid.classList.contains('disco-grid')) return;
-
-    // Für jede Single-Karte Button + Panel ergänzen (falls nicht vorhanden)
-    let idx = 1;
-    singlesGrid.querySelectorAll('.release').forEach(card => {
-      const hasToggle = card.querySelector('.toggle');
-      const hasTracklist = card.querySelector('.tracklist');
-      if (hasToggle && hasTracklist) return;
-
-      const cover = card.querySelector('img.cover');
-      const url = cover?.dataset.spotify || '';
-
-      let embed = '';
-      if (/open\.spotify\.com/.test(url)) {
-        embed = url.replace('open.spotify.com/', 'open.spotify.com/embed/');
-      } else if (/music\.apple\.com/.test(url)) {
-        embed = url.replace('https://music.apple.com', 'https://embed.music.apple.com');
-      } else {
-        const link = card.querySelector('.title a')?.href || '';
-        if (/open\.spotify\.com/.test(link)) embed = link.replace('open.spotify.com/', 'open.spotify.com/embed/');
-        if (/music\.apple\.com/.test(link)) embed = link.replace('https://music.apple.com', 'https://embed.music.apple.com');
-      }
-
-      const afterMeta = card.querySelector('.meta') || card.lastElementChild;
-      const toggleWrap = document.createElement('div');
-      toggleWrap.className = 'toggle';
-
-      const id = `tracklist-s-${idx++}`;
-      toggleWrap.innerHTML = `<button type="button" onclick="toggleTracklist('${id}')">Mehr</button>`;
-
-      const panel = document.createElement('div');
-      panel.className = 'tracklist';
-      panel.id = id;
-      panel.innerHTML = embed
-        ? `<iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="${embed}"></iframe>`
-        : `<div style="padding:.6rem 0;color:#666">Keine Einbettung gefunden.</div>`;
-
-      afterMeta.insertAdjacentElement('afterend', toggleWrap);
-      toggleWrap.insertAdjacentElement('afterend', panel);
-    });
-  });
-</script>
-
-<!-- Akkordeon-Logik für Alben / EPs / Singles -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll('main section');
-
-    sections.forEach((section, i) => {
-      const heading = section.querySelector('.panel-block h3');
-      const grid = section.querySelector('.disco-grid');
-      if (!heading || !grid) return;
-
-      // Zugänglich machen
-      heading.setAttribute('role', 'button');
-      heading.setAttribute('tabindex', '0');
-
-      const gridId = `cat-grid-${i+1}`;
-      heading.setAttribute('aria-controls', gridId);
-      heading.setAttribute('aria-expanded', 'false');
-      grid.id = gridId;
-      grid.hidden = true; // Start: eingeklappt
-
-      const toggle = () => {
-        const isOpen = heading.getAttribute('aria-expanded') === 'true';
-        heading.setAttribute('aria-expanded', String(!isOpen));
-        grid.hidden = isOpen;
-      };
-
-      heading.addEventListener('click', toggle);
-      heading.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-      });
-    });
-
-    // Optional: erste Kategorie beim Laden geöffnet anzeigen
-    const openFirst = false;
-    if (openFirst) {
-      const firstHeading = document.querySelector('main section .panel-block h3[role="button"]');
-      const firstGrid = document.getElementById('cat-grid-1');
-      if (firstHeading && firstGrid) {
-        firstHeading.setAttribute('aria-expanded', 'true');
-        firstGrid.hidden = false;
-      }
-    }
-  });
-</script>
-
-<!-- Trigger-Optik -->
-<style>
-  .panel-block h3[role="button"]{
-    display:flex; align-items:center; justify-content:space-between;
-    font-weight:700; font-size:1rem; line-height:1.2; padding:.9rem 1rem; margin:0 0 .8rem 0;
-    background:rgba(255,255,255,.92); border:1px solid rgba(0,0,0,.08); border-radius:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.06); cursor:pointer; color:#111;
-  }
-  .panel-block h3[role="button"]::after{
-    content:"▾"; opacity:.75; margin-left:.75rem; transition:transform .2s ease, opacity .2s ease; font-weight:400;
-  }
-  .panel-block h3[role="button"][aria-expanded="true"]::after{ transform:rotate(180deg); }
-  .panel-block h3[role="button"]:hover{ box-shadow:0 4px 14px rgba(0,0,0,.08); }
-  .panel-block h3[role="button"]:active{ transform:translateY(1px); }
-  .panel-block h3[role="button"]:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(17,17,17,.2); }
-  .disco-grid[hidden]{ display:none; }
-</style>
 
 </body>
 </html>
