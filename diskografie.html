@@ -43,18 +43,21 @@
     right: var(--title-left);
     z-index: 3;
   }
-  .title-fixed h1{
-    margin: 0;
-    font-size: var(--title-size);
-    font-weight: 800;
-    line-height: 1.1;
-    color:#111;
-  }
-  .title-fixed p{
-    margin: .6rem 0 0 0;
-    font-size: 1.05rem;
-    color:#333;
-  }
+/* Fixierter Titel: Typo identisch zu plattformen.html (aus styles.css) */
+.title-fixed h1{
+  margin: 0;
+  /* keine eigene font-size → erbt H1-Größe aus styles.css */
+  font-weight: 700;   /* nicht 800; wie plattformen */
+  line-height: 1.1;
+  color:#111;
+}
+
+.title-fixed p{
+  margin: .6rem 0 0 0;  /* kleiner Abstand unter der H1 */
+  /* keine eigene font-size → erbt p-Größe aus styles.css */
+  color:#333;
+}
+
 
   /* Nur dieser Bereich scrollt – startet UNTER dem Titel */
   .scroll-panel{
