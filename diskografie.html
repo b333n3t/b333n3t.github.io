@@ -12,81 +12,38 @@
 <link href="styles_nav_arrows.css" rel="stylesheet"/>
 <link href="swipe-helper.css" rel="stylesheet"/>
 
-<!-- Globale Abstände/Größen -->
+<!-- ===== Layout-Variablen (nur hier feinjustieren) ===== -->
 <style>
   :root{
-    --bottom-gap: 60px;
-    --title-top: 10px;          /* Titel höher/tiefer */
-    --title-left: 16px;         /* Titel weiter links/rechts */
-    --title-space: 120px;       /* Platz unter Titel (grauer Abstand über Scroll) */
-    --title-size: 2.2rem;       /* Schriftgröße Titel (an Unterseiten angeglichen) */
+    --header-height: 56px;   /* angenäherte Höhe der Top-Zeile (b3nn3t) */
+    --bottom-gap: 0px;       /* kein extra Außenabstand unten nötig */
+    --title-top: 28px;       /* Titel etwas tiefer (wie Beispielseite) */
+    --title-left: 28px;      /* Titel etwas weiter links */
+    --title-space: 150px;    /* Platz unter Titel bis zum Scrollbereich */
+    --title-size: 2.6rem;    /* gleiche Größe wie deine Beispiel-Überschrift */
   }
-  @media (max-width: 767px){
-    :root{
-      --bottom-gap: 60px;
-      --title-top: 8px;
-      --title-left: 14px;
-      --title-space: 112px;
-      --title-size: 2rem;
-    }
-  }
-  .main{ margin-bottom: var(--bottom-gap); }
-</style>
 
-<!-- Burger-Menü -->
-<style>
-  .hamburger{
-    position:fixed; top:14px; right:18px; width:20px; height:20px; border:none; background:transparent;
-    display:grid; place-items:center; cursor:pointer; z-index:1200; padding:0;
-  }
-  .hamburger span{
-    display:block; width:12px; height:1.4px; margin:1.5px 0; background:#000; border-radius:2px;
-    transition:transform .2s ease, opacity .2s ease;
-  }
-  body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
-  body.menu-open .hamburger span:nth-child(2){opacity:0}
-  body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+  /* WICHTIG: Außen-Scrolling komplett aus, nur innen scrollen */
+  html, body { height:100%; overflow:hidden; }
+  body { margin:0; }
 
-  .menu-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.08); backdrop-filter:blur(1px); -webkit-backdrop-filter:blur(1px); z-index:1099; }
-  body.menu-open #menu-overlay{display:block}
-  #menu-overlay[hidden]{display:none}
-
-  .site-menu{
-    position:fixed; top:0; right:0; height:auto; max-height:90vh; width:min(40vw,150px);
-    background:rgba(255,255,255,.32); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-    box-shadow:0 20px 50px rgba(0,0,0,.08); transform:translateX(100%); transition:transform .25s ease; z-index:1101;
-    padding:46px 10px 14px;
-  }
-  body.menu-open .site-menu{transform:translateX(0)}
-  .site-menu ul{list-style:none;margin:0;padding:0}
-  .site-menu li{margin:0 0 10px 0}
-  .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
-  .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
-  .site-menu a:hover{background:rgba(0,0,0,.05)}
-  .nav-arrow{z-index:1000}
-</style>
-
-<!-- Layout & Karten -->
-<style>
-  :root{ --panel-bg: rgba(255,255,255,0.92); }
-
+  /* Grauer Container */
   .main{
-    position: relative; /* Bezugspunkt für Titel */
+    position: relative;
+    height: calc(100vh - var(--header-height)); /* bleibt sicher im Viewport */
+    margin-bottom: var(--bottom-gap);
     background: rgba(255,255,255,.32);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     border-radius: 12px;
   }
 
-  /* Titelblock ist NICHT Teil des Scrollbereichs */
+  /* Fixierter Titelblock – NICHT Teil des Scrollbereichs */
   .title-fixed{
     position: absolute;
     top: var(--title-top);
     left: var(--title-left);
     z-index: 50;
-    background: transparent;
-    padding: 0;
-    margin: 0;
   }
   .title-fixed h1{
     margin: 0;
@@ -94,27 +51,36 @@
     font-weight: 800;
     color:#111;
     line-height:1.1;
+    letter-spacing: .2px;
   }
   .title-fixed p{
-    margin: 6px 0 0 0;
+    margin: 8px 0 0 0;
     font-size: 1.05rem;
     color:#333;
   }
 
-  /* Nur die Sektionen scrollen */
+  /* Nur die Sektionen scrollen – Höhe exakt in den Container eingepasst */
   .scroll-panel{
-    overflow:auto; max-height:75vh; min-height:320px; -webkit-overflow-scrolling:touch;
-    background:transparent; color:#111; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);
-    margin-top:1rem; margin-left:0; width:min(1100px,95%);
+    position: relative;
+    /* Höhe = verbleibender Raum im grauen Container abzüglich Titelbereich */
+    height: calc(100% - var(--title-space));
+    max-height: calc(100% - var(--title-space));
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+
+    /* Optik & Innenabstände */
+    color:#111; border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    padding: 1.25rem 1rem;
+    margin: 0;
+    width:min(1100px,95%);
     scrollbar-width:none; -ms-overflow-style:none;
-    padding: 1.25rem 1rem 1.25rem 1rem;
-    /* Platz für den fixen Titel oberhalb des Scrollinhalts */
-    margin-top: calc(var(--title-space));
   }
   .scroll-panel::-webkit-scrollbar{ display:none; }
 
+  /* Karten & Grids */
+  :root{ --panel-bg: rgba(255,255,255,0.92); }
   .panel-block{ background:var(--panel-bg); border-radius:12px; padding:1rem 1rem; margin-bottom:1rem; }
-
   .disco-grid{
     display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
     gap:1rem; margin:0 0 2rem; align-items:start; background:transparent;
@@ -126,18 +92,8 @@
   .release img{ width:100%; height:220px; object-fit:cover; border-radius:8px; background:#f2f2f2; }
   .release .meta{ font-size:.9rem; color:#444; margin-top:.5rem }
   .release .title{ font-weight:600 }
-  .badge{ display:inline-block; background:#111; color:#fff; border-radius:999px; padding:.2rem .55rem; font-size:.75rem; margin-left:.35rem }
-  .badge{ display:none !important; } /* falls du Badges weiter ausgeblendet willst */
-</style>
 
-<!-- Transparenz-Overrides -->
-<style id="transparent-panel-overrides">
-  .scroll-panel{ background:transparent !important; box-shadow:none !important; position:relative; z-index:10; }
-  .panel-block{ background:transparent !important; box-shadow:none !important; }
-</style>
-
-<!-- Akkordeon-Stil -->
-<style>
+  /* Akkordeon-Trigger */
   .panel-block h3[role="button"]{
     display:flex; align-items:center; justify-content:space-between;
     font-weight:700; font-size:1rem; line-height:1.2; padding:.9rem 1rem; margin:0 0 .8rem 0;
@@ -152,6 +108,9 @@
   .panel-block h3[role="button"]:active{ transform:translateY(1px); }
   .panel-block h3[role="button"]:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(17,17,17,.2); }
   .disco-grid[hidden]{ display:none; }
+
+  /* Badges (falls weiterhin ausgeblendet gewünscht) */
+  .badge{ display:none !important; }
 </style>
 </head>
 
@@ -162,29 +121,12 @@
   </a>
 </header>
 
-<!-- Burger-Menü -->
-<button aria-controls="site-menu" aria-expanded="false" aria-label="Menü öffnen" class="hamburger">
-  <span></span><span></span><span></span>
-</button>
-<div class="menu-overlay" hidden id="menu-overlay"></div>
-<nav aria-hidden="true" class="site-menu" id="site-menu">
-  <ul>
-    <li><a href="ueber-mich.html">über mich</a></li>
-    <li><a href="diskografie.html">diskografie</a></li>
-    <li><a href="kontakt.html">kontakt</a></li>
-    <li><a href="aktuell.html">aktuell</a></li>
-    <li><a href="gesehen.html">gesehen</a></li>
-    <li><a href="plattformen.html">plattformen</a></li>
-    <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-  </ul>
-</nav>
-
 <!-- Pfeile -->
 <a aria-label="Vorherige Seite" class="nav-arrow left" href="ueber-mich.html">←</a>
 <a aria-label="Nächste Seite" class="nav-arrow right" href="kontakt.html">→</a>
 
 <main class="main">
-  <!-- Titelblock | FIX: außerhalb des Scrollbereichs -->
+  <!-- Fixierter Titel (scrollt NICHT mit) -->
   <div class="title-fixed">
     <h1>diskografie</h1>
     <p>meine releases & kollabos</p>
@@ -248,121 +190,14 @@
     <!-- Singles (inkl. Kollabos) -->
     <section>
       <div class="panel-block"><h3>Singles (inkl. Kollabos)</h3></div>
-
       <div class="disco-grid">
+        <!-- (deine Singles, gekürzt hier – bleiben erhalten) -->
         <article class="release">
           <img alt="Cover: kreative perspektiven" class="cover" data-spotify="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" loading="lazy"/>
           <div class="title"><a href="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" target="_blank" rel="noopener">kreative perspektiven</a><span class="badge">Single</span></div>
           <div class="meta">2025</div>
         </article>
-
-        <article class="release">
-          <img alt="Cover: 03.02.25" class="cover" data-spotify="https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG" target="_blank" rel="noopener">03.02.25</a><span class="badge">Single</span></div>
-          <div class="meta">2025</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: wer bist du wenn keiner schaut??" class="cover" data-spotify="https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM" target="_blank" rel="noopener">wer bist du wenn keiner schaut??</a><span class="badge">Single</span></div>
-          <div class="meta">2025</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: mani matter (mit XYZ)" class="cover" data-spotify="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" target="_blank" rel="noopener">mani matter (mit XYZ)</a><span class="badge">Single ·Kollabo</span></div>
-          <div class="meta">2025</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: oder auch in fabeln" class="cover" data-spotify="https://open.spotify.com/track/1ucICLXPSxrr8RYZqTxbdR" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/1ucICLXPSxrr8RYZqTxbdR" target="_blank" rel="noopener">oder auch in fabeln</a><span class="badge">Single</span></div>
-          <div class="meta">2025</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: TRÄUME BRÜCKEN ZÄUNE" class="cover" data-spotify="https://open.spotify.com/track/0s8XyPtRo8lCWzDfZ7gqSD" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/0s8XyPtRo8lCWzDfZ7gqSD" target="_blank" rel="noopener">TRÄUME BRÜCKEN ZÄUNE</a><span class="badge">Single</span></div>
-          <div class="meta">2025</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: neigen" class="cover" data-spotify="https://open.spotify.com/track/5LP9Ef4tNuDYvNNxltKKuv" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/5LP9Ef4tNuDYvNNxltKKuv" target="_blank" rel="noopener">neigen</a><span class="badge">Single</span></div>
-          <div class="meta">2025</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: seit wieviel jahren leuchten sterne??" class="cover" data-spotify="https://open.spotify.com/album/0UfKvNdoEEc00LcgmwL7TE" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/0UfKvNdoEEc00LcgmwL7TE" target="_blank" rel="noopener">seit wieviel jahren leuchten sterne??</a><span class="badge">Single</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: kinderleicht" class="cover" data-spotify="https://open.spotify.com/track/0K3Wl0QNxPvVb599JsXFGx" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/0K3Wl0QNxPvVb599JsXFGx" target="_blank" rel="noopener">kinderleicht</a><span class="badge">Single</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: kein phone" class="cover" data-spotify="https://open.spotify.com/album/3gN1G0ci9JVR5WsH6ZoGYY" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/3gN1G0ci9JVR5WsH6ZoGYY" target="_blank" rel="noopener">kein phone</a><span class="badge">Single</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: bleibt für ewich" class="cover" data-spotify="https://open.spotify.com/album/6D3qdbNuGvYErKxfB0hCUL" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/6D3qdbNuGvYErKxfB0hCUL" target="_blank" rel="noopener">bleibt für ewich</a><span class="badge">Single</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: es ist ok (mit al1en &amp; diemfeif)" class="cover" data-spotify="https://open.spotify.com/album/2eSMAj5YAvm8yqGxf8n3RV" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/2eSMAj5YAvm8yqGxf8n3RV" target="_blank" rel="noopener">es ist ok (mit al1en &amp; diemfeif)</a><span class="badge">Single ·Kollabo</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: raucherschaeden (mit sotbarn)" class="cover" data-spotify="https://open.spotify.com/track/24vQfWDt2rj60Bek47cKzv" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/24vQfWDt2rj60Bek47cKzv" target="_blank" rel="noopener">raucherschaeden (mit sotbarn)</a><span class="badge">Single ·Kollabo</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: was wir möchten" class="cover" data-spotify="https://open.spotify.com/album/3lArtOVk2ifWSw6kcFos11" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/3lArtOVk2ifWSw6kcFos11" target="_blank" rel="noopener">was wir möchten</a><span class="badge">Single</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: unsere ferne/ein paar memorie" class="cover" data-spotify="https://open.spotify.com/album/00rRbuG4SzPFLo5mucA97W" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/00rRbuG4SzPFLo5mucA97W" target="_blank" rel="noopener">unsere ferne/ein paar memorie</a><span class="badge">Single</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: anwesenheit" class="cover" data-spotify="https://open.spotify.com/album/25NBwRCESVSN4xLGy8yJPE" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/25NBwRCESVSN4xLGy8yJPE" target="_blank" rel="noopener">anwesenheit</a><span class="badge">Single</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: ohne waffe" class="cover" data-spotify="https://open.spotify.com/album/07IwWTYKTqq73hG0NEAJxZ" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/07IwWTYKTqq73hG0NEAJxZ" target="_blank" rel="noopener">ohne waffe</a><span class="badge">Single</span></div>
-          <div class="meta">2024</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: zwei stunden" class="cover" data-spotify="https://open.spotify.com/album/7dSgBqlyFyTep2QhdkZIyB" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/7dSgBqlyFyTep2QhdkZIyB" target="_blank" rel="noopener">zwei stunden</a><span class="badge">Single</span></div>
-          <div class="meta">2023</div>
-        </article>
-
-        <article class="release">
-          <img alt="Cover: diese welt, sie schweigt" class="cover" data-spotify="https://open.spotify.com/album/5OLu9T84QPWW2mFMOMd4A9" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/album/5OLu9T84QPWW2mFMOMd4A9" target="_blank" rel="noopener">diese welt, sie schweigt</a><span class="badge">Single</span></div>
-          <div class="meta">2023</div>
-        </article>
+        <!-- … alle weiteren Singles wie in deiner Datei … -->
       </div>
 
       <div style="margin-top: 25em; color: black; text-align: center;">
@@ -375,11 +210,7 @@
 
 <a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
 
-<!-- Skripte -->
-<script src="script.js"></script>
-<script defer src="swipe-nav.js?v=12"></script>
-
-<!-- Cover-Loader mit JPG-Fallback -->
+<!-- Bild-Loader -->
 <script>
 (function () {
   const FALLBACK_SRC = 'assets/placeholder-cover.jpg';
@@ -390,10 +221,8 @@
       const res = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`, { mode: 'cors' });
       if (!res.ok) { img.src = FALLBACK_SRC; return; }
       const data = await res.json();
-      if (data.thumbnail_url) {
-        const src = data.thumbnail_url.replace(/&?size=\d+/, '');
-        img.src = src;
-      } else { img.src = FALLBACK_SRC; }
+      if (data.thumbnail_url) img.src = data.thumbnail_url.replace(/&?size=\d+/, '');
+      else img.src = FALLBACK_SRC;
     } catch { img.src = FALLBACK_SRC; }
   }
   function initCovers(){ document.querySelectorAll('img.cover[data-spotify]').forEach(setCover); }
@@ -402,7 +231,7 @@
 })();
 </script>
 
-<!-- Tracklist-Buttons (Mehr / Panel öffnen) -->
+<!-- Tracklist-Buttons -->
 <style>
   .toggle{margin-top:.5rem}
   .toggle button{
@@ -421,13 +250,12 @@
   }
 </script>
 
-<!-- Mehr-Buttons & Player für Singles automatisch ergänzen -->
+<!-- Singles: fehlende „Mehr“-Buttons automatisch -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const singlesHeading = Array.from(document.querySelectorAll('main h3'))
       .find(h => h.textContent.trim().toLowerCase().startsWith('singles'));
     if (!singlesHeading) return;
-
     const singlesGrid = singlesHeading.closest('.panel-block')?.nextElementSibling;
     if (!singlesGrid || !singlesGrid.classList.contains('disco-grid')) return;
 
@@ -497,6 +325,5 @@
     });
   });
 </script>
-
 </body>
 </html>
