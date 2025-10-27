@@ -106,6 +106,26 @@
   .disco-grid[hidden]{ display:none; }
   .badge{ display:none !important; } /* Badges ausblenden */
 </style>
+
+<!-- ✅ Neuer Block: Überschrift oben links im grauen Container -->
+<style>
+  .main { position: relative; }              /* Anker für absolute Position */
+  .scroll-panel .panel-block:first-of-type{
+    position: absolute;
+    top: 16px;                                /* bei Bedarf feintunen */
+    left: 24px;                               /* bei Bedarf feintunen */
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 20;
+  }
+  .scroll-panel .panel-block:first-of-type h1{ margin:0; font-size:2.6rem; font-weight:800; color:#111; }
+  .scroll-panel .panel-block:first-of-type p{ margin:6px 0 0 0; font-size:1.1rem; color:#333; }
+
+  /* Platz schaffen, damit der Inhalt nicht unter dem Titel steckt */
+  .scroll-panel{ padding-top:110px !important; }
+</style>
 </head>
 
 <body>
