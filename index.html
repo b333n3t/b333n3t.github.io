@@ -98,109 +98,71 @@
     .footer-inline a:hover { text-decoration: underline; }
 
     /* ===== Brand-Logo: Endzustand (oben links) – wie plattformen.html ===== */
+    .brand { cursor: pointer; }
+    .brand img { display:inline-block; vertical-align:middle; }
+    .brand strong{
+      font-weight:700;
+      font-family: inherit; /* gleiche Systemschrift wie Seite/Plattformen */
+      font-size:24px;
+      line-height:1;
+      vertical-align:middle;
+      margin-left:6px;
+      color:#000;
+      /* Tipp-Reveal oben */
+      clip-path: inset(0 100% 0 0);
+    }
     .brand.hidden{opacity:0; pointer-events:none;}
+    .brand.typed strong { animation: typeReveal 1.4s ease forwards; }
+    @keyframes typeReveal { to { clip-path: inset(0 0 0 0); } }
   </style>
 
-  <!-- ==== EINZIGER Block: Schrift & Animation wie plattformen.html (Endzustand) ==== -->
+  <!-- ==== INTRO-ANIMATION: unten links (groß) → oben links (klein), mit Tippen unten & oben ==== -->
   <style>
-    .brand .logo-svg { width: 100px; height: 28px; display:block; }
-    .brand .logo-word {
-      fill: transparent;
-      stroke: #000;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 400;
-      stroke-dashoffset: 400;
-      animation: brandDraw 1.8s ease forwards;
-      font: 700 24px system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
-    }
-    @keyframes brandDraw { to { stroke-dashoffset: 0; fill: #000; } }
-    @media (prefers-reduced-motion: reduce) {
-      .brand .logo-word { animation: none; stroke-dashoffset: 0; }
-    }
-  </style>
-
-  <!-- ==== INTRO-ANIMATION: groß unten → in Stufen nach oben, jeweils mit Schreib-Effekt ==== -->
-  <style>
-    .intro-logo {
+    .intro-text{
       position: fixed;
       left: 18px;
-      top: calc(100vh - 120px); /* Start: nahe Unterkante */
-      width: 90vw;              /* Startbreite: fast volle Breite */
+      top: calc(100vh - 120px);    /* Start unten links */
       z-index: 1300;
-      pointer-events: none;
-    }
-    .intro-logo svg { width: 100%; height: auto; display: block; }
-    .intro-word {
-      fill: transparent;
-      stroke: #000;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: var(--dash, 900);
-      stroke-dashoffset: var(--dash, 900);
-      font: 800 64px system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
-      animation:
-        introDraw 4.8s ease forwards,
-        introMove 4.8s ease forwards;
+      font-weight:700;
+      font-family: inherit;        /* identisch zur Brand */
+      font-size: clamp(56px, 10vw, 110px); /* groß starten */
+      line-height:1.05;
+      color:#000;
+      /* Tipp-Reveal */
+      clip-path: inset(0 100% 0 0);
+      /* Dauer hier einstellen: 6s → auf 5s/5.5s ändern, wenn gewünscht */
+      animation: revealMove 6s ease forwards;
+      pointer-events:none;
     }
 
-    /* Bewegungs- & Größen-Animation in Stufen: 0→25→50→75→100% */
-    @keyframes introMove {
-      /* Start: groß unten, quasi volle Breite */
-      0%   { top: calc(100vh - 120px); width: 90vw; }
-      /* 1. Stufe (während Reset der Striche kurz danach): etwas nach oben, kleiner */
-      25%  { top: 66vh; width: 70vw; }
-      /* 2. Stufe: weiter hoch, kleiner */
-      50%  { top: 33vh; width: 50vw; }
-      /* 3. Stufe: knapp unter Ziel, deutlich kleiner */
-      75%  { top: 28px; width: 180px; }
-      /* Ziel: oben links, exakt Brand-Größe */
-      100% { top: 14px; width: 100px; }
+    /* Zwei Positionen:
+       0–40%   unten + tippen
+       50–100% oben (klein) + erneut tippen  */
+    @keyframes revealMove{
+      0%   { top: calc(100vh - 120px); font-size: clamp(56px,10vw,110px); clip-path: inset(0 100% 0 0); }
+      40%  { top: calc(100vh - 120px); font-size: clamp(56px,10vw,110px); clip-path: inset(0 0 0 0); }
+      50%  { top: 14px;                font-size: 24px;                    clip-path: inset(0 100% 0 0); }
+      100% { top: 14px;                font-size: 24px;                    clip-path: inset(0 0 0 0); }
     }
 
-    /* Schreib-Animation, die sich an jeder Stufe neu „resetet“ und wieder zeichnet */
-    @keyframes introDraw {
-      0%   { stroke-dashoffset: var(--dash); fill: transparent; }
-      20%  { stroke-dashoffset: 0;           fill: transparent; }
-      24%  { stroke-dashoffset: var(--dash); fill: transparent; } /* Reset 1 */
-      45%  { stroke-dashoffset: 0;           fill: transparent; }
-      49%  { stroke-dashoffset: var(--dash); fill: transparent; } /* Reset 2 */
-      70%  { stroke-dashoffset: 0;           fill: transparent; }
-      74%  { stroke-dashoffset: var(--dash); fill: transparent; } /* Reset 3 */
-      95%  { stroke-dashoffset: 0;           fill: transparent; }
-      100% { stroke-dashoffset: 0;           fill: #000; }        /* Final füllen */
-    }
-
-    /* Bewegunsgedämpft: Intro überspringen, sofort Endzustand zeigen */
+    /* Bewegung reduzieren: Intro überspringen, sofort Endlogo zeigen */
     @media (prefers-reduced-motion: reduce) {
-      .intro-logo { display: none !important; }
-      .brand.hidden { opacity: 1 !important; pointer-events:auto; }
-      .brand .logo-word { animation: none; stroke-dashoffset: 0; fill: #000; }
+      .intro-text { display:none !important; }
+      .brand.hidden { opacity:1 !important; pointer-events:auto; }
     }
   </style>
 </head>
 
 <body ontouchstart="">
   <header class="header">
-    <!-- Endzustand: oben links – wir blenden das echte Brand-Logo erst nach der Intro-Animation ein -->
+    <!-- Endzustand: oben links – identisch wie auf plattformen.html -->
     <a class="brand hidden" href="index.html" aria-label="b3nn3t Home">
-      <svg class="logo-svg" viewBox="0 0 200 50" aria-hidden="true">
-        <text x="0" y="30" class="logo-word">b3nn3t</text>
-      </svg>
-      <img src="favicon.svg" alt="b3nn3t"
-           style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);" />
+      <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
     </a>
   </header>
 
-  <!-- INTRO: großes, bewegtes Logo, das am Ende genau die Brand-Position trifft -->
-  <div class="intro-logo" aria-hidden="true">
-    <svg viewBox="0 0 900 140" preserveAspectRatio="xMinYMid meet">
-      <!-- Dash-Länge per CSS-Var grob passend, damit der Strich komplett „versteckt“ starten kann -->
-      <text x="0" y="98" class="intro-word" style="--dash: 1200;">b3nn3t</text>
-    </svg>
-  </div>
+  <!-- INTRO: Start unten links (groß), bewegt nach oben (klein) -->
+  <div class="intro-text" aria-hidden="true"><strong>b3nn3t</strong></div>
 
   <div id="page-glass" aria-hidden="true">
     <div class="glass-fade"></div>
@@ -295,30 +257,28 @@
   </script>
 
   <script>
-    // Intro-zu-Brand Übergabe: Intro ausblenden, Brand einblenden
+    // Intro -> Brand: nach der Intro-Animation das echte Header-Logo anzeigen
     (function () {
-      const intro = document.querySelector('.intro-logo');
+      const intro = document.querySelector('.intro-text');
       const brand = document.querySelector('.brand');
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       if (!intro || !brand || prefersReduced) {
         brand && brand.classList.remove('hidden');
+        if (brand) brand.classList.add('typed'); // tippt oben sofort
         if (intro) intro.style.display = 'none';
         return;
       }
 
       const finish = () => {
         brand.classList.remove('hidden');
+        brand.classList.add('typed'); // starte Tipp-Reveal oben
         intro.style.display = 'none';
       };
 
-      intro.addEventListener('animationend', (e) => {
-        // Warten bis die Move/Draw-Animation fertig ist
-        finish();
-      });
-
-      // Fallback: hard timeout, falls animationend nicht feuert
-      setTimeout(finish, 5200);
+      intro.addEventListener('animationend', finish);
+      // Fallback-Timeout (Dauer + ~400ms Puffer) – hier 6s → 6400ms
+      setTimeout(finish, 6400);
     })();
   </script>
 
