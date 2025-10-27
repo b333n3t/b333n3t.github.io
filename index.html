@@ -105,41 +105,34 @@
       font-family: inherit; /* gleiche Systemschrift wie Seite/Plattformen */
       font-size:22px;
       line-height:1;
-      vertical-align:middle;
-      margin-left:6px;
-      color:#000;
-      /* Tipp-Reveal oben */
-      clip-path: inset(0 100% 0 0);
-    }
+           color:#000;
+          }
     .brand.hidden{opacity:0; pointer-events:none;}
     .brand.typed strong { animation: typeReveal 1.4s ease forwards; }
     @keyframes typeReveal { to { clip-path: inset(0 0 0 0); } }
   </style>
 
-<!-- ==== INTRO-ANIMATION: 10 gerade Steps unten → oben, Schrift identisch wie Header ==== -->
+<!-- ==== INTRO-ANIMATION: 10 gerade Steps (unten groß → oben links klein) ==== -->
 <style>
-  /* Gesamtdauer (z.B. 6s). Passe auf 5s, 8s, 10s an, wenn du willst. */
-  :root { --introDur: 6s; }
+  :root { --introDur: 6s; } /* Gesamtdauer – passe auf 5s/10s etc. an */
 
   .intro-text{
     position: fixed;
-    left: 18px;                       /* exakt gleiche x-Position wie Header-Logo */
-    top: calc(100vh - 120px);         /* Start knapp über Unterkante */
+    left: 50%;                           /* unten zentriert starten */
+    top: calc(100vh - 120px);
+    transform: translateX(-50%) scale(3);/* groß starten */
+    transform-origin: 50% 100%;          /* Mitte/unten → „Pyramiden“-Gefühl */
     z-index: 1300;
-    font-weight: 700;
-    font-family: inherit;             /* identisch zu plattformen.html */
-    font-size: 24px;                  /* identisch zu Header-Logo */
+    font: 700 24px inherit;              /* exakt wie Header/Plattformen */
     line-height: 1;
     color: #000;
     pointer-events: none;
 
-    /* Tipp-Reveal pro Step + vertikales Shrink/Move in 10 Schritten */
+    /* Tipp-Reveal pro Step + Positions-/Scale-Steps */
     clip-path: inset(0 100% 0 0);
-    transform-origin: 0 0;            /* oben links → skaliert wie Pyramide nach oben */
-    transform: scale(3);              /* Start groß */
     animation:
-      typeReveal calc(var(--introDur) / 10) ease 0s 10 both,
-      moveScale var(--introDur) steps(10, end) forwards;
+      typeReveal calc(var(--introDur)/10) ease 0s 10 both,
+      moveScale  var(--introDur)         steps(10,end) forwards;
   }
 
   /* Schreibmaschinen-Enthüllung (jede Stufe einmal) */
@@ -148,18 +141,28 @@
     to   { clip-path: inset(0 0    0 0); }
   }
 
-  /* 10 gerade Steps: nur nach oben und kleiner werden (Pyramide) */
+  /* 10 gleichmäßige Steps: gerade von unten (zentriert) nach oben links, dabei kleiner */
   @keyframes moveScale {
-    0%   { top: calc(100vh - 120px); transform: scale(3); }
-    100% { top: 14px;                transform: scale(1); }
+    /* 0%  */ 0%   { top: calc(100vh - 120px); left:50%; transform: translateX(-50%) scale(3.0); }
+    /* 10% */ 10%  { top: 90vh;                left:50%; transform: translateX(-50%) scale(2.8); }
+    /* 20% */ 20%  { top: 80vh;                left:50%; transform: translateX(-50%) scale(2.6); }
+    /* 30% */ 30%  { top: 70vh;                left:50%; transform: translateX(-50%) scale(2.4); }
+    /* 40% */ 40%  { top: 60vh;                left:50%; transform: translateX(-50%) scale(2.2); }
+    /* 50% */ 50%  { top: 50vh;                left:50%; transform: translateX(-50%) scale(2.0); }
+    /* 60% */ 60%  { top: 40vh;                left:50%; transform: translateX(-50%) scale(1.8); }
+    /* 70% */ 70%  { top: 30vh;                left:50%; transform: translateX(-50%) scale(1.6); }
+    /* 80% */ 80%  { top: 20vh;                left:50%; transform: translateX(-50%) scale(1.4); }
+    /* 90% */ 90%  { top: 10vh;                left:50%; transform: translateX(-50%) scale(1.2); }
+    /* 100% – Ziel exakt am Header-Logo */
+    100% { top: 14px; left:18px; transform: scale(1); } /* Endzustand oben links, 24px */
   }
 
-  /* Bewegung reduzieren → Intro überspringen, Header sofort zeigen */
   @media (prefers-reduced-motion: reduce) {
     .intro-text { display:none !important; }
     .brand.hidden { opacity:1 !important; pointer-events:auto; }
   }
 </style>
+
 
 
 
