@@ -1,4 +1,4 @@
-index mit animation
+index
 
 <!DOCTYPE html>
 <html lang="de">
@@ -14,17 +14,17 @@ index mit animation
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
-  <!-- 👇 Mobile: grauer Container näher am unteren Rand (DEINE bestehende Regel bleibt unangetastet) -->
-  <style>
-    @media (max-width: 768px) {
-      main.main {
-        min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
-        height: calc(100dvh - 56px - 20px);
-      }
+<!-- 👇 Mobile: grauer Container näher am unteren Rand -->
+<style>
+  @media (max-width: 768px) {
+    main.main {
+      min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
+      height: calc(100dvh - 56px - 20px);
     }
-  </style>
+  }
+</style>
 
-  <!-- 👇 Deine bestehenden Styles (unverändert) -->
+  
   <style>
     /* ===== Header / Menü ===== */
     .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
@@ -96,73 +96,21 @@ index mit animation
 
     footer{text-align:center;margin-top:2rem;font-size:.82rem}
     .footer-inline{text-align:center;font-size:.82rem;margin-bottom:1rem}
-    .footer-inline a { color: #000; text-decoration: none; }
-    .footer-inline a:hover { text-decoration: underline; }
+    /* ===== Linkfarbe im Footer Inline wieder schwarz ===== */
+    .footer-inline a {
+      color: #000;
+      text-decoration: none;
+    }
+    .footer-inline a:hover {
+      text-decoration: underline;
+    }
   </style>
-
-  <!-- 👇 Nur NEU: Mini-Styles NUR für die Schreibanimation; keine Kollisionsgefahr -->
-  <style>
-    .brand .logo-svg { width: 140px; height: 40px; display:block; }
-    .brand .logo-word {
-      fill: transparent;
-      stroke: #000;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 720;
-      stroke-dashoffset: 720;
-      animation: b3draw 3s ease forwards;
-    }
-    @keyframes b3draw { to { stroke-dashoffset: 0; fill: #000; } }
-
-    /* Barrierefreiheit: Bewegungen reduzieren → sofort sichtbar */
-    @media (prefers-reduced-motion: reduce) {
-      .brand .logo-word { animation: none; stroke-dashoffset: 0; }
-    }
-
-    /* Optional: Cursor als Link klar machen */
-    .brand { cursor: pointer; }
-  </style>
-
-  <!-- ==== Schrift & Animation angepasst an plattformen.html ==== -->
-<style>
-  .brand .logo-svg { width: 100px; height: 28px; display:block; }
-  .brand .logo-word {
-    fill: transparent;
-    stroke: #000;
-    stroke-width: 1.8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 400;
-    stroke-dashoffset: 400;
-    animation: b3draw 3s ease forwards;
-    font: 700 24px system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
-  }
-  @keyframes b3draw {
-    to {
-      stroke-dashoffset: 0;
-      fill: #000;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .brand .logo-word { animation: none; stroke-dashoffset: 0; }
-  }
-</style>
-
-  
 </head>
 
 <body ontouchstart="">
   <header class="header">
-    <!-- Link bleibt bestehen -->
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
-    <svg class="logo-svg" viewBox="0 0 200 50" aria-hidden="true">
-      <text x="0" y="30" class="logo-word">b3nn3t</text>
-    </svg>
-    <img src="favicon.svg" alt="b3nn3t" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);" />
-  </a>
-      <!-- Fallback-Logo für ältere Browser / No-SVG (nicht sichtbar, aber vorhanden) -->
-      <img src="favicon.svg" alt="b3nn3t" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);" />
+      <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
     </a>
   </header>
 
