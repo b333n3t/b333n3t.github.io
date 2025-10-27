@@ -12,6 +12,17 @@
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
+<!-- 👇 Mobile: grauer Container näher am unteren Rand -->
+<style>
+  @media (max-width: 768px) {
+    main.main {
+      min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
+      height: calc(100dvh - 56px - 20px);
+    }
+  }
+</style>
+
+  
   <style>
     /* ===== Header / Menü ===== */
     .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
