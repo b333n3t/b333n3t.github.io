@@ -121,27 +121,24 @@
   /* Gesamtdauer der Intro (z. B. 6s). Du kannst 5s/8s/10s setzen. */
   :root { --introDur: 6s; }
 
-  .intro-text {
-    position: fixed;
-    left: 50%;                          /* Start mittig */
-    top: calc(100vh - 120px);           /* Start: ganz unten */
-    transform: translateX(-50%);        /* exakt zentrieren */
-    z-index: 1300;
-    font-weight: 700;
-    font-family: inherit;               /* gleiche Systemschrift wie Header */
-    font-size: clamp(56px, 10vw, 110px);
-    line-height: 1.05;
-    color: #000;
-    pointer-events: none;
+.intro-text {
+  position: fixed;
+  left: 50%;                          /* Start mittig */
+  top: calc(100vh - 120px);           /* unten am Rand */
+  transform: translateX(-50%);
+  z-index: 1300;
+  font-weight:700;
+  font-family: inherit;               /* identisch zum Header */
+  font-size:22px;                     /* <- exakt gleiche Größe wie oben */
+  line-height:1;
+  color:#000;
+  pointer-events:none;
+  clip-path: inset(0 100% 0 0);
+  animation:
+    typeReveal calc(var(--introDur) / 10) ease 0s 10 normal both,
+    moveSteps var(--introDur) steps(10, end) forwards;
+}
 
-    /* Tipp-Reveal + Positionssprünge laufen parallel */
-    clip-path: inset(0 100% 0 0);
-    animation:
-      /* 10x pro Step „tippen“ (Dauer = Gesamt / 10) */
-      typeReveal calc(var(--introDur) / 10) ease 0s 10 normal both,
-      /* 10 Positionssprünge, genau am Step-Ende umspringen */
-      moveSteps var(--introDur) steps(10, end) forwards;
-  }
 
   /* Tipp-Effekt (Schreibmaschinen-Enthüllung) pro Step */
   @keyframes typeReveal {
