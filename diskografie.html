@@ -12,11 +12,13 @@
 <link href="styles_nav_arrows.css" rel="stylesheet"/>
 <link href="swipe-helper.css" rel="stylesheet"/>
 
-<!-- Basisabstände -->
+<!-- Abstand unten: Desktop/Mobile über Variable -->
 <style>
-  :root { --bottom-gap: 60px; --title-block-height: 108px; } /* Höhe des Titelbereichs */
-  @media (max-width: 767px){ :root { --bottom-gap: 60px; --title-block-height: 96px; } }
-  .main { margin-bottom: var(--bottom-gap); }
+  :root { --bottom-gap: 60px; }                 /* Desktop-Abstand */
+  @media (max-width: 767px){
+    :root { --bottom-gap: 60px; }               /* Mobile-Abstand */
+  }
+  .main { margin-bottom: var(--bottom-gap); }   /* auf grauen Container anwenden */
 </style>
 
 <!-- Burger-Menü (schmal & isoliert) -->
@@ -67,9 +69,7 @@
     overflow:auto; max-height:75vh; min-height:320px; -webkit-overflow-scrolling:touch;
     background:transparent; color:#111; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);
     padding:1.25rem 1rem; margin-top:1rem; margin-left:0; width:min(1100px,95%);
-    scrollbar-width:none; -ms-overflow-style:none; position:relative;
-    /* WICHTIG: Platz für sticky Titel freihalten */
-    padding-top: calc(var(--title-block-height) + 16px);
+    scrollbar-width:none; -ms-overflow-style:none;
   }
   .scroll-panel::-webkit-scrollbar{ display:none; }
 
@@ -79,6 +79,7 @@
     display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
     gap:1rem; margin:0 0 2rem; align-items:start; background:transparent;
   }
+  .disco-grid > .release{ align-self:start; }
 
   .release{
     border:1px solid #ddd; border-radius:12px; padding:12px;
@@ -97,50 +98,58 @@
   .panel-block{ background:transparent !important; box-shadow:none !important; }
 </style>
 
-<!-- Trigger-Optik & Akkordeon -->
+<!-- Einklapp-Styles -->
 <style>
-  .panel-block h3[role="button"]{
-    display:flex; align-items:center; justify-content:space-between;
-    font-weight:700; font-size:1rem; line-height:1.2; padding:.9rem 1rem; margin:0 0 .8rem 0;
-    background:rgba(255,255,255,.92); border:1px solid rgba(0,0,0,.08); border-radius:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.06); cursor:pointer; color:#111;
-  }
-  .panel-block h3[role="button"]::after{
-    content:"▾"; opacity:.75; margin-left:.75rem; transition:transform .2s ease, opacity .2s ease; font-weight:400;
-  }
-  .panel-block h3[role="button"][aria-expanded="true"]::after{ transform:rotate(180deg); }
-  .panel-block h3[role="button"]:hover{ box-shadow:0 4px 14px rgba(0,0,0,.08); }
-  .panel-block h3[role="button"]:active{ transform:translateY(1px); }
-  .panel-block h3[role="button"]:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(17,17,17,.2); }
+  .panel-block h3[role="button"]{ cursor:pointer; user-select:none; }
+  .panel-block h3[aria-expanded="true"]::after{ content:" ↑"; font-weight:400; }
+  .panel-block h3[aria-expanded="false"]::after{ content:" ↓"; font-weight:400; }
   .disco-grid[hidden]{ display:none; }
+  /* Badges aktuell ausblenden wie gehabt */
+  .badge{ display:none !important; }
 </style>
 
-<!-- ✅ Fix: Titel oben links – sticky & mit eigenem Platz -->
+<!-- ✅ FIX: Titel oben links fix + Puffer oberhalb des Scrollbereichs -->
 <style>
-  .title-sticky{
-    position: sticky;
-    top: 14px;               /* Position im Container */
-    left: 0;
-    z-index: 30;
-    background: transparent; /* keine Kachel, nur Text */
-    padding: 0;
-    margin: 0;
-    height: var(--title-block-height); /* Referenz für den oberen Freiraum */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+  /* 1) Der graue Container ist der Bezugspunkt */
+  .main { position: relative; }
+
+  /* 2) Titel oben links FEST (nicht mit-scrollend) */
+  .main .panel-block:first-of-type{
+    position: absolute;
+    top: 12px;          /* ← ggf. feiner justieren (z.B. 8px oder 16px) */
+    left: 24px;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    z-index: 50;        /* sicher über Akkordeons/Karten */
   }
-  .title-sticky h1{
+  .main .panel-block:first-of-type h1{
     margin: 0;
     font-size: 2.6rem;
     font-weight: 800;
     color: #111;
     line-height: 1.1;
   }
-  .title-sticky p{
+  .main .panel-block:first-of-type p{
     margin: 6px 0 0 0;
     font-size: 1.1rem;
     color: #333;
+  }
+
+  /* 3) Unsichtbarer Puffer oben im Scrollbereich:
+        verhindert, dass Inhalt unter den Titel scrollt */
+  .scroll-panel{ position: relative; }
+  .scroll-panel::before{
+    content: "";
+    display: block;
+    height: 136px;      /* ← Abstand unter dem Titel; bei Bedarf erhöhen/verringern */
+  }
+
+  @media (max-width: 768px){
+    .main .panel-block:first-of-type h1{ font-size: 2.2rem; }
+    .scroll-panel::before{ height: 120px; }
+    .main .panel-block:first-of-type{ top: 10px; left: 18px; }
   }
 </style>
 </head>
@@ -176,8 +185,8 @@
 <main class="main">
   <div class="scroll-panel">
 
-    <!-- Intro (Titelblock) -->
-    <div class="panel-block title-sticky">
+    <!-- Intro (Überschrift) -->
+    <div class="panel-block">
       <h1>diskografie</h1>
       <p>meine releases & kollabos</p>
     </div>
@@ -190,7 +199,6 @@
           <img alt="Cover: traeum ich??" class="cover" data-spotify="https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz" loading="lazy"/>
           <div class="title"><a href="https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz" target="_blank" rel="noopener">traeum ich??</a><span class="badge">Album</span></div>
           <div class="meta">2025</div>
-          <!-- Mehr + Tracklist -->
           <div class="toggle"><button type="button" onclick="toggleTracklist('tracklist-1')">Mehr</button></div>
           <div class="tracklist" id="tracklist-1"><iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/0om0qmIgGQdOfVaNIKUNmz"></iframe></div>
         </article>
@@ -238,6 +246,7 @@
     <!-- Singles (inkl. Kollabos) -->
     <section>
       <div class="panel-block"><h3>Singles (inkl. Kollabos)</h3></div>
+
       <div class="disco-grid">
         <article class="release">
           <img alt="Cover: kreative perspektiven" class="cover" data-spotify="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" loading="lazy"/>
@@ -259,7 +268,7 @@
 
         <article class="release">
           <img alt="Cover: mani matter (mit XYZ)" class="cover" data-spotify="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" target="_blank" rel="noopener">mani matter (mit XYZ)</a><span class="badge>">Single ·Kollabo</span></div>
+          <div class="title"><a href="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" target="_blank" rel="noopener">mani matter (mit XYZ)</a><span class="badge">Single ·Kollabo</span></div>
           <div class="meta">2025</div>
         </article>
 
@@ -354,7 +363,7 @@
         </article>
       </div>
 
-      <!-- Footer -->
+      <!-- Copyright -->
       <div style="margin-top: 25em; color: black; text-align: center;">
         © b3nn3t · <a href="impressum.html" style="color: black; text-decoration: none;">Impressum / Datenschutz</a>
       </div>
@@ -377,13 +386,23 @@
     const url = img.dataset.spotify;
     if (!url) { img.src = FALLBACK_SRC; return; }
     try {
-      const res = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`, { mode: 'cors' });
+      let embedUrl = '';
+      if (/open\.spotify\.com/.test(url)) {
+        embedUrl = `https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`;
+      } else if (/music\.apple\.com/.test(url)) {
+        img.src = FALLBACK_SRC; return;
+      } else {
+        img.src = FALLBACK_SRC; return;
+      }
+      const res = await fetch(embedUrl, { mode: 'cors' });
       if (!res.ok) { img.src = FALLBACK_SRC; return; }
       const data = await res.json();
       if (data.thumbnail_url) {
         const src = data.thumbnail_url.replace(/&?size=\d+/, '');
         img.src = src;
-      } else { img.src = FALLBACK_SRC; }
+      } else {
+        img.src = FALLBACK_SRC;
+      }
     } catch { img.src = FALLBACK_SRC; }
   }
   function initCovers(){ document.querySelectorAll('img.cover[data-spotify]').forEach(setCover); }
@@ -411,16 +430,19 @@
   }
 </script>
 
-<!-- Ergänze fehlende „Mehr“-Buttons + Player für Singles automatisch -->
+<!-- NEU: Ergänzt fehlende „Mehr“-Buttons + Player für Singles automatisch -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // Überschrift "Singles" finden
     const singlesHeading = Array.from(document.querySelectorAll('main h3'))
       .find(h => h.textContent.trim().toLowerCase().startsWith('singles'));
     if (!singlesHeading) return;
 
+    // Grid nach der Überschrift holen
     const singlesGrid = singlesHeading.closest('.panel-block')?.nextElementSibling;
     if (!singlesGrid || !singlesGrid.classList.contains('disco-grid')) return;
 
+    // Für jede Single-Karte Button + Panel ergänzen (falls nicht vorhanden)
     let idx = 1;
     singlesGrid.querySelectorAll('.release').forEach(card => {
       const hasToggle = card.querySelector('.toggle');
@@ -428,15 +450,16 @@
       if (hasToggle && hasTracklist) return;
 
       const cover = card.querySelector('img.cover');
-      const url = cover?.dataset.spotify || card.querySelector('.title a')?.href || '';
-
+      const url = cover?.dataset.spotify || '';
       let embed = '';
+
       if (/open\.spotify\.com/.test(url)) {
         embed = url.replace('open.spotify.com/', 'open.spotify.com/embed/');
+      } else {
+        const link = card.querySelector('.title a')?.href || '';
+        if (/open\.spotify\.com/.test(link)) embed = link.replace('open.spotify.com/', 'open.spotify.com/embed/');
       }
-      // (Apple Music Support könnte hier ergänzt werden)
 
-      // Button + Panel einsetzen
       const afterMeta = card.querySelector('.meta') || card.lastElementChild;
       const toggleWrap = document.createElement('div');
       toggleWrap.className = 'toggle';
@@ -461,17 +484,19 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('main section');
+
     sections.forEach((section, i) => {
       const heading = section.querySelector('.panel-block h3');
       const grid = section.querySelector('.disco-grid');
       if (!heading || !grid) return;
 
+      // Zugänglich machen
       heading.setAttribute('role', 'button');
       heading.setAttribute('tabindex', '0');
 
       const gridId = `cat-grid-${i+1}`;
       heading.setAttribute('aria-controls', gridId);
-      heading.setAttribute('aria-expanded', 'true');  // <-- standardmäßig offen
+      heading.setAttribute('aria-expanded', 'true');  // Start: offen
       grid.id = gridId;
       grid.hidden = false;
 
@@ -488,6 +513,24 @@
     });
   });
 </script>
+
+<!-- Trigger-Optik -->
+<style>
+  .panel-block h3[role="button"]{
+    display:flex; align-items:center; justify-content:space-between;
+    font-weight:700; font-size:1rem; line-height:1.2; padding:.9rem 1rem; margin:0 0 .8rem 0;
+    background:rgba(255,255,255,.92); border:1px solid rgba(0,0,0,.08); border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06); cursor:pointer; color:#111;
+  }
+  .panel-block h3[role="button"]::after{
+    content:"▾"; opacity:.75; margin-left:.75rem; transition:transform .2s ease, opacity .2s ease; font-weight:400;
+  }
+  .panel-block h3[role="button"][aria-expanded="true"]::after{ transform:rotate(180deg); }
+  .panel-block h3[role="button"]:hover{ box-shadow:0 4px 14px rgba(0,0,0,.08); }
+  .panel-block h3[role="button"]:active{ transform:translateY(1px); }
+  .panel-block h3[role="button"]:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(17,17,17,.2); }
+  .disco-grid[hidden]{ display:none; }
+</style>
 
 </body>
 </html>
