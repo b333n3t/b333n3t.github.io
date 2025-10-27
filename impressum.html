@@ -1,6 +1,3 @@
-impressum
-
-
 <!DOCTYPE html>
 
 <html lang="de">
@@ -21,21 +18,29 @@ impressum
   }
 
   /* Mobile: Container korrekt mit 20px Abstand unten */
-  @media (max-width: 768px) {
-    :root { --frame-pad: clamp(18px, 3vw, 28px); }
+@media (max-width: 768px) {
+  :root { --frame-pad: clamp(18px, 3vw, 28px); }
 
-    main.main {
-  min-height: calc(100dvh - 56px - env(safe-area-inset-bottom));
-  height: auto;
-  padding: var(--frame-pad);
-  padding-bottom: calc(var(--frame-pad) + 32px);
-  box-sizing: border-box;
-  border-radius: 12px;
-  background: rgba(255,255,255,.32);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  overflow: visible;
+  main.main {
+    min-height: calc(100dvh - 56px - env(safe-area-inset-bottom));
+    height: auto;
+    padding: var(--frame-pad);
+    padding-bottom: calc(var(--frame-pad) + 32px);
+    box-sizing: border-box;
+    border-radius: 12px;
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    overflow: visible;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    overflow-y: hidden; /* 👈 verhindert Scrollbalken */
+    height: 100%;
+  }
 }
+
 
 
     /* Falls vorhanden: interne Scrollfläche bündig halten */
