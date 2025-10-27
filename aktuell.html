@@ -18,6 +18,16 @@
   }
   .main { margin-bottom: var(--bottom-gap); }   /* auf grauen Container anwenden */
 </style>
+  <!-- 👇 Mobile: grauer Container näher am unteren Rand -->
+<style>
+  @media (max-width: 768px) {
+    main.main {
+      min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
+      height: calc(100dvh - 56px - 20px);
+    }
+  }
+</style>
+
 
   <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
   <link rel="stylesheet" href="styles_nav_arrows.css" />
