@@ -12,23 +12,25 @@
 <link href="styles_nav_arrows.css" rel="stylesheet"/>
 <link href="swipe-helper.css" rel="stylesheet"/>
 
-<!-- Abstände -->
+<!-- Globale Abstände/Größen -->
 <style>
-  :root {
+  :root{
     --bottom-gap: 60px;
-    --title-offset-top: 14px;    /* Titel-Position (höher/tiefer) */
-    --title-offset-left: 24px;   /* Titel links/rechts */
-    --title-space: 140px;        /* Platz für Titel über dem Inhalt */
+    --title-top: 10px;          /* Titel höher/tiefer */
+    --title-left: 16px;         /* Titel weiter links/rechts */
+    --title-space: 120px;       /* Platz unter Titel (grauer Abstand über Scroll) */
+    --title-size: 2.2rem;       /* Schriftgröße Titel (an Unterseiten angeglichen) */
   }
   @media (max-width: 767px){
-    :root {
+    :root{
       --bottom-gap: 60px;
-      --title-offset-top: 12px;
-      --title-offset-left: 18px;
-      --title-space: 128px;
+      --title-top: 8px;
+      --title-left: 14px;
+      --title-space: 112px;
+      --title-size: 2rem;
     }
   }
-  .main { margin-bottom: var(--bottom-gap); }
+  .main{ margin-bottom: var(--bottom-gap); }
 </style>
 
 <!-- Burger-Menü -->
@@ -76,14 +78,38 @@
     border-radius: 12px;
   }
 
+  /* Titelblock ist NICHT Teil des Scrollbereichs */
+  .title-fixed{
+    position: absolute;
+    top: var(--title-top);
+    left: var(--title-left);
+    z-index: 50;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+  }
+  .title-fixed h1{
+    margin: 0;
+    font-size: var(--title-size);
+    font-weight: 800;
+    color:#111;
+    line-height:1.1;
+  }
+  .title-fixed p{
+    margin: 6px 0 0 0;
+    font-size: 1.05rem;
+    color:#333;
+  }
+
+  /* Nur die Sektionen scrollen */
   .scroll-panel{
     overflow:auto; max-height:75vh; min-height:320px; -webkit-overflow-scrolling:touch;
     background:transparent; color:#111; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);
     margin-top:1rem; margin-left:0; width:min(1100px,95%);
     scrollbar-width:none; -ms-overflow-style:none;
-    /* WICHTIG: Inhalt unterhalb des fixen Titels starten lassen */
     padding: 1.25rem 1rem 1.25rem 1rem;
-    padding-top: calc(var(--title-space) + 16px);
+    /* Platz für den fixen Titel oberhalb des Scrollinhalts */
+    margin-top: calc(var(--title-space));
   }
   .scroll-panel::-webkit-scrollbar{ display:none; }
 
@@ -93,8 +119,6 @@
     display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
     gap:1rem; margin:0 0 2rem; align-items:start; background:transparent;
   }
-  .disco-grid > .release{ align-self:start; }
-
   .release{
     border:1px solid #ddd; border-radius:12px; padding:12px;
     box-shadow:0 1px 3px rgba(0,0,0,.06); background:#fff;
@@ -103,7 +127,7 @@
   .release .meta{ font-size:.9rem; color:#444; margin-top:.5rem }
   .release .title{ font-weight:600 }
   .badge{ display:inline-block; background:#111; color:#fff; border-radius:999px; padding:.2rem .55rem; font-size:.75rem; margin-left:.35rem }
-  .kollabo{ background:#6b7280 }
+  .badge{ display:none !important; } /* falls du Badges weiter ausgeblendet willst */
 </style>
 
 <!-- Transparenz-Overrides -->
@@ -112,7 +136,7 @@
   .panel-block{ background:transparent !important; box-shadow:none !important; }
 </style>
 
-<!-- Akkordeon + Trigger-Optik -->
+<!-- Akkordeon-Stil -->
 <style>
   .panel-block h3[role="button"]{
     display:flex; align-items:center; justify-content:space-between;
@@ -128,36 +152,6 @@
   .panel-block h3[role="button"]:active{ transform:translateY(1px); }
   .panel-block h3[role="button"]:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(17,17,17,.2); }
   .disco-grid[hidden]{ display:none; }
-
-  /* Badges ausblenden, wenn du magst */
-  .badge{ display:none !important; }
-</style>
-
-<!-- ✅ Fix: Titel oben links (fix), Inhalt darunter -->
-<style>
-  /* Der erste .panel-block (Titel) wird fest oben links gezeigt */
-  .main .scroll-panel > .panel-block:first-of-type{
-    position: absolute;
-    top: var(--title-offset-top);
-    left: var(--title-offset-left);
-    margin: 0 !important;
-    padding: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    z-index: 50; /* über Akkordeons/Karten */
-  }
-  .main .scroll-panel > .panel-block:first-of-type h1{
-    margin: 0;
-    font-size: 2.6rem;
-    font-weight: 800;
-    color: #111;
-    line-height: 1.1;
-  }
-  .main .scroll-panel > .panel-block:first-of-type p{
-    margin: 6px 0 0 0;
-    font-size: 1.1rem;
-    color: #333;
-  }
 </style>
 </head>
 
@@ -190,13 +184,14 @@
 <a aria-label="Nächste Seite" class="nav-arrow right" href="kontakt.html">→</a>
 
 <main class="main">
-  <div class="scroll-panel">
+  <!-- Titelblock | FIX: außerhalb des Scrollbereichs -->
+  <div class="title-fixed">
+    <h1>diskografie</h1>
+    <p>meine releases & kollabos</p>
+  </div>
 
-    <!-- Fixierter Titelblock -->
-    <div class="panel-block">
-      <h1>diskografie</h1>
-      <p>meine releases & kollabos</p>
-    </div>
+  <!-- Nur dieser Bereich scrollt -->
+  <div class="scroll-panel">
 
     <!-- Alben -->
     <section>
@@ -370,7 +365,6 @@
         </article>
       </div>
 
-      <!-- Copyright -->
       <div style="margin-top: 25em; color: black; text-align: center;">
         © b3nn3t · <a href="impressum.html" style="color: black; text-decoration: none;">Impressum / Datenschutz</a>
       </div>
@@ -427,7 +421,7 @@
   }
 </script>
 
-<!-- Ergänze fehlende „Mehr“-Buttons + Player für Singles automatisch -->
+<!-- Mehr-Buttons & Player für Singles automatisch ergänzen -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const singlesHeading = Array.from(document.querySelectorAll('main h3'))
@@ -472,11 +466,10 @@
   });
 </script>
 
-<!-- Akkordeon-Logik (Start: offen) -->
+<!-- Akkordeon-Logik (Start: geschlossen) -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('main section');
-
     sections.forEach((section, i) => {
       const heading = section.querySelector('.panel-block h3');
       const grid = section.querySelector('.disco-grid');
@@ -487,9 +480,9 @@
 
       const gridId = `cat-grid-${i+1}`;
       heading.setAttribute('aria-controls', gridId);
-      heading.setAttribute('aria-expanded', 'true');  // Start: offen
+      heading.setAttribute('aria-expanded', 'false'); // geschlossen starten
       grid.id = gridId;
-      grid.hidden = false;
+      grid.hidden = true;
 
       const toggle = () => {
         const isOpen = heading.getAttribute('aria-expanded') === 'true';
