@@ -7,6 +7,18 @@
 <title>Impressum &amp; Datenschutz — b3nn3t</title>
 <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="styles.css" rel="stylesheet"/>
+
+<!-- 👇 Mobile: grauer Container näher am unteren Rand -->
+<style>
+  @media (max-width: 768px) {
+    main.main {
+      min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
+      height: calc(100dvh - 56px - 20px);
+    }
+  }
+</style>
+
+  
 <style>
 .scroll-panel {
   overflow: auto;
