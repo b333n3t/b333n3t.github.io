@@ -1,3 +1,5 @@
+index mit animation
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -12,7 +14,7 @@
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
-  <!-- 👇 Mobile: grauer Container näher am unteren Rand -->
+  <!-- 👇 Mobile: grauer Container näher am unteren Rand (DEINE bestehende Regel bleibt unangetastet) -->
   <style>
     @media (max-width: 768px) {
       main.main {
@@ -96,88 +98,73 @@
     .footer-inline{text-align:center;font-size:.82rem;margin-bottom:1rem}
     .footer-inline a { color: #000; text-decoration: none; }
     .footer-inline a:hover { text-decoration: underline; }
-
-    /* ===== Brand-Logo: Endzustand (oben links) – wie plattformen.html ===== */
-    .brand { cursor: pointer; }
-    .brand img { display:inline-block; vertical-align:middle; }
-    .brand strong{
-      font-weight:700;
-      font-family: inherit; /* gleiche Systemschrift wie Seite/Plattformen */
-      font-size:22px;
-      line-height:1;
-           color:#000;
-          }
-    .brand.hidden{opacity:0; pointer-events:none;}
-    .brand.typed strong { animation: typeReveal 1.4s ease forwards; }
-    @keyframes typeReveal { to { clip-path: inset(0 0 0 0); } }
   </style>
 
-<!-- ==== INTRO-ANIMATION: 10 gerade Steps (unten groß → oben links klein) ==== -->
+  <!-- 👇 Nur NEU: Mini-Styles NUR für die Schreibanimation; keine Kollisionsgefahr -->
+  <style>
+    .brand .logo-svg { width: 140px; height: 40px; display:block; }
+    .brand .logo-word {
+      fill: transparent;
+      stroke: #000;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 720;
+      stroke-dashoffset: 720;
+      animation: b3draw 3s ease forwards;
+    }
+    @keyframes b3draw { to { stroke-dashoffset: 0; fill: #000; } }
+
+    /* Barrierefreiheit: Bewegungen reduzieren → sofort sichtbar */
+    @media (prefers-reduced-motion: reduce) {
+      .brand .logo-word { animation: none; stroke-dashoffset: 0; }
+    }
+
+    /* Optional: Cursor als Link klar machen */
+    .brand { cursor: pointer; }
+  </style>
+
+  <!-- ==== Schrift & Animation angepasst an plattformen.html ==== -->
 <style>
-  :root { --introDur: 6s; } /* Gesamtdauer – passe auf 5s/10s etc. an */
-
-  .intro-text{
-    position: fixed;
-    left: 50%;                           /* unten zentriert starten */
-    top: calc(100vh - 120px);
-    transform: translateX(-50%) scale(3);/* groß starten */
-    transform-origin: 50% 100%;          /* Mitte/unten → „Pyramiden“-Gefühl */
-    z-index: 1300;
-    font: 700 24px inherit;              /* exakt wie Header/Plattformen */
-    line-height: 1;
-    color: #000;
-    pointer-events: none;
-
-    /* Tipp-Reveal pro Step + Positions-/Scale-Steps */
-    clip-path: inset(0 100% 0 0);
-    animation:
-      typeReveal calc(var(--introDur)/10) ease 0s 10 both,
-      moveScale  var(--introDur)         steps(10,end) forwards;
+  .brand .logo-svg { width: 100px; height: 28px; display:block; }
+  .brand .logo-word {
+    fill: transparent;
+    stroke: #000;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    animation: b3draw 3s ease forwards;
+    font: 700 24px system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
   }
-
-  /* Schreibmaschinen-Enthüllung (jede Stufe einmal) */
-  @keyframes typeReveal {
-    from { clip-path: inset(0 100% 0 0); }
-    to   { clip-path: inset(0 0    0 0); }
+  @keyframes b3draw {
+    to {
+      stroke-dashoffset: 0;
+      fill: #000;
+    }
   }
-
-  /* 10 gleichmäßige Steps: gerade von unten (zentriert) nach oben links, dabei kleiner */
-  @keyframes moveScale {
-    /* 0%  */ 0%   { top: calc(100vh - 120px); left:50%; transform: translateX(-50%) scale(3.0); }
-    /* 10% */ 10%  { top: 90vh;                left:50%; transform: translateX(-50%) scale(2.8); }
-    /* 20% */ 20%  { top: 80vh;                left:50%; transform: translateX(-50%) scale(2.6); }
-    /* 30% */ 30%  { top: 70vh;                left:50%; transform: translateX(-50%) scale(2.4); }
-    /* 40% */ 40%  { top: 60vh;                left:50%; transform: translateX(-50%) scale(2.2); }
-    /* 50% */ 50%  { top: 50vh;                left:50%; transform: translateX(-50%) scale(2.0); }
-    /* 60% */ 60%  { top: 40vh;                left:50%; transform: translateX(-50%) scale(1.8); }
-    /* 70% */ 70%  { top: 30vh;                left:50%; transform: translateX(-50%) scale(1.6); }
-    /* 80% */ 80%  { top: 20vh;                left:50%; transform: translateX(-50%) scale(1.4); }
-    /* 90% */ 90%  { top: 10vh;                left:50%; transform: translateX(-50%) scale(1.2); }
-    /* 100% – Ziel exakt am Header-Logo */
-    100% { top: 14px; left:18px; transform: scale(1); } /* Endzustand oben links, 24px */
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .intro-text { display:none !important; }
-    .brand.hidden { opacity:1 !important; pointer-events:auto; }
+    .brand .logo-word { animation: none; stroke-dashoffset: 0; }
   }
 </style>
 
-
-
-
+  
 </head>
 
 <body ontouchstart="">
   <header class="header">
-    <!-- Endzustand: oben links – identisch wie auf plattformen.html -->
-    <a class="brand hidden" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
+    <!-- Link bleibt bestehen -->
+    <a class="brand" href="index.html" aria-label="b3nn3t Home">
+    <svg class="logo-svg" viewBox="0 0 200 50" aria-hidden="true">
+      <text x="0" y="30" class="logo-word">b3nn3t</text>
+    </svg>
+    <img src="favicon.svg" alt="b3nn3t" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);" />
+  </a>
+      <!-- Fallback-Logo für ältere Browser / No-SVG (nicht sichtbar, aber vorhanden) -->
+      <img src="favicon.svg" alt="b3nn3t" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);" />
     </a>
   </header>
-
-  <!-- INTRO: Start unten links (groß), bewegt nach oben (klein) -->
-  <div class="intro-text" aria-hidden="true"><strong>b3nn3t</strong></div>
 
   <div id="page-glass" aria-hidden="true">
     <div class="glass-fade"></div>
@@ -262,7 +249,6 @@
   <script src="swipe-nav.js?v=12" defer></script>
 
   <script>
-    // Scroll-Cue Logik (dein bestehender Code)
     const cue = document.querySelector('.scroll-cue');
     const scroller = document.querySelector('.main');
     window.addEventListener('load', () => cue.classList.add('visible'));
@@ -271,40 +257,7 @@
     }, {passive:true});
   </script>
 
-<script>
-  // Intro -> Brand: nach der Intro-Animation das echte Header-Logo anzeigen
-  (function () {
-    const intro = document.querySelector('.intro-text');
-    const brand = document.querySelector('.brand');
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!intro || !brand || prefersReduced) {
-      brand && brand.classList.remove('hidden');
-      if (brand) brand.classList.add('typed'); // tippt oben sofort
-      if (intro) intro.style.display = 'none';
-      return;
-    }
-
-    const finish = () => {
-      brand.classList.remove('hidden');
-      brand.classList.add('typed'); // starte Tipp-Reveal oben
-      intro.style.display = 'none';
-    };
-
-    intro.addEventListener('animationend', (e) => {
-      // Warten bis die Positions-Animation 'moveSteps' (die zweite) fertig ist
-      if (e.animationName === 'moveSteps') finish();
-    });
-
-    // Fallback-Timeout (Dauer + ~400ms Puffer): bei 6s → 6400ms
-    const durMs = 6000; // ändere auf 5000/8000/10000, wenn du --introDur änderst
-    setTimeout(finish, durMs + 400);
-  })();
-</script>
-
-
   <script>
-    // Page-glass Positionierung (dein bestehender Code)
     (function () {
       const glass = document.getElementById('page-glass');
       const panel = document.querySelector('.main');
