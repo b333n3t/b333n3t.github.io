@@ -12,17 +12,17 @@
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
-<!-- 👇 Mobile: grauer Container näher am unteren Rand -->
-<style>
-  @media (max-width: 768px) {
-    main.main {
-      min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
-      height: calc(100dvh - 56px - 20px);
+  <!-- Mobile: grauer Container näher am unteren Rand -->
+  <style>
+    @media (max-width: 768px) {
+      main.main {
+        min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
+        height: calc(100dvh - 56px - 20px);
+      }
     }
-  }
-</style>
+  </style>
 
-  
+  <!-- Deine bestehenden Styles -->
   <style>
     /* ===== Header / Menü ===== */
     .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
@@ -94,23 +94,135 @@
 
     footer{text-align:center;margin-top:2rem;font-size:.82rem}
     .footer-inline{text-align:center;font-size:.82rem;margin-bottom:1rem}
-    /* ===== Linkfarbe im Footer Inline wieder schwarz ===== */
-    .footer-inline a {
-      color: #000;
-      text-decoration: none;
+    .footer-inline a { color: #000; text-decoration: none; }
+    .footer-inline a:hover { text-decoration: underline; }
+
+    /* ===== Brand-Logo im Header (wie plattformen.html) ===== */
+    .brand { cursor: pointer; }
+    .brand img { display:inline-block; vertical-align:middle; }
+    .brand strong{
+      font-family: inherit;
+      font-weight:700;
+      font-size:24px;      /* identisch zu plattformen.html */
+      line-height:1;
+      vertical-align:middle;
+      margin-left:6px;
+      color:#000;
     }
-    .footer-inline a:hover {
-      text-decoration: underline;
+  </style>
+
+  <!-- ===== Glitch-Intro Overlay (6s) ===== -->
+  <style>
+    /* Gesamtdauer ≈ 6s */
+    :root{
+      --glitchDur: 3s;    /* ~6 Glitches */
+      --flashDur: 1s;     /* 3 starke Blinks */
+      --pauseDur: .2s;    /* kurzer Blackout */
+      --wipeDur: 1.8s;    /* Wipe von oben nach unten */
+    }
+
+    /* Vollflächiges Intro-Overlay */
+    .intro {
+      position: fixed; inset: 0;
+      background: #000;
+      z-index: 1400;
+      pointer-events: none;
+    }
+
+    /* 1) GLITCH-STAGE */
+    .intro .glitch { position: absolute; inset: 0; }
+    .intro .glitch span{
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%,-50%) translate(var(--dx,0), var(--dy,0)) scale(var(--s,1));
+      font: 700 24px system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
+      color: var(--col,#fff);
+      letter-spacing: .02em;
+      opacity: 0;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.6));
+      animation: glitchPop .45s ease-out var(--delay,0s) both;
+    }
+    .intro .glitch span::before,
+    .intro .glitch span::after{
+      content: "b3nn3t";
+      position: absolute; inset: 0;
+      transform: translate(0,0);
+      mix-blend-mode: screen;
+      opacity:.35; pointer-events:none;
+    }
+    .intro .glitch span::before{ color:#0ff; transform: translate(1px,-1px); }
+    .intro .glitch span::after { color:#f0f; transform: translate(-1px,1px); }
+
+    @keyframes glitchPop{
+      0%   { opacity: 0; transform: translate(-50%,-50%) translate(var(--dx), var(--dy)) scale(calc(var(--s)*1.05)); filter: blur(.6px) brightness(1.2); }
+      12%  { opacity: 1; transform: translate(-50%,-50%) translate(var(--dx), var(--dy)) scale(var(--s)); }
+      22%  { transform: translate(calc(-50% + 1px),calc(-50% - 1px)) translate(var(--dx), var(--dy)) scale(var(--s)); }
+      32%  { transform: translate(calc(-50% - 1px),calc(-50% + 1px)) translate(var(--dx), var(--dy)) scale(var(--s)); }
+      45%  { transform: translate(-50%,-50%) translate(var(--dx), var(--dy)) scale(var(--s)); }
+      100% { opacity: 0; transform: translate(-50%,-50%) translate(var(--dx), var(--dy)) scale(calc(var(--s)*.98)); filter: blur(.8px) brightness(.8); }
+    }
+
+    /* 2) FLASH – 3 starke Blinks auf Header-Logo-Position */
+    .intro .flash{
+      position: absolute;
+      left: 18px; top: 14px;            /* gleiche Position wie dein Header-Logo */
+      font: 800 24px system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
+      color: #fff;
+      text-shadow: 0 0 0 rgba(255,255,255,0);
+      opacity: 0;
+      animation: flashBlink calc(var(--flashDur)/3) ease-in-out var(--glitchDur) 3 both;
+    }
+    @keyframes flashBlink{
+      0%,100% { opacity: 0; text-shadow: 0 0 0 rgba(255,255,255,0); }
+      50%     { opacity: 1; text-shadow: 0 0 24px rgba(255,255,255,.9); }
+    }
+
+    /* 3) Wipe (reveal from top to bottom) */
+    .intro .wipe{
+      position: absolute; inset: 0;
+      background:#000;
+      transform-origin: top;
+      transform: scaleY(1);
+      animation: wipeDown var(--wipeDur) ease-in calc(var(--glitchDur) + var(--flashDur) + var(--pauseDur)) forwards;
+    }
+    @keyframes wipeDown{
+      from { transform: scaleY(1); }
+      to   { transform: scaleY(0); }
+    }
+
+    /* Motion-Reduce: Intro überspringen */
+    @media (prefers-reduced-motion: reduce){
+      .intro{ display:none !important; }
     }
   </style>
 </head>
 
 <body ontouchstart="">
   <header class="header">
+    <!-- Header-Logo: bleibt unverändert -->
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
       <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
     </a>
   </header>
+
+  <!-- Intro-Overlay (Glitch + Flash + Wipe) -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <!-- 1) Glitch-Stage: 6 Snippets -->
+    <div class="glitch">
+      <span style="--dx:-32vw; --dy:18vh;  --s:2.8; --col:#fff;   --delay:0s;">b3nn3t</span>
+      <span style="--dx:28vw;  --dy:-10vh; --s:2.2; --col:#e6e6e6;--delay:.45s;">b3nn3t</span>
+      <span style="--dx:-12vw; --dy:-24vh; --s:1.6; --col:#cfcfcf;--delay:.9s;">b3nn3t</span>
+      <span style="--dx:8vw;   --dy:26vh;  --s:1.9; --col:#bdbdbd;--delay:1.35s;">b3nn3t</span>
+      <span style="--dx:0vw;   --dy:-4vh;  --s:3.2; --col:#f5f5f5;--delay:1.8s;">b3nn3t</span>
+      <span style="--dx:-26vw; --dy:-12vh; --s:1.1; --col:#a6a6a6;--delay:2.25s;">b3nn3t</span>
+    </div>
+
+    <!-- 2) Drei starke Blinks exakt auf Header-Logo-Position -->
+    <div class="flash">b3nn3t</div>
+
+    <!-- 3) Wipe: von oben nach unten sichtbar machen -->
+    <div class="wipe"></div>
+  </div>
 
   <div id="page-glass" aria-hidden="true">
     <div class="glass-fade"></div>
@@ -171,19 +283,14 @@
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
         <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
 
-        <!-- Drei Zeilen Abstand -->
         <br><br><br>
 
-        <!-- Neuer Text -->
         <div class="footer-inline">
           © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
         </div>
       </section>
     </div>
   </main>
-
-  <!-- Entfernt: ursprünglicher Footer -->
-  <!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
 
   <div class="scroll-cue" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -195,6 +302,7 @@
   <script src="swipe-nav.js?v=12" defer></script>
 
   <script>
+    // Scroll-Cue Logik (dein bestehender Code)
     const cue = document.querySelector('.scroll-cue');
     const scroller = document.querySelector('.main');
     window.addEventListener('load', () => cue.classList.add('visible'));
@@ -204,6 +312,30 @@
   </script>
 
   <script>
+    // Intro-Overlay nach Ende des Wipes entfernen (Interaktion wieder frei)
+    (function(){
+      const intro = document.getElementById('intro');
+      if(!intro) return;
+      const wipe = intro.querySelector('.wipe');
+
+      const cssVarMs = (v, def) =>
+        (parseFloat(getComputedStyle(document.documentElement).getPropertyValue(v)) * 1000) || def;
+
+      const totalMs = cssVarMs('--glitchDur',3000)
+                    + cssVarMs('--flashDur',1000)
+                    + cssVarMs('--pauseDur',200)
+                    + cssVarMs('--wipeDur',1800)
+                    + 200; // Puffer
+
+      const finish = () => intro.style.display = 'none';
+
+      wipe && wipe.addEventListener('animationend', finish);
+      setTimeout(finish, totalMs); // Fallback
+    })();
+  </script>
+
+  <script>
+    // Page-glass Positionierung (dein bestehender Code)
     (function () {
       const glass = document.getElementById('page-glass');
       const panel = document.querySelector('.main');
