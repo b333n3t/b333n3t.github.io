@@ -17,15 +17,20 @@
     html, body { overflow-y: auto; }
   }
 
-  /* Mobile: Container korrekt mit 20px Abstand unten */
+  /* Mobile (≤768px): gleicher Abstand wie ueber-mich */
 @media (max-width: 768px) {
-  :root { --frame-pad: clamp(18px, 3vw, 28px); }
+  :root{
+    --frame-pad: clamp(18px, 3vw, 28px);
+    --bottom-gap: 20px; /* wie ueber-mich */
+  }
 
-  main.main {
-    min-height: calc(100dvh - 56px - env(safe-area-inset-bottom));
-    height: auto;
+  main.main{
+    /* Containerhöhe berücksichtigt den unteren Abstand */
+    height: calc(100svh - 56px - env(safe-area-inset-bottom) - var(--bottom-gap));
+    min-height: auto;
+    margin: 0 0 var(--bottom-gap) 0;   /* Abstand unten wie ueber-mich */
     padding: var(--frame-pad);
-    padding-bottom: calc(var(--frame-pad) + 32px);
+    padding-bottom: calc(var(--frame-pad)); /* Inhaltspadding; Abstand kommt über margin-bottom */
     box-sizing: border-box;
     border-radius: 12px;
     background: rgba(255,255,255,.32);
@@ -34,23 +39,15 @@
     overflow: visible;
   }
 
-  html, body {
-    overflow-x: hidden;
-    overflow-y: hidden; /* 👈 verhindert Scrollbalken */
-    height: 100%;
+  /* Panel: bekommt den gleichen „Bodenabstand“ intern */
+  .scroll-panel{
+    max-height: unset;
+    padding-bottom: var(--bottom-gap);
+    background: transparent !important;
+    box-shadow: none !important;
   }
 }
 
-
-
-    /* Falls vorhanden: interne Scrollfläche bündig halten */
-    .scroll-panel{
-      bottom: 0 !important;
-      max-height: unset;
-      background: transparent !important;
-      box-shadow: none !important;
-    }
-  }
 </style>
 
 
@@ -76,7 +73,12 @@
 }
 </style><script>
 (function() {
+  (function() {
+  if (window.matchMedia('(max-width: 768px)').matches) return; // Mobile: kein Eingriff
   function resizePanel() {
+    ...
+  }
+
     var panel = document.querySelector('.scroll-panel');
     if (!panel) return;
     var header = document.querySelector('.header');
