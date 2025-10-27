@@ -107,6 +107,91 @@
     display: none;
   }
 </style>
+
+<!-- ===== Burger Navigation Styles (wiederhergestellt) ===== -->
+<style>
+.menu-toggle {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+.menu-toggle .bar {
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: #111;
+  position: relative;
+}
+.menu-toggle .bar::before,
+.menu-toggle .bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 16px;
+  height: 2px;
+  background: #111;
+}
+.menu-toggle .bar::before { top: -5px; }
+.menu-toggle .bar::after  { top:  5px; }
+
+.site-nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: auto;
+  max-height: 90vh;
+  width: min(35vw, 130px);
+  background: rgba(255,255,255,0.32);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+  transform: translateX(100%);
+  transition: transform .25s ease;
+  z-index: 1101;
+  padding: 46px 10px 14px;
+}
+.site-nav.open { transform: translateX(0); }
+
+.site-nav a {
+  display: block;
+  padding: 10px 0;
+  font-size: 1.05rem;
+  color: #111;
+  text-decoration: none;
+}
+.site-nav a:hover { text-decoration: underline; }
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  z-index: 900;
+}
+.backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Header Layout: Logo links, Burger rechts */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.header .brand { margin-right: auto; }
+</style>
+
+  
 </head>
 
 <body>
@@ -153,7 +238,70 @@
       <p>Die oben genannte Person ist zugleich die verantwortliche Stelle für die Datenbearbeitung gemäß dem Schweizer Datenschutzgesetz (DSG).</p>
     </section>
 
-    <!-- Restlicher Datenschutztext unverändert -->
+    <h3>Haftungsausschluss</h3>
+<p>Diese Website wurde mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte
+        kann jedoch keine Gewähr übernommen werden. Trotz sorgfältiger Kontrolle übernehme ich keine Haftung für externe Links.
+        Für den Inhalt verlinkter Seiten sind ausschließlich deren Betreiber verantwortlich.</p>
+  <p>Der Künstlername b3nn3t® ist in der Schweiz als Marke eingetragen und geschützt
+(Markennummer 818956, gemäss Art. 1 ff. Markenschutzgesetz [MSchG]).</p>
+  <p>Die oben genannte Person ist zugleich die verantwortliche Stelle für die Datenbearbeitung gemäß dem Schweizer Datenschutzgesetz (DSG).</p>
+</section><section>
+<h2>Datenschutzerklärung (nach Schweizer Datenschutzgesetz, DSG)</h2>
+<h3>1. Verantwortliche Stelle</h3>
+<p>Bennet Kohnke<br/>St. Gallerstrasse 131<br/>8645 Rapperswil-Jona<br/>kontakt@b3nn3t.com</p>
+<h3>2. Erhebung und Speicherung personenbezogener Daten</h3>
+<p>Beim Besuch dieser Website werden automatisch technische Daten (z. B. IP-Adresse, Browsertyp, Datum und Uhrzeit des Zugriffs)
+        durch den Hosting-Anbieter erfasst. Diese Daten sind notwendig, um den sicheren und stabilen Betrieb der Website zu gewährleisten.
+        Eine personenbezogene Auswertung findet nicht statt.</p>
+<h3>3. Hosting über GitHub Pages</h3>
+<p>Diese Website wird über <strong>GitHub Pages</strong>, einen Dienst der <strong>GitHub, Inc.</strong> mit Sitz in den USA, gehostet.
+        Beim Aufruf der Seite werden technische Daten (z. B. IP-Adresse, Browserinformationen, Zugriffszeitpunkt) automatisch verarbeitet, um den sicheren Betrieb der Website zu ermöglichen.
+        GitHub kann Daten in Länder außerhalb der Schweiz und der EU übermitteln. Ich habe keinen Einfluss auf diese Datenverarbeitung.
+        Weitere Informationen findest du in der <a href="https://docs.github.com/de/site-policy/privacy-policies/github-privacy-statement" target="_blank">Datenschutzerklärung von GitHub</a>.</p>
+<h3>4. Kontaktaufnahme</h3>
+<p>Wenn du mich per E-Mail kontaktierst, werden deine Angaben zur Bearbeitung der Anfrage gespeichert. Diese Daten werden nicht
+        ohne deine Einwilligung an Dritte weitergegeben.</p>
+<h3>Kontaktformular / Newsletter (FormSubmit)</h3>
+<p>Wenn du uns per Formular kontaktierst oder den Newsletter abonnierst, werden die von dir eingegebenen Daten (Name, E‑Mail, Nachricht sowie ggf. Einwilligungen) zum Zweck der Bearbeitung deiner Anfrage bzw. des Newsletterversands verarbeitet. Der Versand erfolgt über den Dienst <strong>FormSubmit</strong> (formsubmit.co), der die Formulardaten als E‑Mail an uns weiterleitet. Es findet keine Speicherung der Inhalte auf dieser Website statt. Anbieterangaben und Details findest du unter <a href="https://formsubmit.co/privacy.pdf" rel="noopener" target="_blank">formsubmit.co/privacy</a>.</p>
+<p><strong>Rechtsgrundlage:</strong> Die Verarbeitung erfolgt gemäss dem <strong>Schweizer Datenschutzgesetz (DSG)</strong> auf Basis deiner Einwilligung oder weil sie zur Bearbeitung deiner Anfrage erforderlich ist. Du kannst eine erteilte Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.</p>
+<p><strong>Empfänger:</strong> FormSubmit (Übermittlung der Daten als E‑Mail). <strong>Datenübermittlung:</strong> Eine Übermittlung in die USA kann stattfinden. Wir haben die Datenübermittlung auf das Notwendige beschränkt.</p>
+<p><strong>Speicherdauer:</strong> Wir speichern deine E‑Mails nur so lange, wie es zur Bearbeitung notwendig ist bzw. gesetzliche Aufbewahrungspflichten bestehen.</p>
+<h3>5. Einbindung von Diensten und Inhalten Dritter</h3>
+<p>Auf dieser Website können Inhalte Dritter eingebunden sein, z. B.:
+        <ul>
+<li>YouTube (zur Einbettung von Musikvideos)</li>
+<li>Spotify oder SoundCloud (zur Musikwiedergabe)</li>
+<li>Instagram / TikTok / Facebook (zur Darstellung von Social-Feeds oder Links)</li>
+</ul>
+        Diese Anbieter können Daten (z. B. IP-Adresse, Cookies) erheben, sobald ihre Inhalte geladen werden.
+        Ich habe keinen Einfluss auf diese Datenverarbeitung.
+        Weitere Informationen findest du in den Datenschutzerklärungen der jeweiligen Dienste:
+        <ul>
+<li><a href="https://policies.google.com/privacy" target="_blank">YouTube / Google Datenschutzerklärung</a></li>
+<li><a href="https://www.spotify.com/de/legal/privacy-policy/" target="_blank">Spotify Datenschutzrichtlinie</a></li>
+<li><a href="https://privacycenter.instagram.com/policy" target="_blank">Meta (Instagram / Facebook)</a></li>
+</ul></p>
+<h3>6. Internationale Zugriffe</h3>
+<p>Diese Website richtet sich primär an Besucherinnen und Besucher in der Schweiz, kann jedoch weltweit aufgerufen werden.
+        Ich verarbeite keine personenbezogenen Daten gezielt für Nutzer aus der EU oder anderen Staaten. Dennoch kann es technisch
+        vorkommen, dass Daten bei Zugriffen aus dem Ausland übermittelt werden. Diese Übertragungen erfolgen gemäß den geltenden
+        Datenschutzbestimmungen und nur soweit für den Betrieb der Website erforderlich.</p>
+<h3>7. Cookies</h3>
+<p>Diese Website verwendet in der Regel keine Cookies. Sollte ein eingebetteter Dienst (z. B. YouTube oder Spotify) Cookies setzen,
+        erfolgt dies außerhalb meines Einflussbereichs. Du kannst Cookies in den Einstellungen deines Browsers jederzeit löschen oder blockieren.</p>
+<h3>8. Deine Rechte im Zusammenhang mit deinen Daten</h3>
+<p>Du hast im Rahmen des Schweizer Datenschutzgesetzes (DSG) das Recht, Auskunft über die dich betreffenden personenbezogenen Daten zu erhalten, sie berichtigen oder löschen zu lassen und dich über die Art der Datenbearbeitung zu informieren. 
+Soweit die Datenbearbeitung im Rahmen dieser Website erfolgt oder direkt über mich läuft, komme ich diesen Rechten selbstverständlich gerne nach.</p>
+<p>Bitte beachte jedoch, dass bestimmte Daten über externe Dienste (z. B. <strong>YouTube</strong>, <strong>Spotify</strong>, <strong>SoundCloud</strong>, <strong>GitHub</strong> oder soziale Netzwerke wie <strong>Instagram</strong>) verarbeitet werden. 
+Auf diese externen Systeme habe ich <strong>keinen direkten Zugriff</strong> und kann daher <strong>keine Auskunft über dort gespeicherte oder verarbeitete Daten geben</strong>. 
+In diesen Fällen gelten die jeweiligen <strong>Datenschutzerklärungen der Anbieter</strong>, die im entsprechenden Abschnitt dieser Seite verlinkt sind.</p>
+<p>Wenn du Fragen zu deinen Daten oder zur Datenbearbeitung im Rahmen dieser Website hast, kannst du dich jederzeit formlos an <strong>kontakt@b3nn3t.ch</strong> wenden.</p>
+<h3>9. Änderungen dieser Datenschutzerklärung</h3>
+<p>Ich behalte mir vor, diese Datenschutzerklärung gelegentlich anzupassen, um sie an aktuelle rechtliche Anforderungen anzupassen.</p>
+<p><em>Stand: Oktober 2025</em></p>
+</section><p><a class="btn" href=</a></p></div></main>
+<!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
+
     ...
   </div>
 </main>
