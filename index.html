@@ -118,25 +118,30 @@
 
 <!-- ==== INTRO-ANIMATION: 10 Steps (unten groß → oben links klein) ==== -->
 <style>
-  /* Gesamtdauer der Intro (hier 6s). Änderbar auf 5s, 8s, 10s … */
+  /* Gesamtdauer der Intro (z. B. 6s). Du kannst 5s/8s/10s setzen. */
   :root { --introDur: 6s; }
 
-.intro-text {
-  position: fixed;
-  left: 50%;                          /* Mitte horizontal */
-  top: calc(100vh - 120px);           /* unten am Rand */
-  transform: translateX(-50%);        /* exakt zentriert */
-  z-index: 1300;
-  font-weight:700;
-  font-family: inherit;
-  font-size: clamp(56px, 10vw, 110px);
-  line-height:1.05;
-  color:#000;
-  pointer-events:none;
-  clip-path: inset(0 100% 0 0);
-  animation: revealMove var(--introDur,6s) ease forwards;
-}
+  .intro-text {
+    position: fixed;
+    left: 50%;                          /* Start mittig */
+    top: calc(100vh - 120px);           /* Start: ganz unten */
+    transform: translateX(-50%);        /* exakt zentrieren */
+    z-index: 1300;
+    font-weight: 700;
+    font-family: inherit;               /* gleiche Systemschrift wie Header */
+    font-size: clamp(56px, 10vw, 110px);
+    line-height: 1.05;
+    color: #000;
+    pointer-events: none;
 
+    /* Tipp-Reveal + Positionssprünge laufen parallel */
+    clip-path: inset(0 100% 0 0);
+    animation:
+      /* 10x pro Step „tippen“ (Dauer = Gesamt / 10) */
+      typeReveal calc(var(--introDur) / 10) ease 0s 10 normal both,
+      /* 10 Positionssprünge, genau am Step-Ende umspringen */
+      moveSteps var(--introDur) steps(10, end) forwards;
+  }
 
   /* Tipp-Effekt (Schreibmaschinen-Enthüllung) pro Step */
   @keyframes typeReveal {
@@ -146,25 +151,28 @@
 
   /* 10 Positions-/Größen-Schritte bei 0,10,…,100% */
   @keyframes moveSteps {
+    /* 0%  = Start unten mittig, sehr groß */
     0%   { top: calc(100vh - 120px); left: 50%; transform: translateX(-50%); font-size: clamp(56px,10vw,110px); }
-  10%  { top: 82vh; left: 45%; transform: translateX(-50%); font-size: clamp(54px,9.5vw,104px); }
-  20%  { top: 74vh; left: 40%; transform: translateX(-50%); font-size: clamp(50px,9vw,98px); }
-  30%  { top: 66vh; left: 35%; transform: translateX(-50%); font-size: clamp(46px,8.5vw,92px); }
-  40%  { top: 58vh; left: 30%; transform: translateX(-50%); font-size: clamp(42px,8vw,86px); }
-  50%  { top: 50vh; left: 25%; transform: translateX(-50%); font-size: clamp(38px,7.5vw,78px); }
-  60%  { top: 42vh; left: 22%; transform: translateX(-50%); font-size: clamp(34px,7vw,68px); }
-  70%  { top: 34vh; left: 20%; transform: translateX(-50%); font-size: clamp(30px,6vw,56px); }
-  80%  { top: 26vh; left: 19%; transform: translateX(-50%); font-size: clamp(26px,4vw,40px); }
-  90%  { top: 18vh; left: 18.5%; transform: translateX(-50%); font-size: 26px; }
-  100% { top: 14px; left: 18px; transform: none; font-size: 24px; } /* Ziel oben links */
+    10%  { top: 82vh;                left: 45%; transform: translateX(-50%); font-size: clamp(54px, 9.5vw,104px); }
+    20%  { top: 74vh;                left: 40%; transform: translateX(-50%); font-size: clamp(50px, 9vw,   98px); }
+    30%  { top: 66vh;                left: 35%; transform: translateX(-50%); font-size: clamp(46px, 8.5vw, 92px); }
+    40%  { top: 58vh;                left: 30%; transform: translateX(-50%); font-size: clamp(42px, 8vw,   86px); }
+    50%  { top: 50vh;                left: 25%; transform: translateX(-50%); font-size: clamp(38px, 7.5vw, 78px); }
+    60%  { top: 42vh;                left: 22%; transform: translateX(-50%); font-size: clamp(34px, 7vw,   68px); }
+    70%  { top: 34vh;                left: 20%; transform: translateX(-50%); font-size: clamp(30px, 6vw,   56px); }
+    80%  { top: 26vh;                left: 19%; transform: translateX(-50%); font-size: clamp(26px, 4vw,   40px); }
+    90%  { top: 18vh;                left: 18.5%;transform: translateX(-50%); font-size: 26px; }
+    /* 100% = Endposition oben links, exakt beim Header-Logo */
+    100% { top: 14px;                 left: 18px; transform: none;            font-size: 24px; }
   }
 
   /* Bewegung reduzieren: Intro überspringen, sofort Endlogo zeigen */
   @media (prefers-reduced-motion: reduce) {
-    .intro-text { display:none !important; }
-    .brand.hidden { opacity:1 !important; pointer-events:auto; }
+    .intro-text { display: none !important; }
+    .brand.hidden { opacity: 1 !important; pointer-events: auto; }
   }
 </style>
+
 
 </head>
 
@@ -271,31 +279,37 @@
     }, {passive:true});
   </script>
 
-  <script>
-    // Intro -> Brand: nach der Intro-Animation das echte Header-Logo anzeigen
-    (function () {
-      const intro = document.querySelector('.intro-text');
-      const brand = document.querySelector('.brand');
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+<script>
+  // Intro -> Brand: nach der Intro-Animation das echte Header-Logo anzeigen
+  (function () {
+    const intro = document.querySelector('.intro-text');
+    const brand = document.querySelector('.brand');
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      if (!intro || !brand || prefersReduced) {
-        brand && brand.classList.remove('hidden');
-        if (brand) brand.classList.add('typed'); // tippt oben sofort
-        if (intro) intro.style.display = 'none';
-        return;
-      }
+    if (!intro || !brand || prefersReduced) {
+      brand && brand.classList.remove('hidden');
+      if (brand) brand.classList.add('typed'); // tippt oben sofort
+      if (intro) intro.style.display = 'none';
+      return;
+    }
 
-      const finish = () => {
-        brand.classList.remove('hidden');
-        brand.classList.add('typed'); // starte Tipp-Reveal oben
-        intro.style.display = 'none';
-      };
+    const finish = () => {
+      brand.classList.remove('hidden');
+      brand.classList.add('typed'); // starte Tipp-Reveal oben
+      intro.style.display = 'none';
+    };
 
-      intro.addEventListener('animationend', finish);
-      // Fallback-Timeout (Dauer + ~400ms Puffer) – hier 6s → 6400ms
-      setTimeout(finish, 6400);
-    })();
-  </script>
+    intro.addEventListener('animationend', (e) => {
+      // Warten bis die Positions-Animation 'moveSteps' (die zweite) fertig ist
+      if (e.animationName === 'moveSteps') finish();
+    });
+
+    // Fallback-Timeout (Dauer + ~400ms Puffer): bei 6s → 6400ms
+    const durMs = 6000; // ändere auf 5000/8000/10000, wenn du --introDur änderst
+    setTimeout(finish, durMs + 400);
+  })();
+</script>
+
 
   <script>
     // Page-glass Positionierung (dein bestehender Code)
