@@ -3,20 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>b3nn3t</title>
+  <title>b3nn3t – Intro</title>
   <style>
-    /* --- INTRO OVERLAY --- */
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+
     #intro {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      background: black;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
       z-index: 9999;
+      animation: tvOn 0.7s ease-out;
     }
 
     #intro img {
@@ -28,7 +33,6 @@
       filter: brightness(0.9) contrast(1.1);
     }
 
-    /* --- Rauschen Overlay --- */
     #static {
       position: absolute;
       top: 0; left: 0;
@@ -45,7 +49,6 @@
       to { background-position: 100% 100%; }
     }
 
-    /* --- Text "b3nn3t" --- */
     #intro h1 {
       position: absolute;
       top: 50%;
@@ -62,7 +65,6 @@
       animation: flicker 0.3s infinite;
     }
 
-    /* Countdown */
     #countdown {
       position: absolute;
       bottom: 20%;
@@ -80,7 +82,6 @@
       50% { opacity: 0.8; }
     }
 
-    /* Weißer Blitz */
     #flash {
       position: fixed;
       top: 0; left: 0;
@@ -99,31 +100,16 @@
       100% { opacity: 0; }
     }
 
-    /* TV-Einschaltflackern */
     @keyframes tvOn {
       0% { transform: scaleY(0.02) scaleX(1.2); opacity: 0; }
       40% { transform: scaleY(0.05) scaleX(1.1); opacity: 1; }
       60% { transform: scaleY(0.9) scaleX(1.05); }
       100% { transform: scale(1); }
     }
-
-    #intro {
-      animation: tvOn 0.7s ease-out;
-    }
-
-    /* Hauptseite (versteckt bis Übergang) */
-    main {
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
-    main.visible {
-      opacity: 1;
-    }
   </style>
 </head>
 <body>
 
-  <!-- INTRO -->
   <div id="intro">
     <img src="assets/tv.jpg" alt="Testbild">
     <div id="static"></div>
@@ -133,25 +119,16 @@
 
   <div id="flash"></div>
 
-  <!-- HAUPTSEITE -->
-  <main>
-    <h2>Willkommen auf der Website von b3nn3t</h2>
-    <p>Hier kommt dein eigentlicher Inhalt hin …</p>
-  </main>
-
-  <!-- Soundeffekt (leises TV-Rauschen) -->
   <audio id="tvSound" src="https://cdn.pixabay.com/download/audio/2021/09/16/audio_60a1479d5f.mp3?filename=tv-static-6979.mp3">
 
   <script>
     const countdown = document.getElementById("countdown");
     const intro = document.getElementById("intro");
     const flash = document.getElementById("flash");
-    const main = document.querySelector("main");
     const tvSound = document.getElementById("tvSound");
 
-    // Sound starten (leise)
     tvSound.volume = 0.3;
-    tvSound.play().catch(() => {}); // autoplay fallback
+    tvSound.play().catch(() => {}); // für Browser mit Autoplay-Sperre
 
     let count = 3;
     const timer = setInterval(() => {
@@ -162,10 +139,8 @@
         clearInterval(timer);
         flash.style.animation = "flash 0.8s ease";
         setTimeout(() => {
-          intro.remove();
-          flash.style.opacity = 0;
-          main.classList.add("visible");
           tvSound.pause();
+          window.location.href = "index.html"; // Weiterleitung zur Hauptseite
         }, 800);
       }
     }, 1000);
