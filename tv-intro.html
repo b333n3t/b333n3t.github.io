@@ -216,9 +216,9 @@ function drawLine(){
       const s = avatar.headScale * p;
       const top = y - avatar.bodyScale * p - s - 2*p; // über dem Rumpf
 
-      if (headReady){
+      if (headReady && headSource){
         const w = s, h = s; // quadratischer Kopf
-        ctx.drawImage(headImg, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
+        ctx.drawImage(headSource, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
         // schwarze Outline
         ctx.fillStyle = '#000';
         ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top), 1, Math.round(h));
