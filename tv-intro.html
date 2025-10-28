@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pixel-Marionette – Intro (Fail‑Safe)</title>
+  <title>Pixel-Marionette – Intro (Fail-Safe)</title>
   <style>
     :root{ --bg:#1e1e1e; --duration:11000; }
-    html,body{height:100%;margin:0;background:var(--bg);} body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges;background:var(--bg)}
+    html,body{height:100%;margin:0;background:var(--bg);}
+    body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    canvas{
+      display:block;width:100vw;height:100vh;
+      image-rendering:pixelated; image-rendering:crisp-edges;
+      background:var(--bg)
+    }
     #main{position:fixed;inset:0;display:grid;place-items:center;background:#111;color:#fff;opacity:0;pointer-events:none;transition:opacity .8s ease}
     #main.show{opacity:1;pointer-events:auto}
     #main .card{max-width:min(90vw,840px);padding:32px;border-radius:16px;background:#181818;box-shadow:0 10px 40px rgba(0,0,0,.45)}
@@ -21,42 +26,203 @@
 
   <script>
   // ======= KNOBS =======
-  const HEAD_IMG_URL = location.origin + "/img/dein-pixel-kopf.webp?v=" + Date.now(); // absolut + Cachebuster
-  const RUN_TO_RIGHT = true; // links -> rechts
+  // absoluter Pfad + Cachebuster
+  const HEAD_IMG_URL = location.origin + "/img/dein-pixel-kopf.webp?v=" + Date.now();
+  const RUN_TO_RIGHT = true;             // links -> rechts
+  const CHROMA_TOLERANCE = 35;           // 25–45 probieren, falls noch Reste sichtbar
+  const DRAW_MATTE = true;               // schwarze Pixel-Matte hinter dem Kopf
+  const MATTE_PAD = 1;                   // Matte-Rand in Pixeln um das Bild
   // =====================
 
   const canvas = document.getElementById('stage');
   const ctx = canvas.getContext('2d');
-  let W, H, DPR; function resize(){ DPR=Math.max(1,Math.floor(window.devicePixelRatio||1)); W=canvas.width=Math.floor(innerWidth*DPR); H=canvas.height=Math.floor(innerHeight*DPR); canvas.style.width=innerWidth+'px'; canvas.style.height=innerHeight+'px'; ctx.imageSmoothingEnabled=false;} window.addEventListener('resize',resize); resize();
 
-  const lineY = () => Math.floor(H*2/3);
-  const lineEndX = () => Math.floor(W*0.82);
-  const PX = () => Math.max(2, Math.floor(Math.min(W,H)/240));
+  let W, H, DPR;
+  function resize(){
+    DPR = Math.max(1, Math.floor(window.devicePixelRatio||1));
+    W = canvas.width  = Math.floor(innerWidth * DPR);
+    H = canvas.height = Math.floor(innerHeight * DPR);
+    canvas.style.width  = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.imageSmoothingEnabled = false;
+  }
+  window.addEventListener('resize', resize); resize();
 
-  const avatar = {state:'walk', x: RUN_TO_RIGHT? -40*PX(): W+40*PX(), y: lineY()-16*PX(), vx: RUN_TO_RIGHT? 2.1 : -2.1, vy:0, gravity:.35, step:0, headScale:22, bodyScale:12};
+  const lineY   = () => Math.floor(H * 2/3);
+  const lineEndX= () => Math.floor(W * 0.82);
+  const PX      = () => Math.max(2, Math.floor(Math.min(W,H) / 240));
 
-  // --- Robustes Kopf-Loading ---
-  let headReady=false; let headImg=new Image(); headImg.crossOrigin='anonymous';
-  headImg.onload=()=>{ headReady=true; console.log('HEAD OK', headImg.width, headImg.height); };
-  headImg.onerror=(e)=>{ console.error('HEAD ERROR', HEAD_IMG_URL, e); };
-  console.log('HEAD LOAD', HEAD_IMG_URL); headImg.src=HEAD_IMG_URL;
+  const avatar = {
+    state:'walk',
+    x: RUN_TO_RIGHT ? -40*PX() : W+40*PX(),
+    y: lineY() - 16*PX(),
+    vx: RUN_TO_RIGHT ? 2.1 : -2.1,
+    vy:0, gravity:.35, step:0,
+    headScale:22, bodyScale:12
+  };
 
-  function drawLine(){ ctx.strokeStyle='#fff'; ctx.lineWidth=2*PX(); ctx.beginPath(); ctx.moveTo(0,lineY()); ctx.lineTo(lineEndX(),lineY()); ctx.stroke(); }
+  // ---- Grauen Hintergrund entfernen (Chroma-Key) ----
+  function removeGrayBG(image, tolerance = 35) {
+    const off = document.createElement("canvas");
+    off.width = image.width;
+    off.height = image.height;
+    const octx = off.getContext("2d", { willReadFrequently: true });
+    octx.imageSmoothingEnabled = false;
+    octx.drawImage(image, 0, 0);
+    const imgData = octx.getImageData(0, 0, off.width, off.height);
+    const d = imgData.data;
 
-  function rect(px,py,w,h,fill){ ctx.fillStyle=fill; ctx.fillRect(px,py,w,h); ctx.fillStyle='#000'; ctx.fillRect(px-1,py,w+2,1); ctx.fillRect(px-1,py+h-1,w+2,1); ctx.fillRect(px-1,py,1,h); ctx.fillRect(px+w-1,py,1,h); }
-
-  function drawBody(x,y){ const p=PX(), bodyH=avatar.bodyScale*p, bodyW=Math.round(8*p), legLen=Math.round(9*p), armLen=Math.round(7*p); const t=(Math.sin(avatar.step)+1)/2; const legSwing=.8; const a1=-legSwing+t*2*legSwing, a2=legSwing-t*2*legSwing; const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH); rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56'); const armSwing=.7, armFront=armSwing-t*2*armSwing, armBack=-armSwing+t*2*armSwing; function limb(px,py,len,ang,thk,col){ const dx=Math.cos(ang)*len, dy=Math.sin(ang)*len; rect(Math.round(px),Math.round(py),Math.max(3*p,thk),Math.max(3*p,thk),col); rect(Math.round(px+dx),Math.round(py+dy),Math.max(3*p,thk),Math.max(3*p,thk),col);} const shoulderY=torsoY+Math.round(3*p), shoulderL=x-Math.round(6*p), shoulderR=x+Math.round(3*p); limb(shoulderR,shoulderY,armLen,armFront,3*p,'#2b3a56'); limb(shoulderL,shoulderY,armLen,armBack,3*p,'#2b3a56'); const hipY=y, hipL=x-Math.round(3*p), hipR=x+Math.round(1*p); limb(hipR,hipY,legLen,a1,4*p,'#233047'); limb(hipL,hipY,legLen,a2,4*p,'#233047'); rect(Math.round(hipR+Math.cos(a1)*legLen),Math.round(hipY+Math.sin(a1)*legLen),6*p,3*p,'#7a4f1f'); rect(Math.round(hipL+Math.cos(a2)*legLen),Math.round(hipY+Math.sin(a2)*legLen),6*p,3*p,'#7a4f1f'); ctx.strokeStyle='#bbb'; ctx.lineWidth=1*p; ctx.beginPath(); ctx.moveTo(x,torsoY-avatar.headScale*p-2*p); ctx.lineTo(x,0); ctx.moveTo(shoulderR+Math.cos(armFront)*armLen, shoulderY+Math.sin(armFront)*armLen); ctx.lineTo(shoulderR,0); ctx.moveTo(shoulderL+Math.cos(armBack)*armLen,  shoulderY+Math.sin(armBack )*armLen); ctx.lineTo(shoulderL,0); ctx.stroke(); }
-
-  function drawHead(x,y){ const p=PX(); const s=avatar.headScale*p; const top=y-avatar.bodyScale*p - s - 2*p; if(headReady && headImg && headImg.naturalWidth){ const w=s, h=s; ctx.drawImage(headImg, Math.round(x-w/2), Math.round(top), Math.round(w), Math.round(h)); ctx.fillStyle='#000'; ctx.fillRect(Math.round(x-w/2)-1,Math.round(top),1,Math.round(h)); ctx.fillRect(Math.round(x+w/2),Math.round(top),1,Math.round(h)); ctx.fillRect(Math.round(x-w/2)-1,Math.round(top)-1,Math.round(w)+2,1); ctx.fillRect(Math.round(x-w/2)-1,Math.round(top+h),Math.round(w)+2,1); } else { // Platzhalter (falls Bild lädt oder 404)
-    const w=s, h=s; ctx.fillStyle='#c9a23b'; ctx.fillRect(Math.round(x-w/2),Math.round(top),Math.round(w),Math.round(h*.62)); ctx.fillStyle='#f2b59a'; ctx.fillRect(Math.round(x-w/2),Math.round(top+h*.45),Math.round(w),Math.round(h*.45)); ctx.fillStyle='#000'; ctx.fillRect(Math.round(x-w/2)-1,Math.round(top),1,Math.round(h)); ctx.fillRect(Math.round(x+w/2),Math.round(top),1,Math.round(h)); ctx.fillRect(Math.round(x-w/2)-1,Math.round(top)-1,Math.round(w)+2,1); ctx.fillRect(Math.round(x-w/2)-1,Math.round(top+h),Math.round(w)+2,1); }
-    // Debug-Overlay
-    ctx.fillStyle='rgba(255,255,255,.5)'; ctx.font=(8*p)+'px monospace'; ctx.fillText('headReady:'+headReady, 8*p, 12*p);
+    // Schlüsselfarbe aus Ecke (0,0)
+    const keyR = d[0], keyG = d[1], keyB = d[2];
+    for (let i = 0; i < d.length; i += 4) {
+      const dr = Math.abs(d[i]   - keyR);
+      const dg = Math.abs(d[i+1] - keyG);
+      const db = Math.abs(d[i+2] - keyB);
+      if (dr < tolerance && dg < tolerance && db < tolerance) d[i+3] = 0; // transparent
+    }
+    octx.putImageData(imgData, 0, 0);
+    return off;
   }
 
-  let raf; function tick(){ try{ ctx.clearRect(0,0,W,H); drawLine(); const p=PX(), speed=avatar.vx*p; if(avatar.state==='walk'){ avatar.x += speed; avatar.step += .15; avatar.y = lineY()-2*p + Math.round(Math.sin(avatar.step*2)*1*p); if( (RUN_TO_RIGHT && avatar.x >= lineEndX()-6*p) || (!RUN_TO_RIGHT && avatar.x <= lineEndX()+6*p) ){ avatar.state='fall'; avatar.vy=0; } } else if(avatar.state==='fall'){ avatar.vy += avatar.gravity*p*.6; avatar.y += avatar.vy; avatar.x += speed*.2; if(avatar.y > H + 40*p){ avatar.state='done'; startTransition(); } } drawBody(avatar.x, avatar.y); drawHead(avatar.x, avatar.y);} catch(err){ console.error('TICK ERROR', err);} raf=requestAnimationFrame(tick);} tick();
+  // --- Kopf laden (robust) ---
+  let headReady = false;
+  let headImg = new Image(); headImg.crossOrigin='anonymous';
+  headImg.onload = () => {
+    // nach dem Laden freistellen
+    headImg = removeGrayBG(headImg, CHROMA_TOLERANCE);
+    headReady = true;
+    console.log('HEAD cleaned & OK', headImg.width, headImg.height);
+  };
+  headImg.onerror = (e) => { console.error('HEAD ERROR', HEAD_IMG_URL, e); };
+  console.log('HEAD LOAD', HEAD_IMG_URL);
+  headImg.src = HEAD_IMG_URL;
 
-  const main=document.getElementById('main'); function startTransition(){ cancelAnimationFrame(raf); main.classList.add('show'); const redirectTo=null; if(redirectTo){ setTimeout(()=>location.href=redirectTo,900); } }
-  setTimeout(()=>{ if(avatar.state!=='done') startTransition(); }, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
+  function drawLine(){
+    ctx.strokeStyle='#fff';
+    ctx.lineWidth = 2*PX();
+    ctx.beginPath();
+    ctx.moveTo(0, lineY());
+    ctx.lineTo(lineEndX(), lineY());
+    ctx.stroke();
+  }
+
+  function rect(px,py,w,h,fill){
+    ctx.fillStyle=fill; ctx.fillRect(px,py,w,h);
+    ctx.fillStyle='#000';
+    ctx.fillRect(px-1,py,w+2,1);
+    ctx.fillRect(px-1,py+h-1,w+2,1);
+    ctx.fillRect(px-1,py,1,h);
+    ctx.fillRect(px+w-1,py,1,h);
+  }
+
+  function drawBody(x,y){
+    const p=PX(), bodyH=avatar.bodyScale*p, bodyW=Math.round(8*p),
+          legLen=Math.round(9*p), armLen=Math.round(7*p);
+    const t=(Math.sin(avatar.step)+1)/2;
+    const legSwing=.8, a1=-legSwing+t*2*legSwing, a2=legSwing-t*2*legSwing;
+
+    const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH);
+    rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
+
+    const armSwing=.7, armFront=armSwing-t*2*armSwing, armBack=-armSwing+t*2*armSwing;
+    function limb(px,py,len,ang,thk,col){
+      const dx=Math.cos(ang)*len, dy=Math.sin(ang)*len;
+      rect(Math.round(px),Math.round(py),Math.max(3*p,thk),Math.max(3*p,thk),col);
+      rect(Math.round(px+dx),Math.round(py+dy),Math.max(3*p,thk),Math.max(3*p,thk),col);
+    }
+
+    const shoulderY=torsoY+Math.round(3*p), shoulderL=x-Math.round(6*p), shoulderR=x+Math.round(3*p);
+    limb(shoulderR,shoulderY,armLen,armFront,3*p,'#2b3a56');
+    limb(shoulderL,shoulderY,armLen,armBack, 3*p,'#2b3a56');
+
+    const hipY=y, hipL=x-Math.round(3*p), hipR=x+Math.round(1*p);
+    limb(hipR,hipY,legLen,a1,4*p,'#233047');
+    limb(hipL,hipY,legLen,a2,4*p,'#233047');
+
+    rect(Math.round(hipR+Math.cos(a1)*legLen),Math.round(hipY+Math.sin(a1)*legLen),6*p,3*p,'#7a4f1f');
+    rect(Math.round(hipL+Math.cos(a2)*legLen),Math.round(hipY+Math.sin(a2)*legLen),6*p,3*p,'#7a4f1f');
+
+    // Fäden
+    ctx.strokeStyle='#bbb'; ctx.lineWidth=1*p; ctx.beginPath();
+    ctx.moveTo(x,torsoY-avatar.headScale*p-2*p); ctx.lineTo(x,0);
+    ctx.moveTo(shoulderR+Math.cos(armFront)*armLen, shoulderY+Math.sin(armFront)*armLen); ctx.lineTo(shoulderR,0);
+    ctx.moveTo(shoulderL+Math.cos(armBack )*armLen, shoulderY+Math.sin(armBack )*armLen); ctx.lineTo(shoulderL,0);
+    ctx.stroke();
+  }
+
+  function drawHead(x,y){
+    const p = PX();
+    const s = avatar.headScale * p;
+    const top = y - avatar.bodyScale * p - s - 2*p; // über dem Rumpf
+    const w = s, h = s;
+
+    if (DRAW_MATTE){
+      // schwarze Pixel-Matte hinter dem Kopf (Retro-Look, kaschiert Ränder)
+      ctx.fillStyle = '#000';
+      ctx.fillRect(Math.round(x - w/2) - MATTE_PAD,
+                   Math.round(top)      - MATTE_PAD,
+                   Math.round(w) + MATTE_PAD*2,
+                   Math.round(h) + MATTE_PAD*2);
+    }
+
+    if (headReady && headImg && headImg.width){
+      ctx.drawImage(headImg, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
+    } else {
+      // Platzhalter (bis Bild geladen ist)
+      ctx.fillStyle='#c9a23b';
+      ctx.fillRect(Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h*.62));
+      ctx.fillStyle='#f2b59a';
+      ctx.fillRect(Math.round(x - w/2), Math.round(top + h*.45), Math.round(w), Math.round(h*.45));
+    }
+
+    // schwarze Outline
+    ctx.fillStyle = '#000';
+    ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top), 1, Math.round(h));
+    ctx.fillRect(Math.round(x + w/2),     Math.round(top), 1, Math.round(h));
+    ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top) - 1, Math.round(w) + 2, 1);
+    ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top + h), Math.round(w) + 2, 1);
+
+    // Debug
+    ctx.fillStyle='rgba(255,255,255,.5)'; ctx.font=(8*p)+'px monospace';
+    ctx.fillText('headReady:'+headReady, 8*p, 12*p);
+  }
+
+  let raf;
+  function tick(){
+    try{
+      ctx.clearRect(0,0,W,H);
+      drawLine();
+      const p=PX(), speed=avatar.vx*p;
+
+      if(avatar.state==='walk'){
+        avatar.x += speed;
+        avatar.step += .15;
+        avatar.y = lineY()-2*p + Math.round(Math.sin(avatar.step*2)*1*p);
+        const atEdge = RUN_TO_RIGHT ? (avatar.x >= lineEndX()-6*p) : (avatar.x <= lineEndX()+6*p);
+        if(atEdge){ avatar.state='fall'; avatar.vy=0; }
+      } else if(avatar.state==='fall'){
+        avatar.vy += avatar.gravity*p*.6;
+        avatar.y  += avatar.vy;
+        avatar.x  += speed*.2;
+        if(avatar.y > H + 40*p){ avatar.state='done'; startTransition(); }
+      }
+
+      drawBody(avatar.x, avatar.y);
+      drawHead(avatar.x, avatar.y);
+    } catch(err){ console.error('TICK ERROR', err); }
+    raf = requestAnimationFrame(tick);
+  }
+  tick();
+
+  const main=document.getElementById('main');
+  function startTransition(){
+    cancelAnimationFrame(raf);
+    main.classList.add('show');
+    const redirectTo=null; // z.B. '/home' oder 'https://example.com/app'
+    if(redirectTo){ setTimeout(()=>location.href=redirectTo,900); }
+  }
+  setTimeout(()=>{ if(avatar.state!=='done') startTransition(); },
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
   </script>
 </body>
 </html>
