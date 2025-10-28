@@ -45,8 +45,7 @@
      */
 
     // === KONFIG ===
-    const HEAD_IMG_URL = "/img/dein-pixel-kopf.webp?v=3"; // absoluter Pfad + Cachebuster
-
+    const HEAD_IMG_URL = "img/pixel-head.png"; // Pfad ist relativ zur HTML
 
     const canvas = document.getElementById('stage');
     const ctx = canvas.getContext('2d');
@@ -81,16 +80,53 @@
       bodyScale: 12, // Körper-Höhe in PX()-Einheiten
     };
 
-    // Kopf-Asset (mit sauberem Preload & Fehler-Logging)
-    let headReady = false;
-    const headImg = new Image();
-    if(HEAD_IMG_URL){
-      headImg.onload = () => { headReady = true; };
-      headImg.onerror = (e) => { console.warn('Kopfbild konnte nicht geladen werden:', HEAD_IMG_URL, e); };
-      headImg.src = HEAD_IMG_URL;
-    }
+    // Kopf-Asset mit Chroma-Key (macht einfarbigen Hintergrund transparent)
+const HEAD_CHROMA = true; // auf false setzen, wenn der PNG-Hintergrund bereits transparent ist
+let headReady = false; let headSource = null; // wird ein Canvas mit freigestelltem Kopf
 
-    function drawLine(){
+function loadHeadWithChroma(url){
+  return new Promise((resolve,reject)=>{
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = ()=>{
+      const w = img.naturalWidth, h = img.naturalHeight;
+      const off = document.createElement('canvas'); off.width=w; off.height=h;
+      const octx = off.getContext('2d', { willReadFrequently:true });
+      octx.imageSmoothingEnabled = false;
+      octx.drawImage(img,0,0);
+
+      if(HEAD_CHROMA){
+        const imgd = octx.getImageData(0,0,w,h); const d = imgd.data;
+        // Schlüsselfarbe aus der Ecke (0,0) lesen – das ist normalerweise der flächige BG
+        const keyR=d[0], keyG=d[1], keyB=d[2];
+        const tol = 18; // Toleranz in 0..255
+        for(let i=0;i<d.length;i+=4){
+          const dr = Math.abs(d[i]-keyR), dg = Math.abs(d[i+1]-keyG), db = Math.abs(d[i+2]-keyB);
+          if(dr<tol && dg<tol && db<tol){ d[i+3] = 0; } // transparent
+        }
+        octx.putImageData(imgd,0,0);
+      }
+      resolve(off);
+    };
+    img.onerror = (e)=>{ console.warn('Kopfbild konnte nicht geladen werden:', url, e); reject(e); };
+    img.src = url;
+  });
+}
+
+(function preloadHead(){
+  if(!HEAD_IMG_URL) return;
+  const bust = (HEAD_IMG_URL.includes('?')? '&':'?') + 'v=' + Date.now();
+  loadHeadWithChroma(HEAD_IMG_URL + bust).then(canvas=>{ headSource = canvas; headReady = true; }).catch(()=>{});
+})();
+
+function drawLine(){
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2*PX();
+  ctx.beginPath();
+  ctx.moveTo(0, lineY());
+  ctx.lineTo(lineEndX(), lineY());
+  ctx.stroke();
+}(){
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2*PX();
       ctx.beginPath();
