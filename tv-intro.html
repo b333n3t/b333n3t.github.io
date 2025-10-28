@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -33,7 +33,7 @@
       filter: brightness(0.9) contrast(1.1);
     }
 
-    /* Rauschen (leicht transparentes Overlay) */
+    /* Leichtes statisches Rauschen */
     #static {
       position: absolute;
       top: 0; left: 0;
@@ -50,21 +50,21 @@
       to { background-position: 100% 100%; }
     }
 
-    /* Text "b3nn3t" */
+    /* Text "b3nn3t" (zentriert, schmaler) */
     #intro h1 {
       position: absolute;
-      top: 50%;
+      top: 48%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 5vw;
+      font-size: 3.5vw; /* etwas kleiner als vorher */
       font-family: 'Courier New', monospace;
       color: white;
       background: rgba(0,0,0,0.6);
-      padding: 0.2em 0.6em;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      text-shadow: 0 0 10px white;
-      animation: flicker 0.3s infinite;
+      padding: 0.15em 0.4em; /* schmaler Balken */
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      text-shadow: 0 0 20px white, 0 0 30px #ccc, 0 0 50px white;
+      animation: strongFlicker 1s infinite;
     }
 
     /* Countdown */
@@ -76,13 +76,21 @@
       font-size: 8vw;
       color: white;
       font-family: 'Courier New', monospace;
-      text-shadow: 0 0 10px white;
+      text-shadow: 0 0 15px white, 0 0 25px white;
       animation: flicker 0.3s infinite;
     }
 
     @keyframes flicker {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Neuer stärkerer Flicker für das Logo */
+    @keyframes strongFlicker {
+      0%, 100% { opacity: 1; filter: brightness(1.2); }
+      25% { opacity: 0.6; filter: brightness(0.8); }
+      50% { opacity: 1; filter: brightness(1.5); }
+      75% { opacity: 0.7; filter: brightness(1.0); }
     }
 
     /* Weißer Blitz beim Übergang */
@@ -100,7 +108,8 @@
     @keyframes flash {
       0% { opacity: 0; }
       25% { opacity: 1; }
-      50% { opacity: 0.7; }
+      50% { opacity: 0.8; }
+      75% { opacity: 1; }
       100% { opacity: 0; }
     }
 
@@ -134,9 +143,9 @@
     const flash = document.getElementById("flash");
     const tvSound = document.getElementById("tvSound");
 
-    // Sound starten (leise)
+    // Sound starten
     tvSound.volume = 0.3;
-    tvSound.play().catch(() => {}); // Falls Browser Autoplay blockt
+    tvSound.play().catch(() => {}); // Autoplay-Fallback
 
     let count = 3;
     const timer = setInterval(() => {
@@ -146,14 +155,14 @@
       } else {
         clearInterval(timer);
 
-        // TV-Flackern-Effekt
-        flash.style.animation = "flash 0.8s ease";
+        // Längeres, stärkeres Aufblinken
+        flash.style.animation = "flash 1.5s ease";
 
-        // Nach kurzem Flackern → Weiterleitung zur Hauptseite
+        // Nach kurzem Blitz → Weiterleitung zur Hauptseite
         setTimeout(() => {
           tvSound.pause();
           window.location.href = "index.html";
-        }, 800);
+        }, 1500);
       }
     }, 1000);
   </script>
