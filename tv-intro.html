@@ -3,289 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pixel-Marionette – Intro</title>
+  <title>Pixel-Marionette – Intro (Fail‑Safe)</title>
   <style>
-    :root{
-      --bg:#1e1e1e;
-      --line:#ffffff;
-      --duration:11000; /* Gesamtdauer (ms) bis zur Übergabe an Hauptseite */
-    }
-    html,body{height:100%;margin:0;background:var(--bg);}
-    body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    /* Pixel-Look */
-    canvas{display:block;width:100vw;height:100vh;image-rendering: pixelated;image-rendering: crisp-edges;background:var(--bg)}
-
-    /* Hauptinhalt (wird nach dem Intro eingeblendet) */
+    :root{ --bg:#1e1e1e; --duration:11000; }
+    html,body{height:100%;margin:0;background:var(--bg);} body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges;background:var(--bg)}
     #main{position:fixed;inset:0;display:grid;place-items:center;background:#111;color:#fff;opacity:0;pointer-events:none;transition:opacity .8s ease}
     #main.show{opacity:1;pointer-events:auto}
     #main .card{max-width:min(90vw,840px);padding:32px;border-radius:16px;background:#181818;box-shadow:0 10px 40px rgba(0,0,0,.45)}
   </style>
 </head>
 <body>
-  <!-- Intro-Canvas -->
   <canvas id="stage"></canvas>
-
-  <!-- Beispiel-Hauptseite (ersetzt später eure echte Seite) -->
   <section id="main" aria-hidden="true">
-    <div class="card">
-      <h1>Willkommen!</h1>
-      <p>Dies ist der Platzhalter für die Hauptseite. Das Intro blendet automatisch hierhin über.</p>
-      <p><small>Tipp: Um auf eine andere URL zu navigieren, sucht im Script nach <code>redirectTo</code> und setzt eure Ziel-URL.</small></p>
-    </div>
+    <div class="card"><h1>Willkommen!</h1><p>Platzhalter für die Hauptseite.</p></div>
   </section>
 
   <script>
-    /**
-     * PIXEL-MARIONETTE INTRO (SEGA/Nintendo inspiriert)
-     * -------------------------------------------------
-     * - Figur läuft auf weißer Linie (2/3 Höhe) von LINKS nach RECHTS
-     * - Kopf immer zum Betrachter, großer Kopf / kleiner Körper
-     * - Am rechten Linienende fällt sie herunter und verschwindet unten
-     * - Danach Übergang (Fade) zur Hauptseite oder Redirect
-     */
+  // ======= KNOBS =======
+  const HEAD_IMG_URL = location.origin + "/img/pixel-head.png?v=" + Date.now(); // absolut + Cachebuster
+  const RUN_TO_RIGHT = true; // links -> rechts
+  // =====================
 
-    // === KONFIG ===
-    const HEAD_IMG_URL = "img/pixel-head.png"; // Pfad ist relativ zur HTML
+  const canvas = document.getElementById('stage');
+  const ctx = canvas.getContext('2d');
+  let W, H, DPR; function resize(){ DPR=Math.max(1,Math.floor(window.devicePixelRatio||1)); W=canvas.width=Math.floor(innerWidth*DPR); H=canvas.height=Math.floor(innerHeight*DPR); canvas.style.width=innerWidth+'px'; canvas.style.height=innerHeight+'px'; ctx.imageSmoothingEnabled=false;} window.addEventListener('resize',resize); resize();
 
-    const canvas = document.getElementById('stage');
-    const ctx = canvas.getContext('2d');
-    let W, H, DPR;
+  const lineY = () => Math.floor(H*2/3);
+  const lineEndX = () => Math.floor(W*0.82);
+  const PX = () => Math.max(2, Math.floor(Math.min(W,H)/240));
 
-    function resize(){
-      DPR = Math.max(1, Math.floor(window.devicePixelRatio || 1));
-      W = canvas.width = Math.floor(window.innerWidth * DPR);
-      H = canvas.height = Math.floor(window.innerHeight * DPR);
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      ctx.imageSmoothingEnabled = false;
-    }
-    window.addEventListener('resize', resize); resize();
+  const avatar = {state:'walk', x: RUN_TO_RIGHT? -40*PX(): W+40*PX(), y: lineY()-16*PX(), vx: RUN_TO_RIGHT? 2.1 : -2.1, vy:0, gravity:.35, step:0, headScale:22, bodyScale:12};
 
-    // Szene
-    const lineY = () => Math.floor(H * 2/3);       // Linie auf 2/3 Höhe
-    const lineEndX = () => Math.floor(W * 0.82);   // RECHTES Ende, wo die Figur fällt
+  // --- Robustes Kopf-Loading ---
+  let headReady=false; let headImg=new Image(); headImg.crossOrigin='anonymous';
+  headImg.onload=()=>{ headReady=true; console.log('HEAD OK', headImg.width, headImg.height); };
+  headImg.onerror=(e)=>{ console.error('HEAD ERROR', HEAD_IMG_URL, e); };
+  console.log('HEAD LOAD', HEAD_IMG_URL); headImg.src=HEAD_IMG_URL;
 
-    // Charakter-Parameter (Pixel-Einheiten im Retro-Raster)
-    const PX = () => Math.max(2, Math.floor(Math.min(W,H) / 240)); // Basis-Pixelgröße
+  function drawLine(){ ctx.strokeStyle='#fff'; ctx.lineWidth=2*PX(); ctx.beginPath(); ctx.moveTo(0,lineY()); ctx.lineTo(lineEndX(),lineY()); ctx.stroke(); }
 
-    const avatar = {
-      state: 'walk', // 'walk' | 'fall' | 'done'
-      x: -40*PX(),            // Start links außerhalb des Bildes
-      y: lineY() - 16*PX(),
-      vx: 2.1,                // nach rechts
-      vy: 0,
-      gravity: 0.35,
-      step: 0,
-      headScale: 22, // Kopfgröße in PX()-Einheiten
-      bodyScale: 12, // Körper-Höhe in PX()-Einheiten
-    };
+  function rect(px,py,w,h,fill){ ctx.fillStyle=fill; ctx.fillRect(px,py,w,h); ctx.fillStyle='#000'; ctx.fillRect(px-1,py,w+2,1); ctx.fillRect(px-1,py+h-1,w+2,1); ctx.fillRect(px-1,py,1,h); ctx.fillRect(px+w-1,py,1,h); }
 
-    // Kopf-Asset mit Chroma-Key (macht einfarbigen Hintergrund transparent)
-const HEAD_CHROMA = true; // auf false setzen, wenn der PNG-Hintergrund bereits transparent ist
-let headReady = false; let headSource = null; // wird ein Canvas mit freigestelltem Kopf
+  function drawBody(x,y){ const p=PX(), bodyH=avatar.bodyScale*p, bodyW=Math.round(8*p), legLen=Math.round(9*p), armLen=Math.round(7*p); const t=(Math.sin(avatar.step)+1)/2; const legSwing=.8; const a1=-legSwing+t*2*legSwing, a2=legSwing-t*2*legSwing; const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH); rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56'); const armSwing=.7, armFront=armSwing-t*2*armSwing, armBack=-armSwing+t*2*armSwing; function limb(px,py,len,ang,thk,col){ const dx=Math.cos(ang)*len, dy=Math.sin(ang)*len; rect(Math.round(px),Math.round(py),Math.max(3*p,thk),Math.max(3*p,thk),col); rect(Math.round(px+dx),Math.round(py+dy),Math.max(3*p,thk),Math.max(3*p,thk),col);} const shoulderY=torsoY+Math.round(3*p), shoulderL=x-Math.round(6*p), shoulderR=x+Math.round(3*p); limb(shoulderR,shoulderY,armLen,armFront,3*p,'#2b3a56'); limb(shoulderL,shoulderY,armLen,armBack,3*p,'#2b3a56'); const hipY=y, hipL=x-Math.round(3*p), hipR=x+Math.round(1*p); limb(hipR,hipY,legLen,a1,4*p,'#233047'); limb(hipL,hipY,legLen,a2,4*p,'#233047'); rect(Math.round(hipR+Math.cos(a1)*legLen),Math.round(hipY+Math.sin(a1)*legLen),6*p,3*p,'#7a4f1f'); rect(Math.round(hipL+Math.cos(a2)*legLen),Math.round(hipY+Math.sin(a2)*legLen),6*p,3*p,'#7a4f1f'); ctx.strokeStyle='#bbb'; ctx.lineWidth=1*p; ctx.beginPath(); ctx.moveTo(x,torsoY-avatar.headScale*p-2*p); ctx.lineTo(x,0); ctx.moveTo(shoulderR+Math.cos(armFront)*armLen, shoulderY+Math.sin(armFront)*armLen); ctx.lineTo(shoulderR,0); ctx.moveTo(shoulderL+Math.cos(armBack)*armLen,  shoulderY+Math.sin(armBack )*armLen); ctx.lineTo(shoulderL,0); ctx.stroke(); }
 
-function loadHeadWithChroma(url){
-  return new Promise((resolve,reject)=>{
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = ()=>{
-      const w = img.naturalWidth, h = img.naturalHeight;
-      const off = document.createElement('canvas'); off.width=w; off.height=h;
-      const octx = off.getContext('2d', { willReadFrequently:true });
-      octx.imageSmoothingEnabled = false;
-      octx.drawImage(img,0,0);
+  function drawHead(x,y){ const p=PX(); const s=avatar.headScale*p; const top=y-avatar.bodyScale*p - s - 2*p; if(headReady && headImg && headImg.naturalWidth){ const w=s, h=s; ctx.drawImage(headImg, Math.round(x-w/2), Math.round(top), Math.round(w), Math.round(h)); ctx.fillStyle='#000'; ctx.fillRect(Math.round(x-w/2)-1,Math.round(top),1,Math.round(h)); ctx.fillRect(Math.round(x+w/2),Math.round(top),1,Math.round(h)); ctx.fillRect(Math.round(x-w/2)-1,Math.round(top)-1,Math.round(w)+2,1); ctx.fillRect(Math.round(x-w/2)-1,Math.round(top+h),Math.round(w)+2,1); } else { // Platzhalter (falls Bild lädt oder 404)
+    const w=s, h=s; ctx.fillStyle='#c9a23b'; ctx.fillRect(Math.round(x-w/2),Math.round(top),Math.round(w),Math.round(h*.62)); ctx.fillStyle='#f2b59a'; ctx.fillRect(Math.round(x-w/2),Math.round(top+h*.45),Math.round(w),Math.round(h*.45)); ctx.fillStyle='#000'; ctx.fillRect(Math.round(x-w/2)-1,Math.round(top),1,Math.round(h)); ctx.fillRect(Math.round(x+w/2),Math.round(top),1,Math.round(h)); ctx.fillRect(Math.round(x-w/2)-1,Math.round(top)-1,Math.round(w)+2,1); ctx.fillRect(Math.round(x-w/2)-1,Math.round(top+h),Math.round(w)+2,1); }
+    // Debug-Overlay
+    ctx.fillStyle='rgba(255,255,255,.5)'; ctx.font=(8*p)+'px monospace'; ctx.fillText('headReady:'+headReady, 8*p, 12*p);
+  }
 
-      if(HEAD_CHROMA){
-        const imgd = octx.getImageData(0,0,w,h); const d = imgd.data;
-        // Schlüsselfarbe aus der Ecke (0,0) lesen – das ist normalerweise der flächige BG
-        const keyR=d[0], keyG=d[1], keyB=d[2];
-        const tol = 18; // Toleranz in 0..255
-        for(let i=0;i<d.length;i+=4){
-          const dr = Math.abs(d[i]-keyR), dg = Math.abs(d[i+1]-keyG), db = Math.abs(d[i+2]-keyB);
-          if(dr<tol && dg<tol && db<tol){ d[i+3] = 0; } // transparent
-        }
-        octx.putImageData(imgd,0,0);
-      }
-      resolve(off);
-    };
-    img.onerror = (e)=>{ console.warn('Kopfbild konnte nicht geladen werden:', url, e); reject(e); };
-    img.src = url;
-  });
-}
+  let raf; function tick(){ try{ ctx.clearRect(0,0,W,H); drawLine(); const p=PX(), speed=avatar.vx*p; if(avatar.state==='walk'){ avatar.x += speed; avatar.step += .15; avatar.y = lineY()-2*p + Math.round(Math.sin(avatar.step*2)*1*p); if( (RUN_TO_RIGHT && avatar.x >= lineEndX()-6*p) || (!RUN_TO_RIGHT && avatar.x <= lineEndX()+6*p) ){ avatar.state='fall'; avatar.vy=0; } } else if(avatar.state==='fall'){ avatar.vy += avatar.gravity*p*.6; avatar.y += avatar.vy; avatar.x += speed*.2; if(avatar.y > H + 40*p){ avatar.state='done'; startTransition(); } } drawBody(avatar.x, avatar.y); drawHead(avatar.x, avatar.y);} catch(err){ console.error('TICK ERROR', err);} raf=requestAnimationFrame(tick);} tick();
 
-(function preloadHead(){
-  if(!HEAD_IMG_URL) return;
-  const bust = (HEAD_IMG_URL.includes('?')? '&':'?') + 'v=' + Date.now();
-  loadHeadWithChroma(HEAD_IMG_URL + bust).then(canvas=>{ headSource = canvas; headReady = true; }).catch(()=>{});
-})();
-
-function drawLine(){
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 2*PX();
-  ctx.beginPath();
-  ctx.moveTo(0, lineY());
-  ctx.lineTo(lineEndX(), lineY());
-  ctx.stroke();
-}(){
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2*PX();
-      ctx.beginPath();
-      ctx.moveTo(0, lineY());         // Linie beginnt links
-      ctx.lineTo(lineEndX(), lineY()); // und endet rechts (Fallkante)
-      ctx.stroke();
-    }
-
-    // Einfacher Pixelkörper
-    function drawBody(x,y){
-      const p = PX();
-      const scale = p;
-      const bodyH = avatar.bodyScale * scale; // Rumpf-Höhe
-      const bodyW = Math.round(8*scale);
-      const legLen = Math.round(9*scale);
-      const armLen = Math.round(7*scale);
-
-      // Laufphase (0..1)
-      const t = (Math.sin(avatar.step) + 1) / 2;
-
-      // Beine
-      const legSwing = 0.8; // max Winkel
-      const a1 = -legSwing + t*2*legSwing;   // vorderes Bein
-      const a2 = legSwing - t*2*legSwing;    // hinteres Bein
-
-      // Pixelrechteck mit Outline
-      function rect(px,py,w,h,fill){
-        ctx.fillStyle = fill; ctx.fillRect(px,py,w,h);
-        ctx.fillStyle = '#000';
-        ctx.fillRect(px-1,py,w+2,1);
-        ctx.fillRect(px-1,py+h-1,w+2,1);
-        ctx.fillRect(px-1,py,1,h);
-        ctx.fillRect(px+w-1,py,1,h);
-      }
-
-      // Koordinaten
-      const torsoX = Math.round(x - bodyW/2);
-      const torsoY = Math.round(y - bodyH);
-
-      // Rumpf
-      rect(torsoX, torsoY, bodyW, bodyH, '#2b3a56');
-
-      // Arme (einfach schwingend)
-      const armSwing = 0.7;
-      const armFront = armSwing - t*2*armSwing;
-      const armBack  = -armSwing + t*2*armSwing;
-
-      function limb(px,py,len,angle,thick,color){
-        const dx = Math.cos(angle)*len;
-        const dy = Math.sin(angle)*len;
-        rect(Math.round(px), Math.round(py), Math.max(3*scale,thick), Math.max(3*scale,thick), color);
-        rect(Math.round(px+dx), Math.round(py+dy), Math.max(3*scale,thick), Math.max(3*scale,thick), color);
-      }
-
-      // Schultern
-      const shoulderY = torsoY + Math.round(3*scale);
-      const shoulderL = x - Math.round(6*scale);
-      const shoulderR = x + Math.round(3*scale);
-
-      limb(shoulderR, shoulderY, armLen, armFront, 3*scale, '#2b3a56'); // Vorderarm
-      limb(shoulderL, shoulderY, armLen, armBack,  3*scale, '#2b3a56'); // Hinterarm
-
-      // Beine
-      const hipY = y;
-      const hipL = x - Math.round(3*scale);
-      const hipR = x + Math.round(1*scale);
-
-      limb(hipR, hipY, legLen, a1, 4*scale, '#233047'); // Vorderbein
-      limb(hipL, hipY, legLen, a2, 4*scale, '#233047'); // Hinterbein
-
-      // Stiefel
-      rect(Math.round(hipR + Math.cos(a1)*legLen), Math.round(hipY + Math.sin(a1)*legLen), 6*scale, 3*scale, '#7a4f1f');
-      rect(Math.round(hipL + Math.cos(a2)*legLen), Math.round(hipY + Math.sin(a2)*legLen), 6*scale, 3*scale, '#7a4f1f');
-
-      // Marionetten-Fäden (Kopf + Handgelenke)
-      ctx.strokeStyle = '#bbbbbb';
-      ctx.lineWidth = 1*scale;
-      ctx.beginPath();
-      ctx.moveTo(x, torsoY -  avatar.headScale*scale - 2*scale); ctx.lineTo(x, 0); // Kopf
-      ctx.moveTo(shoulderR + Math.cos(armFront)*armLen, shoulderY + Math.sin(armFront)*armLen); ctx.lineTo(shoulderR, 0);
-      ctx.moveTo(shoulderL + Math.cos(armBack )*armLen, shoulderY + Math.sin(armBack )*armLen); ctx.lineTo(shoulderL, 0);
-      ctx.stroke();
-    }
-
-    function drawHead(x,y){
-      const p = PX();
-      const s = avatar.headScale * p;
-      const top = y - avatar.bodyScale * p - s - 2*p; // über dem Rumpf
-
-      if (headReady && headSource){
-        const w = s, h = s; // quadratischer Kopf
-        ctx.drawImage(headSource, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
-        // schwarze Outline
-        ctx.fillStyle = '#000';
-        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top), 1, Math.round(h));
-        ctx.fillRect(Math.round(x + w/2), Math.round(top), 1, Math.round(h));
-        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top) - 1, Math.round(w) + 2, 1);
-        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top + h), Math.round(w) + 2, 1);
-      } else {
-        // Platzhalter-Kopf (falls Asset noch lädt)
-        const w = s, h = s;
-        ctx.fillStyle = '#c9a23b';
-        ctx.fillRect(Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h*0.62));
-        ctx.fillStyle = '#f2b59a';
-        ctx.fillRect(Math.round(x - w/2), Math.round(top + h*0.45), Math.round(w), Math.round(h*0.45));
-        ctx.fillStyle = '#000';
-        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top), 1, Math.round(h));
-        ctx.fillRect(Math.round(x + w/2), Math.round(top), 1, Math.round(h));
-        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top) - 1, Math.round(w) + 2, 1);
-        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top + h), Math.round(w) + 2, 1);
-      }
-    }
-
-    // Animation
-    let raf;
-    function tick(){
-      ctx.clearRect(0,0,W,H);
-      drawLine();
-
-      const p = PX();
-      const speed = avatar.vx * p; // DPI- und Größe-sensitiv
-
-      if(avatar.state === 'walk'){
-        avatar.x += speed;          // → nach rechts
-        avatar.step += 0.15;        // Schrittfrequenz
-        avatar.y = lineY() - 2*p + Math.round(Math.sin(avatar.step*2) * 1*p);
-        if(avatar.x >= lineEndX() - 6*p){
-          avatar.state = 'fall';
-          avatar.vy = 0; // Startfall
-        }
-      } else if(avatar.state === 'fall'){
-        avatar.vy += avatar.gravity * p * 0.6;
-        avatar.y += avatar.vy;
-        avatar.x += speed * 0.2; // leichter Drift nach rechts
-        if(avatar.y > H + 40*p){
-          avatar.state = 'done';
-          startTransition();
-        }
-      }
-
-      // Zeichnen
-      drawBody(avatar.x, avatar.y);
-      drawHead(avatar.x, avatar.y);
-
-      raf = requestAnimationFrame(tick);
-    }
-
-    // Übergang zur Hauptseite
-    const main = document.getElementById('main');
-    function startTransition(){
-      cancelAnimationFrame(raf);
-      main.classList.add('show');
-      const redirectTo = null; // z.B. '/home' oder 'https://example.com/app'
-      if(redirectTo){ setTimeout(()=>{ window.location.href = redirectTo; }, 900); }
-    }
-
-    // Starten (Fallback: automatische Beendigung nach fester Dauer)
-    tick();
-    setTimeout(()=>{ if(avatar.state!=='done') startTransition(); }, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
+  const main=document.getElementById('main'); function startTransition(){ cancelAnimationFrame(raf); main.classList.add('show'); const redirectTo=null; if(redirectTo){ setTimeout(()=>location.href=redirectTo,900); } }
+  setTimeout(()=>{ if(avatar.state!=='done') startTransition(); }, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
   </script>
 </body>
 </html>
