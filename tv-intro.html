@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -15,7 +15,8 @@
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
-      height: 100vh;
+      height: 100svh;       /* iPhone-sicher: sichtbarer Bereich ohne UI */
+      min-height: 100dvh;   /* Fallback */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -28,6 +29,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: 50% 45%; /* etwas nach oben verschoben → schwarzer Balken bleibt */
       position: absolute;
       top: 0; left: 0;
       filter: brightness(0.9) contrast(1.1);
@@ -36,9 +38,7 @@
     /* Leichtes Rauschen */
     #static {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: repeating-radial-gradient(#fff, #000 1px);
       opacity: 0.1;
       animation: staticAnim 0.1s steps(5) infinite;
@@ -50,21 +50,50 @@
       to { background-position: 100% 100%; }
     }
 
-    /* Text "b3nn3t" */
+    /* Text "b3nn3t" – Desktop-Basis */
     #intro h1 {
       position: absolute;
-      top: 54%; /* etwas tiefer, direkt über dem schwarzen Balken */
       left: 50%;
+      top: 54%;                               /* Desktop */
       transform: translate(-50%, -50%);
-      font-size: 3.5vw;
       font-family: 'Courier New', monospace;
-      color: white;
-      background: rgba(0,0,0,0.6);
-      padding: 0.15em 0.4em;
-      letter-spacing: 0.08em;
+      font-weight: 700;
+      font-size: clamp(20px, 3.5vw, 40px);
+      color: #fff;
+      background: rgba(0,0,0,.6);
+      padding: .15em .40em;
+      letter-spacing: .08em;
       text-transform: lowercase;
-      text-shadow: 0 0 20px white, 0 0 30px #ccc, 0 0 50px white;
+      text-shadow: 0 0 20px #fff, 0 0 30px #ccc, 0 0 50px #fff;
       animation: strongFlicker 1s infinite;
+    }
+
+    /* Tablets / kleinere Laptops */
+    @media (max-width: 900px) {
+      #intro h1 {
+        top: 57%;
+        font-size: clamp(20px, 4.2vw, 36px);
+      }
+    }
+
+    /* iPhone 14 Pro / Smartphones */
+    @supports(padding:max(0px)) {
+      @media (max-width: 600px) {
+        #intro h1 {
+          top: calc(60% + env(safe-area-inset-top, 0px)); /* leicht tiefer für Balken */
+          font-size: clamp(18px, 5.2vw, 32px);
+          padding: .12em .34em;
+          letter-spacing: .07em;
+        }
+      }
+    }
+
+    /* Sehr kleine Phones */
+    @media (max-width: 400px) {
+      #intro h1 {
+        top: 62%;
+        font-size: clamp(16px, 6vw, 28px);
+      }
     }
 
     /* Countdown */
@@ -78,6 +107,13 @@
       font-family: 'Courier New', monospace;
       text-shadow: 0 0 15px white, 0 0 25px white;
       animation: flicker 0.3s infinite;
+    }
+
+    /* Countdown höher auf Phones (wegen Safe-Area) */
+    @media (max-width: 600px) {
+      #countdown {
+        bottom: calc(18% + env(safe-area-inset-bottom, 0px));
+      }
     }
 
     @keyframes flicker {
@@ -96,9 +132,9 @@
     /* Weißer Blitz beim Übergang */
     #flash {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
+      height: 100svh;
+      min-height: 100dvh;
       background: white;
       opacity: 0;
       pointer-events: none;
