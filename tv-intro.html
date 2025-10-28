@@ -1,175 +1,176 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Start — b3nn3t</title>
-  <meta name="description" content="Start — b3nn3t" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-
-  <!-- Preload moderne Bilder -->
-  <link rel="preload" as="image" href="assets/bennet_index1.webp" type="image/webp">
-  <link rel="preload" as="image" href="assets/bennet_index2.webp" type="image/webp">
-  <link rel="preload" as="image" href="assets/bennet_index3.webp" type="image/webp">
-
-  <!-- Globale Styles -->
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="styles_nav_arrows.css" />
-  <link rel="stylesheet" href="swipe-helper.css" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>b3nn3t</title>
   <style>
-    /* ==== Startseite Glasverlauf ==== */
-    body.home .main{
-      background: linear-gradient(
-        to bottom,
-        rgba(255,255,255,0) 0,
-        rgba(255,255,255,0) 100vh,
-        rgba(255,255,255,.32) 110vh,
-        rgba(255,255,255,.32) 100%
-      ) !important;
-      backdrop-filter: blur(2px) !important;
-      -webkit-backdrop-filter: blur(2px) !important;
-      position:relative; border-radius:12px;
-      overflow:auto; -webkit-overflow-scrolling:touch;
-      scrollbar-width:none; -ms-overflow-style:none;
-      transform:translateZ(0);
-      padding:1.25rem 1rem 2.5rem;
-    }
-    body.home .main::-webkit-scrollbar{display:none}
-    .content-offset{padding-top:105vh}
-    body.home .main>*{position:relative;z-index:1}
-
-    /* ==== Pfeil unten (wie Nav-Pfeile) ==== */
-    .nav-arrow.down {
+    /* --- INTRO OVERLAY --- */
+    #intro {
       position: fixed;
-      left: 50%;
-      bottom: 40px;
-      transform: translateX(-50%);
-      z-index: 1200;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.4);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      box-shadow: 0 4px 10px rgba(0,0,0,.1);
-      display: grid;
-      place-items: center;
-      color: #000;
-      transition: opacity .25s ease, transform .25s ease;
-      opacity: 1;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      z-index: 9999;
     }
 
-    /* Ausblenden beim Scrollen */
-    body.scrolled .nav-arrow.down {
+    #intro img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0; left: 0;
+      filter: brightness(0.9) contrast(1.1);
+    }
+
+    /* --- Rauschen Overlay --- */
+    #static {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-radial-gradient(#fff, #000 1px);
+      opacity: 0.1;
+      animation: staticAnim 0.1s steps(5) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes staticAnim {
+      from { background-position: 0 0; }
+      to { background-position: 100% 100%; }
+    }
+
+    /* --- Text "b3nn3t" --- */
+    #intro h1 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 5vw;
+      font-family: 'Courier New', monospace;
+      color: white;
+      background: rgba(0,0,0,0.6);
+      padding: 0.2em 0.6em;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 10px white;
+      animation: flicker 0.3s infinite;
+    }
+
+    /* Countdown */
+    #countdown {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 8vw;
+      color: white;
+      font-family: 'Courier New', monospace;
+      text-shadow: 0 0 10px white;
+      animation: flicker 0.3s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    /* Weißer Blitz */
+    #flash {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
       opacity: 0;
       pointer-events: none;
-      transform: translateX(-50%) translateY(10px);
+      z-index: 10000;
     }
 
-    /* SVG-Ausrichtung */
-    .nav-arrow.down svg {
-      width: 20px;
-      height: 20px;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      transform: rotate(90deg); /* zeigt nach unten */
+    @keyframes flash {
+      0% { opacity: 0; }
+      25% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 0; }
+    }
+
+    /* TV-Einschaltflackern */
+    @keyframes tvOn {
+      0% { transform: scaleY(0.02) scaleX(1.2); opacity: 0; }
+      40% { transform: scaleY(0.05) scaleX(1.1); opacity: 1; }
+      60% { transform: scaleY(0.9) scaleX(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    #intro {
+      animation: tvOn 0.7s ease-out;
+    }
+
+    /* Hauptseite (versteckt bis Übergang) */
+    main {
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    main.visible {
+      opacity: 1;
     }
   </style>
 </head>
+<body>
 
-<body class="home">
-  <header class="header">
-    <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
-    </a>
-  </header>
+  <!-- INTRO -->
+  <div id="intro">
+    <img src="assets/tv.jpg" alt="Testbild">
+    <div id="static"></div>
+    <h1>b3nn3t</h1>
+    <div id="countdown">3</div>
+  </div>
 
-  <!-- Menü -->
-  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div id="menu-overlay" class="menu-overlay" hidden></div>
-  <nav id="site-menu" class="site-menu" aria-hidden="true">
-    <ul>
-      <li><a href="ueber-mich.html">über mich</a></li>
-      <li><a href="diskografie.html">diskografie</a></li>
-      <li><a href="kontakt.html">kontakt</a></li>
-      <li><a href="aktuell.html">aktuell</a></li>
-      <li><a href="gesehen.html">gesehen</a></li>
-      <li><a href="plattformen.html">plattformen</a></li>
-      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-    </ul>
-  </nav>
+  <div id="flash"></div>
 
-  <!-- Hauptinhalt -->
-  <main class="main">
-    <div class="content-offset">
-      <h1>moin und willkommen</h1>
-      <p>bei <strong>b3nn3t</strong> – bock auf browsen... dann los</p>
-
-      <section class="grid" aria-label="Seitenübersicht">
-        <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-        <figure class="panel-photo">
-          <picture>
-            <source srcset="assets/bennet_index1.avif" type="image/avif">
-            <source srcset="assets/bennet_index1.webp" type="image/webp">
-            <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet" loading="eager" decoding="async">
-          </picture>
-        </figure>
-
-        <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
-        <figure class="panel-photo">
-          <picture>
-            <source srcset="assets/bennet_index2.avif" type="image/avif">
-            <source srcset="assets/bennet_index2.webp" type="image/webp">
-            <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio" loading="eager" decoding="async">
-          </picture>
-        </figure>
-
-        <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
-        <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
-        <figure class="panel-photo">
-          <picture>
-            <source srcset="assets/bennet_index3.avif" type="image/avif">
-            <source srcset="assets/bennet_index3.webp" type="image/webp">
-            <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell" loading="eager" decoding="async">
-          </picture>
-        </figure>
-
-        <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
-        <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
-      </section>
-    </div>
+  <!-- HAUPTSEITE -->
+  <main>
+    <h2>Willkommen auf der Website von b3nn3t</h2>
+    <p>Hier kommt dein eigentlicher Inhalt hin …</p>
   </main>
 
-  <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer>
+  <!-- Soundeffekt (leises TV-Rauschen) -->
+  <audio id="tvSound" src="https://cdn.pixabay.com/download/audio/2021/09/16/audio_60a1479d5f.mp3?filename=tv-static-6979.mp3">
 
-  <!-- Neuer Down-Pfeil im Stil der Nav-Arrows -->
-  <a class="nav-arrow down" aria-label="Nach unten scrollen">
-    <svg viewBox="0 0 24 24">
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  </a>
-
-  <!-- Skripte -->
-  <script src="script.js"></script>
-  <script src="swipe-nav.js?v=12" defer></script>
   <script>
-    // Pfeil beim Scrollen ausblenden
-    const downArrow = document.querySelector('.nav-arrow.down');
-    const main = document.querySelector('.main');
-    main.addEventListener('scroll', () => {
-      if (main.scrollTop > 50) document.body.classList.add('scrolled');
-      else document.body.classList.remove('scrolled');
-    });
+    const countdown = document.getElementById("countdown");
+    const intro = document.getElementById("intro");
+    const flash = document.getElementById("flash");
+    const main = document.querySelector("main");
+    const tvSound = document.getElementById("tvSound");
 
-    // Klick auf Pfeil -> smooth scroll
-    downArrow.addEventListener('click', () => {
-      main.scrollTo({ top: main.scrollTop + window.innerHeight * 0.9, behavior: 'smooth' });
-    });
+    // Sound starten (leise)
+    tvSound.volume = 0.3;
+    tvSound.play().catch(() => {}); // autoplay fallback
+
+    let count = 3;
+    const timer = setInterval(() => {
+      count--;
+      if (count > 0) {
+        countdown.textContent = count;
+      } else {
+        clearInterval(timer);
+        flash.style.animation = "flash 0.8s ease";
+        setTimeout(() => {
+          intro.remove();
+          flash.style.opacity = 0;
+          main.classList.add("visible");
+          tvSound.pause();
+        }, 800);
+      }
+    }, 1000);
   </script>
+
 </body>
 </html>
+
