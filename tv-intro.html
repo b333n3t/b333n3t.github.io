@@ -1,207 +1,268 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>b3nn3t – Intro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pixel-Marionette – Intro</title>
   <style>
-    body {
-      margin: 0;
-      background: black;
-      overflow: hidden;
+    :root{
+      --bg:#1e1e1e;
+      --line:#ffffff;
+      --duration:11000; /* Gesamtdauer (ms) bis zur Übergabe an Hauptseite */
     }
+    html,body{height:100%;margin:0;background:var(--bg);}
+    body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    /* Pixel-Look */
+    canvas{display:block;width:100vw;height:100vh;image-rendering: pixelated;image-rendering: crisp-edges;background:var(--bg)}
 
-    #intro {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100svh;       /* iPhone-sicher: sichtbarer Bereich ohne UI */
-      min-height: 100dvh;   /* Fallback */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      z-index: 9999;
-      animation: tvOn 0.7s ease-out;
-    }
-
-    #intro img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: 50% 45%; /* etwas nach oben verschoben → schwarzer Balken bleibt */
-      position: absolute;
-      top: 0; left: 0;
-      filter: brightness(0.9) contrast(1.1);
-    }
-
-    /* Leichtes Rauschen */
-    #static {
-      position: absolute;
-      inset: 0;
-      background: repeating-radial-gradient(#fff, #000 1px);
-      opacity: 0.1;
-      animation: staticAnim 0.1s steps(5) infinite;
-      pointer-events: none;
-    }
-
-    @keyframes staticAnim {
-      from { background-position: 0 0; }
-      to { background-position: 100% 100%; }
-    }
-
-    /* Text "b3nn3t" – Desktop-Basis */
-    #intro h1 {
-      position: absolute;
-      left: 50%;
-      top: 54%;                               /* Desktop */
-      transform: translate(-50%, -50%);
-      font-family: 'Courier New', monospace;
-      font-weight: 700;
-      font-size: clamp(20px, 3.5vw, 40px);
-      color: #fff;
-      background: rgba(0,0,0,.6);
-      padding: .15em .40em;
-      letter-spacing: .08em;
-      text-transform: lowercase;
-      text-shadow: 0 0 20px #fff, 0 0 30px #ccc, 0 0 50px #fff;
-      animation: strongFlicker 1s infinite;
-    }
-
-    /* Tablets / kleinere Laptops */
-    @media (max-width: 900px) {
-      #intro h1 {
-        top: 57%;
-        font-size: clamp(20px, 4.2vw, 36px);
-      }
-    }
-
-    /* iPhone 14 Pro / Smartphones */
-    @supports(padding:max(0px)) {
-      @media (max-width: 600px) {
-        #intro h1 {
-          top: calc(60% + env(safe-area-inset-top, 0px)); /* leicht tiefer für Balken */
-          font-size: clamp(18px, 5.2vw, 32px);
-          padding: .12em .34em;
-          letter-spacing: .07em;
-        }
-      }
-    }
-
-    /* Sehr kleine Phones */
-    @media (max-width: 400px) {
-      #intro h1 {
-        top: 62%;
-        font-size: clamp(16px, 6vw, 28px);
-      }
-    }
-
-    /* Countdown */
-    #countdown {
-      position: absolute;
-      bottom: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 8vw;
-      color: white;
-      font-family: 'Courier New', monospace;
-      text-shadow: 0 0 15px white, 0 0 25px white;
-      animation: flicker 0.3s infinite;
-    }
-
-    /* Countdown höher auf Phones (wegen Safe-Area) */
-    @media (max-width: 600px) {
-      #countdown {
-        bottom: calc(18% + env(safe-area-inset-bottom, 0px));
-      }
-    }
-
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-
-    /* Stärkeres Flackern für Logo */
-    @keyframes strongFlicker {
-      0%, 100% { opacity: 1; filter: brightness(1.2); }
-      25% { opacity: 0.6; filter: brightness(0.8); }
-      50% { opacity: 1; filter: brightness(1.6); }
-      75% { opacity: 0.7; filter: brightness(1.0); }
-    }
-
-    /* Weißer Blitz beim Übergang */
-    #flash {
-      position: fixed;
-      inset: 0;
-      height: 100svh;
-      min-height: 100dvh;
-      background: white;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 10000;
-    }
-
-    @keyframes flash {
-      0% { opacity: 0; }
-      25% { opacity: 1; }
-      50% { opacity: 0.8; }
-      75% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
-    /* TV-Einschalt-Effekt */
-    @keyframes tvOn {
-      0% { transform: scaleY(0.02) scaleX(1.2); opacity: 0; }
-      40% { transform: scaleY(0.05) scaleX(1.1); opacity: 1; }
-      60% { transform: scaleY(0.9) scaleX(1.05); }
-      100% { transform: scale(1); }
-    }
+    /* Hauptinhalt (wird nach dem Intro eingeblendet) */
+    #main{position:fixed;inset:0;display:grid;place-items:center;background:#111;color:#fff;opacity:0;pointer-events:none;transition:opacity .8s ease}
+    #main.show{opacity:1;pointer-events:auto}
+    #main .card{max-width:min(90vw,840px);padding:32px;border-radius:16px;background:#181818;box-shadow:0 10px 40px rgba(0,0,0,.45)}
   </style>
 </head>
 <body>
+  <!-- Intro-Canvas -->
+  <canvas id="stage"></canvas>
 
-  <!-- INTRO -->
-  <div id="intro">
-    <img src="assets/tv.webp" alt="Testbild">
-    <div id="static"></div>
-    <h1>b3nn3t</h1>
-    <div id="countdown">3</div>
-  </div>
-
-  <div id="flash"></div>
-
-  <!-- TV-Rausch-Sound -->
-  <audio id="tvSound" src="https://cdn.pixabay.com/download/audio/2021/09/16/audio_60a1479d5f.mp3?filename=tv-static-6979.mp3"></audio>
+  <!-- Beispiel-Hauptseite (ersetzt später eure echte Seite) -->
+  <section id="main" aria-hidden="true">
+    <div class="card">
+      <h1>Willkommen!</h1>
+      <p>Dies ist der Platzhalter für die Hauptseite. Das Intro blendet automatisch hierhin über.</p>
+      <p><small>Tipp: Um auf eine andere URL zu navigieren, sucht im Script nach <code>redirectTo</code> und setzt eure Ziel-URL.</small></p>
+    </div>
+  </section>
 
   <script>
-    const countdown = document.getElementById("countdown");
-    const intro = document.getElementById("intro");
-    const flash = document.getElementById("flash");
-    const tvSound = document.getElementById("tvSound");
+    /**
+     * PIXEL-MARIONETTE INTRO (SEGA/Nintendo inspiriert)
+     * -------------------------------------------------
+     * - Figur läuft auf weißer Linie (2/3 Höhe) von rechts nach links
+     * - Kopf immer zum Betrachter (Front/Profil-Mix), großer Kopf / kleiner Körper
+     * - Am Linienende fällt sie herunter und verschwindet unten
+     * - Danach Übergang (Fade) zur Hauptseite oder Redirect
+     *
+     * ASSET-KONFIGURATION
+     * -------------------
+     * 1) Ersetzt HEAD_IMG_URL durch den finalen Pixel-Kopf (PNG/GIF). Transparent empfohlen.
+     *    Der Kopf wird unabhängig vom Körper gerendert (Marionetten-Feeling) und bleibt zur Kamera ausgerichtet.
+     * 2) Alternativ könnt ihr den Platzhalter-Kopf beibehalten; dann wirkt er generisch.
+     */
 
-    // Sound starten
-    tvSound.volume = 0.3;
-    tvSound.play().catch(() => {}); // Autoplay-Fallback
+    const HEAD_IMG_URL = ""; // <-- HIER euren exportierten Pixel-Kopf einsetzen (z.B. "/img/pixel-head.png")
 
-    let count = 3;
-    const timer = setInterval(() => {
-      count--;
-      if (count > 0) {
-        countdown.textContent = count;
-      } else {
-        clearInterval(timer);
+    const canvas = document.getElementById('stage');
+    const ctx = canvas.getContext('2d');
+    let W, H, DPR;
 
-        // Längeres, stärkeres Aufblinken
-        flash.style.animation = "flash 1.5s ease";
+    function resize(){
+      DPR = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.imageSmoothingEnabled = false;
+    }
+    window.addEventListener('resize', resize); resize();
 
-        // Nach dem Blitz → Weiterleitung zur Hauptseite
-        setTimeout(() => {
-          tvSound.pause();
-          window.location.href = "index.html";
-        }, 1500);
+    // Szene
+    const lineY = () => Math.floor(H * 2/3); // Linie auf 2/3 Höhe
+    const lineEndX = () => Math.floor(W * 0.18); // Linkes Ende, wo die Figur fällt
+
+    // Charakter-Parameter (Pixel-Einheiten im Retro-Raster)
+    const PX = () => Math.max(2, Math.floor(Math.min(W,H) / 240)); // Basis-Pixelgröße
+
+    const avatar = {
+      state: 'walk', // 'walk' | 'fall' | 'done'
+      x: W + 40*PX(),
+      y: lineY() - 16*PX(),
+      vx: -2.1, // Laufgeschwindigkeit (Pixel pro Frame skaliert unten)
+      vy: 0,
+      gravity: 0.35,
+      step: 0,
+      headScale: 22, // Kopfgröße in PX()-Einheiten
+      bodyScale: 12, // Körper-Höhe in PX()-Einheiten
+      hairBelowEar: true,
+    };
+
+    // Kopf-Asset
+    const headImg = new Image();
+    if(HEAD_IMG_URL) headImg.src = HEAD_IMG_URL;
+
+    function drawLine(){
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2*PX();
+      ctx.beginPath();
+      ctx.moveTo(lineEndX(), lineY());
+      ctx.lineTo(W, lineY());
+      ctx.stroke();
+    }
+
+    // Einfacher Pixelkörper (SEGA/Nintendo inspiriert, ohne externes Sprite)
+    function drawBody(x,y){
+      const p = PX();
+      const scale = p;
+      const bodyH = avatar.bodyScale * scale; // Rumpf-Höhe
+      const bodyW = Math.round(8*scale);
+      const legLen = Math.round(9*scale);
+      const armLen = Math.round(7*scale);
+
+      // Laufphase (0..1)
+      const t = (Math.sin(avatar.step) + 1) / 2;
+
+      // Beine
+      const legSwing = 0.8; // max Winkel
+      const a1 = -legSwing + t*2*legSwing;   // vorderes Bein
+      const a2 = legSwing - t*2*legSwing;    // hinteres Bein
+
+      // Pixelrechteck mit Schlagkante (Outlines)
+      function rect(px,py,w,h,fill){
+        ctx.fillStyle = fill; ctx.fillRect(px,py,w,h);
+        ctx.fillStyle = '#000'; // Outline
+        ctx.fillRect(px-1,py,w+2,1);
+        ctx.fillRect(px-1,py+h-1,w+2,1);
+        ctx.fillRect(px-1,py,1,h);
+        ctx.fillRect(px+w-1,py,1,h);
       }
-    }, 1000);
-  </script>
 
+      // Koordinaten
+      const torsoX = Math.round(x - bodyW/2);
+      const torsoY = Math.round(y - bodyH);
+
+      // Rumpf
+      rect(torsoX, torsoY, bodyW, bodyH, '#2b3a56');
+
+      // Arme (einfach schwingend)
+      const armSwing = 0.7;
+      const armFront = armSwing - t*2*armSwing;
+      const armBack  = -armSwing + t*2*armSwing;
+
+      // Hilfsfunktion für "Knochen" aus Pixelblöcken
+      function limb(px,py,len,angle,thick,color){
+        const dx = Math.cos(angle)*len;
+        const dy = Math.sin(angle)*len;
+        rect(Math.round(px), Math.round(py), Math.max(3*scale,thick), Math.max(3*scale,thick), color);
+        rect(Math.round(px+dx), Math.round(py+dy), Math.max(3*scale,thick), Math.max(3*scale,thick), color);
+      }
+
+      // Schultern
+      const shoulderY = torsoY + Math.round(3*scale);
+      const shoulderL = x - Math.round(6*scale);
+      const shoulderR = x + Math.round(3*scale);
+
+      limb(shoulderR, shoulderY, armLen, armFront, 3*scale, '#2b3a56'); // Vorderarm
+      limb(shoulderL, shoulderY, armLen, armBack,  3*scale, '#2b3a56'); // Hinterarm
+
+      // Beine
+      const hipY = y;
+      const hipL = x - Math.round(3*scale);
+      const hipR = x + Math.round(1*scale);
+
+      limb(hipR, hipY, legLen, a1, 4*scale, '#233047'); // Vorderbein
+      limb(hipL, hipY, legLen, a2, 4*scale, '#233047'); // Hinterbein
+
+      // Stiefel
+      rect(Math.round(hipR + Math.cos(a1)*legLen), Math.round(hipY + Math.sin(a1)*legLen), 6*scale, 3*scale, '#7a4f1f');
+      rect(Math.round(hipL + Math.cos(a2)*legLen), Math.round(hipY + Math.sin(a2)*legLen), 6*scale, 3*scale, '#7a4f1f');
+
+      // Marionetten-Fäden (Kopf + Handgelenke)
+      ctx.strokeStyle = '#bbbbbb';
+      ctx.lineWidth = 1*scale;
+      ctx.beginPath();
+      ctx.moveTo(x, torsoY -  avatar.headScale*scale - 2*scale); ctx.lineTo(x, 0); // Kopf
+      ctx.moveTo(shoulderR + Math.cos(armFront)*armLen, shoulderY + Math.sin(armFront)*armLen); ctx.lineTo(shoulderR, 0);
+      ctx.moveTo(shoulderL + Math.cos(armBack )*armLen, shoulderY + Math.sin(armBack )*armLen); ctx.lineTo(shoulderL, 0);
+      ctx.stroke();
+    }
+
+    function drawHead(x,y){
+      const p = PX();
+      const s = avatar.headScale * p;
+      const top = y - avatar.bodyScale * p - s - 2*p; // über dem Rumpf
+
+      if (headImg.complete && headImg.naturalWidth){
+        const aspect = headImg.width / headImg.height;
+        const w = s; const h = s; // quadratischer Kopf für klaren Retro-Look
+        ctx.drawImage(headImg, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
+        // schwarze Outline
+        ctx.fillStyle = '#000';
+        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top), 1, Math.round(h));
+        ctx.fillRect(Math.round(x + w/2), Math.round(top), 1, Math.round(h));
+        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top) - 1, Math.round(w) + 2, 1);
+        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top + h), Math.round(w) + 2, 1);
+      } else {
+        // Platzhalter-Kopf (Pixelhaare bis unter die Ohren)
+        const w = s, h = s;
+        // Haar
+        ctx.fillStyle = '#c9a23b';
+        ctx.fillRect(Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h*0.62));
+        // Gesicht
+        ctx.fillStyle = '#f2b59a';
+        ctx.fillRect(Math.round(x - w/2), Math.round(top + h*0.45), Math.round(w), Math.round(h*0.45));
+        // Augen
+        ctx.fillStyle = '#1a5cff';
+        ctx.fillRect(Math.round(x - w*0.18), Math.round(top + h*0.62), Math.round(w*0.10), Math.round(h*0.08));
+        ctx.fillRect(Math.round(x + w*0.08), Math.round(top + h*0.62), Math.round(w*0.10), Math.round(h*0.08));
+        // Outline
+        ctx.fillStyle = '#000';
+        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top), 1, Math.round(h));
+        ctx.fillRect(Math.round(x + w/2), Math.round(top), 1, Math.round(h));
+        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top) - 1, Math.round(w) + 2, 1);
+        ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top + h), Math.round(w) + 2, 1);
+      }
+    }
+
+    // Animation
+    let raf;
+    function tick(){
+      ctx.clearRect(0,0,W,H);
+      drawLine();
+
+      const p = PX();
+      const speed = avatar.vx * p; // DPI- und Größe-sensitiv
+
+      if(avatar.state === 'walk'){
+        avatar.x += speed;
+        avatar.step += 0.15; // Schrittfrequenz
+        // Kippen/Trippeln auf der Linie
+        avatar.y = lineY() - 2*p + Math.round(Math.sin(avatar.step*2) * 1*p);
+        if(avatar.x <= lineEndX() + 6*p){
+          avatar.state = 'fall';
+          avatar.vy = 0; // Startfall
+        }
+      } else if(avatar.state === 'fall'){
+        avatar.vy += avatar.gravity * p * 0.6;
+        avatar.y += avatar.vy;
+        avatar.x += speed * 0.2; // leichter Drift nach links
+        if(avatar.y > H + 40*p){
+          avatar.state = 'done';
+          startTransition();
+        }
+      }
+
+      // Zeichnen
+      drawBody(avatar.x, avatar.y);
+      drawHead(avatar.x, avatar.y);
+
+      raf = requestAnimationFrame(tick);
+    }
+
+    // Übergang zur Hauptseite
+    const main = document.getElementById('main');
+    function startTransition(){
+      cancelAnimationFrame(raf);
+      main.classList.add('show');
+      // Optional: auf eine URL weiterleiten
+      const redirectTo = null; // z.B. '/home' oder 'https://example.com/app'
+      if(redirectTo){
+        setTimeout(()=>{ window.location.href = redirectTo; }, 900);
+      }
+    }
+
+    // Starten (Fallback: automatische Beendigung nach fester Dauer)
+    tick();
+    setTimeout(()=>{ if(avatar.state!=='done') startTransition(); }, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
+  </script>
 </body>
 </html>
