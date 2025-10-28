@@ -1,4 +1,4 @@
-s/<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -38,20 +38,14 @@ s/<!DOCTYPE html>
     /**
      * PIXEL-MARIONETTE INTRO (SEGA/Nintendo inspiriert)
      * -------------------------------------------------
-     * - Figur läuft auf weißer Linie (2/3 Höhe) von rechts nach links
-     * - Kopf immer zum Betrachter (Front/Profil-Mix), großer Kopf / kleiner Körper
-     * - Am Linienende fällt sie herunter und verschwindet unten
+     * - Figur läuft auf weißer Linie (2/3 Höhe) von LINKS nach RECHTS
+     * - Kopf immer zum Betrachter, großer Kopf / kleiner Körper
+     * - Am rechten Linienende fällt sie herunter und verschwindet unten
      * - Danach Übergang (Fade) zur Hauptseite oder Redirect
-     *
-     * ASSET-KONFIGURATION
-     * -------------------
-     * 1) Ersetzt HEAD_IMG_URL durch den finalen Pixel-Kopf (PNG/GIF). Transparent empfohlen.
-     *    Der Kopf wird unabhängig vom Körper gerendert (Marionetten-Feeling) und bleibt zur Kamera ausgerichtet.
-     * 2) Alternativ könnt ihr den Platzhalter-Kopf beibehalten; dann wirkt er generisch.
      */
 
-    const HEAD_IMG_URL = "img/pixel-head.png";
- // <-- HIER euren exportierten Pixel-Kopf einsetzen (z.B. "/img/pixel-head.png")
+    // === KONFIG ===
+    const HEAD_IMG_URL = "img/pixel-head.png"; // Pfad ist relativ zur HTML
 
     const canvas = document.getElementById('stage');
     const ctx = canvas.getContext('2d');
@@ -68,39 +62,43 @@ s/<!DOCTYPE html>
     window.addEventListener('resize', resize); resize();
 
     // Szene
-    const lineY = () => Math.floor(H * 2/3); // Linie auf 2/3 Höhe
-    const lineEndX = () => Math.floor(W * 0.18); // Linkes Ende, wo die Figur fällt
+    const lineY = () => Math.floor(H * 2/3);       // Linie auf 2/3 Höhe
+    const lineEndX = () => Math.floor(W * 0.82);   // RECHTES Ende, wo die Figur fällt
 
     // Charakter-Parameter (Pixel-Einheiten im Retro-Raster)
     const PX = () => Math.max(2, Math.floor(Math.min(W,H) / 240)); // Basis-Pixelgröße
 
     const avatar = {
       state: 'walk', // 'walk' | 'fall' | 'done'
-      x: W + 40*PX(),
+      x: -40*PX(),            // Start links außerhalb des Bildes
       y: lineY() - 16*PX(),
-      vx: -2.1, // Laufgeschwindigkeit (Pixel pro Frame skaliert unten)
+      vx: 2.1,                // nach rechts
       vy: 0,
       gravity: 0.35,
       step: 0,
       headScale: 22, // Kopfgröße in PX()-Einheiten
       bodyScale: 12, // Körper-Höhe in PX()-Einheiten
-      hairBelowEar: true,
     };
 
-    // Kopf-Asset
+    // Kopf-Asset (mit sauberem Preload & Fehler-Logging)
+    let headReady = false;
     const headImg = new Image();
-    if(HEAD_IMG_URL) headImg.src = HEAD_IMG_URL;
+    if(HEAD_IMG_URL){
+      headImg.onload = () => { headReady = true; };
+      headImg.onerror = (e) => { console.warn('Kopfbild konnte nicht geladen werden:', HEAD_IMG_URL, e); };
+      headImg.src = HEAD_IMG_URL;
+    }
 
     function drawLine(){
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2*PX();
       ctx.beginPath();
-      ctx.moveTo(lineEndX(), lineY());
-      ctx.lineTo(W, lineY());
+      ctx.moveTo(0, lineY());         // Linie beginnt links
+      ctx.lineTo(lineEndX(), lineY()); // und endet rechts (Fallkante)
       ctx.stroke();
     }
 
-    // Einfacher Pixelkörper (SEGA/Nintendo inspiriert, ohne externes Sprite)
+    // Einfacher Pixelkörper
     function drawBody(x,y){
       const p = PX();
       const scale = p;
@@ -117,10 +115,10 @@ s/<!DOCTYPE html>
       const a1 = -legSwing + t*2*legSwing;   // vorderes Bein
       const a2 = legSwing - t*2*legSwing;    // hinteres Bein
 
-      // Pixelrechteck mit Schlagkante (Outlines)
+      // Pixelrechteck mit Outline
       function rect(px,py,w,h,fill){
         ctx.fillStyle = fill; ctx.fillRect(px,py,w,h);
-        ctx.fillStyle = '#000'; // Outline
+        ctx.fillStyle = '#000';
         ctx.fillRect(px-1,py,w+2,1);
         ctx.fillRect(px-1,py+h-1,w+2,1);
         ctx.fillRect(px-1,py,1,h);
@@ -139,7 +137,6 @@ s/<!DOCTYPE html>
       const armFront = armSwing - t*2*armSwing;
       const armBack  = -armSwing + t*2*armSwing;
 
-      // Hilfsfunktion für "Knochen" aus Pixelblöcken
       function limb(px,py,len,angle,thick,color){
         const dx = Math.cos(angle)*len;
         const dy = Math.sin(angle)*len;
@@ -182,9 +179,8 @@ s/<!DOCTYPE html>
       const s = avatar.headScale * p;
       const top = y - avatar.bodyScale * p - s - 2*p; // über dem Rumpf
 
-      if (headImg.complete && headImg.naturalWidth){
-        const aspect = headImg.width / headImg.height;
-        const w = s; const h = s; // quadratischer Kopf für klaren Retro-Look
+      if (headReady){
+        const w = s, h = s; // quadratischer Kopf
         ctx.drawImage(headImg, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
         // schwarze Outline
         ctx.fillStyle = '#000';
@@ -193,19 +189,12 @@ s/<!DOCTYPE html>
         ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top) - 1, Math.round(w) + 2, 1);
         ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top + h), Math.round(w) + 2, 1);
       } else {
-        // Platzhalter-Kopf (Pixelhaare bis unter die Ohren)
+        // Platzhalter-Kopf (falls Asset noch lädt)
         const w = s, h = s;
-        // Haar
         ctx.fillStyle = '#c9a23b';
         ctx.fillRect(Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h*0.62));
-        // Gesicht
         ctx.fillStyle = '#f2b59a';
         ctx.fillRect(Math.round(x - w/2), Math.round(top + h*0.45), Math.round(w), Math.round(h*0.45));
-        // Augen
-        ctx.fillStyle = '#1a5cff';
-        ctx.fillRect(Math.round(x - w*0.18), Math.round(top + h*0.62), Math.round(w*0.10), Math.round(h*0.08));
-        ctx.fillRect(Math.round(x + w*0.08), Math.round(top + h*0.62), Math.round(w*0.10), Math.round(h*0.08));
-        // Outline
         ctx.fillStyle = '#000';
         ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top), 1, Math.round(h));
         ctx.fillRect(Math.round(x + w/2), Math.round(top), 1, Math.round(h));
@@ -224,18 +213,17 @@ s/<!DOCTYPE html>
       const speed = avatar.vx * p; // DPI- und Größe-sensitiv
 
       if(avatar.state === 'walk'){
-        avatar.x += speed;
-        avatar.step += 0.15; // Schrittfrequenz
-        // Kippen/Trippeln auf der Linie
+        avatar.x += speed;          // → nach rechts
+        avatar.step += 0.15;        // Schrittfrequenz
         avatar.y = lineY() - 2*p + Math.round(Math.sin(avatar.step*2) * 1*p);
-        if(avatar.x <= lineEndX() + 6*p){
+        if(avatar.x >= lineEndX() - 6*p){
           avatar.state = 'fall';
           avatar.vy = 0; // Startfall
         }
       } else if(avatar.state === 'fall'){
         avatar.vy += avatar.gravity * p * 0.6;
         avatar.y += avatar.vy;
-        avatar.x += speed * 0.2; // leichter Drift nach links
+        avatar.x += speed * 0.2; // leichter Drift nach rechts
         if(avatar.y > H + 40*p){
           avatar.state = 'done';
           startTransition();
@@ -254,11 +242,8 @@ s/<!DOCTYPE html>
     function startTransition(){
       cancelAnimationFrame(raf);
       main.classList.add('show');
-      // Optional: auf eine URL weiterleiten
       const redirectTo = null; // z.B. '/home' oder 'https://example.com/app'
-      if(redirectTo){
-        setTimeout(()=>{ window.location.href = redirectTo; }, 900);
-      }
+      if(redirectTo){ setTimeout(()=>{ window.location.href = redirectTo; }, 900); }
     }
 
     // Starten (Fallback: automatische Beendigung nach fester Dauer)
