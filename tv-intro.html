@@ -3,24 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>b3nn3t • Intro (Hammer + Funken)</title>
+  <title>b3nn3t • Intro mit Kopf-Bild</title>
   <style>
     html,body{margin:0;height:100%;background:#333;overflow:hidden}
     canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges}
   </style>
 </head>
 <body>
-<canvas id="c"></canvas>
+  <canvas id="c"></canvas>
 
 <script>
-const RUN_TO_RIGHT = true;
-const WORD = "b3nn3t";
-const HAMMER_MS = 380;
-const SPARK_COUNT = 10;
-const HEAD_SCALE = 26;
-const BODY_SCALE = 16;
-const LETTER_SIZE = 18;
-const LETTER_GAP = 18;
+/* ======= EINSTELLUNGEN ======= */
+const USE_HEAD_IMAGE = true;  // <-- true = Kopf-Bild nutzen, false = Pixelkopf
+const HEAD_IMG_URL   = "img/pixel-head.png?v=" + Date.now(); // oder .webp
+
+const RUN_TO_RIGHT   = true;
+const WORD           = "b3nn3t";
+const HAMMER_MS      = 380;
+const SPARK_COUNT    = 10;
+const HEAD_SCALE     = 26;
+const BODY_SCALE     = 16;
+const LETTER_SIZE    = 18;
+const LETTER_GAP     = 18;
+/* ============================== */
 
 const c = document.getElementById('c');
 const ctx = c.getContext('2d');
@@ -41,7 +46,16 @@ function resize(){
 }
 addEventListener('resize',resize);resize();
 
-/* Zeichenhilfen */
+/* ====== Kopf laden ====== */
+let headReady=false, headImg;
+if(USE_HEAD_IMAGE){
+  headImg=new Image();headImg.crossOrigin="anonymous";
+  headImg.onload=()=>headReady=true;
+  headImg.onerror=()=>{headReady=false;};
+  headImg.src=HEAD_IMG_URL;
+}
+
+/* ====== Zeichenhilfen ====== */
 function rect(x,y,w,h,fill){
   ctx.fillStyle=fill;ctx.fillRect(x,y,w,h);
   ctx.fillStyle='#000';
@@ -55,30 +69,43 @@ function drawLine(){
   ctx.beginPath();ctx.moveTo(0,lineY());ctx.lineTo(lineEndX(),lineY());ctx.stroke();
 }
 
-/* Avatar */
+/* ====== Avatar ====== */
 const avatar={state:'walk',x:-40*PX(),y:lineY()-3*PX(),vx:2.2,vy:0,gravity:.35,step:0,headScale:HEAD_SCALE,bodyScale:BODY_SCALE,hammerUntil:0};
+
 function drawHead(x,y){
-  const p=PX(),s=avatar.headScale*p,w=s,h=s,top=y-avatar.bodyScale*p-s-2*p;
-  rect(Math.round(x-w/2),Math.round(top),w,Math.round(h*0.6),'#caa134'); // Haare
-  rect(Math.round(x-w/2),Math.round(top+h*0.45),w,Math.round(h*0.5),'#f2b59a'); // Gesicht
+  const p=PX(),s=avatar.headScale*p,w=s,h=s;
+  const top=y-avatar.bodyScale*p-s-2*p;
+  if(USE_HEAD_IMAGE && headReady){
+    ctx.drawImage(headImg,Math.round(x-w/2),Math.round(top),Math.round(w),Math.round(h));
+    return;
+  }
+  // Pixelkopf (Fallback)
+  rect(Math.round(x-w/2),Math.round(top),w,Math.round(h*0.6),'#caa134');
+  rect(Math.round(x-w/2),Math.round(top+h*0.45),w,Math.round(h*0.5),'#f2b59a');
   ctx.fillStyle='#1a5cff';
   ctx.fillRect(Math.round(x+w*0.1),Math.round(top+h*0.62),2*p,2*p);
   ctx.fillRect(Math.round(x+w*0.22),Math.round(top+h*0.62),2*p,2*p);
 }
+
 function drawBody(x,y){
   const p=PX(),bodyH=avatar.bodyScale*p,bodyW=Math.round(10*p),legLen=Math.round(12*p),armLen=Math.round(9*p);
   const torsoX=Math.round(x-bodyW/2),torsoY=Math.round(y-bodyH);
   rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
+
   const hammering=performance.now()<avatar.hammerUntil;
   const armTh=3*p,legTh=4*p;
   const armSwing=hammering?-2*p:Math.sin(avatar.step)*1.2*p;
+
   rect(Math.round(x+4*p),torsoY+Math.round(3*p)+Math.round(armSwing),armTh,armLen,'#2b3a56');
   rect(Math.round(x-7*p),torsoY+Math.round(3*p)-Math.round(armSwing),armTh,armLen,'#2b3a56');
+
   const legSwing=Math.sin(avatar.step)*1.2*p;
   rect(Math.round(x+1*p),y-legLen+Math.round(legSwing),legTh,legLen,'#233047');
   rect(Math.round(x-4*p),y-legLen-Math.round(legSwing),legTh,legLen,'#233047');
+
   rect(Math.round(x+1*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
   rect(Math.round(x-4*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
+
   if(hammering){
     const hx=Math.round(x+10*p),hy=Math.round(torsoY+7*p);
     ctx.fillStyle='#7a4f1f';ctx.fillRect(hx,hy,1*p,9*p);
@@ -91,7 +118,7 @@ function drawBody(x,y){
   }
 }
 
-/* Bodenschatten */
+/* ====== Bodenschatten ====== */
 function drawFallShadow(){
   if(avatar.state!=='fall')return;
   const p=PX(),baseY=lineY()+2*p,dist=Math.max(0,avatar.y-lineY());
@@ -101,14 +128,13 @@ function drawFallShadow(){
   ctx.beginPath();ctx.fillStyle=`rgba(0,0,0,${a})`;ctx.arc(0,0,1,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 
-/* Buchstaben */
+/* ====== Buchstaben + Funken ====== */
 let baseX=null;
 function ensureBaseX(){if(baseX!==null)return;const p=PX(),s=LETTER_GAP*p;const total=(WORD.length-1)*s;baseX=Math.round(W/2-total/2);}
 function letterTargetX(i){ensureBaseX();const p=PX(),s=LETTER_GAP*p;return baseX+i*s;}
 function letterTargetY(){const p=PX(),s=avatar.headScale*p;return avatar.y-avatar.bodyScale*p-s*0.35;}
 const letters=[];let nextLetterIndex=0;
 
-/* Funken */
 const sparks=[];
 function spawnSparks(x,y){
   const p=PX();
@@ -134,7 +160,6 @@ function drawSparks(){
   }
   ctx.globalAlpha=1;
 }
-
 function maybeHammerNext(){
   if(nextLetterIndex>=WORD.length)return;
   const i=nextLetterIndex,tx=letterTargetX(i),ty=letterTargetY(),reach=8*PX();
@@ -157,7 +182,7 @@ function drawLetters(){
   }
 }
 
-/* Loop */
+/* ====== Hauptloop ====== */
 function tick(){
   ctx.clearRect(0,0,W,H);
   drawLine();
