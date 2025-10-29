@@ -12,105 +12,133 @@
 <link href="styles_nav_arrows.css" rel="stylesheet"/>
 <link href="swipe-helper.css" rel="stylesheet"/>
 
+<!-- ========= Layout-Variablen & Kernlayout ========= -->
 <style>
-  :root {
-    --header-height: 56px;
-    --title-top: clamp(21px, 3vw, 31px);
-    --title-left: clamp(21px, 3vw, 31px);
-    --title-space: 150px;
-    --title-size: 2.6rem;
+  :root{
+    --header-height: 56px;                  /* Höhe der Top-Leiste "b3nn3t" */
+    --title-top: clamp(21px, 3vw, 31px);    /* 3 px tiefer */
+    --title-left: clamp(21px, 3vw, 31px);   /* 3 px weiter rechts */
+    --title-space: 150px;                   /* Luft zwischen Titelblock und Scrollbereich */
+    --title-size: 2.6rem;                   /* H1-Größe wie „gesehen“ */
   }
 
+  /* Außen-Scrolling aus; nur innen wird gescrollt */
   html, body { height: 100%; overflow: hidden; margin: 0; }
 
-  .main {
+  /* Grauer Container */
+  .main{
     position: relative;
-    height: calc(100vh - var(--header-height));
+    height: calc(100vh - var(--header-height)); /* bleibt im Viewport */
     background: rgba(255,255,255,.32);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     border-radius: 12px;
   }
 
-  .title-fixed {
+  /* Fixierter Titelblock – NICHT im Scrollbereich */
+  .title-fixed{
     position: absolute;
     top: var(--title-top);
     left: var(--title-left);
     right: var(--title-left);
     z-index: 3;
   }
+/* Fixierter Titel: Typo identisch zu plattformen.html (aus styles.css) */
+.title-fixed h1{
+  margin: 0;
+  /* keine eigene font-size → erbt H1-Größe aus styles.css */
+  font-weight: 700;   /* nicht 800; wie plattformen */
+  line-height: 1.1;
+  color:#111;
+}
 
-  .title-fixed h1 {
-    margin: 0;
-    font-weight: 700;
-    line-height: 1.1;
-    color:#111;
-  }
+.title-fixed p{
+  margin: .6rem 0 0 0;  /* kleiner Abstand unter der H1 */
+  /* keine eigene font-size → erbt p-Größe aus styles.css */
+  color:#333;
+}
 
-  .title-fixed p {
-    margin: .6rem 0 0 0;
-    color:#333;
-  }
 
-  .scroll-panel {
+  /* Nur dieser Bereich scrollt – startet UNTER dem Titel */
+  .scroll-panel{
     position: absolute;
     top: calc(var(--title-top) + var(--title-space));
     left: var(--title-left);
     right: var(--title-left);
+    right: var(--title-left);
     bottom: 16px;
+
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    background: transparent !important;
-    scrollbar-width: none;
-  }
 
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin: 0;
+    border-radius: 12px;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
   .scroll-panel::-webkit-scrollbar{ display:none; }
 
-  .disco-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
-    gap: 1rem;
-    margin: 0 0 2rem;
-    align-items: start;
+  /* Karten & Grids */
+  .panel-block{ background:transparent !important; box-shadow:none !important; padding:0; margin:0 0 1rem 0; }
+  .disco-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:1rem; margin:0 0 2rem; align-items:start;
   }
+  .release{
+    border:1px solid #ddd; border-radius:12px; padding:12px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06); background:#fff;
+  }
+  .release img{ width:100%; height:220px; object-fit:cover; border-radius:8px; background:#f2f2f2; }
+  .release .meta{ font-size:.9rem; color:#444; margin-top:.5rem }
+  .release .title{ font-weight:600 }
 
-  .release {
-    border:1px solid #ddd;
+  /* Akkordeon-Header */
+  .panel-block h3[role="button"]{
+    display:flex; align-items:center; justify-content:space-between;
+    font-weight:700; font-size:1rem; line-height:1.2;
+    padding:.9rem 1rem; margin:0 0 .8rem 0;
+    background:rgba(255,255,255,.92);
+    border:1px solid rgba(0,0,0,.08);
     border-radius:12px;
-    padding:12px;
-    box-shadow:0 1px 3px rgba(0,0,0,.06);
-    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+    cursor:pointer; color:#111;
   }
-
-  .release img {
-    width:100%;
-    height:220px;
-    object-fit:cover;
-    border-radius:8px;
-    background:#f2f2f2;
+  .panel-block h3[role="button"]::after{
+    content:"▾"; opacity:.75; margin-left:.75rem;
+    transition:transform .2s ease, opacity .2s ease;
+    font-weight:400;
   }
+  .panel-block h3[role="button"]:[aria-expanded="true"]::after{ transform:rotate(180deg); }
+  .panel-block h3[role="button"]:hover{ box-shadow:0 4px 14px rgba(0,0,0,.08); }
+  .panel-block h3[role="button"]:active{ transform:translateY(1px); }
+  .panel-block h3[role="button"]:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(17,17,17,.2); }
 
-  .release .meta { font-size:.9rem; color:#444; margin-top:.5rem }
-  .release .title { font-weight:600 }
+  .disco-grid[hidden]{ display:none; }
 
-  .toggle {margin-top:.5rem}
-  .toggle button {
-    border:1px solid #111;
-    border-radius:999px;
-    padding:.35rem .7rem;
-    font-weight:600;
-    background:#111;
-    color:#fff;
-    cursor:pointer;
+  /* (Optional) Badges ausblenden */
+  .badge{ display:none !important; }
+
+  /* Mehr-Button / Tracklist */
+  .toggle{margin-top:.5rem}
+  .toggle button{
+    border:1px solid #111;border-radius:999px;padding:.35rem .7rem;font-weight:600;
+    background:#111;color:#fff;cursor:pointer
   }
-
-  .tracklist {margin-top:.6rem;display:none}
+  .tracklist{margin-top:.6rem;display:none}
   .tracklist.open{display:block}
   .tracklist iframe{width:100%;height:352px;border:0;border-radius:8px}
 
-  @media (max-width:768px){
+@media (max-width:768px){
+    /* Text im Untertitel etwas kleiner (wie gehabt) */
     .title-fixed p{ font-size:1rem; }
-    .scroll-panel{ bottom:8px; }
+
+    /* Scrollbereich minimal näher an unten */
+    .scroll-panel{ bottom:8px; } /* vorher 12px */
+
+    /* Grauer Container: etwas näher an unteren Rand,
+       dynamische Höhe für Mobile-Browserleisten */
     main.main{
       min-height: calc(100dvh - var(--header-height) - 20px);
       height: calc(100dvh - var(--header-height) - 20px);
@@ -126,116 +154,327 @@
   </a>
 </header>
 
+<!-- Pfeile -->
 <a aria-label="Vorherige Seite" class="nav-arrow left" href="ueber-mich.html">←</a>
 <a aria-label="Nächste Seite" class="nav-arrow right" href="kontakt.html">→</a>
 
 <main class="main">
+  <!-- Fixierter Titel -->
   <div class="title-fixed">
     <h1>diskografie</h1>
     <p>meine releases & kollabos</p>
   </div>
 
+  <!-- Scrollbarer Bereich -->
   <div class="scroll-panel">
-    <!-- Beispiel-Inhalt -->
+
+    <!-- Alben -->
     <section>
-      <div class="panel-block"><h3>Singles (inkl. Kollabos)</h3></div>
+      <div class="panel-block"><h3>Alben</h3></div>
       <div class="disco-grid">
         <article class="release">
-          <img class="cover" alt="Cover: mani matter (mit XYZ)"
-               data-spotify="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU"
-               loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" target="_blank" rel="noopener">mani matter (mit XYZ)</a></div>
+          <img alt="Cover: traeum ich??" class="cover" data-spotify="https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz" target="_blank" rel="noopener">traeum ich??</a><span class="badge">Album</span></div>
+          <div class="meta">2025</div>
+          <div class="toggle"><button type="button" onclick="toggleTracklist('tracklist-1')">Mehr</button></div>
+          <div class="tracklist" id="tracklist-1"><iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/0om0qmIgGQdOfVaNIKUNmz"></iframe></div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: laut nachgedacht" class="cover" data-spotify="https://open.spotify.com/album/4n2ziE3adhDkSf4WPy7c1l" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/4n2ziE3adhDkSf4WPy7c1l" target="_blank" rel="noopener">laut nachgedacht</a><span class="badge">Album</span></div>
+          <div class="meta">2024</div>
+          <div class="toggle"><button type="button" onclick="toggleTracklist('tracklist-2')">Mehr</button></div>
+          <div class="tracklist" id="tracklist-2"><iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/4n2ziE3adhDkSf4WPy7c1l"></iframe></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- EPs -->
+    <section>
+      <div class="panel-block"><h3>EPs</h3></div>
+      <div class="disco-grid">
+        <article class="release">
+          <img alt="Cover: st3rne☆*" class="cover" data-spotify="https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI" target="_blank" rel="noopener">st3rne☆*</a><span class="badge">EP</span></div>
+          <div class="meta">2025</div>
+          <div class="toggle"><button type="button" onclick="toggleTracklist('tracklist-3')">Mehr</button></div>
+          <div class="tracklist" id="tracklist-3"><iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/3d7F0wnumMBtTKar2t2cgI"></iframe></div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: hundert grad" class="cover" data-spotify="https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz" target="_blank" rel="noopener">hundert grad</a><span class="badge">EP</span></div>
+          <div class="meta">2024</div>
+          <div class="toggle"><button type="button" onclick="toggleTracklist('tracklist-4')">Mehr</button></div>
+          <div class="tracklist" id="tracklist-4"><iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/363ITnyvTfkJ4p5yu3K0Bz"></iframe></div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: gesund/krank" class="cover" data-spotify="https://open.spotify.com/album/63meNbUfVkmao1NCuiplaf" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/63meNbUfVkmao1NCuiplaf" target="_blank" rel="noopener">gesund/krank</a><span class="badge">EP</span></div>
+          <div class="meta">2023</div>
+          <div class="toggle"><button type="button" onclick="toggleTracklist('tracklist-5')">Mehr</button></div>
+          <div class="tracklist" id="tracklist-5"><iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="https://open.spotify.com/embed/album/63meNbUfVkmao1NCuiplaf"></iframe></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Singles (inkl. Kollabos) -->
+    <section>
+      <div class="panel-block"><h3>Singles (inkl. Kollabos)</h3></div>
+
+      <div class="disco-grid">
+        <article class="release">
+          <img alt="Cover: kreative perspektiven" class="cover" data-spotify="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" target="_blank" rel="noopener">kreative perspektiven</a><span class="badge">Single</span></div>
           <div class="meta">2025</div>
         </article>
 
         <article class="release">
-          <img class="cover" alt="Cover: oder auch in fabeln"
-               data-spotify="https://open.spotify.com/track/1ucICLXPSxrr8RYZqTxbdR"
-               loading="lazy"/>
-          <div class="title"><a href="https://open.spotify.com/track/1ucICLXPSxrr8RYZqTxbdR" target="_blank" rel="noopener">oder auch in fabeln</a></div>
+          <img alt="Cover: 03.02.25" class="cover" data-spotify="https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG" target="_blank" rel="noopener">03.02.25</a><span class="badge">Single</span></div>
           <div class="meta">2025</div>
         </article>
+
+        <article class="release">
+          <img alt="Cover: wer bist du wenn keiner schaut??" class="cover" data-spotify="https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM" target="_blank" rel="noopener">wer bist du wenn keiner schaut??</a><span class="badge">Single</span></div>
+          <div class="meta">2025</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: mani matter (mit XYZ)" class="cover" data-spotify="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" target="_blank" rel="noopener">mani matter (mit XYZ)</a><span class="badge">Single ·Kollabo</span></div>
+          <div class="meta">2025</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: oder auch in fabeln" class="cover" data-spotify="https://open.spotify.com/track/1ucICLXPSxrr8RYZqTxbdR" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/track/1ucICLXPSxrr8RYZqTxbdR" target="_blank" rel="noopener">oder auch in fabeln</a><span class="badge">Single</span></div>
+          <div class="meta">2025</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: TRÄUME BRÜCKEN ZÄUNE" class="cover" data-spotify="https://open.spotify.com/track/0s8XyPtRo8lCWzDfZ7gqSD" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/track/0s8XyPtRo8lCWzDfZ7gqSD" target="_blank" rel="noopener">TRÄUME BRÜCKEN ZÄUNE</a><span class="badge">Single</span></div>
+          <div class="meta">2025</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: neigen" class="cover" data-spotify="https://open.spotify.com/track/5LP9Ef4tNuDYvNNxltKKuv" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/track/5LP9Ef4tNuDYvNNxltKKuv" target="_blank" rel="noopener">neigen</a><span class="badge">Single</span></div>
+          <div class="meta">2025</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: seit wieviel jahren leuchten sterne??" class="cover" data-spotify="https://open.spotify.com/album/0UfKvNdoEEc00LcgmwL7TE" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/0UfKvNdoEEc00LcgmwL7TE" target="_blank" rel="noopener">seit wieviel jahren leuchten sterne??</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: kinderleicht" class="cover" data-spotify="https://open.spotify.com/track/0K3Wl0QNxPvVb599JsXFGx" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/track/0K3Wl0QNxPvVb599JsXFGx" target="_blank" rel="noopener">kinderleicht</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: kein phone" class="cover" data-spotify="https://open.spotify.com/album/3gN1G0ci9JVR5WsH6ZoGYY" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/3gN1G0ci9JVR5WsH6ZoGYY" target="_blank" rel="noopener">kein phone</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: bleibt für ewich" class="cover" data-spotify="https://open.spotify.com/album/6D3qdbNuGvYErKxfB0hCUL" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/6D3qdbNuGvYErKxfB0hCUL" target="_blank" rel="noopener">bleibt für ewich</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: es ist ok (mit al1en &amp; diemfeif)" class="cover" data-spotify="https://open.spotify.com/album/2eSMAj5YAvm8yqGxf8n3RV" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/2eSMAj5YAvm8yqGxf8n3RV" target="_blank" rel="noopener">es ist ok (mit al1en &amp; diemfeif)</a><span class="badge">Single ·Kollabo</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: raucherschaeden (mit sotbarn)" class="cover" data-spotify="https://open.spotify.com/track/24vQfWDt2rj60Bek47cKzv" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/track/24vQfWDt2rj60Bek47cKzv" target="_blank" rel="noopener">raucherschaeden (mit sotbarn)</a><span class="badge">Single ·Kollabo</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: was wir möchten" class="cover" data-spotify="https://open.spotify.com/album/3lArtOVk2ifWSw6kcFos11" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/3lArtOVk2ifWSw6kcFos11" target="_blank" rel="noopener">was wir möchten</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: unsere ferne/ein paar memorie" class="cover" data-spotify="https://open.spotify.com/album/00rRbuG4SzPFLo5mucA97W" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/00rRbuG4SzPFLo5mucA97W" target="_blank" rel="noopener">unsere ferne/ein paar memorie</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: anwesenheit" class="cover" data-spotify="https://open.spotify.com/album/25NBwRCESVSN4xLGy8yJPE" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/25NBwRCESVSN4xLGy8yJPE" target="_blank" rel="noopener">anwesenheit</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: ohne waffe" class="cover" data-spotify="https://open.spotify.com/album/07IwWTYKTqq73hG0NEAJxZ" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/07IwWTYKTqq73hG0NEAJxZ" target="_blank" rel="noopener">ohne waffe</a><span class="badge">Single</span></div>
+          <div class="meta">2024</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: zwei stunden" class="cover" data-spotify="https://open.spotify.com/album/7dSgBqlyFyTep2QhdkZIyB" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/7dSgBqlyFyTep2QhdkZIyB" target="_blank" rel="noopener">zwei stunden</a><span class="badge">Single</span></div>
+          <div class="meta">2023</div>
+        </article>
+
+        <article class="release">
+          <img alt="Cover: diese welt, sie schweigt" class="cover" data-spotify="https://open.spotify.com/album/5OLu9T84QPWW2mFMOMd4A9" loading="lazy"/>
+          <div class="title"><a href="https://open.spotify.com/album/5OLu9T84QPWW2mFMOMd4A9" target="_blank" rel="noopener">diese welt, sie schweigt</a><span class="badge">Single</span></div>
+          <div class="meta">2023</div>
+        </article>
+      </div>
+
+      <!-- Copyright -->
+      <div style="margin-top: 25em; color: black; text-align: center;">
+        © b3nn3t · <a href="impressum.html" style="color: black; text-decoration: none;">Impressum / Datenschutz</a>
       </div>
     </section>
+
   </div>
 </main>
 
 <a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
 
-<!-- ==================== OPTIMIERTER COVER-LOADER ==================== -->
+<!-- Skripte -->
+<script src="script.js"></script>
+<script defer src="swipe-nav.js?v=12"></script>
+
+<!-- Cover-Loader mit JPG-Fallback (seriell + kleine Pause) -->
 <script>
 (function () {
   const FALLBACK_SRC = 'assets/placeholder-cover.jpg';
-  const DELAY_MS = 150;           // Pause zwischen Requests
-  const PREFETCH_MARGIN = '200px'; // Lazy-Load Vorpuffer
+  const DELAY_MS = 150; // kleine Pause zwischen Requests
 
-  async function fetchCoverUrl(spotifyUrl){
+  async function setCover(img) {
+    const url = img.dataset.spotify;
+    if (!url) { img.src = FALLBACK_SRC; return; }
     try {
       const res = await fetch(
-        `https://open.spotify.com/oembed?url=${encodeURIComponent(spotifyUrl)}`,
-        { mode: 'cors', cache: 'force-cache' }
+        `https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`,
+        { mode: 'cors' }
       );
       if (!res.ok) throw new Error('oEmbed failed');
       const data = await res.json();
-      return (data.thumbnail_url || '').replace(/&?size=\d+/, '');
+      const src = (data.thumbnail_url || '').replace(/&?size=\d+/, '');
+      img.src = src || FALLBACK_SRC;
     } catch {
-      return null;
+      img.src = FALLBACK_SRC;
+    }
+    // kleine Pause, um Rate-Limits zu vermeiden
+    await new Promise(r => setTimeout(r, DELAY_MS));
+  }
+
+  async function initCovers(){
+    const imgs = document.querySelectorAll('img.cover[data-spotify]');
+    for (const img of imgs){
+      await setCover(img); // seriell statt parallel
     }
   }
-
-  async function setCover(img){
-    const local = img.dataset.local; // Lokaler Cache (optional)
-    if (local) { img.src = local; return; }
-    const url = img.dataset.spotify;
-    if (!url) { img.src = FALLBACK_SRC; return; }
-    const src = await fetchCoverUrl(url);
-    img.src = src || FALLBACK_SRC;
-  }
-
-  // --- Request-Queue (seriell & throttled) ---
-  const queue = [];
-  let running = false;
-  async function runQueue(){
-    if (running) return;
-    running = true;
-    while (queue.length){
-      const job = queue.shift();
-      await job();
-      await new Promise(r => setTimeout(r, DELAY_MS));
-    }
-    running = false;
-  }
-
-  function schedule(img){
-    queue.push(() => setCover(img));
-    runQueue();
-  }
-
-  // --- Initialisierung ---
-  function initCovers(){
-    const imgs = Array.from(document.querySelectorAll('img.cover[data-spotify]'));
-    if ('IntersectionObserver' in window){
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting){
-            io.unobserve(entry.target);
-            schedule(entry.target);
-          }
-        });
-      }, { rootMargin: PREFETCH_MARGIN });
-      imgs.forEach(img => io.observe(img));
-    } else {
-      imgs.forEach(schedule);
-    }
-  }
-
-  if (document.readyState === 'loading')
-    document.addEventListener('DOMContentLoaded', initCovers);
-  else
-    initCovers();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCovers);
+  else initCovers();
 })();
 </script>
 
-<!-- ================================================================ -->
+
+<!-- Singles: fehlende „Mehr“-Buttons + Player automatisch ergänzen -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const singlesHeading = Array.from(document.querySelectorAll('main h3'))
+      .find(h => h.textContent.trim().toLowerCase().startsWith('singles'));
+    if (!singlesHeading) return;
+
+    const singlesGrid = singlesHeading.closest('.panel-block')?.nextElementSibling;
+    if (!singlesGrid || !singlesGrid.classList.contains('disco-grid')) return;
+
+    let idx = 1;
+    singlesGrid.querySelectorAll('.release').forEach(card => {
+      const hasToggle = card.querySelector('.toggle');
+      const hasTracklist = card.querySelector('.tracklist');
+      if (hasToggle && hasTracklist) return;
+
+      const url =
+        card.querySelector('img.cover')?.dataset.spotify ||
+        card.querySelector('.title a')?.href || '';
+
+      let embed = '';
+      if (/open\.spotify\.com/.test(url)) {
+        embed = url.replace('open.spotify.com/', 'open.spotify.com/embed/');
+      }
+
+      const afterMeta = card.querySelector('.meta') || card.lastElementChild;
+      const toggleWrap = document.createElement('div');
+      toggleWrap.className = 'toggle';
+
+      const id = `tracklist-s-${idx++}`;
+      toggleWrap.innerHTML = `<button type="button" onclick="toggleTracklist('${id}')">Mehr</button>`;
+
+      const panel = document.createElement('div');
+      panel.className = 'tracklist';
+      panel.id = id;
+      panel.innerHTML = embed
+        ? `<iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" src="${embed}"></iframe>`
+        : `<div style="padding:.6rem 0;color:#666">Keine Einbettung gefunden.</div>`;
+
+      afterMeta.insertAdjacentElement('afterend', toggleWrap);
+      toggleWrap.insertAdjacentElement('afterend', panel);
+    });
+  });
+</script>
+
+<!-- Akkordeon-Logik (Start: geschlossen) -->
+<script>
+  function toggleTracklist(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.toggle('open');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('main section');
+
+    sections.forEach((section, i) => {
+      const heading = section.querySelector('.panel-block h3');
+      const grid = section.querySelector('.disco-grid');
+      if (!heading || !grid) return;
+
+      heading.setAttribute('role', 'button');
+      heading.setAttribute('tabindex', '0');
+
+      const gridId = `cat-grid-${i+1}`;
+      heading.setAttribute('aria-controls', gridId);
+      heading.setAttribute('aria-expanded', 'false'); // geschlossen starten
+      grid.id = gridId;
+      grid.hidden = true;
+
+      const toggle = () => {
+        const isOpen = heading.getAttribute('aria-expanded') === 'true';
+        heading.setAttribute('aria-expanded', String(!isOpen));
+        grid.hidden = isOpen;
+      };
+
+      heading.addEventListener('click', toggle);
+      heading.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  });
+</script>
+
 </body>
 </html>
