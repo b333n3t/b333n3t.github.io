@@ -15,7 +15,7 @@
 <script>
 /* ======= EINSTELLUNGEN ======= */
 const USE_HEAD_IMAGE   = true;
-const HEAD_IMG_URL     = "img/pixel-head.png?v=" + Date.now(); // oder .webp
+const HEAD_IMG_URL     = "img/dein-pixel.webp?v=" + Date.now(); // oder .webp
 
 // Keying (falls Kopfbild grauen Hintergrund hat)
 const KEY_TOLERANCE    = 65;
@@ -29,21 +29,21 @@ const HAMMER_MS        = 420;    // Pause je Buchstabe (Hammer-Animation)
 const SPARK_COUNT      = 12;
 const HEAD_SCALE       = 26;
 const BODY_SCALE       = 16;
-const LETTER_SIZE      = 18;     // Schriftgröße (px * PX())
+const LETTER_SIZE      = 22;     // Schriftgröße (px * PX())
 const LETTER_GAP       = 18;     // Abstand zwischen Buchstaben (px * PX())
 
 /* Letzter Buchstabe: Kipp- & Wackelbewegung */
 const TILT_TRIGGER_PX  = 42;     // Abstand zur Kante (in PX()) wann das t kippt
 const TILT_TARGET_DEG  = 22;     // Kippwinkel (rechts = positiv)
 const TILT_MS          = 400;    // Zeit bis max. Neigung
-const TILT_WOBBLE_MS   = 1800;   // Dauer des Wackelns nach dem Kippen
-const TILT_PAUSE_MS    = 700;    // **NEU:** Figur pausiert so lange, wenn t kippt
+const TILT_WOBBLE_MS   = 2000;   // Dauer des Wackelns nach dem Kippen
+const TILT_PAUSE_MS    = 900;    // **NEU:** Figur pausiert so lange, wenn t kippt
 
 /* Glow & Welle */
-const GLOW_MS          = 550;    // Dauer des Aufleuchtens
+const GLOW_MS          = 700;    // Dauer des Aufleuchtens
 const WAVE_DELAY_MS    = 100;    // Startverzögerung der Welle nach Glow
 const WAVE_MS          = 1400;   // Dauer der Lichtwelle
-const WAVE_STRENGTH    = 0.85;   // Helligkeit der Welle (0..1)
+const WAVE_STRENGTH    = 0.95;   // Helligkeit der Welle (0..1)
 /* ============================== */
 
 const c = document.getElementById('c');
@@ -317,7 +317,7 @@ function drawWave(){
   const p=PX();
   const rMax = Math.hypot(W, H);                // bis über den Bildschirm
   const r = rMax * t;
-  const band = 30*p;                            // Bandbreite der Welle
+  const band = 50*p;                            // Bandbreite der Welle
 
   const grad = ctx.createRadialGradient(waveOrigin.x, waveOrigin.y, Math.max(1, r-band),
                                         waveOrigin.x, waveOrigin.y, r);
