@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>b3nn3t • Intro mit Kopf-Chroma-Key</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>b3nn3t • Intro mit smarterm Kopf-Keying</title>
   <style>
     html,body{margin:0;height:100%;background:#333;overflow:hidden}
     canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges}
@@ -14,9 +14,13 @@
 
 <script>
 /* ======= EINSTELLUNGEN ======= */
-const USE_HEAD_IMAGE   = true;   // true = Bildkopf verwenden
-const HEAD_IMG_URL     = "img/dein-pixel-kopf.webp?v=" + Date.now(); // oder .webp
-const CHROMA_TOLERANCE = 65;     // 25–55: höher = aggressiveres Entfernen
+const USE_HEAD_IMAGE   = true;
+const HEAD_IMG_URL     = "img/pixel-head.png?v=" + Date.now(); // oder .webp
+// Keying-Feintuning:
+const KEY_TOLERANCE    = 65;   // 40–80 (höher = mehr Hintergrund weg)
+const KEY_SOFTNESS     = 0.45; // 0..1 (Kantenweiche)
+const KEY_CUTOFF       = 0.10; // 0..1 (unterhalb -> volle Transparenz)
+const KEY_DESPECKLE    = 1;    // 0..2 (0=aus, 1=leicht, 2=stärker)
 
 const RUN_TO_RIGHT   = true;
 const WORD           = "b3nn3t";
@@ -47,12 +51,17 @@ function resize(){
 }
 addEventListener('resize',resize);resize();
 
-/* ====== Kopf laden & Grauhintergrund entfernen ====== */
+/* ====== Kopf laden & SMART-Keying ====== */
 let headReady=false, headImg;
 if(USE_HEAD_IMAGE){
   const raw = new Image(); raw.crossOrigin="anonymous";
   raw.onload=()=>{
-    headImg = removeFlatBG(raw, CHROMA_TOLERANCE); // -> Canvas mit Transparenz
+    headImg = removeBGSmart(raw, {
+      tolerance: KEY_TOLERANCE,
+      softness:  KEY_SOFTNESS,
+      cutoff:    KEY_CUTOFF,
+      despeckle: KEY_DESPECKLE
+    });
     headReady=true;
   };
   raw.onerror=()=>{ headReady=false; };
@@ -60,37 +69,79 @@ if(USE_HEAD_IMAGE){
 }
 
 /**
- * Nimmt die Farbe oben links als Key und macht ähnliche Pixel transparent.
- * tolerance: 0..255 (RGB-Abstand). 40–50 funktioniert gut bei grauen Hintergründen.
+ * Entfernt flachen/rauschigen Hintergrund:
+ * - sampling aller Rand-Pixel -> gemittelter Key
+ * - Distanz in YCbCr (robuster als reines RGB)
+ * - Softness (smoothstep), Cutoff und Despeckle-Filter
  */
-function removeFlatBG(image, tolerance){
-  const off = document.createElement("canvas");
-  off.width = image.naturalWidth || image.width;
-  off.height = image.naturalHeight || image.height;
-  const octx = off.getContext("2d", { willReadFrequently: true });
+function removeBGSmart(image, {tolerance=60, softness=.4, cutoff=.1, despeckle=1}={}){
+  const w = image.naturalWidth || image.width;
+  const h = image.naturalHeight || image.height;
+  const off = document.createElement('canvas'); off.width=w; off.height=h;
+  const octx = off.getContext('2d', { willReadFrequently:true });
   octx.imageSmoothingEnabled = false;
-  octx.drawImage(image, 0, 0);
+  octx.drawImage(image,0,0,w,h);
 
-  const img = octx.getImageData(0, 0, off.width, off.height);
+  // ---- 1) Key-Farbe aus allen Rändern mitteln
+  const img = octx.getImageData(0,0,w,h);
   const d = img.data;
+  let sumR=0,sumG=0,sumB=0,count=0;
+  function addPixel(ix){ sumR+=d[ix]; sumG+=d[ix+1]; sumB+=d[ix+2]; count++; }
+  for(let x=0;x<w;x++){ addPixel((0*w + x)<<2); addPixel(((h-1)*w + x)<<2); }
+  for(let y=0;y<h;y++){ addPixel((y*w + 0)<<2); addPixel((y*w + (w-1))<<2); }
+  const keyR = sumR/count|0, keyG = sumG/count|0, keyB = sumB/count|0;
 
-  // Key-Farbe aus Ecke oben links
-  const keyR = d[0], keyG = d[1], keyB = d[2];
+  // ---- 2) RGB -> YCbCr (bessere Farbdistanz)
+  function rgb2ycbcr(r,g,b){
+    const y  =  0.299*r + 0.587*g + 0.114*b;
+    const cb = -0.168736*r - 0.331264*g + 0.5*b + 128;
+    const cr =  0.5*r - 0.418688*g - 0.081312*b + 128;
+    return [y,cb,cr];
+  }
+  const [ky,kcb,kcr] = rgb2ycbcr(keyR,keyG,keyB);
+  const tol = Math.max(1,tolerance);
 
+  // smoothstep helper
+  const smooth = (t)=> (t<=0?0:t>=1?1:t*t*(3-2*t));
+
+  // ---- 3) Alpha berechnen (weiche Kante)
   for(let i=0;i<d.length;i+=4){
-    const r=d[i], g=d[i+1], b=d[i+2];
-    // euklidischer Abstand im RGB-Raum
-    const dr=r-keyR, dg=g-keyG, db=b-keyB;
-    const dist = Math.sqrt(dr*dr + dg*dg + db*db);
-
-    if(dist < tolerance){
-      // weiches „Feathering“ am Rand: je näher, desto transparenter
-      const a = Math.max(0, Math.min(1, dist / tolerance));
-      d[i+3] = Math.round(255 * a * a); // stärkeres Ausdünnen am Rand
-    }
+    const r=d[i],g=d[i+1],b=d[i+2];
+    const [y,cb,cr] = rgb2ycbcr(r,g,b);
+    const dist = Math.hypot(cb-kcb, cr-kcr) * 0.9 + Math.abs(y-ky)*0.1;
+    let a = (dist - tol*cutoff) / Math.max(1, tol*(1-cutoff));
+    a = smooth(a * (1+softness));             // weicher Übergang
+    a = Math.max(0, Math.min(1, a));
+    d[i+3] = Math.round(255 * a);
   }
   octx.putImageData(img,0,0);
-  return off; // Canvas kann direkt in drawImage() genutzt werden
+
+  // ---- 4) Despeckle (Kleinst-Pixel entfernen)
+  if(despeckle>0){
+    const pass = octx.getImageData(0,0,w,h);
+    const p = pass.data;
+    const thr = 140; // Alpha-Schwelle
+    const neigh = (x,y)=> {
+      let n=0;
+      for(let yy=-1;yy<=1;yy++) for(let xx=-1;xx<=1;xx++){
+        if(xx===0 && yy===0) continue;
+        const X=x+xx,Y=y+yy;
+        if(X<0||Y<0||X>=w||Y>=h) continue;
+        if(p[((Y*w+X)<<2)+3] > thr) n++;
+      }
+      return n;
+    };
+    for(let y=1;y<h-1;y++){
+      for(let x=1;x<w-1;x++){
+        const ai = ((y*w+x)<<2)+3;
+        if(p[ai] <= thr && neigh(x,y) >= (despeckle===2?5:7)){
+          p[ai] = 0; // freistellen
+        }
+      }
+    }
+    octx.putImageData(pass,0,0);
+  }
+  return off;
 }
 
 /* ====== Zeichenhilfen ====== */
@@ -117,7 +168,7 @@ function drawHead(x,y){
     ctx.drawImage(headImg,Math.round(x-w/2),Math.round(top),Math.round(w),Math.round(h));
     return;
   }
-  // Pixelkopf (Fallback)
+  // Fallback-Pixelkopf
   rect(Math.round(x-w/2),Math.round(top),w,Math.round(h*0.6),'#caa134');
   rect(Math.round(x-w/2),Math.round(top+h*0.45),w,Math.round(h*0.5),'#f2b59a');
   ctx.fillStyle='#1a5cff';
