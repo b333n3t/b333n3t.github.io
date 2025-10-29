@@ -1,249 +1,79 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pixel-Marionette – Intro (b3nn3t + Hammer + Funken)</title>
+  <title>Start — b3nn3t</title>
+  <meta name="description" content="Start — b3nn3t" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Externe Styles -->
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles_nav_arrows.css" />
+  <link rel="stylesheet" href="swipe-helper.css" />
+
+  <!-- Zusätzliche Anpassungen -->
   <style>
-    :root{ --bg:#333333; --duration:11000; }
-    html,body{height:100%;margin:0;background:var(--bg);}
-    body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    canvas{
-      display:block;width:100vw;height:100vh;
-      image-rendering:pixelated; image-rendering:crisp-edges;
-      background:var(--bg)
+    /* Mobile: grauer Container näher am unteren Rand */
+    @media (max-width: 768px) {
+      main.main {
+        min-height: calc(100dvh - 56px - 20px);
+        height: calc(100dvh - 56px - 20px);
+      }
     }
-    #main{position:fixed;inset:0;display:grid;place-items:center;background:#111;color:#fff;opacity:0;pointer-events:none;transition:opacity .8s ease}
-    #main.show{opacity:1;pointer-events:auto}
-    #main .card{max-width:min(90vw,840px);padding:32px;border-radius:16px;background:#181818;box-shadow:0 10px 40px rgba(0,0,0,.45)}
+
+    /* Eigene, vom Card-Layout unabhängige Bild-Panels */
+    .inline-photo {
+      margin: 1rem -1rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+      line-height: 0;
+      box-shadow: 0 6px 24px rgba(0,0,0,.15);
+      width: auto !important;
+      display: block !important;
+    }
+    .inline-photo img {
+      display: block !important;
+      width: 100% !important;
+      max-width: none !important;
+      height: auto !important;
+      object-fit: cover !important;
+      object-position: center bottom !important; /* Füße frei */
+    }
+    /* Kopf im ersten Inline-Bild etwas tiefer (näher am Körper) */
+    .inline-photo:first-of-type img {
+      object-position: center 60% !important;
+    }
+
+    /* Buchstaben / Karten nicht „nachziehen“ lassen */
+    h1, p, a.card, a.card small {
+      transform: none !important;
+      transition: none !important;
+      will-change: auto !important;
+    }
   </style>
 </head>
-<body>
-  <canvas id="stage"></canvas>
-  <section id="main" aria-hidden="true">
-    <div class="card"><h1>Willkommen!</h1><p>Platzhalter für die Hauptseite.</p></div>
-  </section>
 
-  <script>
-  // ======= EINSTELLUNGEN =======
-  const HEAD_IMG_URL = location.origin + "/img/dein-pixel-kopf.webp?v=" + Date.now();
-  const RUN_TO_RIGHT = true;
-  const CHROMA_TOLERANCE = 40;
-  const TRAIL_TEXT = "b3nn3t";
-  const TRAIL_SPAWN_MS = 300;
-  const HAMMER_MS = 400;        // Dauer Schlag-Animation
-  const SPARK_COUNT = 10;       // Funken pro Schlag
-  // ==============================
+<body ontouchstart="">
+  <header class="header">
+    <a class="brand" href="index.html" aria-label="b3nn3t Home">
+      <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
+    </a>
+  </header>
 
-  const canvas = document.getElementById('stage');
-  const ctx = canvas.getContext('2d');
+  <div id="page-glass" aria-hidden="true">
+    <div class="glass-fade"></div>
+    <div class="glass-solid"></div>
+  </div>
 
-  let W, H, DPR;
-  function resize(){
-    DPR = Math.max(1, Math.floor(window.devicePixelRatio||1));
-    W = canvas.width  = Math.floor(innerWidth * DPR);
-    H = canvas.height = Math.floor(innerHeight * DPR);
-    canvas.style.width  = innerWidth + 'px';
-    canvas.style.height = innerHeight + 'px';
-    ctx.imageSmoothingEnabled = false;
-  }
-  window.addEventListener('resize', resize); resize();
+  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div id="menu-overlay" class="menu-overlay" hidden></div>
 
-  const lineY   = () => Math.floor(H * 2/3);
-  const lineEndX= () => Math.floor(W * 0.82);
-  const PX      = () => Math.max(2, Math.floor(Math.min(W,H) / 240));
-
-  const avatar = {
-    state:'walk',
-    x: RUN_TO_RIGHT ? -40*PX() : W+40*PX(),
-    y: lineY() - 3*PX(),
-    vx: RUN_TO_RIGHT ? 2.1 : -2.1,
-    vy:0, gravity:.35, step:0,
-    headScale:22, bodyScale:12,
-    hammerUntil: 0
-  };
-
-  // ---- FUNKEN ----
-  const sparks = [];
-  function spawnSparks(x,y){
-    const p=PX();
-    for(let i=0;i<SPARK_COUNT;i++){
-      const ang = Math.random()*Math.PI - Math.PI/2;
-      const spd = (0.8+Math.random()*0.8)*6*p;
-      sparks.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd-1*p,life:450+Math.random()*250,born:performance.now(),alpha:1});
-    }
-  }
-  function updateSparks(){
-    const now=performance.now(), p=PX();
-    for(let i=sparks.length-1;i>=0;i--){
-      const s=sparks[i], t=now-s.born;
-      if(t>s.life){sparks.splice(i,1);continue;}
-      s.vy+=0.02*p; s.x+=s.vx*0.016; s.y+=s.vy*0.016; s.alpha=1-(t/s.life);
-    }
-  }
-  function drawSparks(){
-    const p=PX();
-    for(const s of sparks){
-      ctx.globalAlpha=Math.max(0,Math.min(1,s.alpha));
-      ctx.fillStyle='#ffd966';
-      ctx.fillRect(Math.round(s.x/p)*p, Math.round(s.y/p)*p, 2*p, 2*p);
-    }
-    ctx.globalAlpha=1;
-  }
-
-  // ---- KOPF ----
-  function removeGrayBG(image, tolerance = CHROMA_TOLERANCE) {
-    const off = document.createElement("canvas");
-    off.width = image.width; off.height = image.height;
-    const octx = off.getContext("2d", { willReadFrequently: true });
-    octx.imageSmoothingEnabled = false;
-    octx.drawImage(image, 0, 0);
-    const imgData = octx.getImageData(0, 0, off.width, off.height);
-    const d = imgData.data;
-    const keyR = d[0], keyG = d[1], keyB = d[2];
-    for (let i = 0; i < d.length; i += 4) {
-      const dr=Math.abs(d[i]-keyR), dg=Math.abs(d[i+1]-keyG), db=Math.abs(d[i+2]-keyB);
-      if (dr < tolerance && dg < tolerance && db < tolerance) d[i+3] = 0;
-    }
-    octx.putImageData(imgData, 0, 0);
-    return off;
-  }
-
-  let headReady = false;
-  let headImg = new Image(); headImg.crossOrigin='anonymous';
-  headImg.onload = () => { headImg = removeGrayBG(headImg); headReady = true; };
-  headImg.onerror = () => { console.error("Kopf nicht gefunden:", HEAD_IMG_URL); };
-  headImg.src = HEAD_IMG_URL;
-
-  // ---- LINIE ----
-  function drawLine(){
-    ctx.strokeStyle='#fff';
-    ctx.lineWidth = 2*PX();
-    ctx.beginPath(); ctx.moveTo(0, lineY()); ctx.lineTo(lineEndX(), lineY()); ctx.stroke();
-  }
-
-  // ---- KÖRPER ----
-  function rect(px,py,w,h,fill){
-    ctx.fillStyle=fill; ctx.fillRect(px,py,w,h);
-    ctx.fillStyle='#000';
-    ctx.fillRect(px-1,py,w+2,1);
-    ctx.fillRect(px-1,py+h-1,w+2,1);
-    ctx.fillRect(px-1,py,1,h);
-    ctx.fillRect(px+w-1,py,1,h);
-  }
-
-  function drawBody(x,y){
-    const p=PX(), bodyH=avatar.bodyScale*p, bodyW=Math.round(8*p);
-    const legLen=Math.round(9*p), armLen=Math.round(7*p);
-
-    const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH);
-    rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
-
-    const armTh=3*p, legTh=4*p;
-    const hammering = performance.now() < avatar.hammerUntil;
-    const armSwing = hammering ? (Math.sin((1 - (avatar.hammerUntil - performance.now())/HAMMER_MS)*Math.PI)*-2*p)
-                               : Math.sin(avatar.step)*1*p;
-
-    rect(Math.round(x+3*p), torsoY+Math.round(3*p)+Math.round(armSwing), armTh, armLen, '#2b3a56'); 
-    rect(Math.round(x-6*p), torsoY+Math.round(3*p)-Math.round(armSwing), armTh, armLen, '#2b3a56'); 
-
-    const hipY=y;
-    rect(Math.round(x+1*p), hipY-legLen, legTh, legLen, '#233047');
-    rect(Math.round(x-3*p), hipY-legLen, legTh, legLen, '#233047');
-
-    rect(Math.round(x+1*p), Math.round(lineY()-3*p), 6*p, 3*p, '#7a4f1f');
-    rect(Math.round(x-3*p), Math.round(lineY()-3*p), 6*p, 3*p, '#7a4f1f');
-
-    // Hammer
-    if (hammering){
-      const hx = Math.round(x + 8*p);
-      const hy = Math.round(torsoY + 6*p + Math.sin(Math.PI)*6*p);
-      ctx.fillStyle = '#7a4f1f'; ctx.fillRect(hx, hy, 1*p, 8*p);
-      ctx.fillStyle = '#c0c0c0'; ctx.fillRect(hx-3*p, hy, 7*p, 2*p);
-      ctx.fillStyle = '#000';
-      ctx.fillRect(hx-3*p-1, hy, 1, 2*p);
-      ctx.fillRect(hx+7*p-1, hy, 1, 2*p);
-      ctx.fillRect(hx-3*p-1, hy-1, 7*p+2, 1);
-      ctx.fillRect(hx-3*p-1, hy+2*p-1, 7*p+2, 1);
-    }
-  }
-
-  function drawHead(x,y){
-    const p = PX();
-    const s = avatar.headScale * p; const w=s, h=s;
-    const top = y - avatar.bodyScale * p - s - 2*p;
-    if (headReady && headImg && headImg.width)
-      ctx.drawImage(headImg, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
-  }
-
-  // ---- BUCHSTABEN ----
-  const letters = []; // {ch,x,y}
-  let nextSpawnAt = performance.now() + TRAIL_SPAWN_MS, spawnIndex = 0;
-
-  function spawnNextLetter(){
-    const p = PX(); const ch = TRAIL_TEXT[spawnIndex];
-    letters.push({ch, x: avatar.x - 12*p, y: lineY() - avatar.bodyScale*p - 12*p});
-    avatar.hammerUntil = performance.now() + HAMMER_MS;
-    spawnSparks(avatar.x, lineY() - avatar.bodyScale*p - 12*p);
-    spawnIndex++;
-  }
-  function updateLetters(){
-    const p=PX(), spacing=12*p;
-    for(let i=0;i<letters.length;i++){
-      const targetX=avatar.x - spacing*(letters.length-i);
-      letters[i].x += (targetX-letters[i].x)*0.15;
-    }
-  }
-  function drawLetters(){
-    const p=PX();
-    ctx.font=(12*p)+'px monospace';
-    ctx.textBaseline='middle';
-    for(const L of letters){
-      ctx.lineWidth=2*p; ctx.strokeStyle='#000';
-      ctx.strokeText(L.ch,Math.round(L.x),Math.round(L.y));
-      ctx.fillStyle='#f2f2f2';
-      ctx.fillText(L.ch,Math.round(L.x),Math.round(L.y));
-    }
-  }
-
-  // ---- LOOP ----
-  function tick(){
-    ctx.clearRect(0,0,W,H);
-    drawLine();
-
-    const p=PX(), speed=avatar.vx*p;
-    const now=performance.now();
-
-    if(spawnIndex < TRAIL_TEXT.length && now >= nextSpawnAt){
-      spawnNextLetter(); nextSpawnAt = now + TRAIL_SPAWN_MS;
-    }
-    updateLetters();
-    updateSparks();
-    drawLetters();
-    drawSparks();
-
-    if(avatar.state==='walk'){
-      avatar.x += speed; avatar.step += .15;
-      avatar.y = lineY()-3*p + Math.round(Math.sin(avatar.step*2)*0.5*p);
-      if(avatar.x >= lineEndX()-6*p){ avatar.state='fall'; avatar.vy=0; }
-    } else if(avatar.state==='fall'){
-      avatar.vy += avatar.gravity*p*.6; avatar.y += avatar.vy; avatar.x += speed*.2;
-      if(avatar.y > H + 40*p){ avatar.state='done'; startTransition(); }
-    }
-
-    drawBody(avatar.x,avatar.y);
-    drawHead(avatar.x,avatar.y);
-    requestAnimationFrame(tick);
-  }
-  tick();
-
-  // ---- ÜBERGANG ----
-  const main=document.getElementById('main');
-  function startTransition(){
-    main.classList.add('show');
-  }
-  setTimeout(()=>{ if(avatar.state!=='done') startTransition(); },
-    parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
-  </script>
-</body>
-</html>
+  <nav id="site-menu" class="site-menu" aria-hidden="true">
+    <ul>
+      <li><a href="ueber-mich.html">über mich</a></li>
+      <li><a href="diskografie.html">diskografie</a></li>
+      <li><a href="kontakt.html">kontakt</a></li>
+      <li><a href="aktuell.html">aktuell</a></
