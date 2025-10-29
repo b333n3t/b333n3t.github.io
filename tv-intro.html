@@ -26,7 +26,7 @@ const KEY_DESPECKLE    = 1;
 // Bewegung & Layout
 const RUN_TO_RIGHT     = true;
 const WORD             = "b3nn3t";
-const HAMMER_MS        = 520;    // „Hammer“-Zeit je Buchstabe
+const HAMMER_MS        = 620;    // „Hammer“-Zeit je Buchstabe
 const SPARK_COUNT      = 12;
 const HEAD_SCALE       = 26;
 const BODY_SCALE       = 16;
@@ -281,13 +281,15 @@ function maybeHammerNext(){
     spawnSparks(tx,ty);
     nextLetterIndex++;
 
-    if(nextLetterIndex===WORD.length){
-      wordComplete = true;
-      const firstX = letterTargetX(0), lastX = letterTargetX(WORD.length-1);
-      waveOrigin = { x: (firstX+lastX)/2, y: ty };
-      glowStartAt = performance.now() + GLOW_DELAY_MS; // direkt nach letztem Buchstaben
-      waveStartAt = performance.now() + WAVE_DELAY_MS; // etwas später
-    }
+if(nextLetterIndex===WORD.length){
+  wordComplete = true;
+  const firstX = letterTargetX(0), lastX = letterTargetX(WORD.length-1);
+  waveOrigin = { x: (firstX+lastX)/2, y: ty };
+  // Glow & Welle starten NICHT sofort, sondern wenn die Figur beim t angekommen ist
+  glowStartAt = null;
+  waveStartAt = null;
+}
+
   }
 }
 
@@ -300,6 +302,12 @@ function updateTiltAndPause(){
     last.tiltStart = performance.now();
     avatar.state = 'pause';
     avatar.pauseUntil = last.tiltStart + TILT_PAUSE_MS;
+    // Jetzt, wo Figur neben dem t steht → Glow und Welle starten
+if(!glowStartAt){
+  glowStartAt = performance.now() + GLOW_DELAY_MS;
+  waveStartAt = performance.now() + WAVE_DELAY_MS;
+}
+
   }
   if(last.tiltStart){
     const t=(performance.now()-last.tiltStart);
