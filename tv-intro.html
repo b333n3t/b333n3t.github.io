@@ -143,7 +143,7 @@ const avatar={
   hammerUntil:0, pauseUntil:0
 };
 function drawHead(x,y){
-  const p=PX(),s=avatar.headScale*p,w=s,h=s,top=y-avatar.bodyScale*p-s-4*p;
+  const p=PX(),s=avatar.headScale*p,w=s,h=s,top=y-avatar.bodyScale*p-s-1*p;
   if(USE_HEAD_IMAGE&&headReady){
     ctx.drawImage(headImg,Math.round(x-w/2),Math.round(top),Math.round(w),Math.round(h));
     return;
