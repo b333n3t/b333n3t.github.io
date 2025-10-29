@@ -7,22 +7,43 @@
   <meta name="description" content="Start — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
+  <!-- 🔁 Intro-Redirect (nur einmal pro Session) -->
+  <script>
+    (function () {
+      try {
+        const played     = sessionStorage.getItem("introPlayed") === "1";
+        const fromIntro  = document.referrer && /tv-intro\.html(?:$|[?#])/.test(document.referrer);
+        const bypass     = location.search.includes("nointro=1");
+        if (!played && !fromIntro && !bypass) {
+          // Rücksprungziel merken (inkl. Query/Hash)
+          const returnUrl = (location.pathname || "index.html") +
+                            (location.search || "") +
+                            (location.hash || "");
+          sessionStorage.setItem("introReturn", returnUrl);
+          // zur Intro-Seite (ohne Verlaufs-Eintrag)
+          location.replace("tv-intro.html");
+        }
+      } catch (e) {
+        // Ignorieren – Seite lädt normal weiter
+      }
+    })();
+  </script>
+
   <!-- Externe Styles -->
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
-<!-- 👇 Mobile: grauer Container näher am unteren Rand -->
-<style>
-  @media (max-width: 768px) {
-    main.main {
-      min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
-      height: calc(100dvh - 56px - 20px);
+  <!-- 👇 Mobile: grauer Container näher am unteren Rand -->
+  <style>
+    @media (max-width: 768px) {
+      main.main {
+        min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
+        height: calc(100dvh - 56px - 20px);
+      }
     }
-  }
-</style>
+  </style>
 
-  
   <style>
     /* ===== Header / Menü ===== */
     .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
@@ -181,9 +202,6 @@
       </section>
     </div>
   </main>
-
-  <!-- Entfernt: ursprünglicher Footer -->
-  <!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
 
   <div class="scroll-cue" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
