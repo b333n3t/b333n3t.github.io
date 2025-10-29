@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>b3nn3t • Intro mit smarterm Kopf-Keying</title>
+  <title>b3nn3t • Intro (Pause, Hammer, schiefes „t”)</title>
   <style>
     html,body{margin:0;height:100%;background:#333;overflow:hidden}
     canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges}
@@ -15,21 +15,27 @@
 <script>
 /* ======= EINSTELLUNGEN ======= */
 const USE_HEAD_IMAGE   = true;
-const HEAD_IMG_URL     = "img/dein-pixel.webp?v=" + Date.now(); // oder .webp
-// Keying-Feintuning:
-const KEY_TOLERANCE    = 65;   // 40–80 (höher = mehr Hintergrund weg)
-const KEY_SOFTNESS     = 0.45; // 0..1 (Kantenweiche)
-const KEY_CUTOFF       = 0.10; // 0..1 (unterhalb -> volle Transparenz)
-const KEY_DESPECKLE    = 1;    // 0..2 (0=aus, 1=leicht, 2=stärker)
+const HEAD_IMG_URL     = "img/pixel-head.png?v=" + Date.now(); // oder .webp
+
+// Keying-Feintuning (falls Kopf Bild grauen Hintergrund hat)
+const KEY_TOLERANCE    = 65;
+const KEY_SOFTNESS     = 0.45;
+const KEY_CUTOFF       = 0.10;
+const KEY_DESPECKLE    = 1;
 
 const RUN_TO_RIGHT   = true;
 const WORD           = "b3nn3t";
-const HAMMER_MS      = 380;
-const SPARK_COUNT    = 10;
+const HAMMER_MS      = 420;    // so lange steht die Figur je Buchstabe
+const SPARK_COUNT    = 12;
 const HEAD_SCALE     = 26;
 const BODY_SCALE     = 16;
 const LETTER_SIZE    = 18;
 const LETTER_GAP     = 18;
+
+/* Last-letter tilt */
+const TILT_TRIGGER_PX = 42;    // wie nah an der Kante das „t“ zu kippen beginnt (in PX())
+const TILT_TARGET_DEG = -22;   // Zielneigung
+const TILT_MS         = 500;   // Dauer bis Zielneigung erreicht ist
 /* ============================== */
 
 const c = document.getElementById('c');
@@ -51,7 +57,7 @@ function resize(){
 }
 addEventListener('resize',resize);resize();
 
-/* ====== Kopf laden & SMART-Keying ====== */
+/* ====== Kopf laden & Keying ====== */
 let headReady=false, headImg;
 if(USE_HEAD_IMAGE){
   const raw = new Image(); raw.crossOrigin="anonymous";
@@ -68,12 +74,6 @@ if(USE_HEAD_IMAGE){
   raw.src=HEAD_IMG_URL;
 }
 
-/**
- * Entfernt flachen/rauschigen Hintergrund:
- * - sampling aller Rand-Pixel -> gemittelter Key
- * - Distanz in YCbCr (robuster als reines RGB)
- * - Softness (smoothstep), Cutoff und Despeckle-Filter
- */
 function removeBGSmart(image, {tolerance=60, softness=.4, cutoff=.1, despeckle=1}={}){
   const w = image.naturalWidth || image.width;
   const h = image.naturalHeight || image.height;
@@ -82,63 +82,32 @@ function removeBGSmart(image, {tolerance=60, softness=.4, cutoff=.1, despeckle=1
   octx.imageSmoothingEnabled = false;
   octx.drawImage(image,0,0,w,h);
 
-  // ---- 1) Key-Farbe aus allen Rändern mitteln
   const img = octx.getImageData(0,0,w,h);
   const d = img.data;
   let sumR=0,sumG=0,sumB=0,count=0;
-  function addPixel(ix){ sumR+=d[ix]; sumG+=d[ix+1]; sumB+=d[ix+2]; count++; }
-  for(let x=0;x<w;x++){ addPixel((0*w + x)<<2); addPixel(((h-1)*w + x)<<2); }
-  for(let y=0;y<h;y++){ addPixel((y*w + 0)<<2); addPixel((y*w + (w-1))<<2); }
-  const keyR = sumR/count|0, keyG = sumG/count|0, keyB = sumB/count|0;
+  const add=(ix)=>{sumR+=d[ix]; sumG+=d[ix+1]; sumB+=d[ix+2]; count++;};
+  for(let x=0;x<w;x++){ add((x<<2)); add((((h-1)*w + x)<<2)); }
+  for(let y=0;y<h;y++){ add(((y*w)<<2)); add(((y*w + (w-1))<<2)); }
+  const keyR=(sumR/count)|0, keyG=(sumG/count)|0, keyB=(sumB/count)|0;
 
-  // ---- 2) RGB -> YCbCr (bessere Farbdistanz)
-  function rgb2ycbcr(r,g,b){
-    const y  =  0.299*r + 0.587*g + 0.114*b;
-    const cb = -0.168736*r - 0.331264*g + 0.5*b + 128;
-    const cr =  0.5*r - 0.418688*g - 0.081312*b + 128;
-    return [y,cb,cr];
-  }
-  const [ky,kcb,kcr] = rgb2ycbcr(keyR,keyG,keyB);
-  const tol = Math.max(1,tolerance);
+  const rgb2ycbcr=(r,g,b)=>[0.299*r+0.587*g+0.114*b, -0.168736*r-0.331264*g+0.5*b+128, 0.5*r-0.418688*g-0.081312*b+128];
+  const [ky,kcb,kcr]=rgb2ycbcr(keyR,keyG,keyB);
+  const tol=Math.max(1,tolerance);
+  const smooth=(t)=> (t<=0?0:t>=1?1:t*t*(3-2*t));
 
-  // smoothstep helper
-  const smooth = (t)=> (t<=0?0:t>=1?1:t*t*(3-2*t));
-
-  // ---- 3) Alpha berechnen (weiche Kante)
   for(let i=0;i<d.length;i+=4){
-    const r=d[i],g=d[i+1],b=d[i+2];
-    const [y,cb,cr] = rgb2ycbcr(r,g,b);
-    const dist = Math.hypot(cb-kcb, cr-kcr) * 0.9 + Math.abs(y-ky)*0.1;
-    let a = (dist - tol*cutoff) / Math.max(1, tol*(1-cutoff));
-    a = smooth(a * (1+softness));             // weicher Übergang
-    a = Math.max(0, Math.min(1, a));
-    d[i+3] = Math.round(255 * a);
+    const [y,cb,cr]=rgb2ycbcr(d[i],d[i+1],d[i+2]);
+    const dist=Math.hypot(cb-kcb,cr-kcr)*0.9 + Math.abs(y-ky)*0.1;
+    let a=(dist - tol*cutoff) / Math.max(1,tol*(1-cutoff));
+    a=smooth(a*(1+softness)); a=Math.max(0,Math.min(1,a));
+    d[i+3]=Math.round(255*a);
   }
   octx.putImageData(img,0,0);
 
-  // ---- 4) Despeckle (Kleinst-Pixel entfernen)
   if(despeckle>0){
-    const pass = octx.getImageData(0,0,w,h);
-    const p = pass.data;
-    const thr = 140; // Alpha-Schwelle
-    const neigh = (x,y)=> {
-      let n=0;
-      for(let yy=-1;yy<=1;yy++) for(let xx=-1;xx<=1;xx++){
-        if(xx===0 && yy===0) continue;
-        const X=x+xx,Y=y+yy;
-        if(X<0||Y<0||X>=w||Y>=h) continue;
-        if(p[((Y*w+X)<<2)+3] > thr) n++;
-      }
-      return n;
-    };
-    for(let y=1;y<h-1;y++){
-      for(let x=1;x<w-1;x++){
-        const ai = ((y*w+x)<<2)+3;
-        if(p[ai] <= thr && neigh(x,y) >= (despeckle===2?5:7)){
-          p[ai] = 0; // freistellen
-        }
-      }
-    }
+    const pass=octx.getImageData(0,0,w,h), p=pass.data, thr=140;
+    const neigh=(x,y)=>{let n=0;for(let yy=-1;yy<=1;yy++)for(let xx=-1;xx<=1;xx++){if(!xx&&!yy)continue;const X=x+xx,Y=y+yy;if(X<0||Y<0||X>=w||Y>=h)continue; if(p[((Y*w+X)<<2)+3]>thr)n++;} return n;};
+    for(let y=1;y<h-1;y++){for(let x=1;x<w-1;x++){const ai=((y*w+x)<<2)+3; if(p[ai]<=thr && neigh(x,y)>=(despeckle===2?5:7)) p[ai]=0;}}
     octx.putImageData(pass,0,0);
   }
   return off;
@@ -158,8 +127,14 @@ function drawLine(){
   ctx.beginPath();ctx.moveTo(0,lineY());ctx.lineTo(lineEndX(),lineY());ctx.stroke();
 }
 
-/* ====== Avatar ====== */
-const avatar={state:'walk',x:-40*PX(),y:lineY()-3*PX(),vx:2.2,vy:0,gravity:.35,step:0,headScale:HEAD_SCALE,bodyScale:BODY_SCALE,hammerUntil:0};
+/* ====== Avatar mit States: walk | hammer | fall ====== */
+const avatar={
+  state:'walk',
+  x:-40*PX(), y:lineY()-3*PX(),
+  vx:2.2, vy:0, gravity:.35, step:0,
+  headScale:HEAD_SCALE, bodyScale:BODY_SCALE,
+  hammerUntil:0
+};
 
 function drawHead(x,y){
   const p=PX(),s=avatar.headScale*p,w=s,h=s;
@@ -177,25 +152,26 @@ function drawHead(x,y){
 }
 
 function drawBody(x,y){
-  const p=PX(),bodyH=avatar.bodyScale*p,bodyW=Math.round(10*p),legLen=Math.round(12*p),armLen=Math.round(9*p);
+  const p=PX(),bodyH=avatar.bodyScale*p,bodyW=Math.round(10*p);
+  const legLen=Math.round(12*p),armLen=Math.round(9*p);
   const torsoX=Math.round(x-bodyW/2),torsoY=Math.round(y-bodyH);
   rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
 
-  const hammering=performance.now()<avatar.hammerUntil;
-  const armTh=3*p,legTh=4*p;
-  const armSwing=hammering?-2*p:Math.sin(avatar.step)*1.2*p;
+  const isHammer = avatar.state==='hammer' && performance.now()<avatar.hammerUntil;
+  const armTh=3*p, legTh=4*p;
+  const armSwing = isHammer ? -2*p : Math.sin(avatar.step)*1.2*p;
 
   rect(Math.round(x+4*p),torsoY+Math.round(3*p)+Math.round(armSwing),armTh,armLen,'#2b3a56');
   rect(Math.round(x-7*p),torsoY+Math.round(3*p)-Math.round(armSwing),armTh,armLen,'#2b3a56');
 
-  const legSwing=Math.sin(avatar.step)*1.2*p;
-  rect(Math.round(x+1*p),y-legLen+Math.round(legSwing),legTh,legLen,'#233047');
-  rect(Math.round(x-4*p),y-legLen-Math.round(legSwing),legTh,legLen,'#233047');
+  const legSwing = Math.sin(avatar.step)*1.2*p * (avatar.state==='walk'?1:0.1);
+  rect(Math.round(x+1*p),y - legLen + Math.round(legSwing), legTh, legLen, '#233047');
+  rect(Math.round(x-4*p),y - legLen - Math.round(legSwing), legTh, legLen, '#233047');
 
-  rect(Math.round(x+1*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
-  rect(Math.round(x-4*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
+  rect(Math.round(x+1*p), Math.round(lineY()-3*p), 7*p, 3*p, '#7a4f1f');
+  rect(Math.round(x-4*p), Math.round(lineY()-3*p), 7*p, 3*p, '#7a4f1f');
 
-  if(hammering){
+  if(isHammer){
     const hx=Math.round(x+10*p),hy=Math.round(torsoY+7*p);
     ctx.fillStyle='#7a4f1f';ctx.fillRect(hx,hy,1*p,9*p);
     ctx.fillStyle='#c0c0c0';ctx.fillRect(hx-3*p,hy,7*p,2*p);
@@ -217,12 +193,14 @@ function drawFallShadow(){
   ctx.beginPath();ctx.fillStyle=`rgba(0,0,0,${a})`;ctx.arc(0,0,1,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 
-/* ====== Buchstaben + Funken ====== */
+/* ====== Buchstaben + Funken + Tilt ====== */
 let baseX=null;
 function ensureBaseX(){if(baseX!==null)return;const p=PX(),s=LETTER_GAP*p;const total=(WORD.length-1)*s;baseX=Math.round(W/2-total/2);}
 function letterTargetX(i){ensureBaseX();const p=PX(),s=LETTER_GAP*p;return baseX+i*s;}
 function letterTargetY(){const p=PX(),s=avatar.headScale*p;return avatar.y-avatar.bodyScale*p-s*0.35;}
-const letters=[];let nextLetterIndex=0;
+
+const letters=[]; // {ch,x,y,angle,tiltStart}
+let nextLetterIndex=0;
 
 const sparks=[];
 function spawnSparks(x,y){
@@ -249,25 +227,54 @@ function drawSparks(){
   }
   ctx.globalAlpha=1;
 }
-function maybeHammerNext(){
-  if(nextLetterIndex>=WORD.length)return;
-  const i=nextLetterIndex,tx=letterTargetX(i),ty=letterTargetY(),reach=8*PX();
-  if(avatar.x>=tx-reach){
-    letters.push({ch:WORD[i],x:tx,y:ty});
-    avatar.hammerUntil=performance.now()+HAMMER_MS;
-    spawnSparks(tx,ty);
-    nextLetterIndex++;
-  }
-}
+
+// Buchstaben rotieren, wenn Winkel gesetzt
 function drawLetters(){
   const p=PX();
   ctx.font=(LETTER_SIZE*p)+'px monospace';
   ctx.textBaseline='middle';
   for(const L of letters){
-    ctx.lineWidth=2*p;ctx.strokeStyle='#000';
-    ctx.strokeText(L.ch,Math.round(L.x),Math.round(L.y));
+    ctx.save();
+    const x=Math.round(L.x), y=Math.round(L.y);
+    if(L.angle){
+      ctx.translate(x,y);
+      ctx.rotate(L.angle*Math.PI/180);
+      ctx.translate(-x,-y);
+    }
+    ctx.lineWidth=2*p; ctx.strokeStyle='#000';
+    ctx.strokeText(L.ch,x,y);
     ctx.fillStyle='#f2f2f2';
-    ctx.fillText(L.ch,Math.round(L.x),Math.round(L.y));
+    ctx.fillText(L.ch,x,y);
+    ctx.restore();
+  }
+}
+
+function maybeHammerNext(){
+  if(nextLetterIndex>=WORD.length) return;
+  const i=nextLetterIndex, tx=letterTargetX(i), ty=letterTargetY(), reach=8*PX();
+  if(avatar.x>=tx-reach && avatar.state==='walk'){
+    // Buchstaben erzeugen und PAUSE zum Hämmern
+    letters.push({ch:WORD[i],x:tx,y:ty,angle:0,tiltStart:null});
+    avatar.hammerUntil = performance.now()+HAMMER_MS;
+    avatar.state = 'hammer';                 // ← Figur bleibt kurz stehen
+    spawnSparks(tx,ty);
+    nextLetterIndex++;
+  }
+}
+
+// Last-letter tilt bevor Kante
+function updateTilt(){
+  if(letters.length<WORD.length) return;
+  const last = letters[letters.length-1]; // „t“
+  const p=PX();
+  if(!last.tiltStart && avatar.x >= lineEndX() - TILT_TRIGGER_PX*p){
+    last.tiltStart = performance.now();
+  }
+  if(last.tiltStart){
+    const t = Math.min(1, (performance.now()-last.tiltStart)/TILT_MS);
+    // ease-out
+    const e = 1 - Math.pow(1-t, 3);
+    last.angle = TILT_TARGET_DEG * e;
   }
 }
 
@@ -277,25 +284,35 @@ function tick(){
   drawLine();
 
   maybeHammerNext();
+  updateTilt();
   updateSparks();
   drawLetters();
   drawSparks();
 
-  const p=PX(),speed=avatar.vx*p;
+  const p=PX(), speed=avatar.vx*p;
   if(avatar.state==='walk'){
-    avatar.x+=speed;avatar.step+=.15;
-    avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*2)*0.5*p);
-    if(avatar.x>=lineEndX()-6*p){avatar.state='fall';avatar.vy=0;}
+    avatar.x+=speed; avatar.step+=.15;
+    avatar.y=lineY()-3*p + Math.round(Math.sin(avatar.step*2)*0.5*p);
+    if(avatar.x>=lineEndX()-6*p){ avatar.state='fall'; avatar.vy=0; }
+  }else if(avatar.state==='hammer'){
+    // während des Hämmerns stillstehen, leicht wippen
+    if(performance.now()>=avatar.hammerUntil){
+      avatar.state='walk';
+    }else{
+      avatar.step+=.08;
+      avatar.y=lineY()-3*p + Math.round(Math.sin(avatar.step*3)*0.3*p);
+    }
   }else if(avatar.state==='fall'){
-    avatar.vy+=avatar.gravity*p*.6;
-    avatar.y+=avatar.vy;
-    avatar.x+=speed*.2;
+    avatar.vy += avatar.gravity*p*.6;
+    avatar.y  += avatar.vy;
+    avatar.x  += speed*.2;
     drawFallShadow();
-    if(avatar.y>H+40*p){avatar.state='done';}
+    if(avatar.y > H + 40*p){ avatar.state='done'; }
   }
 
-  drawBody(avatar.x,avatar.y);
-  drawHead(avatar.x,avatar.y);
+  drawBody(avatar.x, avatar.y);
+  drawHead(avatar.x, avatar.y);
+
   requestAnimationFrame(tick);
 }
 requestAnimationFrame(tick);
