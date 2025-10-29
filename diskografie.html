@@ -389,10 +389,9 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCovers);
   else initCovers();
 })();
-</script>
-  </script>
 
-  function initCovers(){ document.querySelectorAll('img.cover[data-spotify]').forEach(setCover); }
+function initCovers(){ 
+  document.querySelectorAll('img.cover[data-spotify]').forEach(setCover); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCovers);
   else initCovers();
 }));
