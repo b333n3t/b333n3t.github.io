@@ -26,12 +26,9 @@
 
   <script>
   // ======= KNOBS =======
-  // Pfad unbedingt auf DEINE Datei setzen:
   const HEAD_IMG_URL = location.origin + "/img/dein-pixel-kopf.webp?v=" + Date.now();
   const RUN_TO_RIGHT = true;             // links -> rechts
-  const CHROMA_TOLERANCE = 38;           // 25–45: falls graue Reste sichtbar
-  const DRAW_MATTE = false;              // Matte hinter Kopf (bei Bedarf true)
-  const MATTE_PAD = 1;                   // Matte-Rand (Pixel)
+  const CHROMA_TOLERANCE = 40;           // 25–45: falls graue Reste sichtbar
   const TRAIL_TEXT = "b3nn3t";           // Buchstabenfolge
   const TRAIL_SPAWN_MS = 300;            // Abstand zwischen neuen Buchstaben
   // =====================
@@ -56,14 +53,15 @@
 
   const avatar = {
     state:'walk',
+    // Füße sollen auf der Linie stehen -> Basis-Y = Linie - Stiefelhöhe (3*p)
     x: RUN_TO_RIGHT ? -40*PX() : W+40*PX(),
-    y: lineY() - 16*PX(),
+    y: lineY() - 3*PX(),
     vx: RUN_TO_RIGHT ? 2.1 : -2.1,
     vy:0, gravity:.35, step:0,
     headScale:22, bodyScale:12
   };
 
-  // ---- grauen Kopf-Hintergrund entfernen (Chroma-Key) ----
+  // Kopf-Hintergrund entfernen (Chroma-Key)
   function removeGrayBG(image, tolerance = CHROMA_TOLERANCE) {
     const off = document.createElement("canvas");
     off.width = image.width; off.height = image.height;
@@ -72,7 +70,7 @@
     octx.drawImage(image, 0, 0);
     const imgData = octx.getImageData(0, 0, off.width, off.height);
     const d = imgData.data;
-    const keyR = d[0], keyG = d[1], keyB = d[2]; // Farbprobe Ecke (0,0)
+    const keyR = d[0], keyG = d[1], keyB = d[2]; // Ecke (0,0)
     for (let i = 0; i < d.length; i += 4) {
       const dr=Math.abs(d[i]-keyR), dg=Math.abs(d[i+1]-keyG), db=Math.abs(d[i+2]-keyB);
       if (dr < tolerance && dg < tolerance && db < tolerance) d[i+3] = 0; // transparent
@@ -81,7 +79,7 @@
     return off;
   }
 
-  // --- Kopf laden (robust) ---
+  // Kopf laden
   let headReady = false;
   let headImg = new Image(); headImg.crossOrigin='anonymous';
   headImg.onload = () => { headImg = removeGrayBG(headImg); headReady = true; };
@@ -105,45 +103,38 @@
     ctx.fillRect(px+w-1,py,1,h);
   }
 
-  // --- Flacher 2D-Körper (SEGA/Nintendo-like), keine Fäden ---
+  // flacher 2D-Körper (SEGA/Nintendo-like), ohne Fäden
   function drawBody(x,y){
     const p=PX(), bodyH=avatar.bodyScale*p, bodyW=Math.round(8*p);
     const legLen=Math.round(9*p), armLen=Math.round(7*p);
-    const t=(Math.sin(avatar.step)+1)/2;
 
     // Torso
     const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH);
     rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
 
-    // 2D-Arme/Beine (seitlich)
+    // 2D-Arme/Beine (seitlich), leichte Schrittbewegung
     function limb(px,py,len,phase,thk,col){
-      const swing = Math.round(Math.sin(phase)*2*p);
+      const swing = Math.round(Math.sin(phase)*1*p); // kleinere Amplitude, damit Füße auf Linie bleiben
       rect(px, py+swing, thk, len, col);
     }
     const armTh=3*p, legTh=4*p;
     limb(Math.round(x+3*p), torsoY+Math.round(3*p), armLen, avatar.step,          armTh, '#2b3a56');  // vorderer Arm
     limb(Math.round(x-6*p), torsoY+Math.round(3*p), armLen, avatar.step+Math.PI,  armTh, '#2b3a56');  // hinterer Arm
-    limb(Math.round(x+1*p), y,                       legLen, avatar.step,          legTh, '#233047');  // vorderes Bein
-    limb(Math.round(x-3*p), y,                       legLen, avatar.step+Math.PI,  legTh, '#233047');  // hinteres Bein
 
-    // Stiefel
-    rect(Math.round(x+1*p), Math.round(y+Math.sin(avatar.step)*2*p + legLen), 6*p, 3*p, '#7a4f1f');
-    rect(Math.round(x-3*p), Math.round(y+Math.sin(avatar.step+Math.PI)*2*p + legLen), 6*p, 3*p, '#7a4f1f');
+    // Beine so, dass Stiefel-Unterkante exakt auf der Linie liegt
+    limb(Math.round(x+1*p), y - legLen, legLen, avatar.step,         legTh, '#233047');
+    limb(Math.round(x-3*p), y - legLen, legLen, avatar.step+Math.PI, legTh, '#233047');
+
+    // Stiefel (Unterkante = lineY())
+    rect(Math.round(x+1*p), Math.round(lineY()-3*p), 6*p, 3*p, '#7a4f1f');
+    rect(Math.round(x-3*p), Math.round(lineY()-3*p), 6*p, 3*p, '#7a4f1f');
   }
 
-  // --- Kopf (optional Matte) ---
+  // Kopf (ohne Rand/Outlines ums Bild)
   function drawHead(x,y){
     const p = PX();
     const s = avatar.headScale * p; const w=s, h=s;
     const top = y - avatar.bodyScale * p - s - 2*p;
-
-    if (DRAW_MATTE){
-      ctx.fillStyle = '#444';
-      ctx.fillRect(Math.round(x - w/2) - MATTE_PAD,
-                   Math.round(top)      - MATTE_PAD,
-                   Math.round(w) + MATTE_PAD*2,
-                   Math.round(h) + MATTE_PAD*2);
-    }
 
     if (headReady && headImg && headImg.width){
       ctx.drawImage(headImg, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
@@ -152,45 +143,47 @@
       ctx.fillStyle='#c9a23b'; ctx.fillRect(Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h*.62));
       ctx.fillStyle='#f2b59a'; ctx.fillRect(Math.round(x - w/2), Math.round(top + h*.45), Math.round(w), Math.round(h*.45));
     }
+    // WICHTIG: KEINE schwarze Outline um den Kopf mehr!
+  }
 
-    // Outline
-    ctx.fillStyle='#000';
-    ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top), 1, Math.round(h));
-    ctx.fillRect(Math.round(x + w/2),     Math.round(top), 1, Math.round(h));
-    ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top) - 1, Math.round(w) + 2, 1);
-    ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top + h), Math.round(w) + 2, 1);
+  // Hilfsfunktion: y-Position für Buchstaben auf Kopfhöhe (Mitte des Kopfes)
+  function letterYOnHead(){
+    const p = PX();
+    const s = avatar.headScale * p;
+    return avatar.y - avatar.bodyScale*p - s/2; // Kopf-Mitte
   }
 
   // --- Buchstaben-Spur (b3nn3t) ---
   const letters = []; // {ch, x, y}
-  let nextSpawnAt = performance.now() + TRAIL_SPAWN_MS; 
+  let nextSpawnAt = performance.now() + TRAIL_SPAWN_MS;
   let spawnIndex = 0;
 
-  function spawnNextLetter(){                 // Buchstaben erscheinen in richtiger Reihenfolge
+  function spawnNextLetter(){                 // richtige Reihenfolge
     const p = PX(); const ch = TRAIL_TEXT[spawnIndex];
-    const y  = lineY() - 4*p;                 // knapp über der Linie
-    letters.push({ch, x: avatar.x - 12*p, y});
+    letters.push({ch, x: avatar.x - 12*p, y: letterYOnHead()});
     spawnIndex++;
   }
 
   function updateLetters(){
     const p = PX(); 
-    const spacing = 12*p;                     // Abstände gleich
-    // Wichtig: erstes Zeichen bleibt am weitesten hinten => keine Spiegelung
+    const spacing = 12*p;                     // gleichmäßiger Abstand
+    const targetY = letterYOnHead();          // immer auf Kopfhöhe halten
     for(let i=0;i<letters.length;i++){
-      const target = avatar.x - spacing * (letters.length - i);
-      letters[i].x += (target - letters[i].x) * 0.15;   // sanft nachziehen
-      letters[i].y  = lineY() - 4*p;
+      const targetX = avatar.x - spacing * (letters.length - i); // nicht spiegeln
+      letters[i].x += (targetX - letters[i].x) * 0.15; 
+      letters[i].y += (targetY - letters[i].y) * 0.15;
     }
   }
 
   function drawLetters(){
     const p = PX();
     ctx.font = (12*p) + 'px monospace';
-    ctx.textBaseline = 'alphabetic';
+    ctx.textBaseline = 'middle';
     for(const L of letters){
+      // Outline
       ctx.lineWidth = 2*p; ctx.strokeStyle = '#000';
       ctx.strokeText(L.ch, Math.round(L.x), Math.round(L.y));
+      // Füllung
       ctx.fillStyle = '#f2f2f2';
       ctx.fillText(L.ch, Math.round(L.x), Math.round(L.y));
     }
@@ -206,17 +199,18 @@
 
       const p=PX(), speed=avatar.vx*p;
 
-      // 1) Buchstaben zuerst zeichnen -> liegen hinter der Figur
+      // 1) Buchstaben zuerst (liegen hinter der Figur)
       if(spawnIndex < TRAIL_TEXT.length && now >= nextSpawnAt){
         spawnNextLetter(); nextSpawnAt = now + TRAIL_SPAWN_MS;
       }
       updateLetters();
       drawLetters();
 
-      // 2) Avatar oben drüber zeichnen
+      // 2) Avatar oben drüber
       if(avatar.state==='walk'){
         avatar.x += speed; avatar.step += .15;
-        avatar.y = lineY()-2*p + Math.round(Math.sin(avatar.step*2)*1*p);
+        // sanftes „Hopsen“, ohne die Linie zu verlassen:
+        avatar.y = lineY() - 3*p + Math.round(Math.sin(avatar.step*2) * 0.5*p);
         const atEdge = RUN_TO_RIGHT ? (avatar.x >= lineEndX()-6*p) : (avatar.x <= lineEndX()+6*p);
         if(atEdge){ avatar.state='fall'; avatar.vy=0; }
       } else if(avatar.state==='fall'){
