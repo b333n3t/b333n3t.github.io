@@ -43,28 +43,26 @@
     right: var(--title-left);
     z-index: 3;
   }
-/* Fixierter Titel: Typo identisch zu plattformen.html (aus styles.css) */
-.title-fixed h1{
-  margin: 0;
-  /* keine eigene font-size → erbt H1-Größe aus styles.css */
-  font-weight: 700;   /* nicht 800; wie plattformen */
-  line-height: 1.1;
-  color:#111;
-}
+  /* Fixierter Titel: Typo identisch zu plattformen.html (aus styles.css) */
+  .title-fixed h1{
+    margin: 0;
+    /* keine eigene font-size → erbt H1-Größe aus styles.css */
+    font-weight: 700;   /* nicht 800; wie plattformen */
+    line-height: 1.1;
+    color:#111;
+  }
 
-.title-fixed p{
-  margin: .6rem 0 0 0;  /* kleiner Abstand unter der H1 */
-  /* keine eigene font-size → erbt p-Größe aus styles.css */
-  color:#333;
-}
-
+  .title-fixed p{
+    margin: .6rem 0 0 0;  /* kleiner Abstand unter der H1 */
+    /* keine eigene font-size → erbt p-Größe aus styles.css */
+    color:#333;
+  }
 
   /* Nur dieser Bereich scrollt – startet UNTER dem Titel */
   .scroll-panel{
     position: absolute;
     top: calc(var(--title-top) + var(--title-space));
     left: var(--title-left);
-    right: var(--title-left);
     right: var(--title-left);
     bottom: 16px;
 
@@ -130,7 +128,7 @@
   .tracklist.open{display:block}
   .tracklist iframe{width:100%;height:352px;border:0;border-radius:8px}
 
-@media (max-width:768px){
+  @media (max-width:768px){
     /* Text im Untertitel etwas kleiner (wie gehabt) */
     .title-fixed p{ font-size:1rem; }
 
@@ -145,6 +143,49 @@
     }
   }
 </style>
+
+<!-- === Hamburger-/Menü-Styles (aus ueber-mich.html) === -->
+<style>
+  .hamburger{
+    position:fixed; top:14px; right:18px; width:20px; height:20px;
+    border:none; background:transparent; display:grid; place-items:center;
+    cursor:pointer; z-index:1200; padding:0;
+  }
+  .hamburger span{
+    display:block; width:12px; height:1.4px; margin:1.5px 0;
+    background:#000; border-radius:2px; transition:transform .2s ease, opacity .2s ease;
+  }
+  body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
+  body.menu-open .hamburger span:nth-child(2){opacity:0}
+  body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+
+  .menu-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.08);
+    backdrop-filter:blur(1px); -webkit-backdrop-filter:blur(1px); z-index:1099;
+  }
+  body.menu-open #menu-overlay{display:block}
+  #menu-overlay[hidden]{display:none}
+
+  .site-menu{
+    position:fixed; top:0; right:0; height:auto; max-height:90vh;
+    width:min(40vw,150px);
+    background:rgba(255,255,255,.32);
+    backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+    box-shadow:0 20px 50px rgba(0,0,0,.08);
+    transform:translateX(100%); transition:transform .25s ease;
+    z-index:1101; padding:46px 10px 14px;
+  }
+  body.menu-open .site-menu{transform:translateX(0)}
+  .site-menu ul{list-style:none; margin:0; padding:0}
+  .site-menu li{margin:0 0 10px 0}
+  .site-menu li.sep{margin-top:18px; padding-top:8px; border-top:1px solid rgba(0,0,0,.08)}
+  .site-menu a{
+    display:block; padding:8px 6px; border-radius:10px; color:#000; text-decoration:none;
+    font-size:1rem; font-weight:500;
+  }
+  .site-menu a:hover{background:rgba(0,0,0,.05)}
+  .nav-arrow{z-index:1000}
+</style>
 </head>
 
 <body>
@@ -153,6 +194,24 @@
     <img alt="" src="favicon.svg"/><strong>b3nn3t</strong>
   </a>
 </header>
+
+<!-- Burger-Menü (identisch zu ueber-mich.html) -->
+<button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
+  <span></span><span></span><span></span>
+</button>
+<div id="menu-overlay" class="menu-overlay" hidden></div>
+
+<nav id="site-menu" class="site-menu" aria-hidden="true">
+  <ul>
+    <li><a href="ueber-mich.html">über mich</a></li>
+    <li><a href="diskografie.html" class="active">diskografie</a></li>
+    <li><a href="kontakt.html">kontakt</a></li>
+    <li><a href="aktuell.html">aktuell</a></li>
+    <li><a href="gesehen.html">gesehen</a></li>
+    <li><a href="plattformen.html">plattformen</a></li>
+    <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+  </ul>
+</nav>
 
 <!-- Pfeile -->
 <a aria-label="Vorherige Seite" class="nav-arrow left" href="ueber-mich.html">←</a>
@@ -390,7 +449,6 @@
   else initCovers();
 })();
 </script>
-
 
 <!-- Singles: fehlende „Mehr“-Buttons + Player automatisch ergänzen -->
 <script>
