@@ -41,7 +41,7 @@ const LETTER_JITTER_Y  = 2;      // vertikale Zufallsabweichung in PX()
 const TILT_TRIGGER_PX  = 42;     // Abstand zur Kante (in PX())
 const TILT_TARGET_DEG  = 22;     // Kippwinkel nach rechts
 const TILT_MS          = 400;    // bis max. Neigung
-const TILT_WOBBLE_MS   = 5000;   // Wackeln
+const TILT_WOBBLE_MS   = 5500;   // Wackeln
 const TILT_PAUSE_MS    = 1000;   // Figur-Standzeit beim gekippten „t“
 
 // (Optional) Weißer Glow & Welle – wie vorher
@@ -50,12 +50,14 @@ const GLOW_MS          = 650;
 const WAVE_DELAY_MS    = 700;
 const WAVE_MS          = 1600;
 const WAVE_STRENGTH    = 1.0;
+
+/* ===== Rücksprungziel für Redirect nach dem Intro ===== */
+const INTRO_RETURN_URL = sessionStorage.getItem("introReturn") || "index.html";
 /* ==================================================== */
 
 const c = document.getElementById('c');
 const ctx = c.getContext('2d');
 let W=0,H=0,DPR=1;
-
 
 /* ===== PRELOAD: Bilder & Videos von index.html, diskografie.html & gesehen.html ===== */
 const preloadImages = [
@@ -121,9 +123,7 @@ const preloadImages = [
 ];
 
 // Nur **Videos** hier rein:
-const preloadVideos = [
-  "assets/B3NN3T.mp4"
-];
+const preloadVideos = [ "assets/B3NN3T.mp4" ];
 
 // Bilder vorladen
 function preloadAllImages(urls){
@@ -133,7 +133,6 @@ function preloadAllImages(urls){
     img.src = url;
   });
 }
-
 // Videos vorladen
 function preloadAllVideos(urls){
   urls.forEach(url=>{
@@ -145,8 +144,6 @@ function preloadAllVideos(urls){
   });
 }
 
-
- 
 function PX(){return Math.max(2,Math.floor(Math.min(W,H)/240));}
 function lineY(){return Math.floor(H*2/3);}
 function lineEndX(){return Math.floor(W*0.82);}
@@ -372,15 +369,14 @@ function maybeHammerNext(){
     spawnSparks(tx,ty);
     nextLetterIndex++;
 
-if(nextLetterIndex===WORD.length){
-  wordComplete = true;
-  const firstX = letterTargetX(0), lastX = letterTargetX(WORD.length-1);
-  waveOrigin = { x: (firstX+lastX)/2, y: ty };
-  // Glow & Welle starten NICHT sofort, sondern wenn die Figur beim t angekommen ist
-  glowStartAt = null;
-  waveStartAt = null;
-}
-
+    if(nextLetterIndex===WORD.length){
+      wordComplete = true;
+      const firstX = letterTargetX(0), lastX = letterTargetX(WORD.length-1);
+      waveOrigin = { x: (firstX+lastX)/2, y: ty };
+      // Glow & Welle starten NICHT sofort, sondern wenn die Figur beim t angekommen ist
+      glowStartAt = null;
+      waveStartAt = null;
+    }
   }
 }
 
@@ -393,20 +389,19 @@ function updateTiltAndPause(){
     last.tiltStart = performance.now();
     avatar.state = 'pause';
     avatar.pauseUntil = last.tiltStart + TILT_PAUSE_MS;
-    
-// Preload kurz vor Schluss starten (nur einmal)
-if(!window._preloaded){
-  window._preloaded = true;
-  preloadAllImages(preloadImages);
-  preloadAllVideos(preloadVideos);
-}
+
+    // Preload kurz vor Schluss starten (nur einmal)
+    if(!window._preloaded){
+      window._preloaded = true;
+      preloadAllImages(preloadImages);
+      preloadAllVideos(preloadVideos);
+    }
 
     // Jetzt, wo Figur neben dem t steht → Glow und Welle starten
-if(!glowStartAt){
-  glowStartAt = performance.now() + GLOW_DELAY_MS;
-  waveStartAt = performance.now() + WAVE_DELAY_MS;
-}
-
+    if(!glowStartAt){
+      glowStartAt = performance.now() + GLOW_DELAY_MS;
+      waveStartAt = performance.now() + WAVE_DELAY_MS;
+    }
   }
   if(last.tiltStart){
     const t=(performance.now()-last.tiltStart);
@@ -453,6 +448,12 @@ function drawWave(){
   ctx.restore();
 }
 
+/* ===== Redirect nach Intro ===== */
+function startTransition(){
+  sessionStorage.setItem("introPlayed","1");
+  window.location.href = INTRO_RETURN_URL; // zurück zur index.html (oder gemerkten Seite)
+}
+
 /* ===== Hauptloop ===== */
 function tick(){
   ctx.clearRect(0,0,W,H);
@@ -490,7 +491,7 @@ function tick(){
   }else if(avatar.state==='fall'){
     avatar.vy+=avatar.gravity*p*.6; avatar.y+=avatar.vy; avatar.x+=speed*.2;
     drawFallShadow();
-    if(avatar.y>H+40*p){ avatar.state='done'; }
+    if(avatar.y>H+40*p){ avatar.state='done'; startTransition(); }
   }
 
   drawBody(avatar.x,avatar.y);
