@@ -355,23 +355,42 @@
 <script src="script.js"></script>
 <script defer src="swipe-nav.js?v=12"></script>
 
-<!-- Cover-Loader mit JPG-Fallback -->
+<!-- Cover-Loader mit JPG-Fallback (seriell + kleine Pause) -->
 <script>
 (function () {
   const FALLBACK_SRC = 'assets/placeholder-cover.jpg';
+  const DELAY_MS = 150; // kleine Pause zwischen Requests
+
   async function setCover(img) {
     const url = img.dataset.spotify;
     if (!url) { img.src = FALLBACK_SRC; return; }
     try {
-      const res = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`, { mode: 'cors' });
-      if (!res.ok) { img.src = FALLBACK_SRC; return; }
+      const res = await fetch(
+        `https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`,
+        { mode: 'cors' }
+      );
+      if (!res.ok) throw new Error('oEmbed failed');
       const data = await res.json();
-      if (data.thumbnail_url) {
-        const src = data.thumbnail_url.replace(/&?size=\d+/, '');
-        img.src = src;
-      } else { img.src = FALLBACK_SRC; }
-    } catch { img.src = FALLBACK_SRC; }
+      const src = (data.thumbnail_url || '').replace(/&?size=\d+/, '');
+      img.src = src || FALLBACK_SRC;
+    } catch {
+      img.src = FALLBACK_SRC;
+    }
+    // kleine Pause, um Rate-Limits zu vermeiden
+    await new Promise(r => setTimeout(r, DELAY_MS));
   }
+
+  async function initCovers(){
+    const imgs = document.querySelectorAll('img.cover[data-spotify]');
+    for (const img of imgs){
+      await setCover(img); // seriell statt parallel
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCovers);
+  else initCovers();
+})();
+</script>
+
   function initCovers(){ document.querySelectorAll('img.cover[data-spotify]').forEach(setCover); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCovers);
   else initCovers();
