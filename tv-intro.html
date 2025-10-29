@@ -1,16 +1,190 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>b3nn3t • Intro (robust)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>b3nn3t • Intro (Hammer + Funken)</title>
   <style>
     html,body{margin:0;height:100%;background:#333;overflow:hidden}
     canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges}
   </style>
 </head>
 <body>
-  <canvas id="c"></canvas>
-  <script src="./tv-intro.js"></script>
+<canvas id="c"></canvas>
+
+<script>
+const RUN_TO_RIGHT = true;
+const WORD = "b3nn3t";
+const HAMMER_MS = 380;
+const SPARK_COUNT = 10;
+const HEAD_SCALE = 26;
+const BODY_SCALE = 16;
+const LETTER_SIZE = 18;
+const LETTER_GAP = 18;
+
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+let W=0,H=0,DPR=1;
+
+function PX(){return Math.max(2,Math.floor(Math.min(W,H)/240));}
+function lineY(){return Math.floor(H*2/3);}
+function lineEndX(){return Math.floor(W*0.82);}
+
+function resize(){
+  DPR=Math.max(1,Math.floor(window.devicePixelRatio||1));
+  W=c.width=Math.floor(innerWidth*DPR);
+  H=c.height=Math.floor(innerHeight*DPR);
+  c.style.width=innerWidth+'px';
+  c.style.height=innerHeight+'px';
+  ctx.imageSmoothingEnabled=false;
+  _baseX=null;
+}
+addEventListener('resize',resize);resize();
+
+/* Zeichenhilfen */
+function rect(x,y,w,h,fill){
+  ctx.fillStyle=fill;ctx.fillRect(x,y,w,h);
+  ctx.fillStyle='#000';
+  ctx.fillRect(x-1,y,w+2,1);
+  ctx.fillRect(x-1,y+h-1,w+2,1);
+  ctx.fillRect(x-1,y,1,h);
+  ctx.fillRect(x+w-1,y,1,h);
+}
+function drawLine(){
+  ctx.strokeStyle='#fff';ctx.lineWidth=2*PX();
+  ctx.beginPath();ctx.moveTo(0,lineY());ctx.lineTo(lineEndX(),lineY());ctx.stroke();
+}
+
+/* Avatar */
+const avatar={state:'walk',x:-40*PX(),y:lineY()-3*PX(),vx:2.2,vy:0,gravity:.35,step:0,headScale:HEAD_SCALE,bodyScale:BODY_SCALE,hammerUntil:0};
+function drawHead(x,y){
+  const p=PX(),s=avatar.headScale*p,w=s,h=s,top=y-avatar.bodyScale*p-s-2*p;
+  rect(Math.round(x-w/2),Math.round(top),w,Math.round(h*0.6),'#caa134'); // Haare
+  rect(Math.round(x-w/2),Math.round(top+h*0.45),w,Math.round(h*0.5),'#f2b59a'); // Gesicht
+  ctx.fillStyle='#1a5cff';
+  ctx.fillRect(Math.round(x+w*0.1),Math.round(top+h*0.62),2*p,2*p);
+  ctx.fillRect(Math.round(x+w*0.22),Math.round(top+h*0.62),2*p,2*p);
+}
+function drawBody(x,y){
+  const p=PX(),bodyH=avatar.bodyScale*p,bodyW=Math.round(10*p),legLen=Math.round(12*p),armLen=Math.round(9*p);
+  const torsoX=Math.round(x-bodyW/2),torsoY=Math.round(y-bodyH);
+  rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
+  const hammering=performance.now()<avatar.hammerUntil;
+  const armTh=3*p,legTh=4*p;
+  const armSwing=hammering?-2*p:Math.sin(avatar.step)*1.2*p;
+  rect(Math.round(x+4*p),torsoY+Math.round(3*p)+Math.round(armSwing),armTh,armLen,'#2b3a56');
+  rect(Math.round(x-7*p),torsoY+Math.round(3*p)-Math.round(armSwing),armTh,armLen,'#2b3a56');
+  const legSwing=Math.sin(avatar.step)*1.2*p;
+  rect(Math.round(x+1*p),y-legLen+Math.round(legSwing),legTh,legLen,'#233047');
+  rect(Math.round(x-4*p),y-legLen-Math.round(legSwing),legTh,legLen,'#233047');
+  rect(Math.round(x+1*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
+  rect(Math.round(x-4*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
+  if(hammering){
+    const hx=Math.round(x+10*p),hy=Math.round(torsoY+7*p);
+    ctx.fillStyle='#7a4f1f';ctx.fillRect(hx,hy,1*p,9*p);
+    ctx.fillStyle='#c0c0c0';ctx.fillRect(hx-3*p,hy,7*p,2*p);
+    ctx.fillStyle='#000';
+    ctx.fillRect(hx-3*p-1,hy,1,2*p);
+    ctx.fillRect(hx+7*p-1,hy,1,2*p);
+    ctx.fillRect(hx-3*p-1,hy-1,7*p+2,1);
+    ctx.fillRect(hx-3*p-1,hy+2*p-1,7*p+2,1);
+  }
+}
+
+/* Bodenschatten */
+function drawFallShadow(){
+  if(avatar.state!=='fall')return;
+  const p=PX(),baseY=lineY()+2*p,dist=Math.max(0,avatar.y-lineY());
+  const maxW=28*p,minW=10*p,w=Math.max(minW,maxW-dist*0.15),h=Math.max(2*p,6*p-dist*0.08);
+  const a=Math.max(0.05,Math.min(0.35,0.35-dist*0.0015));
+  ctx.save();ctx.translate(Math.round(avatar.x),Math.round(baseY));ctx.scale(w,h);
+  ctx.beginPath();ctx.fillStyle=`rgba(0,0,0,${a})`;ctx.arc(0,0,1,0,Math.PI*2);ctx.fill();ctx.restore();
+}
+
+/* Buchstaben */
+let baseX=null;
+function ensureBaseX(){if(baseX!==null)return;const p=PX(),s=LETTER_GAP*p;const total=(WORD.length-1)*s;baseX=Math.round(W/2-total/2);}
+function letterTargetX(i){ensureBaseX();const p=PX(),s=LETTER_GAP*p;return baseX+i*s;}
+function letterTargetY(){const p=PX(),s=avatar.headScale*p;return avatar.y-avatar.bodyScale*p-s*0.35;}
+const letters=[];let nextLetterIndex=0;
+
+/* Funken */
+const sparks=[];
+function spawnSparks(x,y){
+  const p=PX();
+  for(let i=0;i<SPARK_COUNT;i++){
+    const ang=Math.random()*Math.PI-Math.PI/2,spd=(0.8+Math.random()*0.8)*6*p;
+    sparks.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd-1*p,life:450+Math.random()*250,b:performance.now(),a:1});
+  }
+}
+function updateSparks(){
+  const now=performance.now(),p=PX();
+  for(let i=sparks.length-1;i>=0;i--){
+    const s=sparks[i],t=now-s.b;
+    if(t>s.life){sparks.splice(i,1);continue;}
+    s.vy+=0.02*p;s.x+=s.vx*0.016;s.y+=s.vy*0.016;s.a=1-(t/s.life);
+  }
+}
+function drawSparks(){
+  const p=PX();
+  for(const s of sparks){
+    ctx.globalAlpha=Math.max(0,Math.min(1,s.a));
+    ctx.fillStyle='#ffd966';
+    ctx.fillRect(Math.round(s.x/p)*p,Math.round(s.y/p)*p,2*p,2*p);
+  }
+  ctx.globalAlpha=1;
+}
+
+function maybeHammerNext(){
+  if(nextLetterIndex>=WORD.length)return;
+  const i=nextLetterIndex,tx=letterTargetX(i),ty=letterTargetY(),reach=8*PX();
+  if(avatar.x>=tx-reach){
+    letters.push({ch:WORD[i],x:tx,y:ty});
+    avatar.hammerUntil=performance.now()+HAMMER_MS;
+    spawnSparks(tx,ty);
+    nextLetterIndex++;
+  }
+}
+function drawLetters(){
+  const p=PX();
+  ctx.font=(LETTER_SIZE*p)+'px monospace';
+  ctx.textBaseline='middle';
+  for(const L of letters){
+    ctx.lineWidth=2*p;ctx.strokeStyle='#000';
+    ctx.strokeText(L.ch,Math.round(L.x),Math.round(L.y));
+    ctx.fillStyle='#f2f2f2';
+    ctx.fillText(L.ch,Math.round(L.x),Math.round(L.y));
+  }
+}
+
+/* Loop */
+function tick(){
+  ctx.clearRect(0,0,W,H);
+  drawLine();
+
+  maybeHammerNext();
+  updateSparks();
+  drawLetters();
+  drawSparks();
+
+  const p=PX(),speed=avatar.vx*p;
+  if(avatar.state==='walk'){
+    avatar.x+=speed;avatar.step+=.15;
+    avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*2)*0.5*p);
+    if(avatar.x>=lineEndX()-6*p){avatar.state='fall';avatar.vy=0;}
+  }else if(avatar.state==='fall'){
+    avatar.vy+=avatar.gravity*p*.6;
+    avatar.y+=avatar.vy;
+    avatar.x+=speed*.2;
+    drawFallShadow();
+    if(avatar.y>H+40*p){avatar.state='done';}
+  }
+
+  drawBody(avatar.x,avatar.y);
+  drawHead(avatar.x,avatar.y);
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+</script>
 </body>
 </html>
