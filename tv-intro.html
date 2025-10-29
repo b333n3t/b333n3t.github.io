@@ -10,31 +10,41 @@
 </head>
 <body>
   <canvas id="c"></canvas>
-  <script>
-    const c = document.getElementById('c');
-    const ctx = c.getContext('2d');
-    c.width = innerWidth; c.height = innerHeight;
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+c.width = innerWidth; c.height = innerHeight;
 
-    // zeichne Linie und bewegenden Kreis
-    let x = 50;
-    function draw(){
-      ctx.clearRect(0,0,c.width,c.height);
-      ctx.strokeStyle = "#fff";
-      ctx.beginPath();
-      ctx.moveTo(0, c.height/2);
-      ctx.lineTo(c.width, c.height/2);
-      ctx.stroke();
+function rect(px,py,w,h,fill){
+  ctx.fillStyle=fill; ctx.fillRect(px,py,w,h);
+  ctx.fillStyle='#000';
+  ctx.fillRect(px-1,py,w+2,1);
+  ctx.fillRect(px-1,py+h-1,w+2,1);
+  ctx.fillRect(px-1,py,1,h);
+  ctx.fillRect(px+w-1,py,1,h);
+}
 
-      ctx.fillStyle = "#0f0";
-      ctx.beginPath();
-      ctx.arc(x, c.height/2, 20, 0, Math.PI*2);
-      ctx.fill();
+let x = 80;
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.strokeStyle = "#fff";
+  ctx.beginPath();
+  ctx.moveTo(0, c.height*2/3);
+  ctx.lineTo(c.width, c.height*2/3);
+  ctx.stroke();
 
-      x += 2;
-      if (x > c.width + 20) x = -20;
-      requestAnimationFrame(draw);
-    }
-    draw();
-  </script>
+  // „Figur“
+  const y = c.height*2/3;
+  rect(x-12, y-40, 24, 40, "#2b3a56");   // Körper
+  rect(x-8,  y-60, 20, 20, "#caa134");   // Kopf
+  rect(x-4,  y, 8, 6, "#7a4f1f");        // Füße
+
+  x += 3;
+  if (x > c.width+20) x = -20;
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
 </body>
 </html>
