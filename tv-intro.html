@@ -451,8 +451,13 @@ function drawWave(){
 /* ===== Redirect nach Intro ===== */
 function startTransition(){
   sessionStorage.setItem("introPlayed","1");
-  window.location.href = INTRO_RETURN_URL; // zurück zur index.html (oder gemerkten Seite)
+
+  // 1500 ms = 1,5 Sekunden warten, bevor zur index.html gewechselt wird
+  setTimeout(()=>{
+    window.location.href = INTRO_RETURN_URL;
+  }, 2000);
 }
+
 
 /* ===== Hauptloop ===== */
 function tick(){
