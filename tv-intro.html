@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>b3nn3t • Intro mit Kopf-Bild</title>
+  <title>b3nn3t • Intro mit Kopf-Chroma-Key</title>
   <style>
     html,body{margin:0;height:100%;background:#333;overflow:hidden}
     canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges}
@@ -14,8 +14,9 @@
 
 <script>
 /* ======= EINSTELLUNGEN ======= */
-const USE_HEAD_IMAGE = true;  // <-- true = Kopf-Bild nutzen, false = Pixelkopf
-const HEAD_IMG_URL   = "img/dein-pixel-kopf.webp?v=" + Date.now(); // oder .webp
+const USE_HEAD_IMAGE   = true;   // true = Bildkopf verwenden
+const HEAD_IMG_URL     = "img/pixel-head.png?v=" + Date.now(); // oder .webp
+const CHROMA_TOLERANCE = 45;     // 25–55: höher = aggressiveres Entfernen
 
 const RUN_TO_RIGHT   = true;
 const WORD           = "b3nn3t";
@@ -46,13 +47,50 @@ function resize(){
 }
 addEventListener('resize',resize);resize();
 
-/* ====== Kopf laden ====== */
+/* ====== Kopf laden & Grauhintergrund entfernen ====== */
 let headReady=false, headImg;
 if(USE_HEAD_IMAGE){
-  headImg=new Image();headImg.crossOrigin="anonymous";
-  headImg.onload=()=>headReady=true;
-  headImg.onerror=()=>{headReady=false;};
-  headImg.src=HEAD_IMG_URL;
+  const raw = new Image(); raw.crossOrigin="anonymous";
+  raw.onload=()=>{
+    headImg = removeFlatBG(raw, CHROMA_TOLERANCE); // -> Canvas mit Transparenz
+    headReady=true;
+  };
+  raw.onerror=()=>{ headReady=false; };
+  raw.src=HEAD_IMG_URL;
+}
+
+/**
+ * Nimmt die Farbe oben links als Key und macht ähnliche Pixel transparent.
+ * tolerance: 0..255 (RGB-Abstand). 40–50 funktioniert gut bei grauen Hintergründen.
+ */
+function removeFlatBG(image, tolerance){
+  const off = document.createElement("canvas");
+  off.width = image.naturalWidth || image.width;
+  off.height = image.naturalHeight || image.height;
+  const octx = off.getContext("2d", { willReadFrequently: true });
+  octx.imageSmoothingEnabled = false;
+  octx.drawImage(image, 0, 0);
+
+  const img = octx.getImageData(0, 0, off.width, off.height);
+  const d = img.data;
+
+  // Key-Farbe aus Ecke oben links
+  const keyR = d[0], keyG = d[1], keyB = d[2];
+
+  for(let i=0;i<d.length;i+=4){
+    const r=d[i], g=d[i+1], b=d[i+2];
+    // euklidischer Abstand im RGB-Raum
+    const dr=r-keyR, dg=g-keyG, db=b-keyB;
+    const dist = Math.sqrt(dr*dr + dg*dg + db*db);
+
+    if(dist < tolerance){
+      // weiches „Feathering“ am Rand: je näher, desto transparenter
+      const a = Math.max(0, Math.min(1, dist / tolerance));
+      d[i+3] = Math.round(255 * a * a); // stärkeres Ausdünnen am Rand
+    }
+  }
+  octx.putImageData(img,0,0);
+  return off; // Canvas kann direkt in drawImage() genutzt werden
 }
 
 /* ====== Zeichenhilfen ====== */
