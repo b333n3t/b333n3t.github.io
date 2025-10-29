@@ -511,7 +511,10 @@ function tick(){
 
   requestAnimationFrame(tick);
 }
-requestAnimationFrame(tick);
+// ⏱ Wartezeit vor dem Start der Animation (z. B. 1500 ms = 1,5 Sek.)
+setTimeout(() => {
+  requestAnimationFrame(tick);
+}, 1500);
 </script>
 </body>
 </html>
