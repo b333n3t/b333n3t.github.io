@@ -3,129 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pixel-Marionette – Sprite (b3nn3t, Hammer + Funken)</title>
+  <title>b3nn3t • Sprite-Intro (Hammer + Funken)</title>
   <style>
-    :root{ --bg:#333333; --duration:12000; }
-    html,body{height:100%;margin:0;background:var(--bg);}
-    body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    canvas{
-      display:block;width:100vw;height:100vh;
-      image-rendering:pixelated; image-rendering:crisp-edges;
-      background:var(--bg)
-    }
-    #main{position:fixed;inset:0;display:grid;place-items:center;background:#111;color:#fff;opacity:0;pointer-events:none;transition:opacity .8s ease}
+    :root { --bg:#333333; --duration:12000; }
+    html,body{ margin:0; height:100%; background:var(--bg); overflow:hidden; }
+    canvas { display:block; width:100vw; height:100vh;
+             image-rendering:pixelated; image-rendering:crisp-edges; }
+    #main{position:fixed;inset:0;display:grid;place-items:center;background:#111;color:#fff;
+          opacity:0;pointer-events:none;transition:opacity .8s ease}
     #main.show{opacity:1;pointer-events:auto}
-    #main .card{max-width:min(90vw,840px);padding:32px;border-radius:16px;background:#181818;box-shadow:0 10px 40px rgba(0,0,0,.45)}
+    #main .card{max-width:min(90vw,840px);padding:32px;border-radius:16px;background:#181818;
+                box-shadow:0 10px 40px rgba(0,0,0,.45)}
   </style>
 </head>
 <body>
   <canvas id="stage"></canvas>
-  <section id="main" aria-hidden="true">
-    <div class="card"><h1>Willkommen!</h1><p>Platzhalter für die Hauptseite.</p></div>
-  </section>
+  <section id="main" aria-hidden="true"><div class="card">
+    <h1>Willkommen!</h1><p>Platzhalter für die Hauptseite.</p>
+  </div></section>
 
   <script>
-  // ================== KNOBS (anpassen) ==================
-  const SPRITE_URL   = location.origin + "/img/avatar-walk.png?v=" + Date.now(); // <— DEIN Sprite-Sheet
-  const FRAME_W      = 128;   // Breite eines Frames im Sprite (px)
-  const FRAME_H      = 128;   // Höhe eines Frames im Sprite (px)
-  const FRAMES       = 8;     // Anzahl Frames in der Zeile
-  const FPS          = 10;    // Animationsgeschwindigkeit (Frames pro Sekunde)
+  // ====================== KNOBS (anpassen) ======================
+  const SPRITE_URL     = "/img/avatar-walk.webp?v=" + Date.now(); // <— dein Sprite-Sheet
+  const FRAMES         = 8;     // Anzahl Frames in einer Reihe (Sprite muss 1-zeilig sein)
+  const FPS            = 10;    // Lauf-Animationsgeschwindigkeit
+  const WORD           = "b3nn3t";
+  const LETTER_GAP_PX  = 14;    // Buchstabenabstand in PX()-Einheiten
+  const LIFT_MS        = 650;   // Dauer bis Buchstabe „hochgehämmert“ ist
+  const HAMMER_MS      = 420;   // Schlagdauer (down+up)
+  const SPARK_COUNT    = 10;    // Funken pro Schlag
+  const RUN_TO_RIGHT   = true;  // links -> rechts
+  // =============================================================
 
-  const RUN_TO_RIGHT     = true;          // links -> rechts
-  const WORD             = "b3nn3t";      // zu hämmerndes Wort
-  const LETTER_GAP_PX    = 14;            // Abstand Zwischenräumen in PX()-Einheiten
-  const LIFT_MS          = 650;           // langsam hochhämmern
-  const HAMMER_MS        = 420;           // Schlag-Zyklus
-  const SPARK_COUNT      = 10;            // Funken pro Schlag
-  // ======================================================
+  const canvas = document.getElementById("stage");
+  const ctx = canvas.getContext("2d");
 
-  const canvas = document.getElementById('stage');
-  const ctx = canvas.getContext('2d');
-
-  let W=0, H=0, DPR=1;
+  let W=0,H=0,DPR=1;
   function resize(){
-    DPR = Math.max(1, Math.floor(window.devicePixelRatio||1));
-    W = canvas.width  = Math.floor(innerWidth * DPR);
+    DPR = Math.max(1, window.devicePixelRatio || 1);
+    W = canvas.width = Math.floor(innerWidth * DPR);
     H = canvas.height = Math.floor(innerHeight * DPR);
-    canvas.style.width  = innerWidth + 'px';
-    canvas.style.height = innerHeight + 'px';
+    canvas.style.width = innerWidth + "px";
+    canvas.style.height = innerHeight + "px";
     ctx.imageSmoothingEnabled = false;
-    baseX = null;
+    baseX = null;  // Wort zentriert neu berechnen
   }
-  window.addEventListener('resize', resize); resize();
+  resize();
+  addEventListener("resize", resize);
 
   const lineY   = () => Math.floor(H * 2/3);
-  const lineEndX= () => Math.floor(W * 0.82);
-  const PX      = () => Math.max(2, Math.floor(Math.min(W,H) / 240)); // Pixelrastergröße
+  const PX      = () => Math.max(2, Math.floor(Math.min(W,H)/240));
 
-  // -------- Sprite laden --------
-  let spr = new Image(); spr.crossOrigin = "anonymous";
-  let sprReady = false;
-  spr.onload = () => sprReady = true;
-  spr.onerror = () => { sprReady = false; console.warn("Sprite nicht gefunden:", SPRITE_URL); };
-  spr.src = SPRITE_URL;
+  // ---- Sprite laden ----
+  const sprite = new Image(); sprite.crossOrigin = "anonymous";
+  let spriteReady = false;
+  sprite.onload = ()=>{ spriteReady = true; };
+  sprite.onerror = ()=>{ spriteReady = false; console.warn("Sprite nicht gefunden:", SPRITE_URL); };
+  sprite.src = SPRITE_URL;
 
-  // -------- Avatar-Physik --------
+  // ---- Avatar-Zustand ----
   const avatar = {
-    state: 'walk',
-    x: RUN_TO_RIGHT ? -40*PX() : W + 40*PX(),
+    state: "walk",
+    x: RUN_TO_RIGHT ? -40*PX() : W + 40*PX(),   // Start außerhalb
+    y: lineY(),                                  // Füße stehen auf der Linie
     vx: RUN_TO_RIGHT ? 2.1 : -2.1,
-    y: lineY(),     // Wir zeichnen Sprite an den Füßen ausgerichtet
-    vy: 0, gravity: 0.35,
+    vy: 0, gravity: .35,
     frame: 0, frameTime: 0,
     hammerUntil: 0,
     hammerLetterIndex: -1
   };
 
-  // -------- Linie --------
+  // ---- Linie ----
   function drawLine(){
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2*PX();
-    ctx.beginPath(); ctx.moveTo(0, lineY()); ctx.lineTo(lineEndX(), lineY()); ctx.stroke();
+    ctx.strokeStyle="#fff"; ctx.lineWidth=2*PX();
+    ctx.beginPath(); ctx.moveTo(0,lineY()); ctx.lineTo(W,lineY()); ctx.stroke();
   }
 
-  // -------- Sprite zeichnen (Füße auf Linie) --------
-  function drawSprite(xFeet, yLine){
-    if(!sprReady){ // Fallback: kleiner Platzhalter
-      const p=PX();
-      ctx.fillStyle='#2b3a56';
-      ctx.fillRect(Math.round(xFeet-6*p), Math.round(yLine-20*p), 12*p, 20*p);
-      ctx.fillStyle='#7a4f1f';
-      ctx.fillRect(Math.round(xFeet-6*p), Math.round(yLine-3*p), 12*p, 3*p);
-      return;
-    }
-    // Maßstab: Sprite soll zur Leinwand passen (skaliert im Raster)
+  // ---- Sprite zeichnen (Füße auf Linie) ----
+  function drawSprite(){
+    if(!spriteReady) return;
     const p = PX();
-    const targetH = 28*p;                   // ca. 28 „Pixel“ hoch (passt zum bisherigen Look)
-    const scale = targetH / FRAME_H;
-    const drawW = Math.round(FRAME_W * scale);
-    const drawH = Math.round(FRAME_H * scale);
+    const FRAME_W = sprite.width / FRAMES;
+    const FRAME_H = sprite.height; // 1 Zeile
+    const targetH = 28*p;          // visuelle Höhe anpassen
+    const scale   = targetH / FRAME_H;
+    const drawW   = Math.round(FRAME_W * scale);
+    const drawH   = Math.round(FRAME_H * scale);
 
-    // Frame auswählen
-    const sx = (avatar.frame|0) % FRAMES * FRAME_W;
-    const sy = 0;
+    const sx = (avatar.frame|0) % FRAMES * FRAME_W, sy = 0;
+    const dx = Math.round(avatar.x - drawW/2);
+    const dy = Math.round(avatar.y - drawH);
 
-    // Füße auf Linie ausrichten -> unten mittig
-    const dx = Math.round(xFeet - drawW/2);
-    const dy = Math.round(yLine - drawH);
-
-    // Schlag: minimalen „Kopfstoß“ simulieren (Y-Wackler)
+    // Hammer-Wackler
     const hammering = performance.now() < avatar.hammerUntil;
     const phase = Math.max(0, 1 - (avatar.hammerUntil - performance.now())/HAMMER_MS);
     const wobbleY = hammering ? Math.round(Math.sin(phase*Math.PI)*2) : 0;
 
-    ctx.drawImage(spr, sx, sy, FRAME_W, FRAME_H, dx, dy + wobbleY, drawW, drawH);
+    ctx.drawImage(sprite, sx, sy, FRAME_W, FRAME_H, dx, dy + wobbleY, drawW, drawH);
 
-    // Hammer (einfaches Pixel-Sprite) neben rechter Hand, nur beim Schlag
+    // Pixel-Hammer (nur während des Schlages)
     if (hammering && avatar.hammerLetterIndex >= 0){
-      const hx = Math.round(xFeet + 8*p);
+      const hx = Math.round(avatar.x + 8*p);
       const hy = Math.round(dy + 10*p + Math.sin(phase*Math.PI)*6*p);
-      // Stiel
-      ctx.fillStyle = '#7a4f1f'; ctx.fillRect(hx, hy, 1*p, 8*p);
-      // Kopf
-      ctx.fillStyle = '#c0c0c0'; ctx.fillRect(hx-3*p, hy, 7*p, 2*p);
-      ctx.fillStyle = '#000';
+      ctx.fillStyle = '#7a4f1f'; ctx.fillRect(hx, hy, 1*p, 8*p);   // Stiel
+      ctx.fillStyle = '#c0c0c0'; ctx.fillRect(hx-3*p, hy, 7*p, 2*p); // Kopf
+      ctx.fillStyle = '#000'; // Outline Kopf
       ctx.fillRect(hx-3*p-1, hy, 1, 2*p);
       ctx.fillRect(hx+7*p-1, hy, 1, 2*p);
       ctx.fillRect(hx-3*p-1, hy-1, 7*p+2, 1);
@@ -133,19 +115,16 @@
     }
   }
 
-  // -------- Wort „b3nn3t“ mittig, hochhämmern, stehen lassen --------
+  // ---- Wort „b3nn3t“ mittig hochhämmern ----
   let baseX = null;
   const letters = []; // {ch, idx, x, y, startY, finalY, t0, hammered}
   let nextIndexToHammer = 0;
 
-  function letterYAboveHead(){
-    // Beim Sprite nehmen wir grob 18p über der Linie (überm Kopf)
-    return lineY() - 18*PX();
-  }
+  function letterYAboveHead(){ return lineY() - 18*PX(); } // ca. Kopfhöhe
   function ensureBaseX(){
-    if (baseX !== null) return;
+    if(baseX !== null) return;
     const p = PX(), spacing = LETTER_GAP_PX*p;
-    const totalWidth = (WORD.length-1)*spacing;
+    const totalWidth = (WORD.length - 1) * spacing;
     baseX = Math.round(W/2 - totalWidth/2);
   }
   function targetXForIndex(i){
@@ -154,12 +133,12 @@
     return baseX + i*spacing;
   }
 
-  // Funken/Staub
+  // ---- Funken/Staub ----
   const sparks = []; // {x,y,vx,vy,life,born,alpha}
   function spawnSparks(x,y){
     const p = PX();
-    for(let i=0;i<10;i++){
-      const ang = Math.random()*Math.PI - Math.PI/2;
+    for(let i=0;i<SPARK_COUNT;i++){
+      const ang = Math.random()*Math.PI - Math.PI/2; // nach oben
       const spd = (0.8 + Math.random()*0.8) * 6*p;
       sparks.push({
         x, y,
@@ -174,12 +153,9 @@
   function updateSparks(){
     const now = performance.now(), p = PX();
     for(let i=sparks.length-1;i>=0;i--){
-      const s = sparks[i];
-      const t = now - s.born;
+      const s = sparks[i], t = now - s.born;
       if (t > s.life){ sparks.splice(i,1); continue; }
-      s.vy += 0.02 * p;
-      s.x  += s.vx * 0.016;
-      s.y  += s.vy * 0.016;
+      s.vy += 0.02 * p; s.x += s.vx*0.016; s.y += s.vy*0.016;
       s.alpha = 1 - (t / s.life);
     }
   }
@@ -195,24 +171,17 @@
 
   function maybeHammerNext(){
     if (nextIndexToHammer >= WORD.length) return;
-    const idx = nextIndexToHammer;
-    const tx = targetXForIndex(idx);
-
-    if ((RUN_TO_RIGHT && avatar.x >= tx) || (!RUN_TO_RIGHT && avatar.x <= tx)) {
-      const p = PX();
-      const finalY = letterYAboveHead();
-      const L = {
+    const idx = nextIndexToHammer, tx = targetXForIndex(idx);
+    if ( (RUN_TO_RIGHT && avatar.x >= tx) || (!RUN_TO_RIGHT && avatar.x <= tx) ){
+      const p = PX(), finalY = letterYAboveHead();
+      letters.push({
         ch: WORD[idx], idx, x: tx,
         startY: finalY + 10*p, y: finalY + 10*p,
-        finalY, t0: performance.now(),
-        hammered: false
-      };
-      letters.push(L);
-
+        finalY, t0: performance.now(), hammered:false
+      });
       avatar.hammerUntil = performance.now() + HAMMER_MS;
       avatar.hammerLetterIndex = idx;
       spawnSparks(tx, finalY);
-
       nextIndexToHammer++;
     }
   }
@@ -220,8 +189,8 @@
     const now = performance.now();
     for (const L of letters){
       if (!L.hammered){
-        const t = Math.min(1, (now - L.t0) / LIFT_MS);
-        const e = 1 - Math.pow(1-t, 3);      // easeOutCubic
+        const t = Math.min(1, (now - L.t0) / LIFT_MS);    // 0..1
+        const e = 1 - Math.pow(1-t, 3);                   // easeOutCubic
         L.y = Math.round(L.startY + (L.finalY - L.startY) * e);
         if (t >= 1) L.hammered = true;
       }
@@ -239,24 +208,24 @@
     }
   }
 
-  // -------- Loop --------
+  // ---- Haupt-Loop ----
   let lastTS = performance.now();
-  function tick(nowTS){
-    const dt = Math.min(100, nowTS - lastTS); lastTS = nowTS;
+  function tick(ts){
+    const dt = Math.min(100, ts - lastTS); lastTS = ts;
 
     ctx.clearRect(0,0,W,H);
     drawLine();
 
-    // Buchstaben (hinter der Figur)
+    // Buchstaben & Funken (liegen hinter der Figur)
     maybeHammerNext();
     updateLetters();
     updateSparks();
     drawLetters();
     drawSparks();
 
-    // Avatar-Bewegung
+    // Avatar bewegen/animieren
     const p = PX(), speed = avatar.vx * p;
-    if (avatar.state === 'walk') {
+    if (avatar.state === "walk"){
       avatar.x += speed;
       // Sprite-Animation
       avatar.frameTime += dt;
@@ -265,29 +234,27 @@
         avatar.frameTime -= msPerFrame;
         avatar.frame = (avatar.frame + 1) % FRAMES;
       }
-      // Sturztrigger am rechten Rand (weiße Linie endet)
-      const atEdge = RUN_TO_RIGHT ? (avatar.x >= lineEndX()-6*p) : (avatar.x <= lineEndX()+6*p);
-      if (atEdge) { avatar.state = 'fall'; avatar.vy = 0; }
-    } else if (avatar.state === 'fall') {
+      // Sturz am rechten Ende der Linie
+      const atEdge = RUN_TO_RIGHT ? (avatar.x >= (W * 0.82) - 6*p) : (avatar.x <= (W * 0.18) + 6*p);
+      if (atEdge){ avatar.state="fall"; avatar.vy=0; }
+    } else if (avatar.state === "fall"){
       avatar.vy += avatar.gravity * p * 0.6;
       avatar.y  += avatar.vy;
       avatar.x  += speed * 0.2;
-      // beim Fallen keine Linienbindung mehr: Füße lösen sich mit
-      if (avatar.y > H + 40*p) { avatar.state = 'done'; startTransition(); }
+      if (avatar.y > H + 40*p){ avatar.state="done"; startTransition(); }
     }
 
-    drawSprite(avatar.x, avatar.y);
-
+    drawSprite();
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
 
-  // -------- Übergang --------
+  // ---- Übergang ----
   const main = document.getElementById('main');
   function startTransition(){
     main.classList.add('show');
-    const redirectTo = null; // z.B. '/home' oder 'https://example.com'
-    if (redirectTo) setTimeout(()=>location.href=redirectTo, 900);
+    const redirectTo = null; // z.B. '/home'
+    if (redirectTo) setTimeout(()=>location.href=redirectTo,900);
   }
   setTimeout(()=>{ if(avatar.state!=='done') startTransition(); },
     parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
