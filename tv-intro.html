@@ -159,6 +159,13 @@ function resize(){
 }
 addEventListener('resize',resize);resize();
 
+/* 🔥 Preload sofort beim Start */
+if(!window._preloaded){
+  window._preloaded=true;
+  preloadAllImages(preloadImages);
+  preloadAllVideos(preloadVideos);
+}
+
 /* ===== Kopf laden & Keying ===== */
 let headReady=false, headImg;
 if(USE_HEAD_IMAGE){
