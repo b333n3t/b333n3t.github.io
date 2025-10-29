@@ -4,10 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>b3nn3t • Intro (schiefe Buchstaben, Pause nur beim „t“)</title>
-  <style>
-    html,body{margin:0;height:100%;background:#333;overflow:hidden}
-    canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges}
-  </style>
+<style>
+  :root {
+    --fade-ms: 900ms; /* Dauer der Ein-/Ausblendung */
+  }
+
+  html,body {
+    margin:0;
+    height:100%;
+    background:#000;          /* schwarzer Hintergrund */
+    overflow:hidden;
+  }
+
+  /* Canvas weich ein-/ausblenden */
+  canvas#c {
+    display:block;
+    width:100vw;
+    height:100vh;
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    opacity:0;
+    transition: opacity var(--fade-ms) ease;
+  }
+
+  body.ready canvas#c  { opacity:1; }  /* Fade-In */
+  body.fadeout canvas#c{ opacity:0; }  /* Fade-Out */
+</style>
+
 </head>
 <body>
   <canvas id="c"></canvas>
@@ -26,7 +49,7 @@ const KEY_DESPECKLE    = 1;
 // Bewegung & Layout
 const RUN_TO_RIGHT     = true;
 const WORD             = "b3nn3t";
-const HAMMER_MS        = 620;    // „Hammer“-Zeit je Buchstabe
+const HAMMER_MS        = 680;    // „Hammer“-Zeit je Buchstabe
 const SPARK_COUNT      = 12;
 const HEAD_SCALE       = 26;
 const BODY_SCALE       = 16;
@@ -39,9 +62,9 @@ const LETTER_JITTER_Y  = 2;      // vertikale Zufallsabweichung in PX()
 
 // „t“ kippen + kurze Pause NUR dann
 const TILT_TRIGGER_PX  = 42;     // Abstand zur Kante (in PX())
-const TILT_TARGET_DEG  = 22;     // Kippwinkel nach rechts
+const TILT_TARGET_DEG  = 24;     // Kippwinkel nach rechts
 const TILT_MS          = 400;    // bis max. Neigung
-const TILT_WOBBLE_MS   = 5500;   // Wackeln
+const TILT_WOBBLE_MS   = 5800;   // Wackeln
 const TILT_PAUSE_MS    = 1000;   // Figur-Standzeit beim gekippten „t“
 
 // (Optional) Weißer Glow & Welle – wie vorher
@@ -458,12 +481,17 @@ function drawWave(){
 /* ===== Redirect nach Intro ===== */
 function startTransition(){
   sessionStorage.setItem("introPlayed","1");
+  // sanft ausblenden
+  document.body.classList.add('fadeout');
 
-  // 1500 ms = 1,5 Sekunden warten, bevor zur index.html gewechselt wird
+  // Wartezeit = Fade-Dauer + kleine Pufferzeit
+  const fadeMs = 2000;     // gleich wie --fade-ms
+  const extra  = 300;     // Puffer
   setTimeout(()=>{
     window.location.href = INTRO_RETURN_URL;
-  }, 2000);
+  }, fadeMs + extra);
 }
+
 
 
 /* ===== Hauptloop ===== */
@@ -513,8 +541,12 @@ function tick(){
 }
 // ⏱ Wartezeit vor dem Start der Animation (z. B. 1500 ms = 1,5 Sek.)
 setTimeout(() => {
+  // erst sanft einblenden…
+  document.body.classList.add('ready');
+  // …und dann Animation starten
   requestAnimationFrame(tick);
-}, 1500);
+}, 1500); // Start-Verzögerung bleibt (1.5s); gern auf 1000/2000 ändern
+
 </script>
 </body>
 </html>
