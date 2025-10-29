@@ -15,7 +15,7 @@
 <script>
 /* ================== EINSTELLUNGEN ================== */
 const USE_HEAD_IMAGE   = true;
-const HEAD_IMG_URL     = "img/pixel-head.png?v=" + Date.now(); // oder .webp
+const HEAD_IMG_URL     = "img/dein-pixel.webp?v=" + Date.now(); // oder .webp
 
 // Kopf-Keying (nur nötig, wenn dein Kopfbild keinen Alpha-Kanal hat)
 const KEY_TOLERANCE    = 65;
@@ -30,7 +30,7 @@ const HAMMER_MS        = 420;    // Pause je Buchstabe (Hammern)
 const SPARK_COUNT      = 12;
 const HEAD_SCALE       = 26;
 const BODY_SCALE       = 16;
-const LETTER_SIZE      = 18;     // in PX()-Einheiten
+const LETTER_SIZE      = 22;     // in PX()-Einheiten
 const LETTER_GAP       = 18;
 
 // Post-Pause: Figur steht rechts neben dem Wort, dann Glow+Wave, erst danach weiterlaufen
@@ -142,7 +142,7 @@ const avatar={
   hammerUntil:0, pauseUntil:0
 };
 function drawHead(x,y){
-  const p=PX(),s=avatar.headScale*p,w=s,h=s,top=y-avatar.bodyScale*p-s-2*p;
+  const p=PX(),s=avatar.headScale*p,w=s,h=s,top=y-avatar.bodyScale*p-s-4*p;
   if(USE_HEAD_IMAGE&&headReady){
     ctx.drawImage(headImg,Math.round(x-w/2),Math.round(top),Math.round(w),Math.round(h));
     return;
