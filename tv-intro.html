@@ -3,16 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pixel-Marionette – Intro (mit b3nn3t-Spur)</title>
+  <title>Pixel-Marionette – Intro (b3nn3t)</title>
   <style>
     :root{ --bg:#333333; --duration:11000; }
-    html,body{height:100%;margin:0;background:var(--bg);}
+    html,body{height:100%;margin:0;background:var(--bg);} 
     body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    canvas{
-      display:block;width:100vw;height:100vh;
-      image-rendering:pixelated; image-rendering:crisp-edges;
-      background:var(--bg)
-    }
+    canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges;background:var(--bg)}
     #main{position:fixed;inset:0;display:grid;place-items:center;background:#111;color:#fff;opacity:0;pointer-events:none;transition:opacity .8s ease}
     #main.show{opacity:1;pointer-events:auto}
     #main .card{max-width:min(90vw,840px);padding:32px;border-radius:16px;background:#181818;box-shadow:0 10px 40px rgba(0,0,0,.45)}
@@ -26,13 +22,13 @@
 
   <script>
   // ======= KNOBS =======
-  const HEAD_IMG_URL = location.origin + "/img/dein-pixel-kopf.webp?v=" + Date.now(); // absolut + Cachebuster
+  const HEAD_IMG_URL = location.origin + "/img/pixel-head.png?v=" + Date.now(); // oder dein-pixel-kopf.webp
   const RUN_TO_RIGHT = true;             // links -> rechts
-  const CHROMA_TOLERANCE = 35;           // 25–45: falls graue Reste sichtbar
-  const DRAW_MATTE = true;               // schwarze Matte hinter dem Kopf
+  const CHROMA_TOLERANCE = 38;           // 25–45: falls graue Reste sichtbar
+  const DRAW_MATTE = false;              // Matte hinter dem Kopf (bei Bedarf true)
   const MATTE_PAD = 1;                   // Matte-Rand (Pixel)
   const TRAIL_TEXT = "b3nn3t";           // Buchstabenfolge
-  const TRAIL_SPAWN_MS = 350;            // Abstand zwischen neuem Buchstaben
+  const TRAIL_SPAWN_MS = 320;            // Abstand zwischen neuem Buchstaben
   // =====================
 
   const canvas = document.getElementById('stage');
@@ -62,139 +58,112 @@
     headScale:22, bodyScale:12
   };
 
-  // ---- Grauen Hintergrund (am Kopf) entfernen (Chroma-Key) ----
+  // ---- Hintergrund am Kopf per Chroma-Key entfernen ----
   function removeGrayBG(image, tolerance = CHROMA_TOLERANCE) {
     const off = document.createElement("canvas");
-    off.width = image.width;
-    off.height = image.height;
+    off.width = image.width; off.height = image.height;
     const octx = off.getContext("2d", { willReadFrequently: true });
     octx.imageSmoothingEnabled = false;
     octx.drawImage(image, 0, 0);
     const imgData = octx.getImageData(0, 0, off.width, off.height);
-    const d = imgData.data;
-    const keyR = d[0], keyG = d[1], keyB = d[2]; // Ecke (0,0)
+    const d = imgData.data; const keyR=d[0], keyG=d[1], keyB=d[2];
     for (let i = 0; i < d.length; i += 4) {
-      const dr = Math.abs(d[i]   - keyR);
-      const dg = Math.abs(d[i+1] - keyG);
-      const db = Math.abs(d[i+2] - keyB);
+      const dr=Math.abs(d[i]-keyR), dg=Math.abs(d[i+1]-keyG), db=Math.abs(d[i+2]-keyB);
       if (dr < tolerance && dg < tolerance && db < tolerance) d[i+3] = 0;
     }
     octx.putImageData(imgData, 0, 0);
     return off;
   }
 
-  // --- Kopf laden (robust) ---
-  let headReady = false;
-  let headImg = new Image(); headImg.crossOrigin='anonymous';
-  headImg.onload = () => {
-    headImg = removeGrayBG(headImg, CHROMA_TOLERANCE); // freistellen
-    headReady = true;
-    console.log('HEAD cleaned & OK', headImg.width, headImg.height);
-  };
+  // --- Kopf laden ---
+  let headReady = false; let headImg = new Image(); headImg.crossOrigin='anonymous';
+  headImg.onload = () => { headImg = removeGrayBG(headImg); headReady = true; };
   headImg.onerror = (e) => { console.error('HEAD ERROR', HEAD_IMG_URL, e); };
-  console.log('HEAD LOAD', HEAD_IMG_URL);
   headImg.src = HEAD_IMG_URL;
 
-  // Linie
   function drawLine(){
     ctx.strokeStyle='#fff';
     ctx.lineWidth = 2*PX();
-    ctx.beginPath();
-    ctx.moveTo(0, lineY());
-    ctx.lineTo(lineEndX(), lineY());
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, lineY()); ctx.lineTo(lineEndX(), lineY()); ctx.stroke();
   }
 
-  // Pixelrechteck + Outline
   function rect(px,py,w,h,fill){
     ctx.fillStyle=fill; ctx.fillRect(px,py,w,h);
     ctx.fillStyle='#000';
-    ctx.fillRect(px-1,py,w+2,1);
-    ctx.fillRect(px-1,py+h-1,w+2,1);
-    ctx.fillRect(px-1,py,1,h);
-    ctx.fillRect(px+w-1,py,1,h);
+    ctx.fillRect(px-1,py,w+2,1); ctx.fillRect(px-1,py+h-1,w+2,1);
+    ctx.fillRect(px-1,py,1,h);   ctx.fillRect(px+w-1,py,1,h);
   }
 
-  // Körper (ohne Fäden)
+  // --- Flacher 2D-Körper im Stil 16‑Bit (einfachere Blöcke, keine Fäden) ---
   function drawBody(x,y){
-    const p=PX(), bodyH=avatar.bodyScale*p, bodyW=Math.round(8*p),
-          legLen=Math.round(9*p), armLen=Math.round(7*p);
-    const t=(Math.sin(avatar.step)+1)/2;
-    const legSwing=.8, a1=-legSwing+t*2*legSwing, a2=legSwing-t*2*legSwing;
+    const p=PX(), bodyH=avatar.bodyScale*p, bodyW=Math.round(8*p);
+    const legLen=Math.round(9*p), armLen=Math.round(7*p);
+    const t=(Math.sin(avatar.step)+1)/2; // 0..1
 
+    // Torso (einfarbig mit Outline)
     const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH);
     rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
 
-    const armSwing=.7, armFront=armSwing-t*2*armSwing, armBack=-armSwing+t*2*armSwing;
-    function limb(px,py,len,ang,thk,col){
-      const dx=Math.cos(ang)*len, dy=Math.sin(ang)*len;
-      rect(Math.round(px),Math.round(py),Math.max(3*p,thk),Math.max(3*p,thk),col);
-      rect(Math.round(px+dx),Math.round(py+dy),Math.max(3*p,thk),Math.max(3*p,thk),col);
+    // Schlichte 2D-Arme/Beine (SEGA/Nintendo‑Look)
+    function limb(px,py,len,phase,thk,col){
+      const swing = Math.round(Math.sin(phase)*2*p);
+      rect(px, py+swing, thk, len, col);
     }
+    const armTh=3*p, legTh=4*p;
+    limb(Math.round(x+3*p), torsoY+Math.round(3*p), armLen, avatar.step, armTh, '#2b3a56'); // Vorderarm
+    limb(Math.round(x-6*p), torsoY+Math.round(3*p), armLen, avatar.step+Math.PI, armTh, '#2b3a56'); // Hinterarm
+    limb(Math.round(x+1*p), y, legLen, avatar.step, legTh, '#233047'); // Vorderbein
+    limb(Math.round(x-3*p), y, legLen, avatar.step+Math.PI, legTh, '#233047'); // Hinterbein
 
-    const shoulderY=torsoY+Math.round(3*p), shoulderL=x-Math.round(6*p), shoulderR=x+Math.round(3*p);
-    limb(shoulderR,shoulderY,armLen,armFront,3*p,'#2b3a56');
-    limb(shoulderL,shoulderY,armLen,armBack, 3*p,'#2b3a56');
-
-    const hipY=y, hipL=x-Math.round(3*p), hipR=x+Math.round(1*p);
-    limb(hipR,hipY,legLen,a1,4*p,'#233047');
-    limb(hipL,hipY,legLen,a2,4*p,'#233047');
-
-    rect(Math.round(hipR+Math.cos(a1)*legLen),Math.round(hipY+Math.sin(a1)*legLen),6*p,3*p,'#7a4f1f');
-    rect(Math.round(hipL+Math.cos(a2)*legLen),Math.round(hipY+Math.sin(a2)*legLen),6*p,3*p,'#7a4f1f');
+    // Stiefel
+    rect(Math.round(x+1*p), Math.round(y+Math.sin(avatar.step)*2*p + legLen), 6*p, 3*p, '#7a4f1f');
+    rect(Math.round(x-3*p), Math.round(y+Math.sin(avatar.step+Math.PI)*2*p + legLen), 6*p, 3*p, '#7a4f1f');
   }
 
-  // Kopf (mit optionaler Matte)
+  // --- Kopf (mit optionaler Matte & Outline) ---
   function drawHead(x,y){
     const p = PX();
-    const s = avatar.headScale * p;
-    const top = y - avatar.bodyScale * p - s - 2*p; // über dem Rumpf
-    const w = s, h = s;
+    const s = avatar.headScale * p; const w=s, h=s;
+    const top = y - avatar.bodyScale * p - s - 2*p;
 
     if (DRAW_MATTE){
-      ctx.fillStyle = '#444'; // hellere Matte statt Schwarz
-      ctx.fillRect(Math.round(x - w/2) - MATTE_PAD,
-                   Math.round(top)      - MATTE_PAD,
-                   Math.round(w) + MATTE_PAD*2,
-                   Math.round(h) + MATTE_PAD*2);
+      ctx.fillStyle = '#444';
+      ctx.fillRect(Math.round(x - w/2) - MATTE_PAD, Math.round(top) - MATTE_PAD, Math.round(w) + MATTE_PAD*2, Math.round(h) + MATTE_PAD*2);
     }
 
     if (headReady && headImg && headImg.width){
       ctx.drawImage(headImg, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
     } else {
       // Platzhalter solange Kopf lädt
-      ctx.fillStyle='#c9a23b';
-      ctx.fillRect(Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h*.62));
-      ctx.fillStyle='#f2b59a';
-      ctx.fillRect(Math.round(x - w/2), Math.round(top + h*.45), Math.round(w), Math.round(h*.45));
+      ctx.fillStyle='#c9a23b'; ctx.fillRect(Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h*.62));
+      ctx.fillStyle='#f2b59a'; ctx.fillRect(Math.round(x - w/2), Math.round(top + h*.45), Math.round(w), Math.round(h*.45));
     }
 
-    // schwarze Outline
-    ctx.fillStyle = '#000';
+    // Outline
+    ctx.fillStyle='#000';
     ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top), 1, Math.round(h));
     ctx.fillRect(Math.round(x + w/2),     Math.round(top), 1, Math.round(h));
     ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top) - 1, Math.round(w) + 2, 1);
     ctx.fillRect(Math.round(x - w/2) - 1, Math.round(top + h), Math.round(w) + 2, 1);
   }
 
-  // --- Buchstaben-Spur ("b3nn3t") ---
+  // --- Buchstaben-Spur (b3nn3t) ---
   const letters = []; // {ch, x, y}
   let nextSpawnAt = performance.now() + TRAIL_SPAWN_MS; let spawnIndex = 0;
 
   function spawnNextLetter(){
-    const p = PX();
-    const ch = TRAIL_TEXT[spawnIndex];
-    const y  = lineY() - 4*p; // knapp über der Linie
+    const p = PX(); const ch = TRAIL_TEXT[spawnIndex];
+    const y = lineY() - 4*p; // knapp über der Linie
     letters.push({ch, x: avatar.x - 12*p, y});
     spawnIndex++;
   }
 
   function updateLetters(){
-    const p = PX();
-    const spacing = 12*p; // Abstand zwischen Buchstaben
+    const p = PX(); const spacing = 12*p;
+    // Ordnung beibehalten: erstes Zeichen bleibt am weitesten hinten, nicht gespiegelt
     for(let i=0;i<letters.length;i++){
-      const target = avatar.x - spacing*(i+1);
-      letters[i].x += (target - letters[i].x) * 0.12; // sanft nachziehen
+      const target = avatar.x - spacing * (letters.length - i); // wichtig: längenbasiert
+      letters[i].x += (target - letters[i].x) * 0.15;
       letters[i].y  = lineY() - 4*p;
     }
   }
@@ -211,17 +180,15 @@
     }
   }
 
-  // --- Hauptrenderloop ---
-  let raf;
+  // --- Loop ---
+  let raf; 
   function tick(){
     try{
       const now = performance.now();
       ctx.clearRect(0,0,W,H);
       drawLine();
-
       const p=PX(), speed=avatar.vx*p;
 
-      // Buchstaben sequentiell erscheinen lassen
       if(spawnIndex < TRAIL_TEXT.length && now >= nextSpawnAt){
         spawnNextLetter(); nextSpawnAt = now + TRAIL_SPAWN_MS;
       }
@@ -232,9 +199,7 @@
         const atEdge = RUN_TO_RIGHT ? (avatar.x >= lineEndX()-6*p) : (avatar.x <= lineEndX()+6*p);
         if(atEdge){ avatar.state='fall'; avatar.vy=0; }
       } else if(avatar.state==='fall'){
-        avatar.vy += avatar.gravity*p*.6;
-        avatar.y  += avatar.vy;
-        avatar.x  += speed*.2;
+        avatar.vy += avatar.gravity*p*.6; avatar.y += avatar.vy; avatar.x += speed*.2;
         if(avatar.y > H + 40*p){ avatar.state='done'; startTransition(); }
       }
 
@@ -247,7 +212,7 @@
   }
   tick();
 
-  // Übergang zur Hauptseite
+  // --- Übergang ---
   const main=document.getElementById('main');
   function startTransition(){
     cancelAnimationFrame(raf);
@@ -255,8 +220,7 @@
     const redirectTo=null; // z.B. '/home' oder 'https://example.com/app'
     if(redirectTo){ setTimeout(()=>location.href=redirectTo,900); }
   }
-  setTimeout(()=>{ if(avatar.state!=='done') startTransition(); },
-    parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
+  setTimeout(()=>{ if(avatar.state!=='done') startTransition(); }, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
   </script>
 </body>
 </html>
