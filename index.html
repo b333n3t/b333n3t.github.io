@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
+  <!-- Mobile: grauer Container näher am unteren Rand -->
   <style>
     @media (max-width: 768px) {
       main.main {
@@ -20,13 +21,24 @@
       }
     }
 
-    /* Einheitlicher Stil für alle Bilder */
-    .panel-photo img {
-      display: block;
-      width: 100%;
-      height: auto;
+    /* Eigenes, vom Card-Layout unabhängiges Bild-Panel */
+    .inline-photo {
+      margin: 1rem -1rem 0;
       border-radius: 12px;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, .15);
+      overflow: hidden;
+      line-height: 0;
+      box-shadow: 0 6px 24px rgba(0,0,0,.15);
+      /* sorgt dafür, dass es wie die großen Bilder wirkt */
+      width: auto !important;
+      display: block !important;
+    }
+    .inline-photo img {
+      display: block !important;
+      width: 100% !important;
+      max-width: none !important;
+      height: auto !important;
+      object-fit: cover !important;
+      object-position: center !important;
     }
   </style>
 </head>
@@ -94,21 +106,17 @@
           </picture>
         </figure>
 
-        <!-- Button "gesehen" -->
+        <!-- Link-Button "gesehen" -->
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
 
-        <!-- Bild zwischen "gesehen" und "plattformen" -->
-        <figure class="panel-photo">
-          <img src="assets/ko.webp" alt="ko">
-        </figure>
+        <!-- ko.webp: Bild zwischen "gesehen" und "plattformen" -->
+        <div class="inline-photo"><img src="assets/ko.webp" alt="ko"></div>
 
-        <!-- Button "plattformen" -->
+        <!-- Link-Button "plattformen" -->
         <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
 
-        <!-- Bild unter "plattformen" -->
-        <figure class="panel-photo">
-          <img src="assets/fu.webp" alt="fu">
-        </figure>
+        <!-- fu.webp: Bild unter "plattformen" -->
+        <div class="inline-photo"><img src="assets/fu.webp" alt="fu"></div>
 
         <!-- Footer -->
         <div class="footer-inline">
@@ -129,3 +137,33 @@
 
   <script>
     const cue = document.querySelector('.scroll-cue');
+    const scroller = document.querySelector('.main');
+    window.addEventListener('load', () => cue.classList.add('visible'));
+    scroller.addEventListener('scroll', () => {
+      cue.classList.toggle('hidden', scroller.scrollTop > 50);
+    }, {passive:true});
+  </script>
+
+  <script>
+    (function () {
+      const glass = document.getElementById('page-glass');
+      const panel = document.querySelector('.main');
+      if (!glass || !panel) return;
+
+      function positionGlass() {
+        const r = panel.getBoundingClientRect();
+        glass.style.left  = r.left + 'px';
+        glass.style.right = (window.innerWidth - r.right) + 'px';
+        const cs = getComputedStyle(panel);
+        glass.style.borderRadius = cs.borderRadius || '12px';
+      }
+      window.addEventListener('load', positionGlass);
+      window.addEventListener('resize', positionGlass);
+      window.addEventListener('scroll', positionGlass, { passive: true });
+
+      let raf; function tick(){ positionGlass(); raf = requestAnimationFrame(tick); }
+      tick(); setTimeout(()=>cancelAnimationFrame(raf), 800);
+    })();
+  </script>
+</body>
+</html>
