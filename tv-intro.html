@@ -26,23 +26,23 @@ const KEY_DESPECKLE    = 1;
 // Bewegung & Layout
 const RUN_TO_RIGHT     = true;
 const WORD             = "b3nn3t";
-const HAMMER_MS        = 420;    // Pause je Buchstabe (Hammern)
+const HAMMER_MS        = 520;    // Pause je Buchstabe (Hammern)
 const SPARK_COUNT      = 12;
 const HEAD_SCALE       = 26;
 const BODY_SCALE       = 16;
-const LETTER_SIZE      = 22;     // in PX()-Einheiten
+const LETTER_SIZE      = 24;     // in PX()-Einheiten
 const LETTER_GAP       = 18;
 
 // Post-Pause: Figur steht rechts neben dem Wort, dann Glow+Wave, erst danach weiterlaufen
-const POSTWORD_PAUSE_MS = 600;   // reine Standzeit direkt neben dem Wort (vor Glow)
-const POSTWORD_MARGIN_PX = 22;   // Abstand rechts vom letzten Buchstaben (in PX())
+const POSTWORD_PAUSE_MS = 700;   // reine Standzeit direkt neben dem Wort (vor Glow)
+const POSTWORD_MARGIN_PX = 25;   // Abstand rechts vom letzten Buchstaben (in PX())
 
 // Letzter Buchstabe „t“: Kipp- & Wackelbewegung
 const TILT_TRIGGER_PX  = 42;     // Entfernung zur Kante (in PX()) wann das t kippt
 const TILT_TARGET_DEG  = 22;     // rechts kippen
 const TILT_MS          = 400;    // Zeit bis maximale Neigung
-const TILT_WOBBLE_MS   = 1800;   // Wackel-Dauer
-const TILT_PAUSE_MS    = 700;    // Figur steht, wenn t kippt
+const TILT_WOBBLE_MS   = 2000;   // Wackel-Dauer
+const TILT_PAUSE_MS    = 1000;    // Figur steht, wenn t kippt
 
 // **Violett-Neon Glow & Welle**
 const NEON_CORE        = "#ffffff";      // heller Kern (weiß)
