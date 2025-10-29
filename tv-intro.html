@@ -41,7 +41,7 @@ const LETTER_JITTER_Y  = 2;      // vertikale Zufallsabweichung in PX()
 const TILT_TRIGGER_PX  = 42;     // Abstand zur Kante (in PX())
 const TILT_TARGET_DEG  = 22;     // Kippwinkel nach rechts
 const TILT_MS          = 400;    // bis max. Neigung
-const TILT_WOBBLE_MS   = 4000;   // Wackeln
+const TILT_WOBBLE_MS   = 5000;   // Wackeln
 const TILT_PAUSE_MS    = 1000;   // Figur-Standzeit beim gekippten „t“
 
 // (Optional) Weißer Glow & Welle – wie vorher
@@ -56,6 +56,98 @@ const c = document.getElementById('c');
 const ctx = c.getContext('2d');
 let W=0,H=0,DPR=1;
 
+let W=0,H=0,DPR=1;
+
+/* ===== PRELOAD: Bilder & Videos von index.html, diskografie.html & gesehen.html ===== */
+const preloadImages = [
+  // --- Startseite ---
+  "assets/bennet_index1.avif",
+  "assets/bennet_index1.webp",
+  "assets/bennet_index1.jpg",
+  "assets/bennet_index2.avif",
+  "assets/bennet_index2.webp",
+  "assets/bennet_index2.jpg",
+  "assets/bennet_index3.avif",
+  "assets/bennet_index3.webp",
+  "assets/bennet_index3.jpg",
+
+  // --- Diskografie (Spotify-Cover) ---
+  "https://i.scdn.co/image/ab67616d0000b2730cf9b68b5a953a81deedb36d",
+  "https://i.scdn.co/image/ab67616d0000b2736a31e8b82b39f63a0042da7a",
+  "https://i.scdn.co/image/ab67616d0000b273b2f73f5a6e7cd46017f3774c",
+  "https://i.scdn.co/image/ab67616d0000b2731b0a403a624e9d2cd7edbdf6",
+  "https://i.scdn.co/image/ab67616d0000b2733bfc6552407f348949859ff2",
+  "https://i.scdn.co/image/ab67616d0000b27346cbf3f511a19c5f1eea5f08",
+  "https://i.scdn.co/image/ab67616d0000b27385f5386f8e170f7a3d7463b7",
+  "https://i.scdn.co/image/ab67616d0000b273079e3e79d7c2499c14bfb1e7",
+  "https://i.scdn.co/image/ab67616d0000b273b81e75b8cf2a93a58f13fa63",
+  "https://i.scdn.co/image/ab67616d0000b2735da36b5f54e2466d803b31c2",
+  "https://i.scdn.co/image/ab67616d0000b2734b54b6e9e22cb44bbec3c632",
+  "https://i.scdn.co/image/ab67616d0000b273ea0a2a0e6e8dc1c901dd0cdd",
+  "https://i.scdn.co/image/ab67616d0000b273ae328b92b5e9b8b2dbeac1cd",
+  "https://i.scdn.co/image/ab67616d0000b27358e66525b8c73f5283b1bde7",
+  "https://i.scdn.co/image/ab67616d0000b2733d4056e897ad5314cbe97b38",
+  "https://i.scdn.co/image/ab67616d0000b27360a6b88205c6a09ef8b73594",
+  "https://i.scdn.co/image/ab67616d0000b2733bbdf4d6de458f62db4c56ac",
+  "https://i.scdn.co/image/ab67616d0000b273c73b44a52860d8dfb6359b37",
+  "https://i.scdn.co/image/ab67616d0000b2732b5e419181c68a02a44b3fa0",
+  "https://i.scdn.co/image/ab67616d0000b273a7c87cf5e14dcb706eb1328a",
+  "https://i.scdn.co/image/ab67616d0000b273e6e6f72354ebc4787a73b50a",
+  "https://i.scdn.co/image/ab67616d0000b273f8c95f1cf501b6d2fadb09cf",
+  "https://i.scdn.co/image/ab67616d0000b273bed4a71f7c12e548b60a1e09",
+  "https://i.scdn.co/image/ab67616d0000b273a8e8b2b2cd4a314ee6090f0a",
+
+  // --- Gesehen (Instagram + YouTube Thumbs + Bilder) ---
+  "assets/insta1.png",
+  "assets/insta2.png",
+  "assets/insta3.png",
+  "assets/insta4.png",
+  "assets/insta5.png",
+  "assets/insta6.png",
+  "assets/reel1.avif",
+  "assets/reel2.avif",
+  "assets/reel3.avif",
+  "assets/reel4.jpg",
+  "assets/reel5.avif",
+  "assets/reel6.avif",
+  "assets/reel7.avif",
+  "assets/instagram_poster.jpg",
+  "https://img.youtube.com/vi/ZSaj_FuqPN8/hqdefault.jpg",
+  "https://img.youtube.com/vi/DMNl40Tip1w/hqdefault.jpg",
+  "https://img.youtube.com/vi/K5pKG0Smdfc/hqdefault.jpg",
+  "https://img.youtube.com/vi/4I9vlcGvFGQ/hqdefault.jpg",
+  "https://img.youtube.com/vi/w0pNdnlb96M/hqdefault.jpg",
+  "https://img.youtube.com/vi/rV1U891RKLo/hqdefault.jpg",
+  "https://img.youtube.com/vi/fq8zhAQMam0/hqdefault.jpg"
+];
+
+// Nur **Videos** hier rein:
+const preloadVideos = [
+  "assets/B3NN3T.mp4"
+];
+
+// Bilder vorladen
+function preloadAllImages(urls){
+  urls.forEach(url=>{
+    const img = new Image();
+    img.referrerPolicy = "no-referrer"; // sicher bei externen Covern
+    img.src = url;
+  });
+}
+
+// Videos vorladen
+function preloadAllVideos(urls){
+  urls.forEach(url=>{
+    const v = document.createElement('video');
+    v.preload = 'auto';
+    v.muted = true;
+    v.src = url;
+    v.load();
+  });
+}
+
+
+ 
 function PX(){return Math.max(2,Math.floor(Math.min(W,H)/240));}
 function lineY(){return Math.floor(H*2/3);}
 function lineEndX(){return Math.floor(W*0.82);}
@@ -302,6 +394,14 @@ function updateTiltAndPause(){
     last.tiltStart = performance.now();
     avatar.state = 'pause';
     avatar.pauseUntil = last.tiltStart + TILT_PAUSE_MS;
+    
+// Preload kurz vor Schluss starten (nur einmal)
+if(!window._preloaded){
+  window._preloaded = true;
+  preloadAllImages(preloadImages);
+  preloadAllVideos(preloadVideos);
+}
+
     // Jetzt, wo Figur neben dem t steht → Glow und Welle starten
 if(!glowStartAt){
   glowStartAt = performance.now() + GLOW_DELAY_MS;
