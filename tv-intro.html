@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pixel-Marionette – Intro (b3nn3t, Hammer + Funken)</title>
+  <title>Pixel-Marionette – Sprite (b3nn3t, Hammer + Funken)</title>
   <style>
-    :root{ --bg:#333333; --duration:11000; }
+    :root{ --bg:#333333; --duration:12000; }
     html,body{height:100%;margin:0;background:var(--bg);}
     body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
     canvas{
@@ -25,18 +25,20 @@
   </section>
 
   <script>
-  // ===== KNOBS =====
-  // Pfad unbedingt auf DEINE Datei setzen (oder pixel-head.png). Cachebuster hält GitHub Pages frisch.
-  const HEAD_IMG_URL      = location.origin + "/img/dein-pixel-kopf.webp?v=" + Date.now();
-  const RUN_TO_RIGHT      = true;          // links -> rechts
-  const CHROMA_TOLERANCE  = 40;            // 25–45, falls Reste
-  const HEAD_Y_OFFSET_PX  = 3;             // Kopf etwas tiefer (in PX()-Einheiten)
-  const WORD              = "b3nn3t";      // zu hämmerndes Wort
-  const LETTER_GAP_PX     = 14;            // Abstand zwischen Buchstaben (PX()-Einheiten)
-  const LIFT_MS           = 650;           // Hochhämmern Dauer (langsamer = größer)
-  const HAMMER_MS         = 420;           // Schlagzyklus (down+up)
-  const SPARK_COUNT       = 10;            // Funken pro Schlag
-  // ==================
+  // ================== KNOBS (anpassen) ==================
+  const SPRITE_URL   = location.origin + "/img/avatar-walk.png?v=" + Date.now(); // <— DEIN Sprite-Sheet
+  const FRAME_W      = 128;   // Breite eines Frames im Sprite (px)
+  const FRAME_H      = 128;   // Höhe eines Frames im Sprite (px)
+  const FRAMES       = 8;     // Anzahl Frames in der Zeile
+  const FPS          = 10;    // Animationsgeschwindigkeit (Frames pro Sekunde)
+
+  const RUN_TO_RIGHT     = true;          // links -> rechts
+  const WORD             = "b3nn3t";      // zu hämmerndes Wort
+  const LETTER_GAP_PX    = 14;            // Abstand Zwischenräumen in PX()-Einheiten
+  const LIFT_MS          = 650;           // langsam hochhämmern
+  const HAMMER_MS        = 420;           // Schlag-Zyklus
+  const SPARK_COUNT      = 10;            // Funken pro Schlag
+  // ======================================================
 
   const canvas = document.getElementById('stage');
   const ctx = canvas.getContext('2d');
@@ -49,101 +51,76 @@
     canvas.style.width  = innerWidth + 'px';
     canvas.style.height = innerHeight + 'px';
     ctx.imageSmoothingEnabled = false;
-    baseX = null; // Wort neu zentrieren
+    baseX = null;
   }
   window.addEventListener('resize', resize); resize();
 
   const lineY   = () => Math.floor(H * 2/3);
   const lineEndX= () => Math.floor(W * 0.82);
-  const PX      = () => Math.max(2, Math.floor(Math.min(W,H) / 240)); // „Pixelgröße“
+  const PX      = () => Math.max(2, Math.floor(Math.min(W,H) / 240)); // Pixelrastergröße
 
+  // -------- Sprite laden --------
+  let spr = new Image(); spr.crossOrigin = "anonymous";
+  let sprReady = false;
+  spr.onload = () => sprReady = true;
+  spr.onerror = () => { sprReady = false; console.warn("Sprite nicht gefunden:", SPRITE_URL); };
+  spr.src = SPRITE_URL;
+
+  // -------- Avatar-Physik --------
   const avatar = {
-    state:'walk',
-    x: RUN_TO_RIGHT ? -40*PX() : W+40*PX(),
-    y: lineY() - 3*PX(), // Füße stehen auf Linie (3*PX Stiefelhöhe)
+    state: 'walk',
+    x: RUN_TO_RIGHT ? -40*PX() : W + 40*PX(),
     vx: RUN_TO_RIGHT ? 2.1 : -2.1,
-    vy:0, gravity:.35, step:0,
-    headScale:22, bodyScale:12,
-    hammerUntil: 0,       // Zeitmarke bis wann Schlag aktiv
-    hammerLetterIndex: -1  // welcher Buchstabe wird geschlagen
+    y: lineY(),     // Wir zeichnen Sprite an den Füßen ausgerichtet
+    vy: 0, gravity: 0.35,
+    frame: 0, frameTime: 0,
+    hammerUntil: 0,
+    hammerLetterIndex: -1
   };
 
-  // ---- Kopf-Bild: grauen Hintergrund entfernen (Chroma-Key) ----
-  function removeGrayBG(image, tolerance = CHROMA_TOLERANCE) {
-    const off = document.createElement("canvas");
-    off.width = image.width; off.height = image.height;
-    const octx = off.getContext("2d", { willReadFrequently: true });
-    octx.imageSmoothingEnabled = false;
-    octx.drawImage(image, 0, 0);
-    const imgData = octx.getImageData(0, 0, off.width, off.height);
-    const d = imgData.data;
-    const keyR = d[0], keyG = d[1], keyB = d[2]; // Ecke (0,0)
-    for (let i = 0; i < d.length; i += 4) {
-      const dr=Math.abs(d[i]-keyR), dg=Math.abs(d[i+1]-keyG), db=Math.abs(d[i+2]-keyB);
-      if (dr < tolerance && dg < tolerance && db < tolerance) d[i+3] = 0;
-    }
-    octx.putImageData(imgData, 0, 0);
-    return off;
-  }
-
-  let headReady = false;
-  let headImg = new Image(); headImg.crossOrigin='anonymous';
-  headImg.onload  = () => { headImg = removeGrayBG(headImg); headReady = true; };
-  headImg.onerror = ()  => { headReady = false; }; // weiter mit Platzhalter
-  headImg.src = HEAD_IMG_URL;
-
-  // --- Linie ---
+  // -------- Linie --------
   function drawLine(){
-    ctx.strokeStyle='#fff';
+    ctx.strokeStyle = '#fff';
     ctx.lineWidth = 2*PX();
     ctx.beginPath(); ctx.moveTo(0, lineY()); ctx.lineTo(lineEndX(), lineY()); ctx.stroke();
   }
 
-  // --- Hilfen ---
-  function rect(px,py,w,h,fill){
-    ctx.fillStyle=fill; ctx.fillRect(px,py,w,h);
-    ctx.fillStyle='#000';
-    ctx.fillRect(px-1,py,w+2,1);
-    ctx.fillRect(px-1,py+h-1,w+2,1);
-    ctx.fillRect(px-1,py,1,h);
-    ctx.fillRect(px+w-1,py,1,h);
-  }
+  // -------- Sprite zeichnen (Füße auf Linie) --------
+  function drawSprite(xFeet, yLine){
+    if(!sprReady){ // Fallback: kleiner Platzhalter
+      const p=PX();
+      ctx.fillStyle='#2b3a56';
+      ctx.fillRect(Math.round(xFeet-6*p), Math.round(yLine-20*p), 12*p, 20*p);
+      ctx.fillStyle='#7a4f1f';
+      ctx.fillRect(Math.round(xFeet-6*p), Math.round(yLine-3*p), 12*p, 3*p);
+      return;
+    }
+    // Maßstab: Sprite soll zur Leinwand passen (skaliert im Raster)
+    const p = PX();
+    const targetH = 28*p;                   // ca. 28 „Pixel“ hoch (passt zum bisherigen Look)
+    const scale = targetH / FRAME_H;
+    const drawW = Math.round(FRAME_W * scale);
+    const drawH = Math.round(FRAME_H * scale);
 
-  // --- Körper (seitliche 2D-Optik) ---
-  function drawBody(x,y){
-    const p=PX(), bodyH=avatar.bodyScale*p, bodyW=Math.round(8*p);
-    const legLen=Math.round(9*p);
+    // Frame auswählen
+    const sx = (avatar.frame|0) % FRAMES * FRAME_W;
+    const sy = 0;
 
-    // Torso
-    const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH);
-    rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
+    // Füße auf Linie ausrichten -> unten mittig
+    const dx = Math.round(xFeet - drawW/2);
+    const dy = Math.round(yLine - drawH);
 
-    // Arme: rechter Arm schlägt beim Hammern schnell, sonst Wippen
-    const armTh=3*p;
+    // Schlag: minimalen „Kopfstoß“ simulieren (Y-Wackler)
     const hammering = performance.now() < avatar.hammerUntil;
-    const phase = Math.max(0, 1 - (avatar.hammerUntil - performance.now())/HAMMER_MS); // 0..1
-    const swingR = hammering ? (Math.sin(phase*Math.PI)*-2*p) : Math.sin(avatar.step)*1*p;
-    const swingL = hammering ? (Math.sin(phase*Math.PI)* 2*p) : -Math.sin(avatar.step)*1*p;
+    const phase = Math.max(0, 1 - (avatar.hammerUntil - performance.now())/HAMMER_MS);
+    const wobbleY = hammering ? Math.round(Math.sin(phase*Math.PI)*2) : 0;
 
-    rect(Math.round(x+3*p), torsoY+Math.round(3*p)+Math.round(swingR), armTh, Math.round(7*p), '#2b3a56');
-    rect(Math.round(x-6*p), torsoY+Math.round(3*p)+Math.round(swingL), armTh, Math.round(7*p), '#2b3a56');
+    ctx.drawImage(spr, sx, sy, FRAME_W, FRAME_H, dx, dy + wobbleY, drawW, drawH);
 
-    // Beine (kleines Wippen, beim Fallen losgelöst)
-    const legTh=4*p;
-    const legSwing = Math.sin(avatar.step)*1*p;
-    rect(Math.round(x+1*p), y - legLen + Math.round(legSwing), legTh, legLen, '#233047');
-    rect(Math.round(x-3*p), y - legLen - Math.round(legSwing), legTh, legLen, '#233047');
-
-    // Stiefel
-    const bootY = (avatar.state==='fall') ? Math.round(y) : Math.round(lineY()-3*p);
-    rect(Math.round(x+1*p), bootY, 6*p, 3*p, '#7a4f1f');
-    rect(Math.round(x-3*p), bootY, 6*p, 3*p, '#7a4f1f');
-
-    // Pixel-Hammer neben rechter Hand
-    if (hammering && avatar.hammerLetterIndex >= 0) {
-      const hx = Math.round(x + 7*p);
-      const hy0 = Math.round(torsoY + 2*p);
-      const hy  = hy0 + Math.round(Math.sin(phase*Math.PI) * 6*p); // hoch/runter
+    // Hammer (einfaches Pixel-Sprite) neben rechter Hand, nur beim Schlag
+    if (hammering && avatar.hammerLetterIndex >= 0){
+      const hx = Math.round(xFeet + 8*p);
+      const hy = Math.round(dy + 10*p + Math.sin(phase*Math.PI)*6*p);
       // Stiel
       ctx.fillStyle = '#7a4f1f'; ctx.fillRect(hx, hy, 1*p, 8*p);
       // Kopf
@@ -156,31 +133,15 @@
     }
   }
 
-  // --- Kopf ---
-  function drawHead(x,y){
-    const p = PX();
-    const s = avatar.headScale * p; const w=s, h=s;
-    const top = y - avatar.bodyScale * p - s - 2*p + HEAD_Y_OFFSET_PX*p;
-    if (headReady && headImg && headImg.width){
-      ctx.drawImage(headImg, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
-    } else {
-      // platzhalter
-      ctx.fillStyle='#c9a23b'; ctx.fillRect(Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h*.62));
-      ctx.fillStyle='#f2b59a'; ctx.fillRect(Math.round(x - w/2), Math.round(top + h*.45), Math.round(w), Math.round(h*.45));
-    }
-  }
-
-  // --- Buchstaben (zentriert, langsam „hochhämmern“, bleiben stehen) ---
-  let baseX = null;                           // Wortmitte berechnen
-  const letters = [];                         // {ch, idx, x, y, finalY, startY, t0, hammered}
+  // -------- Wort „b3nn3t“ mittig, hochhämmern, stehen lassen --------
+  let baseX = null;
+  const letters = []; // {ch, idx, x, y, startY, finalY, t0, hammered}
   let nextIndexToHammer = 0;
 
   function letterYAboveHead(){
-    const p = PX();
-    const s = avatar.headScale * p;
-    return avatar.y - avatar.bodyScale*p - s - 6*p + HEAD_Y_OFFSET_PX*p;
+    // Beim Sprite nehmen wir grob 18p über der Linie (überm Kopf)
+    return lineY() - 18*PX();
   }
-
   function ensureBaseX(){
     if (baseX !== null) return;
     const p = PX(), spacing = LETTER_GAP_PX*p;
@@ -194,17 +155,17 @@
   }
 
   // Funken/Staub
-  const sparks = []; // {x,y,vx,vy,life,alpha}
+  const sparks = []; // {x,y,vx,vy,life,born,alpha}
   function spawnSparks(x,y){
     const p = PX();
-    for(let i=0;i<SPARK_COUNT;i++){
-      const ang = Math.random()*Math.PI - Math.PI/2; // nach oben streuen
+    for(let i=0;i<10;i++){
+      const ang = Math.random()*Math.PI - Math.PI/2;
       const spd = (0.8 + Math.random()*0.8) * 6*p;
       sparks.push({
         x, y,
         vx: Math.cos(ang)*spd,
         vy: Math.sin(ang)*spd - 1*p,
-        life: 450 + Math.random()*250,   // ms
+        life: 450 + Math.random()*250,
         born: performance.now(),
         alpha: 1
       });
@@ -216,8 +177,8 @@
       const s = sparks[i];
       const t = now - s.born;
       if (t > s.life){ sparks.splice(i,1); continue; }
-      s.vy += 0.02 * p;     // leichte Gravitation
-      s.x  += s.vx * 0.016; // dt ~16ms/Frame
+      s.vy += 0.02 * p;
+      s.x  += s.vx * 0.016;
       s.y  += s.vy * 0.016;
       s.alpha = 1 - (t / s.life);
     }
@@ -226,7 +187,7 @@
     const p = PX();
     for(const s of sparks){
       ctx.globalAlpha = Math.max(0, Math.min(1, s.alpha));
-      ctx.fillStyle = '#ffd966'; // gelb
+      ctx.fillStyle = '#ffd966';
       ctx.fillRect(Math.round(s.x/p)*p, Math.round(s.y/p)*p, 2*p, 2*p);
     }
     ctx.globalAlpha = 1;
@@ -237,7 +198,6 @@
     const idx = nextIndexToHammer;
     const tx = targetXForIndex(idx);
 
-    // Schlag, wenn Avatar auf Höhe Ziel-X ist
     if ((RUN_TO_RIGHT && avatar.x >= tx) || (!RUN_TO_RIGHT && avatar.x <= tx)) {
       const p = PX();
       const finalY = letterYAboveHead();
@@ -249,7 +209,6 @@
       };
       letters.push(L);
 
-      // Schlag animieren + Funken
       avatar.hammerUntil = performance.now() + HAMMER_MS;
       avatar.hammerLetterIndex = idx;
       spawnSparks(tx, finalY);
@@ -257,20 +216,18 @@
       nextIndexToHammer++;
     }
   }
-
   function updateLetters(){
     const now = performance.now();
     for (const L of letters){
       if (!L.hammered){
-        const t = Math.min(1, (now - L.t0) / LIFT_MS); // 0..1
-        const e = 1 - Math.pow(1-t, 3);                // EaseOutCubic
+        const t = Math.min(1, (now - L.t0) / LIFT_MS);
+        const e = 1 - Math.pow(1-t, 3);      // easeOutCubic
         L.y = Math.round(L.startY + (L.finalY - L.startY) * e);
         if (t >= 1) L.hammered = true;
       }
     }
   }
-
-  function drawLettersStatic(){
+  function drawLetters(){
     const p = PX();
     ctx.font = (12*p) + 'px monospace';
     ctx.textBaseline = 'middle';
@@ -282,47 +239,55 @@
     }
   }
 
-  // --- Loop ---
-  let raf;
-  function tick(){
+  // -------- Loop --------
+  let lastTS = performance.now();
+  function tick(nowTS){
+    const dt = Math.min(100, nowTS - lastTS); lastTS = nowTS;
+
     ctx.clearRect(0,0,W,H);
     drawLine();
 
-    // 1) Wort & Funken (liegen hinter der Figur)
+    // Buchstaben (hinter der Figur)
     maybeHammerNext();
     updateLetters();
     updateSparks();
-    drawLettersStatic();
+    drawLetters();
     drawSparks();
 
-    // 2) Avatar
-    const p=PX(), speed=avatar.vx*p;
-    if(avatar.state==='walk'){
-      avatar.x += speed; avatar.step += .15;
-      avatar.y = lineY() - 3*p + Math.round(Math.sin(avatar.step*2) * 0.4*p); // leichtes Wippen
+    // Avatar-Bewegung
+    const p = PX(), speed = avatar.vx * p;
+    if (avatar.state === 'walk') {
+      avatar.x += speed;
+      // Sprite-Animation
+      avatar.frameTime += dt;
+      const msPerFrame = 1000 / FPS;
+      while (avatar.frameTime > msPerFrame){
+        avatar.frameTime -= msPerFrame;
+        avatar.frame = (avatar.frame + 1) % FRAMES;
+      }
+      // Sturztrigger am rechten Rand (weiße Linie endet)
       const atEdge = RUN_TO_RIGHT ? (avatar.x >= lineEndX()-6*p) : (avatar.x <= lineEndX()+6*p);
-      if(atEdge){ avatar.state='fall'; avatar.vy=0; }
-    } else if(avatar.state==='fall'){
-      avatar.vy += avatar.gravity*p*.6;
+      if (atEdge) { avatar.state = 'fall'; avatar.vy = 0; }
+    } else if (avatar.state === 'fall') {
+      avatar.vy += avatar.gravity * p * 0.6;
       avatar.y  += avatar.vy;
-      avatar.x  += speed*.2;
-      if(avatar.y > H + 40*p){ avatar.state='done'; startTransition(); }
+      avatar.x  += speed * 0.2;
+      // beim Fallen keine Linienbindung mehr: Füße lösen sich mit
+      if (avatar.y > H + 40*p) { avatar.state = 'done'; startTransition(); }
     }
 
-    drawBody(avatar.x, avatar.y);
-    drawHead(avatar.x, avatar.y);
+    drawSprite(avatar.x, avatar.y);
 
-    raf = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
   }
-  tick();
+  requestAnimationFrame(tick);
 
-  // --- Übergang ---
-  const main=document.getElementById('main');
+  // -------- Übergang --------
+  const main = document.getElementById('main');
   function startTransition(){
-    cancelAnimationFrame(raf);
     main.classList.add('show');
-    const redirectTo=null; // z.B. '/home' oder 'https://example.com/app'
-    if(redirectTo){ setTimeout(()=>location.href=redirectTo,900); }
+    const redirectTo = null; // z.B. '/home' oder 'https://example.com'
+    if (redirectTo) setTimeout(()=>location.href=redirectTo, 900);
   }
   setTimeout(()=>{ if(avatar.state!=='done') startTransition(); },
     parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
