@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>b3nn3t • Intro (Wackel-t)</title>
+  <title>b3nn3t • Intro (Glow, Lichtwelle, Tilt-Pause)</title>
   <style>
     html,body{margin:0;height:100%;background:#333;overflow:hidden}
     canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges}
@@ -15,28 +15,35 @@
 <script>
 /* ======= EINSTELLUNGEN ======= */
 const USE_HEAD_IMAGE   = true;
-const HEAD_IMG_URL     = "img/dein-pixel.webp?v=" + Date.now(); // oder .webp
+const HEAD_IMG_URL     = "img/pixel-head.png?v=" + Date.now(); // oder .webp
 
-// Keying-Feintuning
+// Keying (falls Kopfbild grauen Hintergrund hat)
 const KEY_TOLERANCE    = 65;
 const KEY_SOFTNESS     = 0.45;
 const KEY_CUTOFF       = 0.10;
 const KEY_DESPECKLE    = 1;
 
-const RUN_TO_RIGHT   = true;
-const WORD           = "b3nn3t";
-const HAMMER_MS      = 420;
-const SPARK_COUNT    = 12;
-const HEAD_SCALE     = 26;
-const BODY_SCALE     = 16;
-const LETTER_SIZE    = 18;
-const LETTER_GAP     = 18;
+const RUN_TO_RIGHT     = true;
+const WORD             = "b3nn3t";
+const HAMMER_MS        = 420;    // Pause je Buchstabe (Hammer-Animation)
+const SPARK_COUNT      = 12;
+const HEAD_SCALE       = 26;
+const BODY_SCALE       = 16;
+const LETTER_SIZE      = 18;     // Schriftgröße (px * PX())
+const LETTER_GAP       = 18;     // Abstand zwischen Buchstaben (px * PX())
 
 /* Letzter Buchstabe: Kipp- & Wackelbewegung */
-const TILT_TRIGGER_PX = 42;     // Abstand zur Kante (in PX())
-const TILT_TARGET_DEG = 22;     // Kippwinkel nach rechts (positiv)
-const TILT_MS         = 400;    // Zeit bis max. Neigung
-const TILT_WOBBLE_MS  = 1800;   // Gesamtdauer des Wackelns
+const TILT_TRIGGER_PX  = 42;     // Abstand zur Kante (in PX()) wann das t kippt
+const TILT_TARGET_DEG  = 22;     // Kippwinkel (rechts = positiv)
+const TILT_MS          = 400;    // Zeit bis max. Neigung
+const TILT_WOBBLE_MS   = 1800;   // Dauer des Wackelns nach dem Kippen
+const TILT_PAUSE_MS    = 700;    // **NEU:** Figur pausiert so lange, wenn t kippt
+
+/* Glow & Welle */
+const GLOW_MS          = 550;    // Dauer des Aufleuchtens
+const WAVE_DELAY_MS    = 100;    // Startverzögerung der Welle nach Glow
+const WAVE_MS          = 1400;   // Dauer der Lichtwelle
+const WAVE_STRENGTH    = 0.85;   // Helligkeit der Welle (0..1)
 /* ============================== */
 
 const c = document.getElementById('c');
@@ -64,25 +71,20 @@ if(USE_HEAD_IMAGE){
   const raw=new Image();raw.crossOrigin="anonymous";
   raw.onload=()=>{
     headImg=removeBGSmart(raw,{
-      tolerance:KEY_TOLERANCE,
-      softness:KEY_SOFTNESS,
-      cutoff:KEY_CUTOFF,
-      despeckle:KEY_DESPECKLE
+      tolerance:KEY_TOLERANCE,softness:KEY_SOFTNESS,cutoff:KEY_CUTOFF,despeckle:KEY_DESPECKLE
     });
     headReady=true;
   };
   raw.onerror=()=>{headReady=false;};
   raw.src=HEAD_IMG_URL;
 }
-
 function removeBGSmart(image,{tolerance=60,softness=.4,cutoff=.1,despeckle=1}={}){
   const w=image.naturalWidth||image.width,h=image.naturalHeight||image.height;
   const off=document.createElement('canvas');off.width=w;off.height=h;
   const octx=off.getContext('2d',{willReadFrequently:true});
   octx.imageSmoothingEnabled=false;octx.drawImage(image,0,0,w,h);
   const img=octx.getImageData(0,0,w,h),d=img.data;
-  let sumR=0,sumG=0,sumB=0,count=0;
-  const add=(ix)=>{sumR+=d[ix];sumG+=d[ix+1];sumB+=d[ix+2];count++;};
+  let sumR=0,sumG=0,sumB=0,count=0; const add=(ix)=>{sumR+=d[ix];sumG+=d[ix+1];sumB+=d[ix+2];count++;};
   for(let x=0;x<w;x++){add((x<<2));add((((h-1)*w+x)<<2));}
   for(let y=0;y<h;y++){add(((y*w)<<2));add(((y*w+(w-1))<<2));}
   const keyR=(sumR/count)|0,keyG=(sumG/count)|0,keyB=(sumB/count)|0;
@@ -120,8 +122,13 @@ function drawLine(){
   ctx.beginPath();ctx.moveTo(0,lineY());ctx.lineTo(lineEndX(),lineY());ctx.stroke();
 }
 
-/* ====== Avatar ====== */
-const avatar={state:'walk',x:-40*PX(),y:lineY()-3*PX(),vx:2.2,vy:0,gravity:.35,step:0,headScale:HEAD_SCALE,bodyScale:BODY_SCALE,hammerUntil:0};
+/* ====== Avatar (walk | hammer | pause | fall) ====== */
+const avatar={
+  state:'walk', x:-40*PX(), y:lineY()-3*PX(),
+  vx:2.2, vy:0, gravity:.35, step:0,
+  headScale:HEAD_SCALE, bodyScale:BODY_SCALE,
+  hammerUntil:0, pauseUntil:0
+};
 
 function drawHead(x,y){
   const p=PX(),s=avatar.headScale*p,w=s,h=s,top=y-avatar.bodyScale*p-s-2*p;
@@ -140,16 +147,21 @@ function drawBody(x,y){
   const p=PX(),bodyH=avatar.bodyScale*p,bodyW=Math.round(10*p),legLen=Math.round(12*p),armLen=Math.round(9*p);
   const torsoX=Math.round(x-bodyW/2),torsoY=Math.round(y-bodyH);
   rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
-  const hammering=performance.now()<avatar.hammerUntil;
+
+  const hammering=avatar.state==='hammer' && performance.now()<avatar.hammerUntil;
   const armTh=3*p,legTh=4*p;
+  const walkFactor=(avatar.state==='walk')?1:0.1;
   const armSwing=hammering?-2*p:Math.sin(avatar.step)*1.2*p;
   rect(Math.round(x+4*p),torsoY+Math.round(3*p)+Math.round(armSwing),armTh,armLen,'#2b3a56');
   rect(Math.round(x-7*p),torsoY+Math.round(3*p)-Math.round(armSwing),armTh,armLen,'#2b3a56');
-  const legSwing=Math.sin(avatar.step)*1.2*p*(avatar.state==='walk'?1:0.1);
+
+  const legSwing=Math.sin(avatar.step)*1.2*p*walkFactor;
   rect(Math.round(x+1*p),y-legLen+Math.round(legSwing),legTh,legLen,'#233047');
   rect(Math.round(x-4*p),y-legLen-Math.round(legSwing),legTh,legLen,'#233047');
+
   rect(Math.round(x+1*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
   rect(Math.round(x-4*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
+
   if(hammering){
     const hx=Math.round(x+10*p),hy=Math.round(torsoY+7*p);
     ctx.fillStyle='#7a4f1f';ctx.fillRect(hx,hy,1*p,9*p);
@@ -172,12 +184,19 @@ function drawFallShadow(){
   ctx.beginPath();ctx.fillStyle=`rgba(0,0,0,${a})`;ctx.arc(0,0,1,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 
-/* ====== Buchstaben + Funken + Wackel-t ====== */
+/* ====== Buchstaben, Glow & Welle ====== */
 let baseX=null;
 function ensureBaseX(){if(baseX!==null)return;const p=PX(),s=LETTER_GAP*p;const total=(WORD.length-1)*s;baseX=Math.round(W/2-total/2);}
 function letterTargetX(i){ensureBaseX();const p=PX(),s=LETTER_GAP*p;return baseX+i*s;}
-function letterTargetY(){const p=PX(),s=avatar.headScale*p;return avatar.y-avatar.bodyScale*p-s*0.35;}
-const letters=[];let nextLetterIndex=0;
+function letterTargetY(){
+  // Kopfhöhe – zusätzlich **½ Buchstabenhöhe höher**
+  const p=PX(), s=avatar.headScale*p, base = avatar.y - avatar.bodyScale*p - s*0.35;
+  const halfLetter = (LETTER_SIZE*p)*0.5;
+  return base - halfLetter;
+}
+
+const letters=[]; // {ch,x,y,angle,tiltStart}
+let nextLetterIndex=0;
 
 const sparks=[];
 function spawnSparks(x,y){
@@ -205,53 +224,78 @@ function drawSparks(){
   ctx.globalAlpha=1;
 }
 
-function drawLetters(){
+function drawLetters(glowAlpha=0){
   const p=PX();
   ctx.font=(LETTER_SIZE*p)+'px monospace';
   ctx.textBaseline='middle';
+
   for(const L of letters){
     ctx.save();
-    const x=Math.round(L.x),y=Math.round(L.y);
+    const x=Math.round(L.x), y=Math.round(L.y);
     if(L.angle){
-      ctx.translate(x,y);
-      ctx.rotate(L.angle*Math.PI/180);
-      ctx.translate(-x,-y);
+      ctx.translate(x,y); ctx.rotate(L.angle*Math.PI/180); ctx.translate(-x,-y);
     }
-    ctx.lineWidth=2*p;ctx.strokeStyle='#000';
-    ctx.strokeText(L.ch,x,y);
-    ctx.fillStyle='#f2f2f2';ctx.fillText(L.ch,x,y);
+    // Glow (optional)
+    if(glowAlpha>0){
+      ctx.globalCompositeOperation='lighter';
+      ctx.lineWidth=4*p; ctx.strokeStyle=`rgba(255,255,255,${0.35*glowAlpha})`;
+      ctx.strokeText(L.ch,x,y);
+      ctx.globalCompositeOperation='source-over';
+    }
+    // Outline + Fill
+    ctx.lineWidth=2*p; ctx.strokeStyle='#000'; ctx.strokeText(L.ch,x,y);
+    ctx.fillStyle='#f2f2f2'; ctx.fillText(L.ch,x,y);
     ctx.restore();
   }
 }
 
+/* Glow & Lichtwelle-Steuerung */
+let wordDoneAt=null;    // Zeit, wenn das Wort fertig ist
+let waveStartAt=null;   // Start der Welle
+let waveOrigin=null;    // {x,y}
+
 function maybeHammerNext(){
-  if(nextLetterIndex>=WORD.length)return;
-  const i=nextLetterIndex,tx=letterTargetX(i),ty=letterTargetY(),reach=8*PX();
-  if(avatar.x>=tx-reach&&avatar.state==='walk'){
+  if(nextLetterIndex>=WORD.length) return;
+  const i=nextLetterIndex, tx=letterTargetX(i), ty=letterTargetY(), reach=8*PX();
+  if(avatar.x>=tx-reach && avatar.state==='walk'){
     letters.push({ch:WORD[i],x:tx,y:ty,angle:0,tiltStart:null});
-    avatar.hammerUntil=performance.now()+HAMMER_MS;
-    avatar.state='hammer';
+    avatar.hammerUntil = performance.now()+HAMMER_MS;
+    avatar.state = 'hammer';
     spawnSparks(tx,ty);
     nextLetterIndex++;
+
+    if(nextLetterIndex===WORD.length){
+      wordDoneAt = performance.now();
+      // Mittelpunkt des Wortes als Wellenzentrum
+      const firstX = letterTargetX(0), lastX = letterTargetX(WORD.length-1);
+      waveOrigin = { x: (firstX+lastX)/2, y: ty };
+      waveStartAt = wordDoneAt + WAVE_DELAY_MS;
+    }
   }
 }
 
-// ---- Tilt/Wackel für das "t" ----
-function updateTilt(){
-  if(letters.length<WORD.length)return;
+/* Wackel & Tilt für „t“ + Pause vor dem Sprung */
+function updateTiltAndPause(){
+  if(letters.length<WORD.length) return;
   const last=letters[letters.length-1]; // "t"
   const p=PX();
+
+  // Tilt-Start
   if(!last.tiltStart && avatar.x >= lineEndX() - TILT_TRIGGER_PX*p){
-    last.tiltStart=performance.now();
+    last.tiltStart = performance.now();
+    // Figur pausiert kurz (steht still)
+    avatar.state = 'pause';
+    avatar.pauseUntil = last.tiltStart + TILT_PAUSE_MS;
   }
+
+  // Tilt/Wobble
   if(last.tiltStart){
     const t=(performance.now()-last.tiltStart);
     if(t<TILT_MS){
       const e=1-Math.pow(1-t/TILT_MS,3);
       last.angle=TILT_TARGET_DEG*e;
     }else{
-      // Nach dem Kippen leicht wackeln (gedämpft)
-      const wobbleT = (t-TILT_MS)/TILT_WOBBLE_MS;
+      const wobbleT=(t-TILT_MS)/TILT_WOBBLE_MS;
       if(wobbleT<=1){
         const amp=(1-wobbleT)*TILT_TARGET_DEG*0.5;
         last.angle=TILT_TARGET_DEG + Math.sin(wobbleT*Math.PI*6)*amp;
@@ -262,35 +306,77 @@ function updateTilt(){
   }
 }
 
+/* Lichtwelle zeichnen (von Wortmitte ausgehend, radial) */
+function drawWave(){
+  if(!waveStartAt || !waveOrigin) return;
+  const now=performance.now();
+  const t = (now - waveStartAt) / WAVE_MS;
+  if(t<0) return;
+  if(t>1) return;
+
+  const p=PX();
+  const rMax = Math.hypot(W, H);                // bis über den Bildschirm
+  const r = rMax * t;
+  const band = 30*p;                            // Bandbreite der Welle
+
+  const grad = ctx.createRadialGradient(waveOrigin.x, waveOrigin.y, Math.max(1, r-band),
+                                        waveOrigin.x, waveOrigin.y, r);
+  grad.addColorStop(0, `rgba(255,255,255,0)`);
+  grad.addColorStop(0.5, `rgba(255,255,255,${0.6*WAVE_STRENGTH*(1-t)})`);
+  grad.addColorStop(1, `rgba(255,255,255,0)`);
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+  ctx.restore();
+}
+
 /* ====== Hauptloop ====== */
 function tick(){
   ctx.clearRect(0,0,W,H);
   drawLine();
 
   maybeHammerNext();
-  updateTilt();
+  updateTiltAndPause();
   updateSparks();
-  drawLetters();
+
+  // Glow-Alpha berechnen (wenn Wort fertig)
+  let glowAlpha = 0;
+  if(wordDoneAt){
+    const t = (performance.now() - wordDoneAt) / GLOW_MS;
+    if(t <= 1){ glowAlpha = 1 - Math.pow(1-t, 3); } else { glowAlpha = 0; }
+  }
+
+  drawLetters(glowAlpha);
   drawSparks();
+  drawWave();
 
   const p=PX(),speed=avatar.vx*p;
+
   if(avatar.state==='walk'){
-    avatar.x+=speed;avatar.step+=.15;
+    avatar.x+=speed; avatar.step+=.15;
     avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*2)*0.5*p);
-    if(avatar.x>=lineEndX()-6*p){avatar.state='fall';avatar.vy=0;}
+    // Achtung: Fall erst NACH der Tilt-Pause
+    if(avatar.x>=lineEndX()-6*p && (!letters.length || letters.length<WORD.length || (letters.length===WORD.length && performance.now()>= (letters[letters.length-1].tiltStart||0) + TILT_PAUSE_MS))){
+      avatar.state='fall'; avatar.vy=0;
+    }
   }else if(avatar.state==='hammer'){
-    if(performance.now()>=avatar.hammerUntil){avatar.state='walk';}
-    else{avatar.step+=.08;avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.3*p);}
+    if(performance.now()>=avatar.hammerUntil){ avatar.state='walk'; }
+    else { avatar.step+=.08; avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.3*p); }
+  }else if(avatar.state==='pause'){
+    if(performance.now()>=avatar.pauseUntil){ avatar.state='walk'; }
+    // leichte Idle-Bewegung
+    avatar.step+=.05; avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.25*p);
   }else if(avatar.state==='fall'){
-    avatar.vy+=avatar.gravity*p*.6;
-    avatar.y+=avatar.vy;
-    avatar.x+=speed*.2;
+    avatar.vy+=avatar.gravity*p*.6; avatar.y+=avatar.vy; avatar.x+=speed*.2;
     drawFallShadow();
-    if(avatar.y>H+40*p){avatar.state='done';}
+    if(avatar.y>H+40*p){ avatar.state='done'; }
   }
 
   drawBody(avatar.x,avatar.y);
   drawHead(avatar.x,avatar.y);
+
   requestAnimationFrame(tick);
 }
 requestAnimationFrame(tick);
