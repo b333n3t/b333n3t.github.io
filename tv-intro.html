@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>b3nn3t • Intro (Neon + Post-Pause)</title>
+  <title>b3nn3t • Intro (schiefe Buchstaben, Pause nur beim „t“)</title>
   <style>
     html,body{margin:0;height:100%;background:#333;overflow:hidden}
     canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges}
@@ -16,9 +15,9 @@
 <script>
 /* ================== EINSTELLUNGEN ================== */
 const USE_HEAD_IMAGE   = true;
-const HEAD_IMG_URL     = "img/dein-pixel.webp?v=" + Date.now(); // oder .webp
+const HEAD_IMG_URL     = "img/dein-pixel.webp?v=" + Date.now(); // dein Kopf (mit/ohne Alpha)
 
-// Kopf-Keying (nur nötig, wenn dein Kopfbild keinen Alpha-Kanal hat)
+// Kopf-Keying (nur nötig, wenn das Bild keinen Alpha-Kanal hat)
 const KEY_TOLERANCE    = 65;
 const KEY_SOFTNESS     = 0.45;
 const KEY_CUTOFF       = 0.10;
@@ -27,36 +26,30 @@ const KEY_DESPECKLE    = 1;
 // Bewegung & Layout
 const RUN_TO_RIGHT     = true;
 const WORD             = "b3nn3t";
-const HAMMER_MS        = 520;    // Pause je Buchstabe (Hammern)
+const HAMMER_MS        = 520;    // „Hammer“-Zeit je Buchstabe
 const SPARK_COUNT      = 12;
 const HEAD_SCALE       = 26;
 const BODY_SCALE       = 16;
+
+// Buchstaben-Darstellung
 const LETTER_SIZE      = 24;     // in PX()-Einheiten
 const LETTER_GAP       = 18;
+const LETTER_TILT_MAX  = 6;      // max. zufällige Schiefstellung in Grad
+const LETTER_JITTER_Y  = 2;      // vertikale Zufallsabweichung in PX()
 
-// Post-Pause: Figur steht rechts neben dem Wort, dann Glow+Wave, erst danach weiterlaufen
-const POSTWORD_PAUSE_MS = 700;   // reine Standzeit direkt neben dem Wort (vor Glow)
-const POSTWORD_MARGIN_PX = 25;   // Abstand rechts vom letzten Buchstaben (in PX())
+// „t“ kippen + kurze Pause NUR dann
+const TILT_TRIGGER_PX  = 42;     // Abstand zur Kante (in PX())
+const TILT_TARGET_DEG  = 22;     // Kippwinkel nach rechts
+const TILT_MS          = 400;    // bis max. Neigung
+const TILT_WOBBLE_MS   = 2000;   // Wackeln
+const TILT_PAUSE_MS    = 1000;   // Figur-Standzeit beim gekippten „t“
 
-// Letzter Buchstabe „t“: Kipp- & Wackelbewegung
-const TILT_TRIGGER_PX  = 42;     // Entfernung zur Kante (in PX()) wann das t kippt
-const TILT_TARGET_DEG  = 22;     // rechts kippen
-const TILT_MS          = 400;    // Zeit bis maximale Neigung
-const TILT_WOBBLE_MS   = 2000;   // Wackel-Dauer
-const TILT_PAUSE_MS    = 1000;    // Figur steht, wenn t kippt
-
-// **Violett-Neon Glow & Welle**
-const NEON_CORE        = "#ffffff";      // heller Kern (weiß)
-const NEON_1           = "#d66bff";      // helles Violett
-const NEON_2           = "#a64dff";      // kräftiges Violett
-const NEON_3           = "#6a00ff";      // tiefes Blauviolett
-
-// Glow beginnt NACH der Post-Pause; Welle startet SPÄTER
-const GLOW_DELAY_MS    = 140;   // nach Ende der Post-Pause
-const GLOW_MS          = 650;   // Dauer des Glows
-const WAVE_DELAY_MS    = 700;   // nach Glow-Trigger
-const WAVE_MS          = 1600;  // Dauer der Lichtwelle
-const WAVE_STRENGTH    = 1.0;   // 0..1
+// (Optional) Weißer Glow & Welle – wie vorher
+const GLOW_DELAY_MS    = 140;
+const GLOW_MS          = 650;
+const WAVE_DELAY_MS    = 700;
+const WAVE_MS          = 1600;
+const WAVE_STRENGTH    = 1.0;
 /* ==================================================== */
 
 const c = document.getElementById('c');
@@ -135,15 +128,18 @@ function drawLine(){
   ctx.beginPath();ctx.moveTo(0,lineY());ctx.lineTo(lineEndX(),lineY());ctx.stroke();
 }
 
-/* ===== Avatar (walk | hammer | postpause | pause | fall) ===== */
+/* ===== Avatar (walk | hammer | pause | fall) ===== */
 const avatar={
   state:'walk', x:-40*PX(), y:lineY()-3*PX(),
   vx:2.2, vy:0, gravity:.35, step:0,
   headScale:HEAD_SCALE, bodyScale:BODY_SCALE,
   hammerUntil:0, pauseUntil:0
 };
+
+// Kopf etwas tiefer, Oberkörper etwas höher
 function drawHead(x,y){
-  const p=PX(),s=avatar.headScale*p,w=s,h=s,top=y-avatar.bodyScale*p-s-1*p;
+  const p=PX(),s=avatar.headScale*p,w=s,h=s;
+  const top = y - avatar.bodyScale*p - s + 2*p;   // ↓ Kopf tiefer
   if(USE_HEAD_IMAGE&&headReady){
     ctx.drawImage(headImg,Math.round(x-w/2),Math.round(top),Math.round(w),Math.round(h));
     return;
@@ -156,7 +152,7 @@ function drawHead(x,y){
 }
 function drawBody(x,y){
   const p=PX(),bodyH=avatar.bodyScale*p,bodyW=Math.round(10*p),legLen=Math.round(12*p),armLen=Math.round(9*p);
-  const torsoX=Math.round(x-bodyW/2),torsoY=Math.round(y-bodyH);
+  const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH-2*p); // ↑ Oberkörper leicht höher
   rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
 
   const hammering=avatar.state==='hammer' && performance.now()<avatar.hammerUntil;
@@ -196,14 +192,13 @@ function drawFallShadow(){
   ctx.beginPath();ctx.fillStyle=`rgba(0,0,0,${a})`;ctx.arc(0,0,1,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 
-/* ===== Buchstaben, Neon-Glow & Welle ===== */
+/* ===== Buchstaben (schief) + weißer Glow & Welle ===== */
 let baseX=null;
 function ensureBaseX(){if(baseX!==null)return;const p=PX(),s=LETTER_GAP*p;const total=(WORD.length-1)*s;baseX=Math.round(W/2-total/2);}
 function letterTargetX(i){ensureBaseX();const p=PX(),s=LETTER_GAP*p;return baseX+i*s;}
 function letterTargetY(){
-  // halbe Buchstabenhöhe höher als zuvor
   const p=PX(), s=avatar.headScale*p, base = avatar.y - avatar.bodyScale*p - s*0.35;
-  return base - (LETTER_SIZE*p)*0.5;
+  return base - (LETTER_SIZE*p)*0.5; // halbe Buchstabenhöhe höher
 }
 
 const letters=[]; // {ch,x,y,angle,tiltStart}
@@ -235,7 +230,7 @@ function drawSparks(){
   ctx.globalAlpha=1;
 }
 
-/* Neon-Glow um Buchstaben */
+/* Weißer Glow um Buchstaben */
 function drawLetters(glowAlpha=0){
   const p=PX();
   ctx.font=(LETTER_SIZE*p)+'px monospace';
@@ -246,12 +241,12 @@ function drawLetters(glowAlpha=0){
     const x=Math.round(L.x), y=Math.round(L.y);
     if(L.angle){ ctx.translate(x,y); ctx.rotate(L.angle*Math.PI/180); ctx.translate(-x,-y); }
 
-    // Violett-Neon (additiv, mehrschichtig)
+    // Weißer Glow (additiv)
     if(glowAlpha>0){
       ctx.globalCompositeOperation='lighter';
-      ctx.lineWidth=6*p; ctx.strokeStyle=`rgba(166,77,255,${0.25*glowAlpha})`;
+      ctx.lineWidth=6*p; ctx.strokeStyle=`rgba(255,255,255,${0.25*glowAlpha})`;
       ctx.strokeText(L.ch,x,y);
-      ctx.lineWidth=4*p; ctx.strokeStyle=`rgba(214,107,255,${0.35*glowAlpha})`;
+      ctx.lineWidth=4*p; ctx.strokeStyle=`rgba(255,255,255,${0.35*glowAlpha})`;
       ctx.strokeText(L.ch,x,y);
       ctx.lineWidth=2*p; ctx.strokeStyle=`rgba(255,255,255,${0.45*glowAlpha})`;
       ctx.strokeText(L.ch,x,y);
@@ -265,9 +260,8 @@ function drawLetters(glowAlpha=0){
   }
 }
 
-/* Glow/Welle-Timing */
-let wordComplete=false;  // wenn letzter Buchstabe gesetzt
-let postPauseStartedAt=null;
+/* Glow/Welle-Timing (wie zuvor) */
+let wordComplete=false;
 let glowStartAt=null;
 let waveStartAt=null;
 let waveOrigin=null;
@@ -276,7 +270,12 @@ function maybeHammerNext(){
   if(nextLetterIndex>=WORD.length) return;
   const i=nextLetterIndex, tx=letterTargetX(i), ty=letterTargetY(), reach=8*PX();
   if(avatar.x>=tx-reach && avatar.state==='walk'){
-    letters.push({ch:WORD[i],x:tx,y:ty,angle:0,tiltStart:null});
+    // Schief & leicht ungerade:
+    const p=PX();
+    const angle = (Math.random()*2*LETTER_TILT_MAX - LETTER_TILT_MAX); // ±LETTER_TILT_MAX°
+    const jitterY = (Math.random()*2*LETTER_JITTER_Y - LETTER_JITTER_Y)*p;
+    letters.push({ch:WORD[i],x:tx,y:ty+jitterY,angle,tiltStart:null});
+
     avatar.hammerUntil = performance.now()+HAMMER_MS;
     avatar.state = 'hammer';
     spawnSparks(tx,ty);
@@ -284,14 +283,15 @@ function maybeHammerNext(){
 
     if(nextLetterIndex===WORD.length){
       wordComplete = true;
-      // Zentrum der Welle (Wortmitte)
       const firstX = letterTargetX(0), lastX = letterTargetX(WORD.length-1);
       waveOrigin = { x: (firstX+lastX)/2, y: ty };
+      glowStartAt = performance.now() + GLOW_DELAY_MS; // direkt nach letztem Buchstaben
+      waveStartAt = performance.now() + WAVE_DELAY_MS; // etwas später
     }
   }
 }
 
-/* Tilt & Pause beim „t“ (später, nahe der Kante) */
+/* „t“ kippen + EINZIGE Pause */
 function updateTiltAndPause(){
   if(letters.length<WORD.length) return;
   const last=letters[letters.length-1]; // "t"
@@ -318,25 +318,7 @@ function updateTiltAndPause(){
   }
 }
 
-/* Post-Pause: Figur bleibt rechts neben dem Wort stehen; danach Glow & Welle starten */
-function handlePostWordPause(){
-  if(!wordComplete) return;
-  const p=PX();
-  const lastX = letterTargetX(WORD.length-1);
-  const stopX = lastX + POSTWORD_MARGIN_PX * p;
-
-  // Wenn noch nicht in der Post-Pause und Position erreicht -> anhalten
-  if(avatar.state==='walk' && avatar.x >= stopX && !postPauseStartedAt){
-    postPauseStartedAt = performance.now();
-    avatar.state = 'postpause';
-    avatar.pauseUntil = postPauseStartedAt + POSTWORD_PAUSE_MS;
-    // Glow/Wave erst NACH der Post-Pause einplanen:
-    glowStartAt = avatar.pauseUntil + GLOW_DELAY_MS;
-    waveStartAt = avatar.pauseUntil + WAVE_DELAY_MS;
-  }
-}
-
-/* Neon-Lichtwelle (radial) */
+/* Weiße Lichtwelle (radial) */
 function drawWave(){
   if(!waveStartAt || !waveOrigin) return;
   const now=performance.now();
@@ -352,10 +334,10 @@ function drawWave(){
     waveOrigin.x, waveOrigin.y, Math.max(1, r-band),
     waveOrigin.x, waveOrigin.y, r
   );
-  grad.addColorStop(0.00, "rgba(0,0,0,0)");
-  grad.addColorStop(0.35, `rgba(166,77,255,${0.25*WAVE_STRENGTH*(1-t)})`);
-  grad.addColorStop(0.70, `rgba(214,107,255,${0.35*WAVE_STRENGTH*(1-t)})`);
-  grad.addColorStop(1.00, "rgba(0,0,0,0)");
+  grad.addColorStop(0.00, "rgba(255,255,255,0)");
+  grad.addColorStop(0.35, `rgba(255,255,255,${0.22*WAVE_STRENGTH*(1-t)})`);
+  grad.addColorStop(0.70, `rgba(255,255,255,${0.35*WAVE_STRENGTH*(1-t)})`);
+  grad.addColorStop(1.00, "rgba(255,255,255,0)");
 
   ctx.save();
   ctx.globalCompositeOperation='lighter';
@@ -370,11 +352,10 @@ function tick(){
   drawLine();
 
   maybeHammerNext();
-  handlePostWordPause();     // ← neue Logik
   updateTiltAndPause();
   updateSparks();
 
-  // Glow-Alpha: erst ab glowStartAt
+  // Glow-Alpha (hell/weiß)
   let glowAlpha = 0;
   if(glowStartAt){
     const t = (performance.now() - glowStartAt) / GLOW_MS;
@@ -390,23 +371,13 @@ function tick(){
   if(avatar.state==='walk'){
     avatar.x+=speed; avatar.step+=.15;
     avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*2)*0.5*p);
-    // Fall erst später bei Kante (wie gehabt)
     const last = letters[letters.length-1];
     const pauseOver = !last?.tiltStart || performance.now() >= (last.tiltStart + TILT_PAUSE_MS);
     if(avatar.x>=lineEndX()-6*p && pauseOver){ avatar.state='fall'; avatar.vy=0; }
   }else if(avatar.state==='hammer'){
     if(performance.now()>=avatar.hammerUntil){ avatar.state='walk'; }
     else { avatar.step+=.08; avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.3*p); }
-  }else if(avatar.state==='postpause'){
-    // steht neben dem Wort bis pauseUntil, dann wartet er auf das Ende der Welle
-    avatar.step+=.05; avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.25*p);
-    // Wenn Post-Pause vorbei UND die Welle ist komplett durch -> weiterlaufen
-    const waveDone = waveStartAt && (performance.now() > waveStartAt + WAVE_MS);
-    if(performance.now()>=avatar.pauseUntil && waveDone){
-      avatar.state='walk';
-    }
   }else if(avatar.state==='pause'){
-    // t-Kipp-Pause nahe der Kante
     if(performance.now()>=avatar.pauseUntil){ avatar.state='walk'; }
     avatar.step+=.05; avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.25*p);
   }else if(avatar.state==='fall'){
