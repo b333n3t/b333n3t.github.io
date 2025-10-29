@@ -6,9 +6,13 @@
   <title>Pixel-Marionette – Intro (b3nn3t)</title>
   <style>
     :root{ --bg:#333333; --duration:11000; }
-    html,body{height:100%;margin:0;background:var(--bg);} 
+    html,body{height:100%;margin:0;background:var(--bg);}
     body{overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    canvas{display:block;width:100vw;height:100vh;image-rendering:pixelated;image-rendering:crisp-edges;background:var(--bg)}
+    canvas{
+      display:block;width:100vw;height:100vh;
+      image-rendering:pixelated; image-rendering:crisp-edges;
+      background:var(--bg)
+    }
     #main{position:fixed;inset:0;display:grid;place-items:center;background:#111;color:#fff;opacity:0;pointer-events:none;transition:opacity .8s ease}
     #main.show{opacity:1;pointer-events:auto}
     #main .card{max-width:min(90vw,840px);padding:32px;border-radius:16px;background:#181818;box-shadow:0 10px 40px rgba(0,0,0,.45)}
@@ -22,13 +26,14 @@
 
   <script>
   // ======= KNOBS =======
-  const HEAD_IMG_URL = location.origin + "/img/pixel-head.png?v=" + Date.now(); // oder dein-pixel-kopf.webp
+  // Pfad unbedingt auf DEINE Datei setzen:
+  const HEAD_IMG_URL = location.origin + "/img/dein-pixel-kopf.webp?v=" + Date.now();
   const RUN_TO_RIGHT = true;             // links -> rechts
   const CHROMA_TOLERANCE = 38;           // 25–45: falls graue Reste sichtbar
-  const DRAW_MATTE = false;              // Matte hinter dem Kopf (bei Bedarf true)
+  const DRAW_MATTE = false;              // Matte hinter Kopf (bei Bedarf true)
   const MATTE_PAD = 1;                   // Matte-Rand (Pixel)
   const TRAIL_TEXT = "b3nn3t";           // Buchstabenfolge
-  const TRAIL_SPAWN_MS = 320;            // Abstand zwischen neuem Buchstaben
+  const TRAIL_SPAWN_MS = 300;            // Abstand zwischen neuen Buchstaben
   // =====================
 
   const canvas = document.getElementById('stage');
@@ -58,7 +63,7 @@
     headScale:22, bodyScale:12
   };
 
-  // ---- Hintergrund am Kopf per Chroma-Key entfernen ----
+  // ---- grauen Kopf-Hintergrund entfernen (Chroma-Key) ----
   function removeGrayBG(image, tolerance = CHROMA_TOLERANCE) {
     const off = document.createElement("canvas");
     off.width = image.width; off.height = image.height;
@@ -66,61 +71,67 @@
     octx.imageSmoothingEnabled = false;
     octx.drawImage(image, 0, 0);
     const imgData = octx.getImageData(0, 0, off.width, off.height);
-    const d = imgData.data; const keyR=d[0], keyG=d[1], keyB=d[2];
+    const d = imgData.data;
+    const keyR = d[0], keyG = d[1], keyB = d[2]; // Farbprobe Ecke (0,0)
     for (let i = 0; i < d.length; i += 4) {
       const dr=Math.abs(d[i]-keyR), dg=Math.abs(d[i+1]-keyG), db=Math.abs(d[i+2]-keyB);
-      if (dr < tolerance && dg < tolerance && db < tolerance) d[i+3] = 0;
+      if (dr < tolerance && dg < tolerance && db < tolerance) d[i+3] = 0; // transparent
     }
     octx.putImageData(imgData, 0, 0);
     return off;
   }
 
-  // --- Kopf laden ---
-  let headReady = false; let headImg = new Image(); headImg.crossOrigin='anonymous';
+  // --- Kopf laden (robust) ---
+  let headReady = false;
+  let headImg = new Image(); headImg.crossOrigin='anonymous';
   headImg.onload = () => { headImg = removeGrayBG(headImg); headReady = true; };
   headImg.onerror = (e) => { console.error('HEAD ERROR', HEAD_IMG_URL, e); };
   headImg.src = HEAD_IMG_URL;
 
+  // Linie
   function drawLine(){
     ctx.strokeStyle='#fff';
     ctx.lineWidth = 2*PX();
     ctx.beginPath(); ctx.moveTo(0, lineY()); ctx.lineTo(lineEndX(), lineY()); ctx.stroke();
   }
 
+  // Pixelrechteck + Outline
   function rect(px,py,w,h,fill){
     ctx.fillStyle=fill; ctx.fillRect(px,py,w,h);
     ctx.fillStyle='#000';
-    ctx.fillRect(px-1,py,w+2,1); ctx.fillRect(px-1,py+h-1,w+2,1);
-    ctx.fillRect(px-1,py,1,h);   ctx.fillRect(px+w-1,py,1,h);
+    ctx.fillRect(px-1,py,w+2,1);
+    ctx.fillRect(px-1,py+h-1,w+2,1);
+    ctx.fillRect(px-1,py,1,h);
+    ctx.fillRect(px+w-1,py,1,h);
   }
 
-  // --- Flacher 2D-Körper im Stil 16‑Bit (einfachere Blöcke, keine Fäden) ---
+  // --- Flacher 2D-Körper (SEGA/Nintendo-like), keine Fäden ---
   function drawBody(x,y){
     const p=PX(), bodyH=avatar.bodyScale*p, bodyW=Math.round(8*p);
     const legLen=Math.round(9*p), armLen=Math.round(7*p);
-    const t=(Math.sin(avatar.step)+1)/2; // 0..1
+    const t=(Math.sin(avatar.step)+1)/2;
 
-    // Torso (einfarbig mit Outline)
+    // Torso
     const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH);
     rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
 
-    // Schlichte 2D-Arme/Beine (SEGA/Nintendo‑Look)
+    // 2D-Arme/Beine (seitlich)
     function limb(px,py,len,phase,thk,col){
       const swing = Math.round(Math.sin(phase)*2*p);
       rect(px, py+swing, thk, len, col);
     }
     const armTh=3*p, legTh=4*p;
-    limb(Math.round(x+3*p), torsoY+Math.round(3*p), armLen, avatar.step, armTh, '#2b3a56'); // Vorderarm
-    limb(Math.round(x-6*p), torsoY+Math.round(3*p), armLen, avatar.step+Math.PI, armTh, '#2b3a56'); // Hinterarm
-    limb(Math.round(x+1*p), y, legLen, avatar.step, legTh, '#233047'); // Vorderbein
-    limb(Math.round(x-3*p), y, legLen, avatar.step+Math.PI, legTh, '#233047'); // Hinterbein
+    limb(Math.round(x+3*p), torsoY+Math.round(3*p), armLen, avatar.step,          armTh, '#2b3a56');  // vorderer Arm
+    limb(Math.round(x-6*p), torsoY+Math.round(3*p), armLen, avatar.step+Math.PI,  armTh, '#2b3a56');  // hinterer Arm
+    limb(Math.round(x+1*p), y,                       legLen, avatar.step,          legTh, '#233047');  // vorderes Bein
+    limb(Math.round(x-3*p), y,                       legLen, avatar.step+Math.PI,  legTh, '#233047');  // hinteres Bein
 
     // Stiefel
     rect(Math.round(x+1*p), Math.round(y+Math.sin(avatar.step)*2*p + legLen), 6*p, 3*p, '#7a4f1f');
     rect(Math.round(x-3*p), Math.round(y+Math.sin(avatar.step+Math.PI)*2*p + legLen), 6*p, 3*p, '#7a4f1f');
   }
 
-  // --- Kopf (mit optionaler Matte & Outline) ---
+  // --- Kopf (optional Matte) ---
   function drawHead(x,y){
     const p = PX();
     const s = avatar.headScale * p; const w=s, h=s;
@@ -128,13 +139,16 @@
 
     if (DRAW_MATTE){
       ctx.fillStyle = '#444';
-      ctx.fillRect(Math.round(x - w/2) - MATTE_PAD, Math.round(top) - MATTE_PAD, Math.round(w) + MATTE_PAD*2, Math.round(h) + MATTE_PAD*2);
+      ctx.fillRect(Math.round(x - w/2) - MATTE_PAD,
+                   Math.round(top)      - MATTE_PAD,
+                   Math.round(w) + MATTE_PAD*2,
+                   Math.round(h) + MATTE_PAD*2);
     }
 
     if (headReady && headImg && headImg.width){
       ctx.drawImage(headImg, Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h));
     } else {
-      // Platzhalter solange Kopf lädt
+      // Platzhalter
       ctx.fillStyle='#c9a23b'; ctx.fillRect(Math.round(x - w/2), Math.round(top), Math.round(w), Math.round(h*.62));
       ctx.fillStyle='#f2b59a'; ctx.fillRect(Math.round(x - w/2), Math.round(top + h*.45), Math.round(w), Math.round(h*.45));
     }
@@ -149,21 +163,23 @@
 
   // --- Buchstaben-Spur (b3nn3t) ---
   const letters = []; // {ch, x, y}
-  let nextSpawnAt = performance.now() + TRAIL_SPAWN_MS; let spawnIndex = 0;
+  let nextSpawnAt = performance.now() + TRAIL_SPAWN_MS; 
+  let spawnIndex = 0;
 
-  function spawnNextLetter(){
+  function spawnNextLetter(){                 // Buchstaben erscheinen in richtiger Reihenfolge
     const p = PX(); const ch = TRAIL_TEXT[spawnIndex];
-    const y = lineY() - 4*p; // knapp über der Linie
+    const y  = lineY() - 4*p;                 // knapp über der Linie
     letters.push({ch, x: avatar.x - 12*p, y});
     spawnIndex++;
   }
 
   function updateLetters(){
-    const p = PX(); const spacing = 12*p;
-    // Ordnung beibehalten: erstes Zeichen bleibt am weitesten hinten, nicht gespiegelt
+    const p = PX(); 
+    const spacing = 12*p;                     // Abstände gleich
+    // Wichtig: erstes Zeichen bleibt am weitesten hinten => keine Spiegelung
     for(let i=0;i<letters.length;i++){
-      const target = avatar.x - spacing * (letters.length - i); // wichtig: längenbasiert
-      letters[i].x += (target - letters[i].x) * 0.15;
+      const target = avatar.x - spacing * (letters.length - i);
+      letters[i].x += (target - letters[i].x) * 0.15;   // sanft nachziehen
       letters[i].y  = lineY() - 4*p;
     }
   }
@@ -181,18 +197,23 @@
   }
 
   // --- Loop ---
-  let raf; 
+  let raf;
   function tick(){
     try{
       const now = performance.now();
       ctx.clearRect(0,0,W,H);
       drawLine();
+
       const p=PX(), speed=avatar.vx*p;
 
+      // 1) Buchstaben zuerst zeichnen -> liegen hinter der Figur
       if(spawnIndex < TRAIL_TEXT.length && now >= nextSpawnAt){
         spawnNextLetter(); nextSpawnAt = now + TRAIL_SPAWN_MS;
       }
+      updateLetters();
+      drawLetters();
 
+      // 2) Avatar oben drüber zeichnen
       if(avatar.state==='walk'){
         avatar.x += speed; avatar.step += .15;
         avatar.y = lineY()-2*p + Math.round(Math.sin(avatar.step*2)*1*p);
@@ -203,10 +224,8 @@
         if(avatar.y > H + 40*p){ avatar.state='done'; startTransition(); }
       }
 
-      updateLetters();
       drawBody(avatar.x, avatar.y);
       drawHead(avatar.x, avatar.y);
-      drawLetters();
     } catch(err){ console.error('TICK ERROR', err); }
     raf = requestAnimationFrame(tick);
   }
@@ -220,7 +239,8 @@
     const redirectTo=null; // z.B. '/home' oder 'https://example.com/app'
     if(redirectTo){ setTimeout(()=>location.href=redirectTo,900); }
   }
-  setTimeout(()=>{ if(avatar.state!=='done') startTransition(); }, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
+  setTimeout(()=>{ if(avatar.state!=='done') startTransition(); },
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue('--duration')));
   </script>
 </body>
 </html>
