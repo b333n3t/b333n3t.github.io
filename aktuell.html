@@ -7,116 +7,23 @@
   <meta name="description" content="aktuell — b3nn3t" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-  <!-- Haupt-Styles -->
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Abstand unten: Desktop/Mobile über Variable -->
-<style>
-  :root { --bottom-gap: 60px; }                 /* Desktop-Abstand */
-  @media (max-width: 767px){
-    :root { --bottom-gap: 50px; }               /* Mobile-Abstand */
-  }
-  .main { margin-bottom: var(--bottom-gap); }   /* auf grauen Container anwenden */
-</style>
-  <!-- 👇 Mobile: grauer Container näher am unteren Rand -->
-<style>
-  @media (max-width: 768px) {
-    main.main {
-      min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
-      height: calc(100dvh - 56px - 20px);
-    }
-  }
-</style>
-
-
-  <!-- Pfeile (schwarze Halbkreise mit weißen Pfeilen) -->
   <link rel="stylesheet" href="styles_nav_arrows.css" />
-
-  <!-- Swipe-Unterstützung für Mobile (touch-action: pan-y) -->
   <link rel="stylesheet" href="swipe-helper.css" />
 
-  <!-- Burger-Menü (schmal & isoliert) -->
   <style>
-    /* === Hamburger-Button === */
-    .hamburger {
-      position: fixed;
-      top: 14px;
-      right: 18px;
-      width: 20px;
-      height: 20px;
-      border: none;
-      background: transparent;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      z-index: 1200;
-      padding: 0;
-    }
-    .hamburger span {
-      display: block;
-      width: 12px;
-      height: 1.4px;
-      margin: 1.5px 0;
-      background: #000;
-      border-radius: 2px;
-      transition: transform .2s ease, opacity .2s ease;
-    }
-    body.menu-open .hamburger span:nth-child(1) { transform: translateY(3.5px) rotate(45deg); }
-    body.menu-open .hamburger span:nth-child(2) { opacity: 0; }
-    body.menu-open .hamburger span:nth-child(3) { transform: translateY(-3.5px) rotate(-45deg); }
+    :root { --bottom-gap: 60px; }
+    @media (max-width: 767px){ :root { --bottom-gap: 50px; } }
+    .main { margin-bottom: var(--bottom-gap); }
 
-    /* Overlay */
-    .menu-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.08);
-      backdrop-filter: blur(1px);
-      -webkit-backdrop-filter: blur(1px);
-      z-index: 1099;
+    @media (max-width: 768px) {
+      main.main {
+        min-height: calc(100dvh - 56px - 20px);
+        height: calc(100dvh - 56px - 20px);
+      }
     }
-    body.menu-open #menu-overlay { display: block; }
-    #menu-overlay[hidden]{ display:none; }
 
-    /* === Seitenmenü (schmal, nur lokal) === */
-    .site-menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      height: auto;
-      max-height: 90vh;
-      width: min(40vw, 150px);
-      background: rgba(255,255,255,.32);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      box-shadow: 0 20px 50px rgba(0,0,0,.08);
-      transform: translateX(100%);
-      transition: transform .25s ease;
-      z-index: 1101;
-      padding: 46px 10px 14px;
-    }
-    body.menu-open .site-menu { transform: translateX(0); }
-
-    /* Menü-Links – NUR im Menü-Panel */
-    .site-menu ul { list-style: none; margin: 0; padding: 0; }
-    .site-menu li { margin: 0 0 10px 0; }
-    .site-menu li.sep { margin-top: 18px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,.08); }
-    .site-menu a {
-      display: block;
-      padding: 8px 6px;
-      border-radius: 10px;
-      color: #000;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    .site-menu a:hover { background: rgba(0,0,0,.05); }
-
-    .nav-arrow { z-index: 1000; }
-  </style>
-
-  <!-- === OVERRIDE: Transparenter Textbereich über glasigem Hintergrund === -->
-  <style id="transparent-panel-overrides">
-    /* Glasiger Hintergrund unter dem Inhalt */
+    /* Glasiger Textbereich */
     .main{
       background: rgba(255,255,255,.32);
       backdrop-filter: blur(2px);
@@ -125,38 +32,118 @@
       padding: 1.25rem 1rem;
       position: relative;
       z-index: 1;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-
-    /* Inhalt komplett transparent, Scrollleisten aus */
-    .main h1,
-    .main p{
+    .main::-webkit-scrollbar{ display:none; }
+    .main h1, .main p{
       background: transparent !important;
       box-shadow: none !important;
     }
 
-    /* Scrollleisten ausblenden, Scrollen bleibt möglich */
-    .main{
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;      /* Firefox */
-      -ms-overflow-style: none;   /* IE/Edge */
+    /* Menü */
+    .hamburger {
+      position: fixed;
+      top: 14px; right: 18px;
+      width: 20px; height: 20px;
+      border: none; background: transparent;
+      display: grid; place-items: center;
+      cursor: pointer; z-index: 1200; padding: 0;
     }
-    .main::-webkit-scrollbar{ display: none; } /* WebKit */
+    .hamburger span {
+      display:block; width:12px; height:1.4px;
+      margin:1.5px 0; background:#000; border-radius:2px;
+      transition: transform .2s ease, opacity .2s ease;
+    }
+    body.menu-open .hamburger span:nth-child(1){ transform:translateY(3.5px) rotate(45deg);}
+    body.menu-open .hamburger span:nth-child(2){ opacity:0;}
+    body.menu-open .hamburger span:nth-child(3){ transform:translateY(-3.5px) rotate(-45deg);}
+    .menu-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.08);
+      backdrop-filter:blur(1px); -webkit-backdrop-filter:blur(1px);
+      z-index:1099;
+    }
+    body.menu-open #menu-overlay{display:block;}
+    #menu-overlay[hidden]{display:none;}
+    .site-menu {
+      position:fixed; top:0; right:0;
+      height:auto; max-height:90vh;
+      width:min(40vw,150px);
+      background:rgba(255,255,255,.32);
+      backdrop-filter:blur(2px);
+      -webkit-backdrop-filter:blur(2px);
+      box-shadow:0 20px 50px rgba(0,0,0,.08);
+      transform:translateX(100%);
+      transition:transform .25s ease;
+      z-index:1101;
+      padding:46px 10px 14px;
+    }
+    body.menu-open .site-menu{transform:translateX(0);}
+    .site-menu ul{list-style:none;margin:0;padding:0;}
+    .site-menu li{margin:0 0 10px 0;}
+    .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08);}
+    .site-menu a{
+      display:block;padding:8px 6px;border-radius:10px;
+      color:#000;text-decoration:none;font-size:1rem;font-weight:500;
+    }
+    .site-menu a:hover{background:rgba(0,0,0,.05);}
+  </style>
+
+  <!-- CHAOTISCHE BILDERCOLLAGE -->
+  <style>
+    .collage-window {
+      position: relative;
+      max-width: 650px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: rgba(255,255,255,0.25);
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+    .chaos-collage {
+      position: relative;
+      width: 100%;
+      height: 400px;
+    }
+    .chaos-collage img {
+      position: absolute;
+      width: 45%;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      transition: transform 0.4s ease;
+      object-fit: cover;
+    }
+    .chaos-collage img:hover {
+      transform: scale(1.05) rotate(0deg);
+      z-index: 3;
+    }
+    .chaos-collage img:nth-child(1){top:10%;left:5%;transform:rotate(-8deg);}
+    .chaos-collage img:nth-child(2){top:5%;right:8%;transform:rotate(7deg);}
+    .chaos-collage img:nth-child(3){top:45%;left:10%;transform:rotate(-4deg);}
+    .chaos-collage img:nth-child(4){top:40%;right:5%;transform:rotate(10deg);}
+    .chaos-collage img:nth-child(5){top:65%;left:35%;transform:rotate(-3deg);}
+    @media (max-width:600px){
+      .chaos-collage{height:300px;}
+      .chaos-collage img{width:60%;}
+    }
   </style>
 </head>
+
 <body>
   <header class="header">
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg">
-      <strong>b3nn3t</strong>
+      <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
     </a>
   </header>
 
-  <!-- Burger-Menü -->
   <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
     <span></span><span></span><span></span>
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
+
   <nav id="site-menu" class="site-menu" aria-hidden="true">
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
@@ -169,24 +156,85 @@
     </ul>
   </nav>
 
-  <!-- Pfeile -->
-  <a class="nav-arrow left" aria-label="Vorherige Seite" href="#">&larr;</a>
-  <a class="nav-arrow right" aria-label="Nächste Seite" href="#">&rarr;</a>
-
   <main class="main">
     <h1>aktuell</h1>
     <p>was steht an...</p>
-     <div style="margin-top: 3em;">
- <p><b>neuigkeiten</b></p>
-       <p>- lasst euch überraschen ;) - </p>
-     <div style="margin-top: 3em;">
-    <p><b>termine</b></p>
-       <p>- noch in arbeit -</p>
+
     <div style="margin-top: 3em;">
-    <p><b>was mich gerade beschäftigt</b></p>
-      <p>- nähen -</p>
-    
-    <!-- Copyright-Bereich -->
+      <p><b>neuigkeiten</b></p>
+      <p>- lasst euch überraschen ;) - </p>
+    </div>
+
+    <div style="margin-top: 3em;">
+      <p><b>termine</b></p>
+      <p>- - - - - -</p>
+
+      <!-- Linienlose Tabelle -->
+      <div class="termine-wrapper" style="margin-top: 2.5em;">
+        <style>
+          .termine-table {
+            display: grid;
+            grid-template-columns: 8ch 1fr 1fr;
+            gap: 0.5rem 1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1rem;
+          }
+          .termine-table div { padding: 0.2rem 0; }
+          .termine-table .datum {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+          }
+          .termine-table .veranstaltung { font-weight: 500; }
+          .termine-table .ort {
+            text-align: right;
+            opacity: 0.8;
+            white-space: nowrap;
+          }
+          .termine-table .spacer {
+            grid-column: 1 / -1;
+            height: 0.6rem;
+          }
+          @media (max-width: 600px) {
+            .termine-table { grid-template-columns: 8ch 1fr; }
+            .termine-table .ort {
+              grid-column: 2 / -1;
+              text-align: left;
+            }
+          }
+        </style>
+
+        <div class="termine-table">
+          <div class="datum">XX.YY.</div>
+          <div class="veranstaltung">offen</div>
+          <div class="ort">Zürich · xx:xx</div>
+
+          <div class="datum">XX.YY.</div>
+          <div class="veranstaltung">offen</div>
+          <div class="ort">Bern · xx:xx</div>
+
+          <div class="datum">XX.YY.</div>
+          <div class="veranstaltung">offen</div>
+          <div class="ort">Basel · xx:xx</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 3em;">
+      <p><b>was mich gerade beschäftigt</b></p>
+      <p>- - - - - -</p>
+    </div>
+
+    <!-- Chaotische Bildercollage -->
+    <div class="collage-window">
+      <div class="chaos-collage">
+        <img src="bilder-aktuell/er.jpg" alt="style">
+        <img src="bilder-aktuell/qw.jpg" alt="style">
+  
+      </div>
+    </div>
+
     <div style="margin-top: 15em; color: black; text-align: center;">
       © b3nn3t · <a href="impressum.html" style="color: black; text-decoration: none;">Impressum / Datenschutz</a>
     </div>
@@ -194,10 +242,7 @@
 
   <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
 
-  <!-- Hauptskript -->
   <script src="script.js"></script>
-
-  <!-- Swipe-Navigation aktivieren -->
   <script src="swipe-nav.js?v=12" defer></script>
 </body>
 </html>
