@@ -130,6 +130,80 @@
       .chaos-collage img{width:60%;}
     }
   </style>
+
+  <!-- RESPONSIVE "TABELLEN"-STYLES FÜR TERMINE -->
+  <style>
+    /* Container aller Terminzeilen */
+    .termine-list {
+      display: grid;
+      gap: 0.75rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Einzelne Zeile: Datum | Veranstaltung | Ort/Zeit */
+    .termin-row {
+      display: grid;
+      grid-template-columns: 8ch 1fr auto;
+      gap: 0.5rem 1rem;
+      align-items: baseline;
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;       /* keine Linien, nur Luft */
+      background: transparent;   /* bleibt linienlos */
+    }
+
+    .termin-row .datum {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .termin-row .veranstaltung {
+      font-weight: 500;
+      min-width: 10rem;
+    }
+    .termin-row .ort {
+      opacity: .85;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    /* Optionaler Gruppentrenner */
+    .termin-row.spacer {
+      grid-template-columns: 1fr;
+      padding: 0.2rem 0;
+      height: 0.2rem;
+    }
+
+    /* Tablet: 2 Spalten, Ort/Zeit unter den Titel */
+    @media (max-width: 800px) {
+      .termin-row {
+        grid-template-columns: 8ch 1fr;
+      }
+      .termin-row .ort {
+        grid-column: 2 / -1;
+        text-align: left;
+      }
+    }
+
+    /* Handy: Kartenlayout (1 Spalte) */
+    @media (max-width: 480px) {
+      .termin-row {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+        padding: 0.75rem 0.9rem;
+        background: rgba(255,255,255,0.20); /* sanfter Karten-Look */
+        box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      }
+      .termin-row .datum,
+      .termin-row .veranstaltung,
+      .termin-row .ort {
+        text-align: left;
+        white-space: normal;
+      }
+      .termin-row .datum { opacity: .9; }
+      .termin-row .ort   { opacity: .85; }
+    }
+  </style>
 </head>
 
 <body>
@@ -169,56 +243,32 @@
       <p><b>termine</b></p>
       <p>- - - - - -</p>
 
-      <!-- Linienlose Tabelle -->
-      <div class="termine-wrapper" style="margin-top: 2.5em;">
-        <style>
-          .termine-table {
-            display: grid;
-            grid-template-columns: 8ch 1fr 1fr;
-            gap: 0.5rem 1rem;
-            max-width: 700px;
-            margin: 0 auto;
-            font-size: 1rem;
-          }
-          .termine-table div { padding: 0.2rem 0; }
-          .termine-table .datum {
-            font-weight: 600;
-            font-variant-numeric: tabular-nums;
-            white-space: nowrap;
-          }
-          .termine-table .veranstaltung { font-weight: 500; }
-          .termine-table .ort {
-            text-align: right;
-            opacity: 0.8;
-            white-space: nowrap;
-          }
-          .termine-table .spacer {
-            grid-column: 1 / -1;
-            height: 0.6rem;
-          }
-          @media (max-width: 600px) {
-            .termine-table { grid-template-columns: 8ch 1fr; }
-            .termine-table .ort {
-              grid-column: 2 / -1;
-              text-align: left;
-            }
-          }
-        </style>
+      <!-- ===== Responsive, linienlose "Tabelle" für Termine ===== -->
+      <div class="termine-responsive" style="margin-top: 2rem;">
+        <!-- 💡 Hier trägst du deine Termine ein (Datum | Veranstaltung | Ort/Zeit) -->
+        <div class="termine-list" role="table" aria-label="Termine">
+          <div class="termin-row" role="row">
+            <div class="datum" role="cell"><time datetime="2025-11-08">08.11.</time></div>
+            <div class="veranstaltung" role="cell">Open Studio: Näh-Sessions &amp; Q&amp;A</div>
+            <div class="ort" role="cell">Zürich · 14:00</div>
+          </div>
 
-        <div class="termine-table">
-          <div class="datum">XX.YY.</div>
-          <div class="veranstaltung">offen</div>
-          <div class="ort">Zürich · xx:xx</div>
+          <div class="termin-row" role="row">
+            <div class="datum" role="cell"><time datetime="2025-12-03">03.12.</time></div>
+            <div class="veranstaltung" role="cell">Workshop: Upcycling aus Reststoffen</div>
+            <div class="ort" role="cell">Bern · 18:30</div>
+          </div>
 
-          <div class="datum">XX.YY.</div>
-          <div class="veranstaltung">offen</div>
-          <div class="ort">Bern · xx:xx</div>
+          <div class="termin-row spacer" aria-hidden="true"></div>
 
-          <div class="datum">XX.YY.</div>
-          <div class="veranstaltung">offen</div>
-          <div class="ort">Basel · xx:xx</div>
+          <div class="termin-row" role="row">
+            <div class="datum" role="cell"><time datetime="2026-01-17">17.01.</time></div>
+            <div class="veranstaltung" role="cell">Community-Meetup „Fadenlauf“</div>
+            <div class="ort" role="cell">Basel · 19:00</div>
+          </div>
         </div>
       </div>
+      <!-- ===== Ende: Responsive Termine ===== -->
     </div>
 
     <div style="margin-top: 3em;">
@@ -231,7 +281,6 @@
       <div class="chaos-collage">
         <img src="bilder-aktuell/er.jpg" alt="style">
         <img src="bilder-aktuell/qw.jpg" alt="style">
-  
       </div>
     </div>
 
