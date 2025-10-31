@@ -38,7 +38,7 @@
 <script>
 /* ================== EINSTELLUNGEN ================== */
 const USE_HEAD_IMAGE   = true;
-const HEAD_IMG_URL     = "img/dein-pixel.webp?v=" + Date.now(); // dein Kopf (mit/ohne Alpha)
+const HEAD_IMG_URL     = "assets/tv-intro/dein-pixel.webp?v=" + Date.now(); // dein Kopf (mit/ohne Alpha)
 
 // Kopf-Keying (nur nötig, wenn das Bild keinen Alpha-Kanal hat)
 const KEY_TOLERANCE    = 65;
@@ -85,15 +85,15 @@ let W=0,H=0,DPR=1;
 /* ===== PRELOAD: Bilder & Videos von index.html, diskografie.html & gesehen.html ===== */
 const preloadImages = [
   // --- Startseite ---
-  "assets/bennet_index1.avif",
-  "assets/bennet_index1.webp",
-  "assets/bennet_index1.jpg",
-  "assets/bennet_index2.avif",
-  "assets/bennet_index2.webp",
-  "assets/bennet_index2.jpg",
-  "assets/bennet_index3.avif",
-  "assets/bennet_index3.webp",
-  "assets/bennet_index3.jpg",
+  "assets/index/bennet_index1.avif",
+  "assets/index/bennet_index1.webp",
+  "assets/index/bennet_index1.jpg",
+  "assets/index/bennet_index2.avif",
+  "assets/index/bennet_index2.webp",
+  "assets/index/bennet_index2.jpg",
+  "assets/index/bennet_index3.avif",
+  "assets/index/bennet_index3.webp",
+  "assets/index/bennet_index3.jpg",
 
   // --- Diskografie (Spotify-Cover) ---
   "https://i.scdn.co/image/ab67616d0000b2730cf9b68b5a953a81deedb36d",
@@ -122,20 +122,20 @@ const preloadImages = [
   "https://i.scdn.co/image/ab67616d0000b273a8e8b2b2cd4a314ee6090f0a",
 
   // --- Gesehen (Instagram + YouTube Thumbs + Bilder) ---
-  "assets/insta1.png",
-  "assets/insta2.png",
-  "assets/insta3.png",
-  "assets/insta4.png",
-  "assets/insta5.png",
-  "assets/insta6.png",
-  "assets/reel1.avif",
-  "assets/reel2.avif",
-  "assets/reel3.avif",
-  "assets/reel4.jpg",
-  "assets/reel5.avif",
-  "assets/reel6.avif",
-  "assets/reel7.avif",
-  "assets/instagram_poster.jpg",
+  "assets/gesehen/insta1.png",
+  "assets/gesehen/insta2.png",
+  "assets/gesehen/insta3.png",
+  "assets/gesehen/insta4.png",
+  "assets/gesehen/insta5.png",
+  "assets/gesehen/insta6.png",
+  "assets/gesehen/reel1.avif",
+  "assets/gesehen/reel2.avif",
+  "assets/gesehen/reel3.avif",
+  "assets/gesehen/reel4.jpg",
+  "assets/gesehen/reel5.avif",
+  "assets/gesehen/reel6.avif",
+  "assets/gesehen/reel7.avif",
+  "assets/gesehen/instagram_poster.jpg",
   "https://img.youtube.com/vi/ZSaj_FuqPN8/hqdefault.jpg",
   "https://img.youtube.com/vi/DMNl40Tip1w/hqdefault.jpg",
   "https://img.youtube.com/vi/K5pKG0Smdfc/hqdefault.jpg",
@@ -146,7 +146,7 @@ const preloadImages = [
 ];
 
 // Nur **Videos** hier rein:
-const preloadVideos = [ "assets/B3NN3T.mp4" ];
+const preloadVideos = [ "assets/gesehen/B3NN3T.mp4" ];
 
 // Bilder vorladen
 function preloadAllImages(urls){

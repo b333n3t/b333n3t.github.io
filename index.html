@@ -15,17 +15,13 @@
         const fromIntro  = document.referrer && /tv-intro\.html(?:$|[?#])/.test(document.referrer);
         const bypass     = location.search.includes("nointro=1");
         if (!played && !fromIntro && !bypass) {
-          // Rücksprungziel merken (inkl. Query/Hash)
           const returnUrl = (location.pathname || "index.html") +
                             (location.search || "") +
                             (location.hash || "");
           sessionStorage.setItem("introReturn", returnUrl);
-          // zur Intro-Seite (ohne Verlaufs-Eintrag)
           location.replace("tv-intro.html");
         }
-      } catch (e) {
-        // Ignorieren – Seite lädt normal weiter
-      }
+      } catch (e) {}
     })();
   </script>
 
@@ -38,7 +34,7 @@
   <style>
     @media (max-width: 768px) {
       main.main {
-        min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
+        min-height: calc(100dvh - 56px - 20px);
         height: calc(100dvh - 56px - 20px);
       }
     }
@@ -115,15 +111,62 @@
 
     footer{text-align:center;margin-top:2rem;font-size:.82rem}
     .footer-inline{text-align:center;font-size:.82rem;margin-bottom:1rem}
-    /* ===== Linkfarbe im Footer Inline wieder schwarz ===== */
-    .footer-inline a {
-      color: #000;
-      text-decoration: none;
-    }
-    .footer-inline a:hover {
-      text-decoration: underline;
-    }
+    .footer-inline a { color: #000; text-decoration: none; }
+    .footer-inline a:hover { text-decoration: underline; }
   </style>
+
+  <!-- ✅ Nur Performance: Verbindungen vorbereiten (keine Layout-Änderung) -->
+  <link rel="preconnect" href="https://open.spotify.com" crossorigin>
+  <link rel="preconnect" href="https://i.scdn.co" crossorigin>
+
+  <!-- ✅ Warm-up für Spotify-Thumbnails (läuft im Idle, kein DOM, kein Layout-Einfluss) -->
+  <script>
+    const DISCO_SPOTIFY_URLS = [
+      "https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz",
+      "https://open.spotify.com/album/4n2ziE3adhDkSf4WPy7c1l",
+      "https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI",
+      "https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz",
+      "https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM",
+      "https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG",
+      "https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM"
+
+    
+    ];
+    async function warmupSpotifyThumb(u){
+      try{
+        const r = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(u)}`, {mode:'cors'});
+        if(!r.ok) return;
+        const j = await r.json();
+        const thumb = (j.thumbnail_url || '').replace(/&?size=\d+/, '');
+        if(thumb) new Image().src = thumb;
+      }catch{}
+    }
+    (function(){
+      const DELAY=80, MAX=6;
+      let active=0, i=0;
+      function next(){
+        while(active<MAX && i<DISCO_SPOTIFY_URLS.length){
+          active++;
+          warmupSpotifyThumb(DISCO_SPOTIFY_URLS[i++]).finally(()=>{
+            active--; setTimeout(next, DELAY);
+          });
+        }
+      }
+      ('requestIdleCallback' in window)
+        ? requestIdleCallback(next,{timeout:1500})
+        : setTimeout(next,600);
+    })();
+  </script>
+
+  <!-- (Optional) Speculation Rules – erst aktivieren, wenn du willst -->
+  <!--
+  <script type="speculationrules">
+  {
+    "prefetch": [{ "source": "list", "urls": ["diskografie.html", "plattformen.html", "kontakt.html"] }],
+    "prerender": [{ "source": "list", "urls": ["diskografie.html"] }]
+  }
+  </script>
+  -->
 </head>
 
 <body ontouchstart="">
@@ -164,18 +207,18 @@
         <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
         <figure class="panel-photo">
           <picture>
-            <source srcset="assets/bennet_index1.avif" type="image/avif">
-            <source srcset="assets/bennet_index1.webp" type="image/webp">
-            <img src="assets/bennet_index1.jpg" alt="b3nn3t – Bennet">
+            <source srcset="assets/index/bennet_index1.avif" type="image/avif">
+            <source srcset="assets/index/bennet_index1.webp" type="image/webp">
+            <img src="assets/index/bennet_index1.jpg" alt="b3nn3t – Bennet">
           </picture>
         </figure>
 
         <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
         <figure class="panel-photo">
           <picture>
-            <source srcset="assets/bennet_index2.avif" type="image/avif">
-            <source srcset="assets/bennet_index2.webp" type="image/webp">
-            <img src="assets/bennet_index2.jpg" alt="b3nn3t – Bennet Studio">
+            <source srcset="assets/index/bennet_index2.avif" type="image/avif">
+            <source srcset="assets/index/bennet_index2.webp" type="image/webp">
+            <img src="assets/index/bennet_index2.jpg" alt="b3nn3t – Bennet Studio">
           </picture>
         </figure>
 
@@ -183,19 +226,17 @@
         <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
         <figure class="panel-photo">
           <picture>
-            <source srcset="assets/bennet_index3.avif" type="image/avif">
-            <source srcset="assets/bennet_index3.webp" type="image/webp">
-            <img src="assets/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell">
+            <source srcset="assets/index/bennet_index3.avif" type="image/avif">
+            <source srcset="assets/index/bennet_index3.webp" type="image/webp">
+            <img src="assets/index/bennet_index3.jpg" alt="b3nn3t – Bennet Aktuell">
           </picture>
         </figure>
 
         <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
         <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
 
-        <!-- Drei Zeilen Abstand -->
         <br><br><br>
 
-        <!-- Neuer Text -->
         <div class="footer-inline">
           © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
         </div>
