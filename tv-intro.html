@@ -492,7 +492,7 @@ function drawWave(){
 function startTransition(){
   sessionStorage.setItem("introPlayed","1");
   document.body.classList.add('fadeout');
-  const fadeMs = 2000;
+  const fadeMs = 1800;
   const extra  = 300;
   setTimeout(()=>{ window.location.href = INTRO_RETURN_URL; }, fadeMs + extra);
 }
