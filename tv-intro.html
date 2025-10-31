@@ -65,12 +65,12 @@ const TILT_TRIGGER_PX  = 42;     // Abstand zur Kante (in PX())
 const TILT_TARGET_DEG  = 24;     // Kippwinkel nach rechts
 const TILT_MS          = 500;    // bis max. Neigung
 const TILT_WOBBLE_MS   = 5800;   // Wackeln
-const TILT_PAUSE_MS    = 3500;   // Figur-Standzeit beim gekippten „t“
+const TILT_PAUSE_MS    = 3000;   // Figur-Standzeit beim gekippten „t“
 
 // (Optional) Weißer Glow & Welle – wie vorher
 const GLOW_DELAY_MS    = 140;
 const GLOW_MS          = 650;
-const WAVE_DELAY_MS    = 700;
+const WAVE_DELAY_MS    = 800;
 const WAVE_MS          = 1600;
 const WAVE_STRENGTH    = 1.0;
 
@@ -457,7 +457,7 @@ function startTransition(){
   document.body.classList.add('fadeout');
 
   // Wartezeit = Fade-Dauer + kleine Pufferzeit
-  const fadeMs = 2000;     // gleich wie --fade-ms
+  const fadeMs = 1800;     // gleich wie --fade-ms
   const extra  = 300;     // Puffer
   setTimeout(()=>{
     window.location.href = INTRO_RETURN_URL;
@@ -517,7 +517,7 @@ setTimeout(() => {
   document.body.classList.add('ready');
   // …und dann Animation starten
   requestAnimationFrame(tick);
-}, 1500); // Start-Verzögerung bleibt (1.5s); gern auf 1000/2000 ändern
+}, 1000); // Start-Verzögerung bleibt (1.5s); gern auf 1000/2000 ändern
 
 </script>
 </body>
