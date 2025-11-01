@@ -1,14 +1,104 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>über mich — b3nn3t</title>
-<meta content="über mich — b3nn3t" name="description"/>
-<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="styles.css" rel="stylesheet">
-<link href="styles_nav_arrows.css" rel="stylesheet"/>
-<link href="swipe-helper.css" rel="stylesheet"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <!-- ✅ SEO -->
+  <title>b3nn3t – Über mich | Offizielle Website</title>
+  <meta name="description" content="b3nn3t – deutscher Indie-Pop-Künstler, lebt in der Schweiz. Einblicke, Haltung und die Geschichte hinter den Songs." />
+  <meta name="robots" content="index,follow"/>
+
+  <!-- ✅ Canonical & hreflang (DACH) -->
+  <link rel="canonical" href="https://www.b3nn3t.com/ueber-mich.html"/>
+  <link rel="alternate" hreflang="de"    href="https://www.b3nn3t.com/ueber-mich.html"/>
+  <link rel="alternate" hreflang="de-DE" href="https://www.b3nn3t.de/ueber-mich.html"/>
+  <link rel="alternate" hreflang="de-CH" href="https://www.b3nn3t.ch/ueber-mich.html"/>
+  <link rel="alternate" hreflang="de-AT" href="https://www.b3nn3t.at/ueber-mich.html"/>
+  <link rel="alternate" hreflang="x-default" href="https://www.b3nn3t.com/ueber-mich.html"/>
+
+  <!-- ✅ Open Graph / Twitter -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://www.b3nn3t.com/ueber-mich.html"/>
+  <meta property="og:title" content="b3nn3t – Über mich"/>
+  <meta property="og:description" content="Deutscher Indie-Pop, lebt in der Schweiz. Einblicke und Haltung hinter der Musik."/>
+  <meta property="og:image" content="https://www.b3nn3t.com/assets/index/bennet_index1.jpg"/>
+  <meta property="og:site_name" content="b3nn3t"/>
+  <meta property="og:locale" content="de_DE"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="b3nn3t – Über mich"/>
+  <meta name="twitter:description" content="Einblicke in b3nn3ts Welt – Musik, Texte, Haltung."/>
+  <meta name="twitter:image" content="https://www.b3nn3t.com/assets/index/bennet_index1.jpg"/>
+
+  <!-- ✅ Strukturierte Daten (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.b3nn3t.com/#website",
+        "url": "https://www.b3nn3t.com/",
+        "name": "b3nn3t",
+        "inLanguage": "de-DE",
+        "publisher": { "@id": "https://www.b3nn3t.com/#org" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.b3nn3t.com/ueber-mich.html",
+        "url": "https://www.b3nn3t.com/ueber-mich.html",
+        "name": "b3nn3t – Über mich",
+        "description": "Über mich: deutscher Indie-Pop-Künstler, lebt in der Schweiz.",
+        "isPartOf": { "@id": "https://www.b3nn3t.com/#website" },
+        "inLanguage": "de-DE"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.b3nn3t.com/#person",
+        "name": "b3nn3t",
+        "alternateName": ["b3nn3t®"],
+        "nationality": "DE",
+        "homeLocation": { "@type": "Country", "name": "CH" },
+        "jobTitle": "Singer-Songwriter",
+        "genre": "Indie Pop",
+        "url": "https://www.b3nn3t.com/",
+        "sameAs": [
+          "https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A",
+          "https://music.apple.com/ch/artist/b3nn3t/1786857463?l=de-DE",
+          "https://www.youtube.com/@b333nn3t",
+          "https://www.instagram.com/b333nn3t?igsh=MWphMjcxdXZwZ2s1ZQ==",
+          "https://soundcloud.com/b3nn3t-music?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+          "https://mx3.ch/b3nn3t",
+          "https://genius.com/artists/B3nn3t"
+        ],
+        "affiliation": { "@id": "https://www.b3nn3t.com/#org" }
+      },
+      {
+        "@type": "MusicGroup",
+        "@id": "https://www.b3nn3t.com/#org",
+        "name": "b3nn3t",
+        "url": "https://www.b3nn3t.com/",
+        "alternateName": ["b3nn3t.com","b3nn3t.de","b3nn3t.ch","b3nn3t.at"],
+        "genre": "Indie Pop",
+        "areaServed": ["DE","CH","AT"],
+        "address": { "@type": "PostalAddress", "addressCountry": "CH" },
+        "member": { "@id": "https://www.b3nn3t.com/#person" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Start", "item": "https://www.b3nn3t.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Über mich", "item": "https://www.b3nn3t.com/ueber-mich.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="styles.css" rel="stylesheet">
+  <link href="styles_nav_arrows.css" rel="stylesheet"/>
+  <link href="swipe-helper.css" rel="stylesheet"/>
 
   <!-- 👇 Mobile: grauer Container näher am unteren Rand -->
 <style>
