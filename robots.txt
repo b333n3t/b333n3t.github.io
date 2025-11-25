@@ -1,8 +1,7 @@
 User-agent: *
 Allow: /
 
+# Sitemap für Suchmaschinen
 Sitemap: https://www.b3nn3t.com/sitemap.xml
 
-
-Disallow: /tv-intro.html
 
