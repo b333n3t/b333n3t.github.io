@@ -44,81 +44,95 @@
   <!-- ✅ Strukturierte Daten (JSON-LD) -->
   <script type="application/ld+json">
   {
-    "@context":"https://schema.org",
-    "@graph":[
+    "@context": "https://schema.org",
+    "@graph": [
       {
-        "@type":"WebSite",
-        "@id":"https://www.b3nn3t.com/#website",
-        "url":"https://www.b3nn3t.com/",
-        "name":"b3nn3t",
-        "inLanguage":"de-DE",
-        "publisher":{"@id":"https://www.b3nn3t.com/#org"}
+        "@type": "WebSite",
+        "@id": "https://www.b3nn3t.com/#website",
+        "url": "https://www.b3nn3t.com/",
+        "name": "b3nn3t",
+        "inLanguage": "de-DE",
+        "publisher": { "@id": "https://www.b3nn3t.com/#org" }
       },
       {
-        "@type":"WebPage",
-        "@id":"https://www.b3nn3t.com/gesehen.html",
-        "url":"https://www.b3nn3t.com/gesehen.html",
-        "name":"b3nn3t – Gesehen: Videos & Reels",
-        "description":"Aktuelle Videos, Reels und Musikclips von b3nn3t.",
-        "isPartOf":{"@id":"https://www.b3nn3t.com/#website"},
-        "inLanguage":"de-DE"
+        "@type": "WebPage",
+        "@id": "https://www.b3nn3t.com/gesehen.html",
+        "url": "https://www.b3nn3t.com/gesehen.html",
+        "name": "b3nn3t – Gesehen: Videos & Reels",
+        "description": "Aktuelle Videos, Reels und Musikclips von b3nn3t.",
+        "isPartOf": { "@id": "https://www.b3nn3t.com/#website" },
+        "inLanguage": "de-DE"
       },
       {
-        "@type":"MusicGroup",
-        "@id":"https://www.b3nn3t.com/#org",
-        "name":"b3nn3t",
-        "url":"https://www.b3nn3t.com/",
-        "alternateName":["b3nn3t.com","b3nn3t.de","b3nn3t.ch","b3nn3t.at"],
-        "genre":"Indie Pop",
-        "areaServed":["DE","CH","AT"],
-        "address":{"@type":"PostalAddress","addressCountry":"CH"}
+        "@type": "MusicGroup",
+        "@id": "https://www.b3nn3t.com/#org",
+        "name": "b3nn3t",
+        "url": "https://www.b3nn3t.com/",
+        "alternateName": ["b3nn3t.com","b3nn3t.de","b3nn3t.ch","b3nn3t.at"],
+        "genre": "Indie Pop",
+        "areaServed": ["DE","CH","AT"],
+        "address": { "@type": "PostalAddress", "addressCountry": "CH" }
       },
       {
-        "@type":"BreadcrumbList",
-        "itemListElement":[
-          {"@type":"ListItem","position":1,"name":"Start","item":"https://www.b3nn3t.com/"},
-          {"@type":"ListItem","position":2,"name":"Gesehen","item":"https://www.b3nn3t.com/gesehen.html"}
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Start", "item": "https://www.b3nn3t.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Gesehen", "item": "https://www.b3nn3t.com/gesehen.html" }
         ]
       },
-      { "@type":"VideoObject",
-        "name":"Intro-Video",
-        "thumbnailUrl":"https://www.b3nn3t.com/assets/instagram_poster.jpg",
-        "contentUrl":"https://www.b3nn3t.com/assets/gesehen/B3NN3T.mp4",
-        "uploadDate":"2025-01-01",
-        "inLanguage":"de",
-        "publisher":{"@id":"https://www.b3nn3t.com/#org"}
+      {
+        "@type": "VideoObject",
+        "name": "Intro-Video",
+        "description": "Kurzes Intro-Video von b3nn3t zur Website.",
+        "thumbnailUrl": "https://www.b3nn3t.com/assets/instagram_poster.jpg",
+        "contentUrl": "https://www.b3nn3t.com/assets/gesehen/B3NN3T.mp4",
+        "uploadDate": "2025-01-01",
+        "inLanguage": "de",
+        "publisher": { "@id": "https://www.b3nn3t.com/#org" }
       },
-      { "@type":"VideoObject",
-        "name":"YouTube 1",
-        "thumbnailUrl":"https://img.youtube.com/vi/ZSaj_FuqPN8/hqdefault.jpg",
-        "embedUrl":"https://www.youtube.com/embed/ZSaj_FuqPN8",
-        "url":"https://www.youtube.com/watch?v=ZSaj_FuqPN8",
-        "inLanguage":"de",
-        "publisher":{"@id":"https://www.b3nn3t.com/#org"}
+      {
+        "@type": "VideoObject",
+        "name": "YouTube 1",
+        "description": "YouTube-Video von b3nn3t auf dem offiziellen Kanal.",
+        "thumbnailUrl": "https://img.youtube.com/vi/ZSaj_FuqPN8/hqdefault.jpg",
+        "embedUrl": "https://www.youtube.com/embed/ZSaj_FuqPN8",
+        "url": "https://www.youtube.com/watch?v=ZSaj_FuqPN8",
+        "uploadDate": "2024-10-15",
+        "inLanguage": "de",
+        "publisher": { "@id": "https://www.b3nn3t.com/#org" }
       },
-      { "@type":"VideoObject",
-        "name":"YouTube 2",
-        "thumbnailUrl":"https://img.youtube.com/vi/DMNl40Tip1w/hqdefault.jpg",
-        "embedUrl":"https://www.youtube.com/embed/DMNl40Tip1w",
-        "url":"https://www.youtube.com/watch?v=DMNl40Tip1w",
-        "inLanguage":"de",
-        "publisher":{"@id":"https://www.b3nn3t.com/#org"}
+      {
+        "@type": "VideoObject",
+        "name": "YouTube 2",
+        "description": "Zweites Musikvideo von b3nn3t auf YouTube.",
+        "thumbnailUrl": "https://img.youtube.com/vi/DMNl40Tip1w/hqdefault.jpg",
+        "embedUrl": "https://www.youtube.com/embed/DMNl40Tip1w",
+        "url": "https://www.youtube.com/watch?v=DMNl40Tip1w",
+        "uploadDate": "2024-09-20",
+        "inLanguage": "de",
+        "publisher": { "@id": "https://www.b3nn3t.com/#org" }
       },
-      { "@type":"VideoObject",
-        "name":"YouTube 3",
-        "thumbnailUrl":"https://img.youtube.com/vi/K5pKG0Smdfc/hqdefault.jpg",
-        "embedUrl":"https://www.youtube.com/embed/K5pKG0Smdfc",
-        "url":"https://www.youtube.com/watch?v=K5pKG0Smdfc",
-        "inLanguage":"de",
-        "publisher":{"@id":"https://www.b3nn3t.com/#org"}
+      {
+        "@type": "VideoObject",
+        "name": "YouTube 3",
+        "description": "Weiteres Video von b3nn3t auf YouTube.",
+        "thumbnailUrl": "https://img.youtube.com/vi/K5pKG0Smdfc/hqdefault.jpg",
+        "embedUrl": "https://www.youtube.com/embed/K5pKG0Smdfc",
+        "url": "https://www.youtube.com/watch?v=K5pKG0Smdfc",
+        "uploadDate": "2024-08-10",
+        "inLanguage": "de",
+        "publisher": { "@id": "https://www.b3nn3t.com/#org" }
       },
-      { "@type":"VideoObject",
-        "name":"Instagram Reel",
-        "thumbnailUrl":"https://www.b3nn3t.com/assets/gesehen/insta1.webp",
-        "embedUrl":"https://www.instagram.com/reel/DKHa8SoMzQ-/embed",
-        "url":"https://www.instagram.com/reel/DKHa8SoMzQ-/",
-        "inLanguage":"de",
-        "publisher":{"@id":"https://www.b3nn3t.com/#org"}
+      {
+        "@type": "VideoObject",
+        "name": "Instagram Reel",
+        "description": "Instagram-Reel mit einem kurzen Clip von b3nn3t.",
+        "thumbnailUrl": "https://www.b3nn3t.com/assets/gesehen/insta1.webp",
+        "embedUrl": "https://www.instagram.com/reel/DKHa8SoMzQ-/embed",
+        "url": "https://www.instagram.com/reel/DKHa8SoMzQ-/",
+        "uploadDate": "2024-11-01",
+        "inLanguage": "de",
+        "publisher": { "@id": "https://www.b3nn3t.com/#org" }
       }
     ]
   }
@@ -128,17 +142,16 @@
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
-<!-- 👇 Mobile: grauer Container näher am unteren Rand -->
-<style>
-  @media (max-width: 768px) {
-    main.main {
-      min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
-      height: calc(100dvh - 56px - 20px);
+  <!-- 👇 Mobile: grauer Container näher am unteren Rand -->
+  <style>
+    @media (max-width: 768px) {
+      main.main {
+        min-height: calc(100dvh - 56px - 20px); /* 56 = Headerhöhe, 20 = Abstand unten */
+        height: calc(100dvh - 56px - 20px);
+      }
     }
-  }
-</style>
+  </style>
 
-  
   <style>
     .hamburger {
       position: fixed;
@@ -217,7 +230,6 @@
       -webkit-backdrop-filter:blur(2px);
       border-radius:12px;
       padding:var(--frame-pad);
-      
     }
     .scroll-panel{
       overflow:auto;
@@ -311,10 +323,10 @@
     .footer-inline{
       text-align:center;
       font-size:.82rem;
-      margin:2rem 0 1rem 0; /* 3 Zeilen Abstand erzeugen wir unten zusätzlich mit <br> */
+      margin:2rem 0 1rem 0;
     }
     .footer-inline a{
-      color:#000;           /* schwarze Linkfarbe */
+      color:#000;
       text-decoration:none;
     }
     .footer-inline a:hover{
@@ -371,7 +383,6 @@
         <div class="card" id="video3" data-embed-src="https://www.instagram.com/reel/DLqGKqLsY6S/embed">▶︎ link<small>Instagram</small></div>
         <div class="card" id="video4" data-embed-src="https://www.instagram.com/reel/C40c2qsN_eI/embed">▶︎ link<small>Instagram</small></div>
 
-
         <!-- YouTube -->
         <div class="card" id="yt1" data-embed-src="https://www.youtube.com/embed/ZSaj_FuqPN8">▶︎ YouTube 1<small>YouTube</small></div>
         <div class="card" id="yt2" data-embed-src="https://www.youtube.com/embed/DMNl40Tip1w">▶︎ YouTube 2<small>YouTube</small></div>
@@ -380,7 +391,6 @@
         <div class="card" id="yt5" data-embed-src="https://www.youtube.com/embed/w0pNdnlb96M">▶︎ YouTube 5<small>YouTube</small></div>
         <div class="card" id="yt6" data-embed-src="https://www.youtube.com/embed/rV1U891RKLo">▶︎ YouTube 6<small>YouTube</small></div>
         <div class="card" id="yt7" data-embed-src="https://www.youtube.com/embed/fq8zhAQMam0">▶︎ YouTube 7<small>YouTube</small></div>
-
       </section>
 
       <!-- Drei Zeilen Abstand -->
@@ -395,9 +405,6 @@
 
   <!-- „Startseite“-Button wie gehabt außerhalb des Containers -->
   <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
-
-  <!-- Entfernt: alter Seiten-Footer -->
-  <!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
 
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
@@ -471,15 +478,16 @@
         video1: 'assets/gesehen/insta1.webp',
         video2: 'assets/gesehen/insta2.webp',
         video3: 'assets/gesehen/insta3.webp',
-        video4: 'assets/gesehen/insta4.webp',
-       
+        video4: 'assets/gesehen/insta4.webp'
       };
       Object.entries(map).forEach(([id, src]) => {
         const card = document.getElementById(id);
         if (!card || card.querySelector('img.thumb')) return;
         const img = new Image();
-        img.loading = 'lazy'; img.decoding = 'async';
-        img.className = 'thumb'; img.alt = 'Instagram-Vorschau';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.className = 'thumb';
+        img.alt = 'Instagram-Vorschau';
         img.src = src;
         img.onerror = () => { img.onerror = null; img.src = 'assets/instagram_poster.jpg'; };
         card.insertBefore(img, card.firstChild);
@@ -507,7 +515,8 @@
         const card = document.getElementById(id);
         if (!card || card.querySelector('img.thumb')) return;
         const img = new Image();
-        img.loading = 'lazy'; img.decoding = 'async';
+        img.loading = 'lazy';
+        img.decoding = 'async';
         img.className = 'thumb';
         img.alt = 'YouTube-Vorschau';
         img.src = cfg.file;
@@ -523,68 +532,59 @@
   });
   </script>
 
-<!-- YouTube Titel automatisch (oEmbed, DOM-sicher) -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  try {
-    window.YT_TITLES = window.YT_TITLES || {};
-    const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src*="youtube.com/embed/"]'));
+  <!-- YouTube Titel automatisch (oEmbed, DOM-sicher) -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      window.YT_TITLES = window.YT_TITLES || {};
+      const ytCards = Array.from(document.querySelectorAll('.card[data-embed-src*="youtube.com/embed/"]'));
 
-    function extractId(src){
-      const m = (src||'').match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
-      return m ? m[1] : null;
+      function extractId(src){
+        const m = (src||'').match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
+        return m ? m[1] : null;
+      }
+
+      ytCards.forEach((card) => {
+        const src = card.getAttribute('data-embed-src');
+        const id  = extractId(src);
+        if (!id) return;
+
+        const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`;
+        fetch(url, { mode: 'cors' })
+          .then(res => res.ok ? res.json() : Promise.reject('oEmbed failed'))
+          .then(data => {
+            const title = (data && data.title) ? data.title : '';
+            if (!title) return;
+
+            window.YT_TITLES[id] = title;
+
+            const thumb = card.querySelector('img.thumb');
+            let small  = card.querySelector('small');
+
+            if (!small) {
+              small = document.createElement('small');
+              small.textContent = 'YouTube';
+              card.appendChild(small);
+            }
+
+            Array.from(card.childNodes).forEach(node => {
+              if (node === thumb || node === small) return;
+              if (thumb && node === thumb.previousSibling) return;
+              if (thumb && thumb.contains && thumb.contains(node)) return;
+              card.removeChild(node);
+            });
+
+            const label = document.createElement('span');
+            label.className = 'play-label';
+            label.textContent = `▶︎ ${title}`;
+            card.insertBefore(label, small);
+          })
+          .catch(() => {});
+      });
+    } catch (err) {
+      console.error('YT oEmbed error:', err);
     }
-
-    ytCards.forEach((card) => {
-      const src = card.getAttribute('data-embed-src');
-      const id  = extractId(src);
-      if (!id) return;
-
-      const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`;
-      fetch(url, { mode: 'cors' })
-        .then(res => res.ok ? res.json() : Promise.reject('oEmbed failed'))
-        .then(data => {
-          const title = (data && data.title) ? data.title : '';
-          if (!title) return;
-
-          // Für den iframe-title in deinem Click-Handler:
-          // (wird dort aus window.YT_TITLES gelesen)
-          window.YT_TITLES[id] = title;
-
-          // DOM aufräumen: alles außer Thumbnail + <small> entfernen
-          const thumb = card.querySelector('img.thumb');
-          let small  = card.querySelector('small');
-
-          // Wenn kein <small> existiert, anlegen (kommt in deinem HTML aber vor)
-          if (!small) {
-            small = document.createElement('small');
-            small.textContent = 'YouTube';
-            card.appendChild(small);
-          }
-
-          // Alle Knoten außer Thumbnail und <small> entfernen
-          Array.from(card.childNodes).forEach(node => {
-            if (node === thumb || node === small) return;
-            if (thumb && node === thumb.previousSibling) return;
-            if (thumb && thumb.contains && thumb.contains(node)) return;
-            card.removeChild(node);
-          });
-
-          // Label „▶︎ <Titel>“ direkt vor <small> einfügen
-          const label = document.createElement('span');
-          label.className = 'play-label';
-          label.textContent = `▶︎ ${title}`;
-          card.insertBefore(label, small);
-        })
-        .catch(() => { /* ok, falls oEmbed blockiert */});
-    });
-  } catch (err) {
-    console.error('YT oEmbed error:', err);
-  }
-});
-</script>
-
-
-
+  });
+  </script>
 </body>
 </html>
