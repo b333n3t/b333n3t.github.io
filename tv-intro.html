@@ -3,25 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- ✅ SEO: Intro soll nicht indexiert werden -->
-  <meta name="robots" content="noindex,follow" />
-  <!-- ✅ Canonical auf die eigentliche Startseite -->
-  <link rel="canonical" href="https://www.b3nn3t.com/" />
-
   <title>b3nn3t • Intro</title>
 
-  <!-- (Optional) Spekulations-Regeln: Startseite vorladen/prerendern -->
-  <script type="speculationrules">
-  {
-    "prefetch": [{ "source": "document", "urls": ["index.html"] }],
-    "prerender": [{ "source": "document", "urls": ["index.html?nointro=1"] }]
-  }
-  </script>
+  <!-- SEO: Intro nicht indexieren, Links trotzdem folgen -->
+  <meta name="robots" content="noindex,follow" />
+  <link rel="canonical" href="https://www.b3nn3t.com/" />
 
   <style>
     :root {
-      --fade-ms: 1000ms; /* Dauer der Ein-/Ausblendung */
+      --fade-ms: 1000ms; /* Dauer der Ein-/Ausblendung (wie im Original) */
     }
 
     html,body {
@@ -45,41 +35,29 @@
     body.ready canvas#c  { opacity:1; }  /* Fade-In */
     body.fadeout canvas#c{ opacity:0; }  /* Fade-Out */
 
-    /* Skip-Button (Intro überspringen) */
-    .skip {
-      position:fixed; top:14px; right:14px; z-index:10;
-      background:#fff; color:#000; border:0; border-radius:999px;
-      padding:.45rem .8rem; font-weight:700; cursor:pointer;
-    }
-    .skip:focus-visible { outline:2px solid #fff; outline-offset:2px; }
-
-    /* Barrierefreiheit: Nutzer mit reduzierter Bewegung -> sofort weiter */
-    @media (prefers-reduced-motion: reduce) {
-      body { animation:none !important; }
-      canvas#c { transition:none; }
+    /* Screenreader-/SEO-Helfer: unsichtbarer Text */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 1px, 1px);
+      white-space: nowrap;
+      border: 0;
     }
   </style>
 
-  <!-- No-JS-Fallback: sofort weiterleiten -->
-  <noscript>
-    <meta http-equiv="refresh" content="0; url=index.html?nointro=1">
-    <style>
-      body { display:flex; align-items:center; justify-content:center; color:#fff; }
-      a { color:#fff; text-decoration:underline; }
-    </style>
-    <p>Weiter zur <a href="index.html?nointro=1">Startseite</a>…</p>
-  </noscript>
 </head>
 <body>
-  <!-- Skip-Button -->
-  <button class="skip" type="button" aria-label="Intro überspringen">Skip</button>
+  <canvas id="c"></canvas>
 
-  <canvas id="c" aria-hidden="true"></canvas>
-
-  <!-- Kurze Status-Anzeige für Screenreader -->
-  <div aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
-    Intro läuft. Du kannst „Skip“ drücken, um direkt zur Startseite zu wechseln.
-  </div>
+  <!-- Unsichtbarer, aber semantischer Text für Screenreader/SEO -->
+  <h1 class="visually-hidden">b3nn3t – Intro-Animation</h1>
+  <p class="visually-hidden">
+    Intro-Animation zur Website von b3nn3t. Nach der Animation wirst du automatisch zur Startseite weitergeleitet.
+  </p>
 
 <script>
 /* ================== EINSTELLUNGEN ================== */
@@ -125,7 +103,7 @@ const LINE_ERASE_MS = 1200; // Dauer des Links→Rechts-Wipes (langsamer = grö�
 let lineFadeStart = null;   // Startzeitpunkt des Wipes
 
 /* ===== Rücksprungziel für Redirect nach dem Intro ===== */
-const INTRO_RETURN_URL = (sessionStorage.getItem("introReturn") || "index.html") + (location.search.includes('nointro=1') ? "" : (location.search ? "&" : "?") + "nointro=1");
+const INTRO_RETURN_URL = sessionStorage.getItem("introReturn") || "index.html";
 /* ==================================================== */
 
 const c = document.getElementById('c');
@@ -537,29 +515,10 @@ function drawWave(){
 function startTransition(){
   sessionStorage.setItem("introPlayed","1");
   document.body.classList.add('fadeout');
-  const fadeMs = 1700;
+  const fadeMs = 4200;
   const extra  = 300;
   setTimeout(()=>{ window.location.href = INTRO_RETURN_URL; }, fadeMs + extra);
 }
-
-/* ===== Skip-Button & Reduced-Motion direkt nach obenstehender URL-Definition ===== */
-(function setupSkipAndA11y(){
-  const skipBtn = document.querySelector('.skip');
-  function goNow(){
-    try { sessionStorage.setItem("introPlayed","1"); } catch(e){}
-    document.body.classList.add('fadeout');
-    setTimeout(()=>location.replace(INTRO_RETURN_URL), 250);
-  }
-  if (skipBtn) skipBtn.addEventListener('click', goNow);
-
-  // Nutzer:innen mit reduzierter Bewegung -> sofort weiter
-  try {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      goNow();
-      return;
-    }
-  } catch(e){}
-})();
 
 /* ===== Hauptloop ===== */
 function tick(){
@@ -590,26 +549,23 @@ function tick(){
     const pauseOver = !last?.tiltStart || performance.now() >= (last.tiltStart + TILT_PAUSE_MS);
     if(avatar.x>=lineEndX()-6*p && pauseOver){ 
       avatar.state='fall'; avatar.vy=0;
-      // (Optionales Sicherheitsnetz: falls der Wipe noch nicht lief)
       if(!lineFadeStart){ lineFadeStart = performance.now(); }
     }
   }else if(avatar.state==='hammer'){
     if(performance.now()>=avatar.hammerUntil){ avatar.state='walk'; }
     else { avatar.step+=.08; avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.3*p); }
   }else if(avatar.state==='pause'){
-    // kurz vor dem Sprung (~600 ms vor Pausenende) → HIER Wipe starten
     if(!avatar.didPauseJump && performance.now() >= avatar.pauseUntil - 600){
-      if(!lineFadeStart){ lineFadeStart = performance.now(); } // Wipe-Start!
+      if(!lineFadeStart){ lineFadeStart = performance.now(); }
       avatar.didPauseJump = true;
-      avatar.vy = -7*PX(); // Sprung auslösen
+      avatar.vy = -7*PX();
     }
 
     if(avatar.didPauseJump){
-      avatar.vy += avatar.gravity*p*0.9; // sanftere Schwerkraft im Sprung
+      avatar.vy += avatar.gravity*p*0.9;
       avatar.y += avatar.vy;
       if(avatar.y > lineY()-3*p){ avatar.y = lineY()-3*p; avatar.vy = 0; }
     } else {
-      // leichtes Atmen, solange noch nicht gesprungen
       avatar.step+=.05; 
       avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.25*p);
     }
@@ -625,7 +581,8 @@ function tick(){
 
   requestAnimationFrame(tick);
 }
-// ⏱ Wartezeit vor dem Start der Animation (z. B. 1500 ms = 1,5 Sek.)
+
+// ⏱ Wartezeit vor dem Start der Animation (1 Sekunde wie im Original)
 setTimeout(() => {
   document.body.classList.add('ready'); // sanft einblenden
   requestAnimationFrame(tick);          // Animation starten
