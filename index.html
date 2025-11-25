@@ -73,7 +73,8 @@
 
         // einfache Bot-Erkennung über User-Agent
         const ua    = navigator.userAgent || "";
-        const isBot = /bot|crawl|slurp|spider|preview/i.test(ua);
+        const isBot = /bot|crawl|slurp|spider|preview|Google-InspectionTool|Google-Site-Verification|Google-PageRenderer|Google-StructuredDataTestingTool/i.test(ua);
+
 
         // Nur echte Besucher sehen das Intro
         if (!isBot && !played && !fromIntro && !bypass) {
