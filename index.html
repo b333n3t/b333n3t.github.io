@@ -10,6 +10,14 @@
   <meta name="robots" content="index,follow" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
+  <!-- Canonical & hreflang -->
+  <link rel="canonical" href="https://www.b3nn3t.com/" />
+  <link rel="alternate" hreflang="de"    href="https://www.b3nn3t.com/" />
+  <link rel="alternate" hreflang="de-DE" href="https://www.b3nn3t.de/" />
+  <link rel="alternate" hreflang="de-CH" href="https://www.b3nn3t.ch/" />
+  <link rel="alternate" hreflang="de-AT" href="https://www.b3nn3t.at/" />
+  <link rel="alternate" hreflang="x-default" href="https://www.b3nn3t.com/" />
+
   <!-- Open Graph / Social Preview -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="b3nn3t">
@@ -17,6 +25,7 @@
   <meta property="og:description" content="Offizielle Seite von b3nn3t: Deutschrap & Indie-Pop, Diskografie, aktuelle Releases, News, Live-Termine und Kontakt.">
   <meta property="og:url" content="https://www.b3nn3t.com/">
   <meta property="og:image" content="https://www.b3nn3t.com/assets/index/bennet_index1.jpg">
+   <meta property="og:locale" content="de_DE">
 
   <!-- Twitter Card (X) -->
   <meta name="twitter:card" content="summary_large_image">
@@ -34,22 +43,35 @@
         "@id": "https://www.b3nn3t.com/#website",
         "url": "https://www.b3nn3t.com/",
         "name": "b3nn3t",
-        "description": "b3nn3t – Musik, Veröffentlichungen und Projekte von b3nn3t.",
+      "inLanguage": "de-DE",
+        "description": "b3nn3t – Deutschrap & Indie-Pop aus der Schweiz. Musik, Veröffentlichungen und Projekte von b3nn3t.",
         "publisher": {
           "@id": "https://www.b3nn3t.com/#person"
         }
       },
+ {
+        "@type": "WebPage",
+        "@id": "https://www.b3nn3t.com/#startseite",
+        "url": "https://www.b3nn3t.com/",
+        "name": "b3nn3t – Offizielle Startseite",
+        "description": "Startseite von b3nn3t mit Überblick zu Musik, Releases, News, Terminen und Plattformen.",
+        "inLanguage": "de-DE",
+        "isPartOf": {
+          "@id": "https://www.b3nn3t.com/#website"
+        }
+      },
+    
       {
         "@type": "Person",
         "@id": "https://www.b3nn3t.com/#person",
-        "name": "Bennet",
+        "name": "b3nn3t",
         "alternateName": "b3nn3t",
         "url": "https://www.b3nn3t.com/",
         "image": {
           "@type": "ImageObject",
           "url": "https://www.b3nn3t.com/assets/index/bennet_index1.jpg"
         },
-    "description": "b3nn3t ist ein Rap- und Indie-Pop-Künstler aus der Schweiz.",
+  "description": "b3nn3t ist ein Deutschrap- und Indie-Pop-Künstler aus der Schweiz.",
          "sameAs": [
           "https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A",
           "https://music.apple.com/ch/artist/b3nn3t/1786857463?l=de-DE",
@@ -59,7 +81,31 @@
           "https://www.instagram.com/b333nn3t",
           "https://www.youtube.com/@b333nn3t"
         ]
-      }
+      },
+         {
+        "@type": "MusicGroup",
+        "@id": "https://www.b3nn3t.com/#org",
+        "name": "b3nn3t",
+        "url": "https://www.b3nn3t.com/",
+        "genre": "Deutschrap & Indie Pop",
+        "areaServed": ["DE", "CH", "AT"],
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "CH"
+        },
+        "member": {
+          "@id": "https://www.b3nn3t.com/#person"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Start",
+            "item": "https://www.b3nn3t.com/"
+          }
     ]
   }
   </script>
