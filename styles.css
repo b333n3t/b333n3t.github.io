@@ -339,3 +339,77 @@ body.home .main {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+/* === Termine: gridbasierte, linienlose "Tabelle" (Desktop) === */ 
+.termine-list{
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;        /* vertikaler Abstand zwischen den Zeilen */
+  margin-top: 1rem;
+}
+
+.termin-row{
+  display: grid;
+  grid-template-columns: 200px 1fr auto;  /* Desktop: breite Datumsspalte */
+  column-gap: 2rem;
+  align-items: baseline;
+}
+
+/* Typo-Feinschliff */
+.termin-row .datum{
+  font-weight: 700;
+}
+
+.termin-row .veranstaltung{
+  font-weight: 600;
+  margin-left: 1.5rem;  /* Extra-Abstand hinter Datum auf Desktop */
+}
+
+.termin-row .ort{
+  text-align: right;
+}
+
+/* === Mobile Hochformat: Datum links, Veranstaltung + Ort in gleicher Spalte === */
+@media (max-width: 600px){
+
+  /* 2-Spalten-Grid: Datum | Text (Veranstaltung + Ort) */
+  .termin-row{
+    display: grid !important;
+    width: 100%;
+    box-sizing: border-box;
+    grid-template-columns: 110px 1fr !important;   /* 110px = Datumspalte */
+    grid-template-areas:
+      "datum veranstaltung"
+      "datum ort";
+    column-gap: 12px;
+    row-gap: 2px;
+    align-items: baseline;
+    margin-bottom: 0.6rem;
+  }
+
+  .termin-row .datum{
+    grid-area: datum;
+    font-weight: 700;
+    text-align: right !important;
+    white-space: nowrap;
+    padding-right: 0;          /* Sicherheit, falls vorher was gesetzt war */
+  }
+
+  /* Veranstaltung: linksbündig in Spalte 2 */
+  .termin-row .veranstaltung{
+    grid-area: veranstaltung;
+    font-weight: 600;
+    margin-left: 0 !important; /* Abstand kommt über column-gap */
+    text-align: left !important;
+    white-space: nowrap;       /* z.B. "Full HD - Grün & Gold" in einer Zeile */
+  }
+
+  /* Ort/Uhrzeit: gleiche Spalte wie Veranstaltung, gleiche linke Kante */
+  .termin-row .ort{
+    grid-area: ort;
+    display: block !important;
+    text-align: left !important;
+    font-size: 0.9em;
+    margin: 0 !important;
+    white-space: nowrap !important;  /* kein Umbruch "Ort · Uhrzeit" */
+  }
+}
