@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="de">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Basis-SEO -->
-  <title>b3nn3t – Deutschrap & Indie-Pop aus der Schweiz | Songwriter & Musiker | Official Artist Page</title>
+  <title>b3nn3t – Deutschrap & Indie-Pop aus der Schweiz | Songwriter & Musiker</title>
   <meta name="description" content="b3nn3t – Deutschrap und Indie-Pop aus der Schweiz. Moderner Sound, starke Texte und authentische Songs. Jetzt Musik, Releases, Videos, News und Termine entdecken." />
   <meta name="robots" content="index,follow" />
 
@@ -14,6 +14,11 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <!-- Hero-Bild vorladen (LCP-Optimierung) -->
+  <link rel="preload" as="image"
+        href="/assets/index/bennet_index1.webp"
+        imagesizes="(min-width: 900px) 800px, 100vw">
 
   <!-- Canonical & hreflang -->
   <link rel="canonical" href="https://www.b3nn3t.com/" />
@@ -280,9 +285,10 @@
 
 <body ontouchstart="">
   <header class="header">
-    <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
-    </a>
+<a class="brand" href="index.html" aria-label="b3nn3t Home">
+  <img src="favicon.svg" alt="b3nn3t Logo"><strong>b3nn3t</strong>
+</a>
+
   </header>
 
   <div id="page-glass" aria-hidden="true">
@@ -329,18 +335,35 @@
         <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
         <figure class="panel-photo">
           <picture>
-            <source srcset="assets/index/bennet_index1.avif" type="image/avif">
-            <source srcset="assets/index/bennet_index1.webp" type="image/webp">
-            <img src="assets/index/bennet_index1.jpg" alt="b3nn3t – als Musiker, Künstler">
+            <source
+              srcset="assets/index/bennet_index1.avif"
+              type="image/avif"
+              sizes="(min-width: 900px) 800px, 100vw">
+            <source
+              srcset="assets/index/bennet_index1.webp"
+              type="image/webp"
+              sizes="(min-width: 900px) 800px, 100vw">
+            <img
+              src="assets/index/bennet_index1.jpg"
+              alt="b3nn3t liegt kopfüber auf dem Boden einer U-Bahn-Station">
           </picture>
         </figure>
 
         <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
         <figure class="panel-photo">
           <picture>
-            <source srcset="assets/index/bennet_index2.avif" type="image/avif">
-            <source srcset="assets/index/bennet_index2.webp" type="image/webp">
-            <img src="assets/index/bennet_index2.jpg" alt="b3nn3t – bei der Musikproduktion">
+            <source
+              srcset="assets/index/bennet_index2.avif"
+              type="image/avif"
+              sizes="(min-width: 900px) 800px, 100vw">
+            <source
+              srcset="assets/index/bennet_index2.webp"
+              type="image/webp"
+              sizes="(min-width: 900px) 800px, 100vw">
+            <img
+              src="assets/index/bennet_index2.jpg"
+              alt="b3nn3t sitzt in Hocke im Profil, mit Lederjacke und Jeans"
+              loading="lazy">
           </picture>
         </figure>
 
@@ -348,9 +371,18 @@
         <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
         <figure class="panel-photo">
           <picture>
-            <source srcset="assets/index/bennet_index3.avif" type="image/avif">
-            <source srcset="assets/index/bennet_index3.webp" type="image/webp">
-            <img src="assets/index/bennet_index3.jpg" alt="b3nn3t – Aktuell" loading="lazy">
+            <source
+              srcset="assets/index/bennet_index3.avif"
+              type="image/avif"
+              sizes="(min-width: 900px) 800px, 100vw">
+            <source
+              srcset="assets/index/bennet_index3.webp"
+              type="image/webp"
+              sizes="(min-width: 900px) 800px, 100vw">
+            <img
+              src="assets/index/bennet_index3.jpg"
+              alt="b3nn3t hängt akrobatisch an einem Drehkreuz in einer U-Bahn-Station"
+              loading="lazy">
           </picture>
         </figure>
 
