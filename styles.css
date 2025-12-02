@@ -1,5 +1,5 @@
 :root{
-  --bg-tint: rgba(255,255,255,.35); /* blasser Hintergrund */
+  --bg-tint: rgba(255,255,255,.35);
   --text: #0e0e0e;
   --text-dim: #2d2d2d;
   --accent: #0b84ff;
@@ -19,13 +19,25 @@ html,body{
 /* === Einheitlicher Hintergrund: ruhiges Scrolling + dynamischer Fokus === */
 body{
   background-color: #000;
+
+  /* Fallback (ältere Browser) */
   background-image:
     linear-gradient(var(--bg-tint), var(--bg-tint)),
-    url('assets/b3nn3t.jpg');
+    url('assets/b3nn3t_bg.jpg');
+
+  /* Moderne Browser: AVIF > WebP > JPG */
+  background-image:
+    linear-gradient(var(--bg-tint), var(--bg-tint)),
+    image-set(
+      url('assets/b3nn3t_bg.avif') type("image/avif"),
+      url('assets/b3nn3t_bg.webp') type("image/webp"),
+      url('assets/b3nn3t_bg.jpg')  type("image/jpeg")
+    );
+
   background-repeat: no-repeat;
-  background-position: center 45%;   /* Grundfokus etwas höher */
-  background-size: cover;            /* keine Balken links/rechts */
-  background-attachment: scroll;     /* ruhiges Scrolling */
+  background-position: center 45%;
+  background-size: cover;
+  background-attachment: scroll;
   transition: background-position .35s ease;
   min-height: 100vh;
   min-height: 100svh;
@@ -33,27 +45,34 @@ body{
   flex-direction:column;
 }
 
-/* Querformat (Landscape): mehr vom unteren Bereich sichtbar machen */
+/* Querformat */
 @media (orientation: landscape){
   body{ background-position: center 40%; }
 }
 
-/* Sehr flache Viewports (z.B. 1366×768, 1920×800): Fokus noch etwas höher */
+/* Flache Displays */
 @media (max-height: 850px){
   body{ background-position: center 38%; }
 }
 
-/* Extrem flache Viewports (sehr schmale Höhe) */
 @media (max-height: 760px){
   body{ background-position: center 36%; }
 }
 
-/* Optional: mobiles, leichteres Bild falls vorhanden */
+/* === Mobiles Hintergrundbild === */
 @media (max-width: 768px){
   body{
     background-image:
       linear-gradient(var(--bg-tint), var(--bg-tint)),
-      url('assets/b3nn3t-mobile.jpg');
+      url('assets/b3nn3t_bg_mobile.jpg');
+
+    background-image:
+      linear-gradient(var(--bg-tint), var(--bg-tint)),
+      image-set(
+        url('assets/b3nn3t_bg_mobile.avif') type("image/avif"),
+        url('assets/b3nn3t_bg_mobile.webp') type("image/webp"),
+        url('assets/b3nn3t_bg_mobile.jpg')  type("image/jpeg")
+      );
   }
 }
 
@@ -61,7 +80,7 @@ body{
 a{ color: var(--accent); text-decoration: none; }
 a:hover{ text-decoration: underline; }
 
-/* Header/Brand */
+/* Header */
 .header{
   display:flex;
   align-items:center;
@@ -70,6 +89,7 @@ a:hover{ text-decoration: underline; }
   position: sticky;
   top: 0;
 }
+
 .brand{
   font-weight:700;
   letter-spacing:.04em;
@@ -78,338 +98,260 @@ a:hover{ text-decoration: underline; }
   padding:0;
   box-shadow:none;
   position:absolute;
-  left:18px;
+  left:25%;
+  transform:translateX(-50%);
   top:18px;
   text-decoration:none;
 }
 .brand:hover{ text-decoration: underline; }
 
-/* navigation arrows */
+/* Favicon-/Brand-Image verstecken */
+.header img,
+.brand img,
+header img[alt=""],
+header img[src*="favicon"],
+header img[src*="logo"]{
+  display:none !important;
+  width:0 !important;
+  height:0 !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+}
+
+/* Navigation arrows */
 .nav-arrow{
   position:fixed;
   top:12px;
   z-index:10;
-  padding:10px 12px;
-  background: rgba(255,255,255,.8);
-  border-radius: 14px;
-  backdrop-filter: blur(3px);
-  box-shadow: 0 10px 24px rgba(0,0,0,.08);
-  font-weight:600;
+  padding:8px;
+  background:none;
+  border-radius:0;
+  backdrop-filter:none;
+  box-shadow:none;
+  font-weight:700;
+  color:#000;
+  border:none;
 }
-.nav-arrow:hover{ background: rgba(255,255,255,.95); }
 .nav-arrow.left{ left:12px; }
 .nav-arrow.right{ right:12px; }
+.nav-arrow:hover{
+  color:#333;
+  background:none;
+}
 
-/* main container */
+/* Main Container */
 .main{
-  width: min(1100px, 92vw);               /* behält die bisherige Maximalbreite */
-  margin-top: clamp(24px, 5vh, 60px);     /* oben Abstand */
-  margin-bottom: clamp(24px, 5vh, 60px);  /* unten Abstand */
-  margin-left: clamp(20px, 3vw, 40px);    /* näher an den linken Rand */
-  margin-right: auto;                     /* rechter Abstand flexibel */
-  background: rgba(255,255,255,0.32);     /* transparenteres Weiß-Grau */
+  width: min(1100px, 92vw);
+  margin-top: clamp(24px, 5vh, 60px);
+  margin-bottom: clamp(24px, 5vh, 60px);
+  margin-left: clamp(20px, 3vw, 40px);
+  margin-right:auto;
+  background: rgba(255,255,255,0.32);
   border-radius: 18px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.08);/* etwas leichterer Schatten */
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
   padding: clamp(18px, 2vw, 28px);
-  backdrop-filter: blur(2px);             /* sorgt für weichen Glas-Effekt */
+  backdrop-filter: blur(2px);
 }
 
 h1, h2{ margin: .2em 0 .4em; letter-spacing:.02em; }
 p{ line-height:1.6; color: var(--text-dim); }
 
-/* home grid */
+/* Home Grid */
 .grid{
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* vorher 180px */
-  gap: 12px;/* engerer Abstand */
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
   margin-top: 10px;
 }
 
 .card{
   display:block;
-  padding: 12px; /* vorher 16px */
+  padding:12px;
   background: rgba(255,255,255,.9);
   border-radius: 16px;
   box-shadow: 0 10px 20px rgba(0,0,0,.08);
-  font-weight: 600;
+  font-weight:600;
   color: var(--text);
   text-align:center;
 }
-.card small{ display:block; font-weight:400; color: #444; margin-top:6px; }
-.card:hover{ transform: translateY(-2px); transition: transform .12s ease; }
+.card small{
+  display:block;
+  font-weight:400;
+  color:#444;
+  margin-top:6px;
+}
+.card:hover{
+  transform: translateY(-2px);
+  transition: transform .12s ease;
+}
 
-/* home only footer note */
+/* Footer Note */
 .note{
-  margin-top: 18px;
+  margin-top:18px;
   font-size:.95rem;
   color:#333;
 }
 
-/* home button on inner pages */
+/* Home button on inner pages */
 .home-btn{
-  position:fixed;
-  bottom:16px;
-  left:50%;
-  transform: translateX(-50%);
-  padding:12px 16px;
-  background: rgba(255,255,255,.88);
-  border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0,0,0,.1);
-  font-weight:700;
+  display: none !important;
 }
 
+/* Standard-Footer */
 footer{
-  text-align:center;
-  padding: 24px 12px 36px;
-  color:#333;
-}
-
-
-/* Notebook 1920x1200 (16:10) – shift focus higher so the head is visible */
-@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
-  body{ background-position: center 30%; }
-}
-
-
-/* === Stronger upward focus so the head is visible in landscape (mobile + desktop) === */
-@media (orientation: landscape){
-  body{ background-position: center 24% !important; }
-}
-
-/* 1920x1200 (16:10) notebooks: even higher focus */
-@media (min-width: 1600px) and (min-height: 1100px) and (orientation: landscape){
-  body{ background-position: center 20% !important; }
-}
-
-/* Very flat viewports (ultra-wide or browser UI taking height): push higher */
-@media (max-height: 820px){
-  body{ background-position: center 18% !important; }
-}
-
-
-/* === Logo-Icon (z. B. favicon.svg) im Header auf allen Seiten ausblenden === */
-.header img,
-.brand img,
-header img[alt=""],
-header img[src*="favicon"],
-header img[src*="logo"] {
-  display: none !important;
-}
-
-
-/* === Navigationpfeile: Schwarz, ohne Hintergrund === */
-.nav-arrow {
-  color: #000 !important;             /* schwarze Pfeile */
-  background: none !important;        /* kein Hintergrundfeld */
-  box-shadow: none !important;        /* keine Schatten */
-  border: none;
-  font-weight: 700;
-  padding: 8px;
-  text-decoration: none;
-}
-
-.nav-arrow:hover {
-  color: #333 !important;             /* leicht dunkler beim Hover */
-  background: none !important;
-}
-
-
-/* === Footer: eine Zeile + näher am Rand, iOS-safe === */
-footer {
   position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(8px + env(safe-area-inset-bottom)); /* Abstand auch auf iPhones */
-  margin: 0;
-  padding: 2px 8px;
-  display: flex;                  /* verhindert Umbruch */
-  align-items: center;
-  justify-content: center;
-  gap: .4rem;                     /* kleiner Abstand zwischen Textteilen */
-  white-space: nowrap;            /* alles in einer Zeile */
-  word-break: keep-all;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.75);
-  background: transparent;        /* kein Hintergrund */
-  border-radius: 0;
-  backdrop-filter: none;
-  font-weight: 400;
-  font-size: 0.82rem;
-  line-height: 1.2;
-  z-index: 1000;
+  left:50%;
+  transform:translateX(-50%);
+  bottom: calc(8px + env(safe-area-inset-bottom));
+  margin:0;
+  padding:2px 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.4rem;
+  white-space:nowrap;
+  text-align:center;
+  color:rgba(0,0,0,0.75);
+  background:transparent;
+  border-radius:0;
+  backdrop-filter:none;
+  font-weight:400;
+  font-size:0.82rem;
+  line-height:1.2;
+  z-index:1000;
 }
 
-/* Footer-Links schwarz & einzeilig */
-footer a {
-  color: #000 !important;
-  text-decoration: none;
-  white-space: nowrap;
+footer a{
+  color:#000 !important;
+  text-decoration:none;
 }
-footer a:hover {
-  color: #000 !important;
-  text-decoration: underline;
+footer a:hover{
+  color:#000 !important;
+  text-decoration:underline;
 }
 
-/* Auf sehr schmalen Geräten leicht kleiner */
-@media (max-width: 420px) {
-  footer {
-    font-size: 0.75rem;
-    gap: .3rem;
-  }
-}
-/* Footer links black */
-footer a {
-  color: #000 !important;
-  text-decoration: none;
-}
-footer a:hover {
-  color: #000 !important;
-  text-decoration: underline;
-}
-
-/* === b3nn3t-Link leicht nach rechts verschoben === */
-.brand {
-  left: 25%;                /* Position etwa auf 1/4 der Seitenbreite */
-  transform: translateX(-50%);
-}
-
-
-/* === Startseite-Link vollständig ausblenden (global) === */
-.home-btn {
-  display: none !important;
-}
-/* === Mobile-Optimierung: Karten (über mich, diskografie, etc.) schmaler === */
-@media (max-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* vorher 180px */
-    gap: 10px; /* weniger Abstand */
-  }
-
-  .card {
-    padding: 10px;        /* kompaktere Felder */
-    border-radius: 14px;  /* leicht kleiner */
-  }
-
-  .card small {
-    font-size: 0.8rem;    /* kleinerer Untertext */
-    margin-top: 4px;
+/* Mobile Footer smaller */
+@media (max-width: 420px){
+  footer{
+    font-size:0.75rem;
+    gap:.3rem;
   }
 }
 
-/* === Sehr kleine Geräte (z. B. iPhone SE, Galaxy Mini) === */
-@media (max-width: 360px) {
-  .grid {
+/* Mobile Grid adjustments */
+@media (max-width: 480px){
+  .grid{
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap:10px;
+  }
+
+  .card{
+    padding:10px;
+    border-radius:14px;
+  }
+
+  .card small{
+    font-size:0.8rem;
+    margin-top:4px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px){
+  .grid{
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 8px;
+    gap:8px;
   }
 
-  .card {
-    padding: 8px;
+  .card{
+    padding:8px;
   }
 
-  .card small {
-    font-size: 0.78rem;
+  .card small{
+    font-size:0.78rem;
   }
 }
-/* === "gesehen" Seite: Intro-Button wie Startseite, kompakt & linksbündig === */
-.grid-seen {
-  /* statt Vollbreite im Grid: kompakt zentrieren */
-  display: flex;
-  justify-content: flex-start; /* linksbündig statt zentriert */
-  align-items: stretch;
-  gap: 14px
+
+/* "gesehen" page */
+.grid-seen{
+  display:flex;
+  justify-content:flex-start;
+  align-items:stretch;
+  gap:14px;
 }
 
-.grid-seen .card {
-  /* gleiche Kartengröße wie auf der Startseite (≈ 180px) */
-  flex: 0 1 180px;
-  max-width: 180px;
+.grid-seen .card{
+  flex:0 1 180px;
+  max-width:180px;
 }
 
-/* Auf Phones dieselben kleineren Maße wie auf der Startseite verwenden */
-@media (max-width: 480px) {
-  .grid-seen .card {
-    flex-basis: 120px;   /* passt zu deinen Phone-Einstellungen */
-    max-width: 120px;
+@media (max-width: 480px){
+  .grid-seen .card{
+    flex-basis:120px;
+    max-width:120px;
   }
 }
-/* Verhindert, dass globale Styles die Startseite überlagern */
-body.home .main {
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-/* === Termine: gridbasierte, linienlose "Tabelle" (Desktop) === */ 
+
+/* Termine */
 .termine-list{
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;        /* vertikaler Abstand zwischen den Zeilen */
-  margin-top: 1rem;
+  display:flex;
+  flex-direction:column;
+  gap:0.35rem;
+  margin-top:1rem;
 }
 
 .termin-row{
-  display: grid;
-  grid-template-columns: 200px 1fr auto;  /* Desktop: breite Datumsspalte */
-  column-gap: 2rem;
-  align-items: baseline;
+  display:grid;
+  grid-template-columns:200px 1fr auto;
+  column-gap:2rem;
+  align-items:baseline;
 }
 
-/* Typo-Feinschliff */
 .termin-row .datum{
-  font-weight: 700;
+  font-weight:700;
 }
 
 .termin-row .veranstaltung{
-  font-weight: 600;
-  margin-left: 1.5rem;  /* Extra-Abstand hinter Datum auf Desktop */
+  font-weight:600;
+  margin-left:1.5rem;
 }
 
 .termin-row .ort{
-  text-align: right;
+  text-align:right;
 }
 
-/* === Mobile Hochformat: Datum links, Veranstaltung + Ort in gleicher Spalte === */
 @media (max-width: 600px){
-
-  /* 2-Spalten-Grid: Datum | Text (Veranstaltung + Ort) */
   .termin-row{
-    display: grid !important;
-    width: 100%;
-    box-sizing: border-box;
-    grid-template-columns: 110px 1fr !important;   /* 110px = Datumspalte */
+    display:grid !important;
+    width:100%;
+    grid-template-columns:110px 1fr !important;
     grid-template-areas:
       "datum veranstaltung"
       "datum ort";
-    column-gap: 12px;
-    row-gap: 2px;
-    align-items: baseline;
-    margin-bottom: 0.6rem;
+    column-gap:12px;
+    row-gap:2px;
+    align-items:baseline;
+    margin-bottom:0.6rem;
   }
 
   .termin-row .datum{
     grid-area: datum;
-    font-weight: 700;
-    text-align: right !important;
-    white-space: nowrap;
-    padding-right: 0;          /* Sicherheit, falls vorher was gesetzt war */
+    font-weight:700;
+    text-align:right !important;
   }
 
-  /* Veranstaltung: linksbündig in Spalte 2 */
   .termin-row .veranstaltung{
-    grid-area: veranstaltung;
-    font-weight: 600;
-    margin-left: 0 !important; /* Abstand kommt über column-gap */
-    text-align: left !important;
-    white-space: nowrap;       /* z.B. "Full HD - Grün & Gold" in einer Zeile */
+    grid-area:veranstaltung;
+    font-weight:600;
+    margin-left:0 !important;
+    text-align:left !important;
+    white-space:nowrap;
   }
 
-  /* Ort/Uhrzeit: gleiche Spalte wie Veranstaltung, gleiche linke Kante */
   .termin-row .ort{
-    grid-area: ort;
-    display: block !important;
-    text-align: left !important;
-    font-size: 0.9em;
-    margin: 0 !important;
-    white-space: nowrap !important;  /* kein Umbruch "Ort · Uhrzeit" */
+    grid-area:ort;
+    text-align:left !important;
+    font-size:0.9em;
+    white-space:nowrap !important;
   }
 }
