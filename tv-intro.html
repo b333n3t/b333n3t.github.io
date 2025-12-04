@@ -12,7 +12,6 @@
   <title>TV-Intro – b3nn3t | Intro-Annimation &amp; Visuals</title>
   <meta name="description" content="Das offizielle Intro von b3nn3t – Sound, Atmosphäre und visuelle Identität. Ein kurzer Einblick in die Welt hinter dem Intro." />
 
-
   <!-- (Optional) Spekulations-Regeln: Startseite vorladen/prerendern -->
   <script type="speculationrules">
   {
@@ -73,15 +72,19 @@
   </noscript>
 </head>
 <body>
-  <!-- Skip-Button -->
-  <button class="skip" type="button" aria-label="Intro überspringen">Skip</button>
 
-  <canvas id="c" aria-hidden="true"></canvas>
+  <!-- 🔽 Hauptinhalt semantisch markiert -->
+  <main role="main">
+    <!-- Skip-Button -->
+    <button class="skip" type="button" aria-label="Intro überspringen">Skip</button>
 
-  <!-- Kurze Status-Anzeige für Screenreader -->
-  <div aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
-    Intro läuft. Du kannst „Skip“ drücken, um direkt zur Startseite zu wechseln.
-  </div>
+    <canvas id="c" aria-hidden="true"></canvas>
+
+    <!-- Kurze Status-Anzeige für Screenreader -->
+    <div aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+      Intro läuft. Du kannst „Skip“ drücken, um direkt zur Startseite zu wechseln.
+    </div>
+  </main>
 
 <script>
 /* ================== EINSTELLUNGEN ================== */
