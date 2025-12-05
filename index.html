@@ -321,7 +321,7 @@
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
-  <nav id="site-menu" class="site-menu" aria-hidden="true" inert>
+  <nav id="site-menu" class="site-menu" aria-hidden="true">
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
       <li><a href="diskografie.html">diskografie</a></li>
@@ -463,7 +463,7 @@
     })();
   </script>
 
-  <!-- Menüzustand + ARIA/inert sauber steuern -->
+  <!-- Menüzustand + ARIA sauber steuern -->
   <script>
     (function () {
       const hamburger = document.querySelector('.hamburger');
@@ -474,7 +474,6 @@
 
       function openMenu() {
         document.body.classList.add('menu-open');
-        menu.removeAttribute('inert');
         menu.setAttribute('aria-hidden', 'false');
         hamburger.setAttribute('aria-expanded', 'true');
         overlay.hidden = false;
@@ -482,7 +481,6 @@
 
       function closeMenu() {
         document.body.classList.remove('menu-open');
-        menu.setAttribute('inert', '');
         menu.setAttribute('aria-hidden', 'true');
         hamburger.setAttribute('aria-expanded', 'false');
         overlay.hidden = true;
