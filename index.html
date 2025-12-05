@@ -21,7 +21,7 @@
         imagesizes="(min-width: 900px) 800px, 100vw">
 
   <!-- Canonical & hreflang -->
-  <link rel="canonical" href="https://www.b3nn3t.com/index.html">
+  <link rel="canonical" href="https://www.b3nn3t.com/">
   <link rel="alternate" hreflang="de"        href="https://www.b3nn3t.com/index.html" />
   <link rel="alternate" hreflang="de-DE"     href="https://www.b3nn3t.de/index.html" />
   <link rel="alternate" hreflang="de-CH"     href="https://www.b3nn3t.ch/index.html" />
@@ -33,7 +33,7 @@
   <meta property="og:site_name" content="b3nn3t">
   <meta property="og:title" content="b3nn3t – Deutschrap & Indie-Pop aus der Schweiz">
   <meta property="og:description" content="Offizielle Seite von b3nn3t: Deutschrap & Indie-Pop, Diskografie, aktuelle Releases, News, Live-Termine und Kontakt.">
-  <meta property="og:url" content="https://www.b3nn3t.com/index.html" />
+  <meta property="og:url" content="https://www.b3nn3t.com/" />
   <meta property="og:image" content="https://www.b3nn3t.com/assets/index/bennet_index1.jpg">
   <meta property="og:locale" content="de_DE">
 
@@ -61,8 +61,8 @@
       },
       {
         "@type": "WebPage",
-        "@id": "https://www.b3nn3t.com/index.html#startseite",
-        "url": "https://www.b3nn3t.com/index.html",
+        "@id": "https://www.b3nn3t.com/#startseite",
+        "url": "https://www.b3nn3t.com/",
         "name": "b3nn3t – Offizielle Startseite",
         "description": "Startseite von b3nn3t mit Überblick zu Musik, Releases, News, Terminen und Plattformen.",
         "inLanguage": "de-DE",
@@ -113,7 +113,7 @@
             "@type": "ListItem",
             "position": 1,
             "name": "Start",
-            "item": "https://www.b3nn3t.com/index.html"
+            "item": "https://www.b3nn3t.com/"
           }
         ]
       }
@@ -236,69 +236,48 @@
 
     footer{text-align:center;margin-top:2rem;font-size:.82rem}
     .footer-inline{text-align:center;font-size:.82rem;margin-bottom:1rem}
-    .footer-inline a { color: rgba(0,0,0,0.65); text-decoration: none; }
-    .footer-inline a:hover { text-decoration: underline; color: #000; }
+    .footer-inline a { color: #000; text-decoration: none; }
+    .footer-inline a:hover { text-decoration: underline; }
   </style>
 
   <!-- ✅ Nur Performance: Verbindungen vorbereiten (keine Layout-Änderung) -->
   <link rel="preconnect" href="https://open.spotify.com" crossorigin>
   <link rel="preconnect" href="https://i.scdn.co" crossorigin>
 
-  <!-- ✅ Spotify-Warmup: Lighthouse-safe mode -->
+  <!-- ✅ Warm-up für Spotify-Thumbnails (läuft im Idle, kein DOM, kein Layout-Einfluss) -->
   <script>
+    const DISCO_SPOTIFY_URLS = [
+      "https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz",
+      "https://open.spotify.com/album/4n2ziE3adhDkSf4WPy7c1l",
+      "https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI",
+      "https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz",
+      "https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM",
+      "https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG",
+      "https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM"
+    ];
+    async function warmupSpotifyThumb(u){
+      try{
+        const r = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(u)}`, {mode:'cors'});
+        if(!r.ok) return;
+        const j = await r.json();
+        const thumb = (j.thumbnail_url || '').replace(/&?size=\d+/, '');
+        if(thumb) new Image().src = thumb;
+      }catch{}
+    }
     (function(){
-      const DISCO_SPOTIFY_URLS = [
-        "https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz",
-        "https://open.spotify.com/album/4n2ziE3adhDkSf4WPy7c1l",
-        "https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI",
-        "https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz",
-        "https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM",
-        "https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG",
-        "https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM"
-      ];
-
-      async function warmupSpotifyThumb(u){
-        try{
-          const r = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(u)}`, {mode:'cors'});
-          if(!r.ok) return;
-          const j = await r.json();
-          const thumb = (j.thumbnail_url || '').replace(/&?size=\d+/, '');
-          if(thumb) new Image().src = thumb;
-        }catch{}
+      const DELAY=80, MAX=6;
+      let active=0, i=0;
+      function next(){
+        while(active<MAX && i<DISCO_SPOTIFY_URLS.length){
+          active++;
+          warmupSpotifyThumb(DISCO_SPOTIFY_URLS[i++]).finally(()=>{
+            active--; setTimeout(next, DELAY);
+          });
+        }
       }
-
-      function startWarmup(){
-        // Datensparen respektieren
-        if ('connection' in navigator && navigator.connection && navigator.connection.saveData) {
-          return;
-        }
-
-        // Tools wie Lighthouse / PageSpeed Insights überspringen
-        const ua = navigator.userAgent || "";
-        if (/Lighthouse|Chrome-Lighthouse|PageSpeed|Speed Insights/i.test(ua)) {
-          return;
-        }
-
-        const DELAY = 80, MAX = 6;
-        let active = 0, i = 0;
-
-        function next(){
-          while(active < MAX && i < DISCO_SPOTIFY_URLS.length){
-            active++;
-            warmupSpotifyThumb(DISCO_SPOTIFY_URLS[i++]).finally(()=>{
-              active--;
-              setTimeout(next, DELAY);
-            });
-          }
-        }
-
-        next();
-      }
-
-      // Erst nach vollständigem Laden + kleiner Pause starten
-      window.addEventListener('load', function () {
-        setTimeout(startWarmup, 1500);
-      });
+      ('requestIdleCallback' in window)
+        ? requestIdleCallback(next,{timeout:1500})
+        : setTimeout(next,600);
     })();
   </script>
 
@@ -321,7 +300,7 @@
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
-  <nav id="site-menu" class="site-menu" aria-hidden="true">
+  <nav id="site-menu" class="site-menu">
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
       <li><a href="diskografie.html">diskografie</a></li>
@@ -460,50 +439,6 @@
       }
       tick();
       setTimeout(()=>cancelAnimationFrame(raf), 800);
-    })();
-  </script>
-
-  <!-- Menüzustand + ARIA sauber steuern -->
-  <script>
-    (function () {
-      const hamburger = document.querySelector('.hamburger');
-      const menu = document.getElementById('site-menu');
-      const overlay = document.getElementById('menu-overlay');
-
-      if (!hamburger || !menu || !overlay) return;
-
-      function openMenu() {
-        document.body.classList.add('menu-open');
-        menu.setAttribute('aria-hidden', 'false');
-        hamburger.setAttribute('aria-expanded', 'true');
-        overlay.hidden = false;
-      }
-
-      function closeMenu() {
-        document.body.classList.remove('menu-open');
-        menu.setAttribute('aria-hidden', 'true');
-        hamburger.setAttribute('aria-expanded', 'false');
-        overlay.hidden = true;
-      }
-
-      hamburger.addEventListener('click', () => {
-        const isOpen = document.body.classList.contains('menu-open');
-        if (isOpen) {
-          closeMenu();
-        } else {
-          openMenu();
-        }
-      });
-
-      overlay.addEventListener('click', closeMenu);
-
-      // Escape schließt das Menü
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && document.body.classList.contains('menu-open')) {
-          closeMenu();
-          hamburger.focus();
-        }
-      });
     })();
   </script>
 </body>
