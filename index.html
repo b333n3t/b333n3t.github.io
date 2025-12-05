@@ -21,7 +21,7 @@
         imagesizes="(min-width: 900px) 800px, 100vw">
 
   <!-- Canonical & hreflang -->
-  <link rel="canonical" href="https://www.b3nn3t.com/" />
+  <link rel="canonical" href="https://www.b3nn3t.com/">
   <link rel="alternate" hreflang="de"        href="https://www.b3nn3t.com/index.html" />
   <link rel="alternate" hreflang="de-DE"     href="https://www.b3nn3t.de/index.html" />
   <link rel="alternate" hreflang="de-CH"     href="https://www.b3nn3t.ch/index.html" />
@@ -301,7 +301,8 @@
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
-  <nav id="site-menu" class="site-menu" aria-hidden="true">
+  <!-- hier Änderung: inert ergänzt -->
+  <nav id="site-menu" class="site-menu" aria-hidden="true" inert>
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
       <li><a href="diskografie.html">diskografie</a></li>
@@ -440,6 +441,52 @@
       }
       tick();
       setTimeout(()=>cancelAnimationFrame(raf), 800);
+    })();
+  </script>
+
+  <!-- Neues Script: Menüzustand + ARIA/inert sauber steuern -->
+  <script>
+    (function () {
+      const hamburger = document.querySelector('.hamburger');
+      const menu = document.getElementById('site-menu');
+      const overlay = document.getElementById('menu-overlay');
+
+      if (!hamburger || !menu || !overlay) return;
+
+      function openMenu() {
+        document.body.classList.add('menu-open');
+        menu.removeAttribute('inert');
+        menu.setAttribute('aria-hidden', 'false');
+        hamburger.setAttribute('aria-expanded', 'true');
+        overlay.hidden = false;
+      }
+
+      function closeMenu() {
+        document.body.classList.remove('menu-open');
+        menu.setAttribute('inert', '');
+        menu.setAttribute('aria-hidden', 'true');
+        hamburger.setAttribute('aria-expanded', 'false');
+        overlay.hidden = true;
+      }
+
+      hamburger.addEventListener('click', () => {
+        const isOpen = document.body.classList.contains('menu-open');
+        if (isOpen) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      });
+
+      overlay.addEventListener('click', closeMenu);
+
+      // Escape schließt das Menü
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && document.body.classList.contains('menu-open')) {
+          closeMenu();
+          hamburger.focus();
+        }
+      });
     })();
   </script>
 </body>
