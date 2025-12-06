@@ -256,29 +256,27 @@
     </p>
 
     <!-- ✅ Kontaktformular über Google Apps Script -->
-    <form action="https://script.google.com/macros/s/AKfycby3SfFxFDJQZNL0PxI75Z0O_HyDZl_MoC2b8jcW5PLy0kwPAuiOnK9macrxFTaUboXftg/exec"
-      method="POST" accept-charset="UTF-8">
+<form id="kontakt-form">
+  <label for="name">Name</label>
+  <input id="name" name="name" type="text" placeholder="Dein Name" required />
 
+  <label for="email">E-Mail</label>
+  <input id="email" name="email" type="email" placeholder="dein@mail.ch" required />
 
-      <label for="name">Name</label>
-      <input id="name" name="name" type="text" placeholder="Dein Name" required />
+  <label for="subject">Betreff</label>
+  <input id="subject" name="subject" type="text" placeholder="Worum geht’s?" />
 
-      <label for="email">E-Mail</label>
-      <input id="email" name="email" type="email" placeholder="dein@mail.ch" required />
+  <label for="message">Nachricht</label>
+  <textarea id="message" name="message" placeholder="Hi b3nn3t, ..." required></textarea>
 
-      <label for="subject">Betreff</label>
-      <input id="subject" name="subject" type="text" placeholder="Worum geht’s?" />
+  <label style="font-weight:400">
+    <input type="checkbox" name="privacy" value="zugestimmt" required />
+    Ich stimme zu, dass meine Angaben zur Beantwortung meiner Anfrage gespeichert und verarbeitet werden.
+  </label>
 
-      <label for="message">Nachricht</label>
-      <textarea id="message" name="message" placeholder="Hi b3nn3t, ..." required></textarea>
+  <button type="submit">Nachricht senden</button>
+</form>
 
-      <label style="font-weight:400">
-        <input type="checkbox" name="privacy" value="zugestimmt" required />
-        Ich stimme zu, dass meine Angaben zur Beantwortung meiner Anfrage gespeichert und verarbeitet werden.
-      </label>
-
-      <button type="submit">Nachricht senden</button>
-    </form>
 
     <!-- === Drei Zeilen Abstand und Inline-Footer innerhalb des Containers === -->
     <br><br><br>
