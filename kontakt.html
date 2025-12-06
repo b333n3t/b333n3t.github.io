@@ -170,7 +170,7 @@
   }
 
   .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
-  .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+  .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s.ease}
   body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
   body.menu-open .hamburger span:nth-child(2){opacity:0}
   body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
@@ -255,28 +255,27 @@
       </span>
     </p>
 
-    <!-- ✅ Kontaktformular über Google Apps Script -->
-<form id="kontakt-form">
-  <label for="name">Name</label>
-  <input id="name" name="name" type="text" placeholder="Dein Name" required />
+    <!-- ✅ Kontaktformular (ohne action, JS übernimmt das Senden) -->
+    <form id="kontakt-form">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" placeholder="Dein Name" required />
 
-  <label for="email">E-Mail</label>
-  <input id="email" name="email" type="email" placeholder="dein@mail.ch" required />
+      <label for="email">E-Mail</label>
+      <input id="email" name="email" type="email" placeholder="dein@mail.ch" required />
 
-  <label for="subject">Betreff</label>
-  <input id="subject" name="subject" type="text" placeholder="Worum geht’s?" />
+      <label for="subject">Betreff</label>
+      <input id="subject" name="subject" type="text" placeholder="Worum geht’s?" />
 
-  <label for="message">Nachricht</label>
-  <textarea id="message" name="message" placeholder="Hi b3nn3t, ..." required></textarea>
+      <label for="message">Nachricht</label>
+      <textarea id="message" name="message" placeholder="Hi b3nn3t, ..." required></textarea>
 
-  <label style="font-weight:400">
-    <input type="checkbox" name="privacy" value="zugestimmt" required />
-    Ich stimme zu, dass meine Angaben zur Beantwortung meiner Anfrage gespeichert und verarbeitet werden.
-  </label>
+      <label style="font-weight:400">
+        <input type="checkbox" name="privacy" value="zugestimmt" required />
+        Ich stimme zu, dass meine Angaben zur Beantwortung meiner Anfrage gespeichert und verarbeitet werden.
+      </label>
 
-  <button type="submit">Nachricht senden</button>
-</form>
-
+      <button type="submit">Nachricht senden</button>
+    </form>
 
     <!-- === Drei Zeilen Abstand und Inline-Footer innerhalb des Containers === -->
     <br><br><br>
@@ -323,6 +322,35 @@
     if (inForm(e.target)) e.stopPropagation();
   }, true);
 })();
+</script>
+
+<!-- 🔧 JS: Formular per fetch an Google Apps Script senden und dann auf danke.html umleiten -->
+<script>
+  // URL deiner Apps-Script-Web-App
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3SfFxFDJQZNL0PxI75Z0O_HyDZl_MoC2b8jcW5PLy0kwPAuiOnK9macrxFTaUboXftg/exec";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("kontakt-form");
+    if (!form) return;
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault(); // Browser soll NICHT direkt zur Script-URL navigieren
+
+      const formData = new FormData(form);
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: formData,
+        mode: "no-cors"
+      }).catch(function (err) {
+        console.error("Fehler beim Senden an Apps Script:", err);
+        // Optional: hier könntest du eine Fehlermeldung im UI anzeigen
+      }).finally(function () {
+        // In jedem Fall nach erfolgreichem Klick auf deine eigene Danke-Seite gehen
+        window.location.href = "https://www.b3nn3t.com/danke.html";
+      });
+    });
+  });
 </script>
 
 </body>
