@@ -190,6 +190,42 @@ function preloadAllVideos(urls){
   });
 }
 
+/* 🔥 Bilder IMMER sofort preloaden (einmal pro Session) */
+if (!window._introPreloadImagesDone) {
+  window._introPreloadImagesDone = true;
+  preloadAllImages(preloadImages);
+}
+
+/* 🎯 Smart-Preload nur für das MP4:
+   - erst nach 1 Sekunde
+   - nur wenn Verbindung NICHT „2g/3g/slow-2g“
+   - nur wenn kein Datensparen aktiv ist
+*/
+function smartPreloadVideos() {
+  if (window._introPreloadVideosDone) return;
+
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+  if (conn) {
+    if (conn.saveData) {
+      // Datensparen aktiv → kein Video-Preload
+      return;
+    }
+    const type = (conn.effectiveType || "").toLowerCase();
+    if (type === "slow-2g" || type === "2g" || type === "3g") {
+      // zu langsame Verbindung → kein Video-Preload
+      return;
+    }
+    // 4g, gutes WLAN oder unbekannt → ok
+  }
+
+  window._introPreloadVideosDone = true;
+  preloadAllVideos(preloadVideos);
+}
+
+// ⏱ nach 1 Sekunde versuchen, das MP4 smart zu preladen
+setTimeout(smartPreloadVideos, 1000);
+
 function PX(){return Math.max(2,Math.floor(Math.min(W,H)/240));}
 function lineY(){return Math.floor(H*2/3);} 
 function lineEndX(){return Math.floor(W*0.82);} 
@@ -204,13 +240,6 @@ function resize(){
   _baseX=null;
 }
 addEventListener('resize',resize);resize();
-
-/* 🔥 Preload sofort beim Start */
-if(!window._preloaded){
-  window._preloaded=true;
-  preloadAllImages(preloadImages);
-  preloadAllVideos(preloadVideos);
-}
 
 /* ===== Kopf laden & Keying ===== */
 let headReady=false, headImg;
@@ -474,14 +503,8 @@ function updateTiltAndPause(){
     avatar.state = 'pause';
     avatar.pauseUntil = last.tiltStart + TILT_PAUSE_MS;
 
-    // Preload kurz vor Schluss starten (nur einmal)
-    if(!window._preloaded){
-      window._preloaded = true;
-      preloadAllImages(preloadImages);
-      preloadAllVideos(preloadVideos);
-    }
-
-    // Wenn Figur neben dem t steht → Glow und Welle vorladen/startverzögert
+    // (kein Preload mehr hier – das macht jetzt smartPreloadVideos oben)
+    // Glow/Welle-Anstoß
     if(!glowStartAt){
       glowStartAt = performance.now() + GLOW_DELAY_MS;
       waveStartAt = performance.now() + WAVE_DELAY_MS;
@@ -546,7 +569,7 @@ function startTransition(){
   setTimeout(()=>{ window.location.href = INTRO_RETURN_URL; }, fadeMs + extra);
 }
 
-/* ===== Skip-Button & Reduced-Motion direkt nach obenstehender URL-Definition ===== */
+/* ===== Skip-Button & Reduced-Motion ===== */
 (function setupSkipAndA11y(){
   const skipBtn = document.querySelector('.skip');
   function goNow(){
@@ -629,7 +652,8 @@ function tick(){
 
   requestAnimationFrame(tick);
 }
-// ⏱ Wartezeit vor dem Start der Animation (z. B. 1500 ms = 1,5 Sek.)
+
+// ⏱ Wartezeit vor dem Start der Animation (z. B. 1000 ms = 1 Sekunde)
 setTimeout(() => {
   document.body.classList.add('ready'); // sanft einblenden
   requestAnimationFrame(tick);          // Animation starten
