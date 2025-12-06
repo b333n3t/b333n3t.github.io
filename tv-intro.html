@@ -137,20 +137,19 @@ const c = document.getElementById('c');
 const ctx = c.getContext('2d');
 let W=0,H=0,DPR=1;
 
-/* ===== PRELOAD: Bilder & Videos (3 Stufen) ===== */
-
-// 🟢 Stufe 1: Kritische Bilder (AVIF)
-const preloadImagesCritical = [
+/* ===== PRELOAD: Bilder & Videos ===== */
+const preloadImages = [
+  // --- Startseite ---
   "assets/index/bennet_index1.avif",
+  "assets/index/bennet_index1.webp",
+ 
   "assets/index/bennet_index2.avif",
+  "assets/index/bennet_index2.webp",
+
   "assets/index/bennet_index3.avif",
+  "assets/index/bennet_index3.webp",
 
-  "assets/b3nn3t_bg.avif",
-  "assets/b3nn3t_bg_mobile.avif"
-];
-
-// 🟡 Stufe 2: Gesehen-Bereich (Bilder & Reels-AVIF)
-const preloadImagesLater = [
+  // --- Gesehen ---
   "assets/gesehen/insta1.webp",
   "assets/gesehen/insta2.webp",
   "assets/gesehen/insta3.webp",
@@ -162,11 +161,7 @@ const preloadImagesLater = [
   "assets/gesehen/reel4.avif",
   "assets/gesehen/reel5.avif",
   "assets/gesehen/reel6.avif",
-  "assets/gesehen/reel7.avif"
-];
-
-// 🟣 Stufe 3: YouTube-Thumbnails (am wenigsten kritisch)
-const preloadImagesStage3 = [
+  "assets/gesehen/reel7.avif",
   "https://img.youtube.com/vi/ZSaj_FuqPN8/hqdefault.jpg",
   "https://img.youtube.com/vi/DMNl40Tip1w/hqdefault.jpg",
   "https://img.youtube.com/vi/K5pKG0Smdfc/hqdefault.jpg",
@@ -176,7 +171,6 @@ const preloadImagesStage3 = [
   "https://img.youtube.com/vi/fq8zhAQMam0/hqdefault.jpg"
 ];
 
-// Videos (MP4) – mit Stufe 2
 const preloadVideos = [ "assets/gesehen/B3NN3T.mp4" ];
 
 function preloadAllImages(urls){
@@ -196,34 +190,41 @@ function preloadAllVideos(urls){
   });
 }
 
-// 🔥 Stufe 1: Kritische Bilder sofort (einmal pro Session)
+/* 🔥 Bilder IMMER sofort preloaden (einmal pro Session) */
 if (!window._introPreloadImagesDone) {
   window._introPreloadImagesDone = true;
-  preloadAllImages(preloadImagesCritical);
+  preloadAllImages(preloadImages);
 }
 
-// 🟡 Stufe 2: „Gesehen“-Bilder + MP4 nach 1.25s (mit Verbindungs-Check)
-function startStage2() {
-  if (window._introStage2Done) return;
-  window._introStage2Done = true;
+/* 🎯 Smart-Preload nur für das MP4:
+   - erst nach 1 Sekunde
+   - nur wenn Verbindung NICHT „2g/3g/slow-2g“
+   - nur wenn kein Datensparen aktiv ist
+*/
+function smartPreloadVideos() {
+  if (window._introPreloadVideosDone) return;
 
-  // Bilder für "Gesehen"
-  preloadAllImages(preloadImagesLater);
-
-  // MP4 nur bei guter Verbindung & ohne Datensparen
   const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 
   if (conn) {
-    if (conn.saveData) return;
+    if (conn.saveData) {
+      // Datensparen aktiv → kein Video-Preload
+      return;
+    }
     const type = (conn.effectiveType || "").toLowerCase();
-    if (type === "slow-2g" || type === "2g" || type === "3g") return;
+    if (type === "slow-2g" || type === "2g" || type === "3g") {
+      // zu langsame Verbindung → kein Video-Preload
+      return;
+    }
+    // 4g, gutes WLAN oder unbekannt → ok
   }
 
+  window._introPreloadVideosDone = true;
   preloadAllVideos(preloadVideos);
 }
 
-// ⏱️ Stufe 2 nach 1.25 s starten
-setTimeout(startStage2, 1250);
+// ⏱ nach 1 Sekunde versuchen, das MP4 smart zu preladen
+setTimeout(smartPreloadVideos, 1000);
 
 function PX(){return Math.max(2,Math.floor(Math.min(W,H)/240));}
 function lineY(){return Math.floor(H*2/3);} 
@@ -462,7 +463,7 @@ function drawLetters(glowAlpha=0){
   }
 }
 
-/* Glow/Welle-Timing */
+/* Glow/Welle-Timing (wie zuvor) */
 let wordComplete=false;
 let glowStartAt=null;
 let waveStartAt=null;
@@ -488,12 +489,6 @@ function maybeHammerNext(){
       waveOrigin = { x: (firstX+lastX)/2, y: ty };
       glowStartAt = null;
       waveStartAt = null;
-
-      // 🟣 Stufe 3: YouTube-Thumbnails laden, sobald "b3nn3t" fertig ist
-      if (!window._introStage3Done) {
-        window._introStage3Done = true;
-        preloadAllImages(preloadImagesStage3);
-      }
     }
   }
 }
@@ -508,6 +503,7 @@ function updateTiltAndPause(){
     avatar.state = 'pause';
     avatar.pauseUntil = last.tiltStart + TILT_PAUSE_MS;
 
+    // (kein Preload mehr hier – das macht jetzt smartPreloadVideos oben)
     // Glow/Welle-Anstoß
     if(!glowStartAt){
       glowStartAt = performance.now() + GLOW_DELAY_MS;
@@ -621,7 +617,7 @@ function tick(){
     const pauseOver = !last?.tiltStart || performance.now() >= (last.tiltStart + TILT_PAUSE_MS);
     if(avatar.x>=lineEndX()-6*p && pauseOver){ 
       avatar.state='fall'; avatar.vy=0;
-      // Sicherheitsnetz: falls der Wipe noch nicht lief
+      // (Optionales Sicherheitsnetz: falls der Wipe noch nicht lief)
       if(!lineFadeStart){ lineFadeStart = performance.now(); }
     }
   }else if(avatar.state==='hammer'){
