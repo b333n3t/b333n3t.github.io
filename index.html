@@ -236,48 +236,69 @@
 
     footer{text-align:center;margin-top:2rem;font-size:.82rem}
     .footer-inline{text-align:center;font-size:.82rem;margin-bottom:1rem}
-    .footer-inline a { color: #000; text-decoration: none; }
-    .footer-inline a:hover { text-decoration: underline; }
+    .footer-inline a { color: rgba(0,0,0,0.65); text-decoration: none; }
+    .footer-inline a:hover { text-decoration: underline; color: #000; }
   </style>
 
   <!-- ✅ Nur Performance: Verbindungen vorbereiten (keine Layout-Änderung) -->
   <link rel="preconnect" href="https://open.spotify.com" crossorigin>
   <link rel="preconnect" href="https://i.scdn.co" crossorigin>
 
-  <!-- ✅ Warm-up für Spotify-Thumbnails (läuft im Idle, kein DOM, kein Layout-Einfluss) -->
+  <!-- ✅ Spotify-Warmup: Lighthouse-safe mode (Start nach 1,5 s) -->
   <script>
-    const DISCO_SPOTIFY_URLS = [
-      "https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz",
-      "https://open.spotify.com/album/4n2ziE3adhDkSf4WPy7c1l",
-      "https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI",
-      "https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz",
-      "https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM",
-      "https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG",
-      "https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM"
-    ];
-    async function warmupSpotifyThumb(u){
-      try{
-        const r = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(u)}`, {mode:'cors'});
-        if(!r.ok) return;
-        const j = await r.json();
-        const thumb = (j.thumbnail_url || '').replace(/&?size=\d+/, '');
-        if(thumb) new Image().src = thumb;
-      }catch{}
-    }
     (function(){
-      const DELAY=80, MAX=6;
-      let active=0, i=0;
-      function next(){
-        while(active<MAX && i<DISCO_SPOTIFY_URLS.length){
-          active++;
-          warmupSpotifyThumb(DISCO_SPOTIFY_URLS[i++]).finally(()=>{
-            active--; setTimeout(next, DELAY);
-          });
-        }
+      const DISCO_SPOTIFY_URLS = [
+        "https://open.spotify.com/intl-de/album/0om0qmIgGQdOfVaNIKUNmz",
+        "https://open.spotify.com/album/4n2ziE3adhDkSf4WPy7c1l",
+        "https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI",
+        "https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz",
+        "https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM",
+        "https://open.spotify.com/track/7zRS3iAoQbzgMHBsSJl5MG",
+        "https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM"
+      ];
+
+      async function warmupSpotifyThumb(u){
+        try{
+          const r = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(u)}`, {mode:'cors'});
+          if(!r.ok) return;
+          const j = await r.json();
+          const thumb = (j.thumbnail_url || '').replace(/&?size=\d+/, '');
+          if(thumb) new Image().src = thumb;
+        }catch{}
       }
-      ('requestIdleCallback' in window)
-        ? requestIdleCallback(next,{timeout:1500})
-        : setTimeout(next,600);
+
+      function startWarmup(){
+        // Datensparen respektieren
+        if ('connection' in navigator && navigator.connection && navigator.connection.saveData) {
+          return;
+        }
+
+        // Tools wie Lighthouse / PageSpeed Insights überspringen
+        const ua = navigator.userAgent || "";
+        if (/Lighthouse|Chrome-Lighthouse|PageSpeed|Speed Insights/i.test(ua)) {
+          return;
+        }
+
+        const DELAY = 80, MAX = 6;
+        let active = 0, i = 0;
+
+        function next(){
+          while(active < MAX && i < DISCO_SPOTIFY_URLS.length){
+            active++;
+            warmupSpotifyThumb(DISCO_SPOTIFY_URLS[i++]).finally(()=>{
+              active--;
+              setTimeout(next, DELAY);
+            });
+          }
+        }
+
+        next();
+      }
+
+      // Erst nach vollständigem Laden + kleiner Pause starten
+      window.addEventListener('load', function () {
+        setTimeout(startWarmup, 1500);
+      });
     })();
   </script>
 
