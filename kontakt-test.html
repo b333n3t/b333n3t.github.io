@@ -7,25 +7,33 @@
 <body>
   <h1>Kontaktformular Test</h1>
 
-  <form action="https://formsubmit.co/kohnke.bjoern@yahoo.com" method="POST">
-    <!-- Optional: nach Bestätigung wieder auf deine richtige Domain -->
+  <form action="https://formsubmit.co/kontakt@b3nn3t.com" method="POST">
+
+    <!-- Zielseite nach erfolgreichem Absenden -->
     <input type="hidden" name="_next" value="https://www.b3nn3t.com/danke.html">
-    <input type="hidden" name="_captcha" value="false">
+
+    <!-- Betreff der eingehenden Mail -->
+    <input type="hidden" name="_subject" value="Neue Test-Nachricht über b3nn3t Website">
+
+    <!-- Honeypot gegen Bots (unsichtbar für echte Nutzer) -->
+    <input type="text" name="_honey" style="display:none">
+
+    <!-- Keine _captcha-Disabled-Zeile mehr => Rate Limit wird viel besser -->
 
     <label>
-      Name
+      Name<br>
       <input type="text" name="name" required>
-    </label><br>
+    </label><br><br>
 
     <label>
-      E-Mail
+      E-Mail<br>
       <input type="email" name="email" required>
-    </label><br>
+    </label><br><br>
 
     <label>
-      Nachricht
+      Nachricht<br>
       <textarea name="message" required></textarea>
-    </label><br>
+    </label><br><br>
 
     <button type="submit">Test-Mail senden</button>
   </form>
