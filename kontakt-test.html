@@ -2,23 +2,13 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>Kontakt – Test</title>
+  <title>Kontakt – Test (Google Apps Script)</title>
 </head>
 <body>
-  <h1>Kontaktformular Test</h1>
+  <h1>Kontaktformular Test – Google Apps Script</h1>
 
-  <form action="https://formsubmit.co/kohnke.bjoern@yahoo.com" method="POST">
-
-    <!-- Zielseite nach erfolgreichem Absenden -->
-    <input type="hidden" name="_next" value="https://www.b3nn3t.com/danke.html">
-
-    <!-- Betreff der eingehenden Mail -->
-    <input type="hidden" name="_subject" value="Neue Test-Nachricht über b3nn3t Website">
-
-    <!-- Honeypot gegen Bots (unsichtbar für echte Nutzer) -->
-    <input type="text" name="_honey" style="display:none">
-
-    <!-- Keine _captcha-Disabled-Zeile mehr => Rate Limit wird viel besser -->
+  <form action="https://script.google.com/macros/s/AKfycbyFBvZ831vP99pD2gQqY4u0qa7NXq9mTO8UlL3uotur7quDjgpPY74FCstqeL8RykQe/exec"
+        method="POST" accept-charset="UTF-8">
 
     <label>
       Name<br>
@@ -31,8 +21,18 @@
     </label><br><br>
 
     <label>
+      Betreff<br>
+      <input type="text" name="subject" placeholder="Worum geht's?" required>
+    </label><br><br>
+
+    <label>
       Nachricht<br>
       <textarea name="message" required></textarea>
+    </label><br><br>
+
+    <label>
+      <input type="checkbox" name="privacy" value="zugestimmt" required>
+      Ich stimme der Speicherung meiner Angaben zur Beantwortung meiner Anfrage zu.
     </label><br><br>
 
     <button type="submit">Test-Mail senden</button>
