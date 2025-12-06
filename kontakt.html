@@ -90,11 +90,11 @@
   <!-- Assets -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-<!-- Favicons: PNG, ICO, Apple, Android -->
-<link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192.png">
+  <!-- Favicons: PNG, ICO, Apple, Android -->
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192.png">
 
   <link rel="stylesheet" href="styles.css"/>
   <link rel="stylesheet" href="styles_nav_arrows.css"/>
@@ -177,7 +177,7 @@
   .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
   body.menu-open #menu-overlay{display:block}
   #menu-overlay[hidden]{display:none}
-  .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s ease;z-index:1101;padding:46px 10px 14px}
+  .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s.ease;z-index:1101;padding:46px 10px 14px}
   body.menu-open .site-menu{transform:translateX(0)}
   .site-menu ul{list-style:none;margin:0;padding:0}
   .site-menu li{margin:0 0 10px 0}
@@ -194,7 +194,7 @@
     margin: 0 0 1rem 0;
   }
   .footer-inline a{
-    color:#000;          /* schwarze Linkfarbe */
+    color:#000;
     text-decoration:none;
   }
   .footer-inline a:hover{
@@ -246,34 +246,33 @@
 
 <main class="main">
   <div class="scroll-panel">
-<h1>kontakt</h1>
-<p>
-  schreib mir – das formular sendet deine nachricht direkt per e-mail an mich   🖤🖤🖤
-  <span style="opacity:0; height:0; overflow:hidden; display:block;">
-    kontakt & booking für b3nn3t – deutschrap & indie-pop aus der schweiz. 
-    hier erreichst du mich für auftritte, anfragen, kollabos und nachrichten.
-  </span>
-</p>
+    <h1>kontakt</h1>
+    <p>
+      schreib mir – das formular sendet deine nachricht direkt per e-mail an mich 🖤🖤🖤
+      <span style="opacity:0; height:0; overflow:hidden; display:block;">
+        kontakt & booking für b3nn3t – deutschrap & indie-pop aus der schweiz. 
+        hier erreichst du mich für auftritte, anfragen, kollabos und nachrichten.
+      </span>
+    </p>
 
-    <form action="https://formsubmit.co/kontakt@b3nn3t.com" method="POST" accept-charset="UTF-8">
-      <input type="hidden" name="_captcha" value="false" />
-      <input type="hidden" name="_next" value="https://www.b3nn3t.com/danke.html" />
-      <input type="hidden" name="_subject" value="Neue Nachricht über b3nn3t Website" />
+    <!-- ✅ Kontaktformular über Google Apps Script -->
+    <form action="https://script.google.com/macros/s/AKfycbzHj1VTQVGvJV2OMC6qdVeI0OIo6AwU2WXOndBb0tRqXoxX8haDWYTzk4dAenRnGHctwA/exec"
+          method="POST" accept-charset="UTF-8">
 
       <label for="name">Name</label>
-      <input id="name" name="name" placeholder="Dein Name" required />
+      <input id="name" name="name" type="text" placeholder="Dein Name" required />
 
       <label for="email">E-Mail</label>
       <input id="email" name="email" type="email" placeholder="dein@mail.ch" required />
 
       <label for="subject">Betreff</label>
-      <input id="subject" name="subject" placeholder="Worum geht’s?" />
+      <input id="subject" name="subject" type="text" placeholder="Worum geht’s?" />
 
       <label for="message">Nachricht</label>
       <textarea id="message" name="message" placeholder="Hi b3nn3t, ..." required></textarea>
 
       <label style="font-weight:400">
-        <input type="checkbox" name="privacy" required />
+        <input type="checkbox" name="privacy" value="zugestimmt" required />
         Ich stimme zu, dass meine Angaben zur Beantwortung meiner Anfrage gespeichert und verarbeitet werden.
       </label>
 
