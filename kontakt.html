@@ -1,5 +1,3 @@
-kontakt funktioniert
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -102,7 +100,7 @@ kontakt funktioniert
   <link rel="stylesheet" href="styles_nav_arrows.css"/>
   <link rel="stylesheet" href="swipe-helper.css"/>
 
-  <!-- Styles (deine Original-Styles, leicht aufgeräumt) -->
+  <!-- Styles (deine Original-Styles, plus Spinner/Status) -->
 <style>
   html { font-size: 16px; }
 
@@ -166,13 +164,17 @@ kontakt funktioniert
   form label input[type="checkbox"] + *{ display:block; }
 
   form button{
-    margin-top:.6rem; margin-bottom:1.25rem;
+    margin-top:.6rem; margin-bottom:0.4rem;
     border:none; border-radius:8px; padding:.6rem 1.2rem;
     background:#111; color:#fff; font-weight:600; cursor:pointer;
   }
+  form button[disabled]{
+    opacity:0.6;
+    cursor:default;
+  }
 
   .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
-  .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s.ease}
+  .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
   body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
   body.menu-open .hamburger span:nth-child(2){opacity:0}
   body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
@@ -216,6 +218,42 @@ kontakt funktioniert
   .edge-swipe.right { right: 0; }
   @media (pointer: coarse){
     .edge-swipe{ pointer-events: auto; }
+  }
+
+  /* ===== Spinner & Status ===== */
+  .sending-indicator{
+    display:none;
+    align-items:center;
+    gap:.4rem;
+    font-size:.9rem;
+  }
+  .sending-indicator.active{
+    display:flex;
+  }
+  .sending-indicator .spinner{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    border:2px solid #111;
+    border-top-color:transparent;
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{
+    to{ transform:rotate(360deg); }
+  }
+
+  .form-status{
+    display:none;
+    font-size:.85rem;
+    margin-top:.25rem;
+  }
+  .form-status.error{
+    display:block;
+    color:#b00020;
+  }
+  .form-status.success{
+    display:block;
+    color:#0a7a0a;
   }
 </style>
 </head>
@@ -276,7 +314,14 @@ kontakt funktioniert
         Ich stimme zu, dass meine Angaben zur Beantwortung meiner Anfrage gespeichert und verarbeitet werden.
       </label>
 
-      <button type="submit">Nachricht senden</button>
+      <button type="submit" id="kontakt-submit">Nachricht senden</button>
+
+      <div class="sending-indicator" id="sending-indicator" aria-hidden="true">
+        <div class="spinner"></div>
+        <span>Sende&nbsp;…</span>
+      </div>
+
+      <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
     </form>
 
     <!-- === Drei Zeilen Abstand und Inline-Footer innerhalb des Containers === -->
@@ -326,17 +371,29 @@ kontakt funktioniert
 })();
 </script>
 
-<!-- 🔧 JS: Formular per fetch an Google Apps Script senden und dann auf danke.html umleiten -->
+<!-- 🔧 JS: Formular per fetch an Google Apps Script senden + Spinner + Fehlermeldung -->
 <script>
   // URL deiner Apps-Script-Web-App
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3SfFxFDJQZNL0PxI75Z0O_HyDZl_MoC2b8jcW5PLy0kwPAuiOnK9macrxFTaUboXftg/exec";
 
   document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("kontakt-form");
+    const form   = document.getElementById("kontakt-form");
+    const button = document.getElementById("kontakt-submit");
+    const spinner = document.getElementById("sending-indicator");
+    const statusEl = document.getElementById("form-status");
+
     if (!form) return;
 
     form.addEventListener("submit", function (event) {
       event.preventDefault(); // Browser soll NICHT direkt zur Script-URL navigieren
+
+      // Status zurücksetzen
+      statusEl.textContent = "";
+      statusEl.classList.remove("error", "success");
+
+      // UI: Button deaktivieren + Spinner zeigen
+      button.disabled = true;
+      spinner.classList.add("active");
 
       const formData = new FormData(form);
 
@@ -344,12 +401,17 @@ kontakt funktioniert
         method: "POST",
         body: formData,
         mode: "no-cors"
-      }).catch(function (err) {
-        console.error("Fehler beim Senden an Apps Script:", err);
-        // Optional: hier könntest du eine Fehlermeldung im UI anzeigen
-      }).finally(function () {
-        // In jedem Fall nach erfolgreichem Klick auf deine eigene Danke-Seite gehen
+      })
+      .then(function () {
+        // Bei erfolgreichem Senden direkt auf deine Danke-Seite
         window.location.href = "https://www.b3nn3t.com/danke.html";
+      })
+      .catch(function (err) {
+        console.error("Fehler beim Senden an Apps Script:", err);
+        spinner.classList.remove("active");
+        button.disabled = false;
+        statusEl.textContent = "Da ist etwas schiefgelaufen. Bitte prüfe deine Internetverbindung und versuche es später noch einmal.";
+        statusEl.classList.add("error");
       });
     });
   });
