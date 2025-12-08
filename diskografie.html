@@ -249,7 +249,8 @@
     .release .meta{ font-size:.9rem; color:#444; margin-top:.5rem }
     .release .title{ font-weight:600 }
 
-    .panel-block h3[role="button"]{
+    .panel-block h3[role="button"],
+    .panel-block h3{
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -352,6 +353,21 @@
     }
     .site-menu a:hover{background:rgba(0,0,0,.05)}
     .nav-arrow{z-index:1000}
+
+    /* Footer wie auf index */
+    .footer-inline{
+      text-align:center;
+      font-size:.82rem;
+      margin-bottom:1rem;
+    }
+    .footer-inline a{
+      color: rgba(0,0,0,0.65);
+      text-decoration: none;
+    }
+    .footer-inline a:hover{
+      text-decoration: underline;
+      color:#000;
+    }
   </style>
 </head>
 
@@ -388,7 +404,7 @@
   <!-- Fixierter Titel -->
   <div class="title-fixed">
     <h1>diskografie</h1>
-    <p>meine releases & kollabos</p>
+    <p>meine releases &amp; kollabos</p>
   </div>
 
   <!-- Scrollbarer Bereich -->
@@ -727,9 +743,9 @@
         </article>
       </div>
 
-      <!-- Copyright -->
-      <div style="margin-top: 25em; color: black; text-align: center;">
-        © b3nn3t · <a href="impressum.html" style="color: black; text-decoration: none;">Impressum / Datenschutz</a>
+      <!-- Copyright – wie index, kleinere Schrift -->
+      <div class="footer-inline" style="margin-top: 25em;">
+        © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
       </div>
     </section>
 
