@@ -89,6 +89,21 @@
       color:#000;text-decoration:none;font-size:1rem;font-weight:500;
     }
     .site-menu a:hover{background:rgba(0,0,0,.05);}
+
+    /* Footer wie auf index */
+    .footer-inline{
+      text-align:center;
+      font-size:.82rem;
+      margin-bottom:1rem;
+    }
+    .footer-inline a {
+      color: rgba(0,0,0,0.65);
+      text-decoration: none;
+    }
+    .footer-inline a:hover {
+      text-decoration: underline;
+      color: #000;
+    }
   </style>
 
   <!-- CHAOTISCHE BILDERCOLLAGE -->
@@ -193,23 +208,23 @@
       .termin-row .ort   { opacity: .85; }
     }
 
-/* ✔ Haken für vergangene Termine – Datum bleibt an gleicher Position */
-.termin-row .datum {
-  position: relative;         /* damit ::before sich daran orientiert */
-  display: inline-block;
-}
+    /* ✔ Haken für vergangene Termine – Datum bleibt an gleicher Position */
+    .termin-row .datum {
+      position: relative;
+      display: inline-block;
+    }
 
-.termin-row.completed .datum::before {
-  content: "✔";
-  position: absolute;
-  left: -1.2em;               /* wie weit der Haken links stehen soll */
-  top: 50%;
-  transform: translateY(-50%);/* vertikal mittig neben dem Datum */
-  color: green;
-  font-weight: 900;
-  font-size: 1.1em;
-  pointer-events: none;
-}
+    .termin-row.completed .datum::before {
+      content: "✔";
+      position: absolute;
+      left: -1.2em;
+      top: 50%;
+      transform: translateY(-50%);
+      color: green;
+      font-weight: 900;
+      font-size: 1.1em;
+      pointer-events: none;
+    }
 
   </style>
 </head>
@@ -254,7 +269,7 @@
       <div class="termine-responsive" style="margin-top: 2rem;">
         <div class="termine-list" role="table" aria-label="Termine">
 
- <div class="termin-row" role="row">
+          <div class="termin-row" role="row">
             <div class="datum" role="cell"><time datetime="2024-07-10">10.07.2024</time></div>
             <div class="veranstaltung" role="cell">· RAPCITY-Contest - OpenAir Frauenfeld</div>
             <div class="ort" role="cell">· Frauenfeld · 17:15 Uhr</div>
@@ -277,7 +292,7 @@
             <div class="veranstaltung" role="cell">· Jugendfistival - Rüti </div>
             <div class="ort" role="cell">· Rüti · 17:30 Uhr</div>
           </div>
-          
+
           <div class="termin-row" role="row">
             <div class="datum" role="cell"><time datetime="2025-10-10">10.10.2025</time></div>
             <div class="veranstaltung" role="cell">· Full HD - Grün & Gold</div>
@@ -312,8 +327,9 @@
       </div>
     </div>
 
-    <div style="margin-top: 15em; color: black; text-align: center;">
-      © b3nn3t · <a href="impressum.html" style="color: black; text-decoration: none;">Impressum / Datenschutz</a>
+    <!-- Footer wie auf index: kleinere Schrift über .footer-inline -->
+    <div class="footer-inline" style="margin-top: 15em;">
+      © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
     </div>
   </main>
 
@@ -324,20 +340,20 @@
 
   <!-- AUTOMATISCHER HAKEN FÜR VERGANGENE TERMINE -->
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const today = new Date();
+    document.addEventListener("DOMContentLoaded", () => {
+      const today = new Date();
 
-    document.querySelectorAll('.termin-row').forEach(row => {
-      const timeElem = row.querySelector("time");
-      if (!timeElem) return;
+      document.querySelectorAll('.termin-row').forEach(row => {
+        const timeElem = row.querySelector("time");
+        if (!timeElem) return;
 
-      const dateString = timeElem.getAttribute("datetime");
-      if (!dateString || dateString.includes("xx")) return;
+        const dateString = timeElem.getAttribute("datetime");
+        if (!dateString || dateString.includes("xx")) return;
 
-      const date = new Date(dateString);
-      if (date < today) row.classList.add("completed");
+        const date = new Date(dateString);
+        if (date < today) row.classList.add("completed");
+      });
     });
-  });
   </script>
 
 </body>
