@@ -130,6 +130,21 @@
     .platform-list a:hover { text-decoration: underline; }
 
     .nav-arrow { z-index: 1000; }
+
+    /* Footer wie index */
+    .footer-inline{
+      text-align:center;
+      font-size:.82rem;
+      margin-bottom:1rem;
+    }
+    .footer-inline a{
+      color: rgba(0,0,0,0.65);
+      text-decoration: none;
+    }
+    .footer-inline a:hover{
+      text-decoration: underline;
+      color:#000;
+    }
   </style>
 
   <!-- Transparenter Textbereich über glasigem Hintergrund -->
@@ -181,7 +196,7 @@
       <li><a href="kontakt.html">kontakt</a></li>
       <li><a href="aktuell.html">aktuell</a></li>
       <li><a href="gesehen.html">gesehen</a></li>
-      <li><a href="plattformen.html">plattformen</a></li>
+      <li><a href="plattformen.html" class="active">plattformen</a></li>
       <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
     </ul>
   </nav>
@@ -286,8 +301,9 @@
       </li>
     </ul>
 
-    <div style="margin-top: 15em; color: black; text-align: center;">
-      © b3nn3t · <a href="impressum.html" style="color: black; text-decoration: none;">Impressum / Datenschutz</a>
+    <!-- Footer wie index, kleinere Schrift -->
+    <div class="footer-inline" style="margin-top: 15em;">
+      © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
     </div>
   </main>
 
