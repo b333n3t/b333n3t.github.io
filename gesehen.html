@@ -601,79 +601,132 @@
     })();
   </script>
 
-  <!-- Player -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const cards = document.querySelectorAll('.card[data-embed-src]');
+<!-- Player (PATCH) -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const cards = document.querySelectorAll('.card[data-embed-src]');
 
-    function closeAllVideos() {
-      document.querySelectorAll('.video-row').forEach(row => row.remove());
-    }
+  function closeAllVideos() {
+    document.querySelectorAll('.video-row').forEach(row => row.remove());
+  }
 
-    function getCols(){
-      return window.matchMedia('(max-width: 720px)').matches ? 1 : 2;
-    }
+  function getCols(){
+    return window.matchMedia('(max-width: 720px)').matches ? 1 : 2;
+  }
 
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        const section = card.closest('section.grid-seen');
-        if(!section) return;
+  function toNoCookieEmbed(url){
+    if(!url) return url;
 
-        const items = Array.from(section.querySelectorAll('.card[data-embed-src]'));
-        const idx = items.indexOf(card);
+    // 1) youtube.com -> youtube-nocookie.com
+    url = url.replace('https://www.youtube.com/embed/', 'https://www.youtube-nocookie.com/embed/');
+    url = url.replace('http://www.youtube.com/embed/',  'https://www.youtube-nocookie.com/embed/');
 
-        const cols = getCols();
-        const rowStart = idx - (idx % cols);
-        const rowEnd = Math.min(items.length - 1, rowStart + (cols - 1));
-        const anchor = items[rowEnd] || card;
+    // 2) Parameter ergänzen (playsinline/rel)
+    const hasQuery = url.includes('?');
+    const params = new URLSearchParams(hasQuery ? url.split('?')[1] : '');
 
-        const existing = section.querySelector('.video-row');
-        if(existing && existing.dataset.anchorId === (anchor.id || '')){
-          existing.remove();
-          return;
-        }
+    if(!params.has('playsinline')) params.set('playsinline', '1');
+    if(!params.has('rel')) params.set('rel', '0');
 
-        closeAllVideos();
+    const base = url.split('?')[0];
+    return base + '?' + params.toString();
+  }
 
-        const row = document.createElement('div');
-        row.className = 'video-row';
-        row.dataset.anchorId = anchor.id || '';
+  function extractVideoIdFromEmbed(embedUrl){
+    const m = (embedUrl || '').match(/\/embed\/([a-zA-Z0-9_-]{6,})/);
+    return m ? m[1] : null;
+  }
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'video-wrapper';
+  function buildWatchUrl(embedUrl){
+    const id = extractVideoIdFromEmbed(embedUrl);
+    return id ? `https://www.youtube.com/watch?v=${id}` : 'https://www.youtube.com/';
+  }
 
-        const closeBtn = document.createElement('button');
-        closeBtn.type = 'button';
-        closeBtn.textContent = '×';
-        closeBtn.className = 'video-close';
-        closeBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          row.remove();
-        });
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const section = card.closest('section.grid-seen');
+      if(!section) return;
 
-        const src = card.getAttribute('data-embed-src') || '';
-        wrapper.appendChild(closeBtn);
+      const items = Array.from(section.querySelectorAll('.card[data-embed-src]'));
+      const idx = items.indexOf(card);
 
-        const iframe = document.createElement('iframe');
-        iframe.src = src;
-        iframe.allowFullscreen = true;
-        iframe.loading = 'lazy';
-        iframe.title = 'Video';
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-        wrapper.appendChild(iframe);
+      const cols = getCols();
+      const rowStart = idx - (idx % cols);
+      const rowEnd = Math.min(items.length - 1, rowStart + (cols - 1));
+      const anchor = items[rowEnd] || card;
 
-        row.appendChild(wrapper);
-        anchor.insertAdjacentElement('afterend', row);
+      const existing = section.querySelector('.video-row');
+      if(existing && existing.dataset.anchorId === (anchor.id || '')){
+        existing.remove();
+        return;
+      }
 
-        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      closeAllVideos();
+
+      const row = document.createElement('div');
+      row.className = 'video-row';
+      row.dataset.anchorId = anchor.id || '';
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'video-wrapper';
+
+      // Close Button
+      const closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.textContent = '×';
+      closeBtn.className = 'video-close';
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        row.remove();
       });
-    });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeAllVideos();
+      // Embed src -> nocookie + params
+      const rawSrc = card.getAttribute('data-embed-src') || '';
+      const src = toNoCookieEmbed(rawSrc);
+
+      // Fallback: Open in YouTube
+      const openBtn = document.createElement('a');
+      openBtn.textContent = 'In YouTube öffnen';
+      openBtn.href = buildWatchUrl(src);
+      openBtn.target = '_blank';
+      openBtn.rel = 'noopener';
+      openBtn.style.cssText = `
+        position:absolute;left:10px;top:8px;z-index:11;
+        color:#fff;background:rgba(0,0,0,.6);
+        padding:6px 10px;border-radius:6px;
+        text-decoration:none;font-size:14px;line-height:1;
+      `;
+
+      wrapper.appendChild(closeBtn);
+      wrapper.appendChild(openBtn);
+
+      // iframe
+      const iframe = document.createElement('iframe');
+      iframe.allowFullscreen = true;
+      iframe.loading = 'lazy';
+      iframe.title = 'Video';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+
+      // iOS/Safari: src erst im nächsten Frame setzen (stabiler)
+      iframe.src = 'about:blank';
+      requestAnimationFrame(() => { iframe.src = src; });
+
+      wrapper.appendChild(iframe);
+
+      row.appendChild(wrapper);
+      anchor.insertAdjacentElement('afterend', row);
+
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   });
-  </script>
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllVideos();
+  });
+});
+</script>
+
 
   <!-- YouTube Thumbnails -->
   <script>
