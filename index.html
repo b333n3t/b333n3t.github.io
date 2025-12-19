@@ -307,23 +307,28 @@ body .main::after{
 }
 .page-link:active .arrow{ transform:rotate(90deg); }
 
-/* ✅ Footer hochkant rechts (Desktop + Mobile), ohne Umbruch */
+/* ✅ Footer hochkant rechts – bevorzugt deine Position, fällt nach unten zurück */
 .footer-inline{
   position: fixed;
   right: var(--footer-right-desktop);
   top: var(--footer-top-desktop);
   bottom: auto;
-  z-index: 1300; /* ✅ über swipe-zone */
+  left: auto;
+  z-index: 2000;
 
   writing-mode: vertical-rl;
   text-orientation: mixed;
 
-  color:#930010;
+  color:#930010 !important;
   font-size:.82rem;
   padding: 6px 4px;
-
   white-space: nowrap;
+
+  /* Sicherheit gegen Abschneiden */
+  max-height: calc(100vh - 16px);
 }
+
+/* Links */
 .footer-inline a,
 .footer-inline a:visited,
 .footer-inline a:active,
@@ -331,17 +336,33 @@ body .main::after{
   color:#930010 !important;
   text-decoration:none;
   white-space: nowrap;
-
-  display:inline-block; /* ✅ größere Tap-Fläche */
-  padding:6px 6px;      /* ✅ iOS-friendly */
+  display:inline-block;
+  padding:6px 6px;
 }
-.footer-inline a:hover{ text-decoration:underline; }
+.footer-inline a:hover{ text-decoration: underline; }
 
-/* Mobile: Footer bleibt hochkant rechts, aber AUF den Cards */
-@media (max-width: 768px){
+/* Mobile: weiterhin exakt steuerbar */
+@media (max-width:768px){
   .footer-inline{
     right: var(--footer-right-mobile);
     top: var(--footer-top-mobile);
+  }
+}
+
+/* ✅ FALLBACK: wenn Höhe zu klein → lieber unten als zu hoch */
+@media (max-height: 720px){
+  .footer-inline{
+    top: auto !important;
+    bottom: 16px !important;
+    font-size: .78rem;
+  }
+}
+
+@media (max-height: 620px){
+  .footer-inline{
+    top: auto !important;
+    bottom: 12px !important;
+    font-size: .72rem;
   }
 }
 
