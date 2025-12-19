@@ -172,43 +172,65 @@
 
     .page-content h1{ margin-top:0; }
 
-    /* ✅ Footer hochkant rechts (Desktop + Mobile), ohne Umbruch */
-    .footer-inline{
-      position: fixed;
-      right: var(--footer-right-desktop);
-      top: var(--footer-top-desktop);
-      bottom: auto;
-      z-index: 1300; /* ✅ über swipe-zone */
+/* ✅ Footer hochkant rechts (Desktop + Mobile), ohne Umbruch */
+.footer-inline{
+  position: fixed;
+  right: var(--footer-right-desktop);
+  top: var(--footer-top-desktop);
+  bottom: auto;
+  left: auto;
+  z-index: 1300; /* ✅ über swipe-zone */
 
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 
-      color:#930010 !important;
-      font-size:.82rem;
-      padding: 6px 4px;
+  color:#930010 !important;
+  font-size:.82rem;
+  padding: 6px 4px;
 
-      white-space: nowrap;
-    }
-    .footer-inline a,
-    .footer-inline a:visited,
-    .footer-inline a:active,
-    .footer-inline a:focus{
-      color:#930010 !important;
-      text-decoration:none;
-      white-space: nowrap;
+  white-space: nowrap;
 
-      display:inline-block; /* ✅ größere Tap-Fläche */
-      padding:6px 6px;      /* ✅ iOS-friendly */
-    }
-    .footer-inline a:hover{ text-decoration:underline; }
+  /* ✅ verhindert Abschneiden */
+  max-height: calc(100vh - 16px);
+}
 
-    /* Mobile: Footer bleibt hochkant rechts, aber AUF den Cards */
-    @media (max-width: 768px){
-      .footer-inline{
-        right: var(--footer-right-mobile);
-        top: var(--footer-top-mobile);
-      }
-    }
+.footer-inline a,
+.footer-inline a:visited,
+.footer-inline a:active,
+.footer-inline a:focus{
+  color:#930010 !important;
+  text-decoration:none;
+  white-space: nowrap;
+
+  display:inline-block; /* ✅ größere Tap-Fläche */
+  padding:6px 6px;      /* ✅ iOS-friendly */
+}
+.footer-inline a:hover{ text-decoration:underline; }
+
+/* Mobile: Footer bleibt hochkant rechts, wie eingestellt */
+@media (max-width: 768px){
+  .footer-inline{
+    right: var(--footer-right-mobile);
+    top: var(--footer-top-mobile);
+    bottom: auto;
+  }
+}
+
+/* ✅ FALLBACK: wenn Fensterhöhe klein wird → lieber unten statt zu weit oben */
+@media (max-height: 720px){
+  .footer-inline{
+    top: auto !important;
+    bottom: 16px !important;
+    font-size: .78rem;
+  }
+}
+@media (max-height: 620px){
+  .footer-inline{
+    top: auto !important;
+    bottom: 12px !important;
+    font-size: .72rem;
+  }
+}
 
     /* swipe helper */
     .edge-swipe{
