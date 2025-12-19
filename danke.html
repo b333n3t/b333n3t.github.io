@@ -9,6 +9,15 @@
   <link rel="stylesheet" href="styles.css" />
 
   <style>
+    :root{
+      /* ✅ Footer (hochkant rechts) – wie gesehen.html */
+      --footer-top-desktop: 430px;
+      --footer-right-desktop: 0px;
+
+      --footer-top-mobile: 520px;   /* ← höher = kleinerer Wert */
+      --footer-right-mobile: 0.2px; /* ← näher rechts = kleinerer Wert */
+    }
+
     /* NUR: Glas-/Milch-Layer vom main abschalten (Layout aus styles.css bleibt!) */
     main.main::before,
     main.main::after{
@@ -51,43 +60,51 @@
       background:#000 !important;
     }
 
-/* ✅ FOOTER: hochkant rechts (identisch zu anderen Seiten) */
-.footer-inline{
-  display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+    /* ✅ Footer hochkant rechts — wie gesehen.html */
+    .footer-inline{
+      position: fixed !important;
+      right: var(--footer-right-desktop) !important;
+      top: var(--footer-top-desktop) !important;
+      bottom: auto !important;
+      left: auto !important;
+      z-index: 1300 !important; /* über swipe-zone/overlays */
 
-  position: fixed !important;
-  right: 18px !important;
-  bottom: 40px !important;
-  top: auto !important;
-  left: auto !important;
+      writing-mode: vertical-rl !important;
+      text-orientation: mixed !important;
 
-  transform: rotate(-90deg) !important;
-  transform-origin: right bottom !important;
+      color:#930010 !important;
+      font-size:.82rem !important;
+      padding: 6px 4px !important;
 
-  z-index: 1300 !important;
+      white-space: nowrap !important;
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+    }
 
-  color:#930010 !important;
-  font-size:.82rem !important;
-  padding: 6px 4px !important;
+    .footer-inline a,
+    .footer-inline a:visited,
+    .footer-inline a:active,
+    .footer-inline a:focus{
+      color:#930010 !important;
+      text-decoration:none !important;
+      white-space: nowrap !important;
 
-  white-space: nowrap !important;
-  pointer-events: auto !important;
-}
+      display:inline-block !important; /* größere Tap-Fläche */
+      padding:6px 6px !important;      /* iOS-friendly */
+    }
 
-.footer-inline a{
-  color:#930010 !important;
-  text-decoration:none !important;
-  white-space: nowrap !important;
-  display:inline-block !important;
-  padding:6px 6px !important;
-}
+    .footer-inline a:hover{
+      text-decoration: underline !important;
+    }
 
-.footer-inline a:hover{
-  text-decoration: underline !important;
-}
-
+    @media (max-width:768px){
+      .footer-inline{
+        right: var(--footer-right-mobile) !important;
+        top: var(--footer-top-mobile) !important;
+      }
+    }
   </style>
 </head>
 
