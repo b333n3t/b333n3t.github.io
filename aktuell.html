@@ -186,34 +186,52 @@
     .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
     /* ===== Unter-Akkordeons (neuigkeiten / termine / beschäftigt) ===== */
-    .sub-toggle{
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size:1.1rem;
-      background:transparent;
-      border:none;
-      padding:0;
-      color:inherit;
-      cursor:pointer;
-      font-family: inherit;
-      font-weight: inherit;
-      letter-spacing: inherit;
-      line-height: inherit;
-      appearance:none;
-      -webkit-appearance:none;
-    }
-    .sub-toggle .arrow{
-      display:inline-block;
-      transition:transform .2s ease;
-    }
-    .sub-group > .sub-content{
-      display:none;
-      margin-left:18px;
-      margin-top:1.5rem;
-    }
-    .sub-group.open > .sub-content{display:block;}
-    .sub-group.open > .sub-toggle .arrow{transform:rotate(90deg);}
+/* ===== Unter-Akkordeons (neuigkeiten / termine / beschäftigt) ===== */
+
+.sub-toggle{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:1.1rem;
+  background:transparent;
+  border:none;
+  padding:0;
+  color:inherit;
+  cursor:pointer;
+  font-family: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  appearance:none;
+  -webkit-appearance:none;
+}
+
+.sub-toggle .arrow{
+  display:inline-block;
+  transition:transform .2s ease;
+}
+
+/* Inhalt */
+.sub-group > .sub-content{
+  display:none;
+  margin-left:18px;
+  margin-top:1.2rem; /* Abstand Titel → Inhalt */
+}
+
+/* geöffnet */
+.sub-group.open > .sub-content{
+  display:block;
+}
+
+.sub-group.open > .sub-toggle .arrow{
+  transform:rotate(90deg);
+}
+
+/* ✅ Abstand zwischen den Unter-Akkordeons (Titelzeilen) */
+.sub-group + .sub-group{
+  margin-top:1.8rem;  /* ← hier regeln */
+}
+
 
 /* ✅ Footer hochkant rechts (Desktop + Mobile), ohne Umbruch */
 .footer-inline{
