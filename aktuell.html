@@ -51,45 +51,43 @@
       background:#000 !important;
     }
 
-    /* ✅ FOOTER: hochkant rechts (wie andere Seiten) */
-    .footer-inline{
-      /* falls styles.css das ausblendet, erzwingen wir Sichtbarkeit */
-      display: block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
+/* ✅ FOOTER: hochkant rechts (identisch zu anderen Seiten) */
+.footer-inline{
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 
-      position: fixed !important;
+  position: fixed !important;
+  right: 18px !important;
+  bottom: 40px !important;
+  top: auto !important;
+  left: auto !important;
 
-      /* ✅ Fallbacks, falls CSS-Variablen fehlen */
-      right: var(--footer-right-desktop, 18px) !important;
-      top: var(--footer-top-desktop, 120px) !important;
-      bottom: auto !important;
-      left: auto !important;
+  transform: rotate(-90deg) !important;
+  transform-origin: right bottom !important;
 
-      z-index: 1300 !important; /* über swipe-zone / overlays */
+  z-index: 1300 !important;
 
-      writing-mode: vertical-rl !important;
-      text-orientation: mixed !important;
+  color:#930010 !important;
+  font-size:.82rem !important;
+  padding: 6px 4px !important;
 
-      color:#930010 !important;
-      font-size:.82rem !important;
-      padding: 6px 4px !important;
+  white-space: nowrap !important;
+  pointer-events: auto !important;
+}
 
-      white-space: nowrap !important;
-      pointer-events: auto !important;
-    }
+.footer-inline a{
+  color:#930010 !important;
+  text-decoration:none !important;
+  white-space: nowrap !important;
+  display:inline-block !important;
+  padding:6px 6px !important;
+}
 
-    .footer-inline a{
-      color:#930010 !important;
-      text-decoration:none !important;
-      white-space: nowrap !important;
+.footer-inline a:hover{
+  text-decoration: underline !important;
+}
 
-      display:inline-block !important; /* größere Tap-Fläche */
-      padding:6px 6px !important;      /* iOS-friendly */
-    }
-
-    .footer-inline a:hover{
-      text-decoration: underline !important;
     }
   </style>
 </head>
