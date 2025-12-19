@@ -3,53 +3,216 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Danke — b3nn3t</title>
-
+  <title>Aktuell – b3nn3t | Neuigkeiten & Termine</title>
+  <meta name="description" content="Aktuelle Neuigkeiten von b3nn3t – Updates zu Musik, Releases, Projekten, Events und besonderen Momenten." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles_nav_arrows.css" />
+  <link rel="stylesheet" href="swipe-helper.css" />
 
   <style>
-    /* NUR: Glas-/Milch-Layer vom main abschalten (Layout aus styles.css bleibt!) */
+    :root{
+      --bottom-gap:60px;
+
+      /* ✅ Footer (hochkant rechts) – feinjustierbar */
+      --footer-top-desktop: 430px;
+      --footer-right-desktop: 0px;
+
+      --footer-top-mobile: 520px;   /* ← höher = kleinerer Wert */
+      --footer-right-mobile: 0.2px;  /* ← näher rechts = kleinerer Wert */
+    }
+    @media (max-width:768px){ :root{ --bottom-gap:20px; } }
+
+    html, body{ overflow:hidden; }
+    @media (max-width:767px){
+      html, body{ overflow:auto; -webkit-overflow-scrolling:touch; }
+    }
+
+    body{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      color:#fff;
+    }
+
+    main.main{
+      flex:1 0 auto;
+      border-radius:12px;
+      padding:0;
+      position:relative;
+      z-index:1;
+      overflow:visible;
+      background:transparent !important;
+      box-shadow:none !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+      filter:none !important;
+      opacity:1 !important;
+    }
     main.main::before,
     main.main::after{
-      content: none !important;
-      display: none !important;
+      background:transparent !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+      filter:none !important;
+      opacity:0 !important;
     }
 
-    /* optional: falls styles.css dem main selbst blur/filter gibt */
-    main.main{
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      filter: none !important;
+    .nav-arrow,
+    .scroll-cue{
+      display:none !important;
+      opacity:0 !important;
+      visibility:hidden !important;
+      pointer-events:none !important;
     }
 
-    /* Danke-Seite: Textfeld selbst darf nicht milchig sein */
-    main.main{
-      background: transparent !important;
-      box-shadow: none !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
+    .hamburger{
+      position:fixed;top:14px;right:18px;width:20px;height:20px;
+      border:0;background:transparent;display:grid;place-items:center;
+      cursor:pointer;z-index:1200;padding:0
     }
-
-    /* ===== WHITE THEME ===== */
-    body{ color:#fff !important; }
-
-    /* b3nn3t im Header weiß */
-    .header .brand,
-    .header .brand strong{
-      color:#fff !important;
-    }
-
-    /* Buttons/Links im Content weiß */
-    main.main a,
-    main.main a:visited{
-      color:#fff !important;
-    }
-
-    /* Burger-Menü (falls vorhanden) bleibt schwarz */
     .hamburger span{
-      background:#000 !important;
+      display:block;width:12px;height:1.4px;margin:1.5px 0;
+      background:#000;border-radius:2px;
+      transition:transform .2s,opacity .2s
     }
+    body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
+    body.menu-open .hamburger span:nth-child(2){opacity:0}
+    body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+
+    .menu-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.08);
+      backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
+      z-index:1099
+    }
+    body.menu-open #menu-overlay{display:block}
+    #menu-overlay[hidden]{display:none}
+
+    .site-menu{
+      position:fixed;top:0;right:0;height:auto;max-height:90vh;
+      width:min(40vw,150px);
+      background:rgba(255,255,255,.32);
+      backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+      box-shadow:0 20px 50px rgba(0,0,0,.08);
+      transform:translateX(100%);transition:transform .25s;
+      z-index:1101;padding:46px 10px 14px
+    }
+    body.menu-open .site-menu{transform:translateX(0)}
+    .site-menu ul{list-style:none;margin:0;padding:0}
+    .site-menu li{margin:0 0 10px}
+    .site-menu li.sep{
+      margin-top:18px;padding-top:8px;
+      border-top:1px solid rgba(0,0,0,.08)
+    }
+    .site-menu a{
+      display:block;
+      padding:8px 6px;
+      border-radius:10px;
+      color:#000;
+      text-decoration:none;
+      font-size:1rem;
+      font-weight:500;
+    }
+    .site-menu a:hover{background:rgba(0,0,0,.05)}
+
+    .scroll-panel{
+      max-width:min(1000px,94vw);
+      max-height:75vh;
+      margin:0;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      background:transparent;
+      backdrop-filter:none;
+      -webkit-backdrop-filter:none;
+      border-radius:0;
+      box-shadow:none;
+      padding:1.25rem 1rem 1.5rem;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+    .scroll-panel::-webkit-scrollbar{display:none;}
+    .content-offset{ padding-top:1.5rem; }
+
+    .grid{
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+    }
+
+    .page-link{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:1.1rem;
+      text-decoration:none;
+      color:inherit;
+    }
+    .page-link:visited{ color:inherit; }
+    .page-link .arrow{
+      display:inline-block;
+      transition:transform .2s ease;
+    }
+    .page-link:active .arrow{ transform:rotate(90deg); }
+
+    .page-toggle{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:1.1rem;
+      background:transparent;
+      border:none;
+      padding:0;
+      color:inherit;
+      cursor:pointer;
+      font-family: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      line-height: inherit;
+      appearance:none;
+      -webkit-appearance:none;
+    }
+    .page-toggle .arrow{
+      display:inline-block;
+      transition:transform .2s ease;
+    }
+    .page-group > .page-content{
+      display:none;
+      margin-left:18px;
+      margin-top:.75rem;
+    }
+    .page-group.open > .page-content{display:block;}
+    .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
+
+    /* ===== Unter-Akkordeons (neuigkeiten / termine / beschäftigt) ===== */
+    .sub-toggle{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:1.1rem;
+      background:transparent;
+      border:none;
+      padding:0;
+      color:inherit;
+      cursor:pointer;
+      font-family: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      line-height: inherit;
+      appearance:none;
+      -webkit-appearance:none;
+    }
+    .sub-toggle .arrow{
+      display:inline-block;
+      transition:transform .2s ease;
+    }
+    .sub-group > .sub-content{
+      display:none;
+      margin-left:18px;
+      margin-top:.75rem;
+    }
+    .sub-group.open > .sub-content{display:block;}
+    .sub-group.open > .sub-toggle .arrow{transform:rotate(90deg);}
 
 /* ✅ Footer hochkant rechts (Desktop + Mobile), ohne Umbruch */
 .footer-inline{
@@ -112,25 +275,446 @@
   }
 }
 
+
+    .edge-swipe {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 28px;
+      z-index: 1201;
+      background: transparent;
+      pointer-events: none;
     }
+    .edge-swipe.left  { left: 0; }
+    .edge-swipe.right { right: 0; }
+    @media (pointer: coarse){
+      .edge-swipe{ pointer-events: auto; }
+      .edge-swipe.right{ pointer-events: none !important; } /* ✅ blockiert Footer nicht */
+    }
+
+    .release-card {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      margin: 2.2rem 0;
+      padding: 1.6rem 1.6rem;
+      width: 100%;
+      max-width: 440px;
+      background: #fff;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      text-decoration: none !important;
+      color: #000;
+      transition: transform .25s ease, box-shadow .45s ease;
+    }
+    .release-card:hover {
+      transform: scale(1.025);
+      box-shadow:
+        0 0 14px rgba(0,0,0,0.35),
+        0 0 28px rgba(0,0,0,0.30),
+        0 0 45px rgba(0,0,0,0.25);
+    }
+    .release-card img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .release-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .release-info .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      text-align: left;
+      text-decoration: none;
+    }
+    .release-info .desc {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      text-align: center;
+      text-decoration: none;
+    }
+    .release-card *,.release-card:hover * { text-decoration: none; }
+    .songtitle {
+      font-size: 1.55rem;
+      font-weight: 700;
+      text-align: center;
+      margin: 1.1rem 0 1.1rem 0;
+    }
+    @media(max-width:600px){
+      .release-card { flex-direction: column; text-align: center; }
+      .release-card img { width: 75%; height: auto; }
+    }
+
+    .collage-window {
+      position: relative;
+      max-width: 650px;
+      margin: 2rem 0;
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      padding: 0;
+      border-radius: 0;
+      overflow: visible;
+    }
+    .chaos-collage {
+      position: relative;
+      width: 100%;
+      height: 400px;
+    }
+    .chaos-collage img {
+      position: absolute;
+      width: 45%;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      transition: transform 0.4s ease;
+      object-fit: cover;
+    }
+    .chaos-collage img:hover {
+      transform: scale(1.05) rotate(0deg);
+      z-index: 3;
+    }
+    .chaos-collage img:nth-child(1){top:10%;left:5%;transform:rotate(-8deg);}
+    .chaos-collage img:nth-child(2){top:5%;right:8%;transform:rotate(7deg);}
+    .chaos-collage img:nth-child(3){top:45%;left:10%;transform:rotate(-4deg);}
+    .chaos-collage img:nth-child(4){top:40%;right:5%;transform:rotate(10deg);}
+    .chaos-collage img:nth-child(5){top:65%;left:35%;transform:rotate(-3deg);}
+    @media (max-width:600px){
+      .chaos-collage{height:300px;}
+      .chaos-collage img{width:60%;}
+    }
+
+    .termine-list {
+      display: grid;
+      gap: 0.75rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .termin-row {
+      display: grid;
+      grid-template-columns: 8ch 1fr auto;
+      gap: 0.5rem 1rem;
+      align-items: baseline;
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;
+      background: transparent;
+    }
+    .termin-row .datum {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      white-space: nowrap;
+      position: relative;
+      display: inline-block;
+    }
+    .termin-row .veranstaltung { font-weight: 500; min-width: 10rem; }
+    .termin-row .ort { opacity: .85; white-space: nowrap; text-align: right; }
+    @media (max-width: 800px) {
+      .termin-row { grid-template-columns: 8ch 1fr; }
+      .termin-row .ort { grid-column: 2 / -1; text-align: left; }
+    }
+    @media (max-width: 480px) {
+      .termin-row {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+        padding: 0.75rem 0.9rem;
+        background: rgba(255,255,255,0.20);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      }
+      .termin-row .datum,
+      .termin-row .veranstaltung,
+      .termin-row .ort { text-align: left; white-space: normal; }
+      .termin-row .datum { opacity: .9; }
+      .termin-row .ort   { opacity: .85; }
+    }
+    .termin-row.completed .datum::before {
+      content: "✔";
+      position: absolute;
+      left: -1.2em;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #F2F2F2;
+      font-weight: 900;
+      font-size: 1.1em;
+      pointer-events: none;
+    }
+
+    .page-content h1,
+    .page-content h2,
+    .page-content p{
+      font-family: 'Press Start 2P', Arial, sans-serif;
+      font-size: 1.1rem !important;
+      font-weight: 400 !important;
+      letter-spacing: 0.03em !important;
+      line-height: 1.6 !important;
+      color: #fff;
+    }
+    .page-content h1{ margin-bottom: 0.4rem; }
+    .page-content p{ margin-top: 0; margin-bottom: 1rem; }
+
+    a{ color:#fff; }
+    .brand{ color:#fff !important; }
+
+    .release-card{ color:#000; }
+    .release-card *{ color:inherit; }
+
+    .termine-list, .termin-row, .termin-row *{ color:#fff; }
   </style>
 </head>
 
 <body>
   <header class="header">
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <img alt="" src="favicon.svg" aria-hidden="true"><strong>b3nn3t</strong>
+      <img src="favicon.svg" alt="b3nn3t logo" aria-hidden="true"><strong>b3nn3t</strong>
     </a>
   </header>
 
+  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div id="menu-overlay" class="menu-overlay" hidden></div>
+  <nav id="site-menu" class="site-menu" aria-hidden="true">
+    <ul>
+      <li><a href="ueber-mich.html">über mich</a></li>
+      <li><a href="diskografie.html">diskografie</a></li>
+      <li><a href="kontakt.html">kontakt</a></li>
+      <li><a href="aktuell.html">aktuell</a></li>
+      <li><a href="gesehen.html">gesehen</a></li>
+      <li><a href="plattformen.html">links</a></li>
+      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+    </ul>
+  </nav>
+
   <main class="main">
-    <h1>danke!</h1>
-    <p>deine nachricht wurde erfolgreich gesendet. ich melde mich so bald wie möglich zurück.</p>
-    <a class="btn" href="index.html">zurück zur startseite</a>
+    <div class="scroll-panel">
+      <div class="content-offset">
+        <section class="grid" aria-label="Seitenübersicht">
+
+          <a class="page-link" href="ueber-mich.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>über mich</span>
+          </a>
+
+          <a class="page-link" href="diskografie.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>diskografie</span>
+          </a>
+
+          <a class="page-link" href="kontakt.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>kontakt</span>
+          </a>
+
+          <div class="page-group current open">
+            <button class="page-toggle" type="button" aria-expanded="true">
+              <span class="arrow" aria-hidden="true">►</span>
+              <span>aktuell</span>
+            </button>
+
+            <div class="page-content">
+              <h1>relevant und geplant</h1>
+              <p>was steht an...</p>
+
+              <div class="sub-group open" id="acc-neuigkeiten">
+                <button class="sub-toggle" type="button" aria-expanded="true" aria-controls="neuigkeiten-content">
+                  <span class="arrow" aria-hidden="true">►</span>
+                  <span>neuigkeiten</span>
+                </button>
+
+                <div class="sub-content" id="neuigkeiten-content">
+                  <p style="margin-top: 2rem;">- lasst euch überraschen ;) bin am kochen -</p>
+
+                  <a class="release-card" href="https://www.b3nn3t.com/testumgebung-b333n3t.github.io/release-xyz-56.html" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/release/drei-cover.webp" alt="Cover: 3">
+                    <div class="release-info">
+                      <div class="subtitle">🎧 neues release</div>
+                      <div class="songtitle"> drei </div>
+                      <div class="desc">jetzt reinhören & preview-video ansehen!</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              <div class="sub-group" id="acc-termine">
+                <button class="sub-toggle" type="button" aria-expanded="false" aria-controls="termine-content">
+                  <span class="arrow" aria-hidden="true">►</span>
+                  <span>termine</span>
+                </button>
+
+                <div class="sub-content" id="termine-content">
+                  <p>- - - auftritte - - -</p>
+
+                  <div class="termine-responsive" style="margin-top: 2rem;">
+                    <div class="termine-list" role="table" aria-label="Termine">
+
+                      <div class="termin-row" role="row">
+                        <div class="datum" role="cell"><time datetime="2024-07-10">10.07.2024</time></div>
+                        <div class="veranstaltung" role="cell">· RAPCITY-Contest - OpenAir Frauenfeld</div>
+                        <div class="ort" role="cell">· Frauenfeld · 17:15 Uhr</div>
+                      </div>
+
+                      <div class="termin-row" role="row">
+                        <div class="datum" role="cell"><time datetime="2025-06-13">13.06.2025</time></div>
+                        <div class="veranstaltung" role="cell">· Jugend Festival beim ZAK</div>
+                        <div class="ort" role="cell">· Jona · 18:00 Uhr</div>
+                      </div>
+
+                      <div class="termin-row" role="row">
+                        <div class="datum" role="cell"><time datetime="2025-08-02">08.02.2025</time></div>
+                        <div class="veranstaltung" role="cell">· OYA - OPEN AIR - abgesagt</div>
+                        <div class="ort" role="cell">· Wien · 20:00 Uhr</div>
+                      </div>
+
+                      <div class="termin-row" role="row">
+                        <div class="datum" role="cell"><time datetime="2025-09-20">20.09.2025</time></div>
+                        <div class="veranstaltung" role="cell">· Jugendfistval - Rüti</div>
+                        <div class="ort" role="cell">· Rüti · 17:30 Uhr</div>
+                      </div>
+
+                      <div class="termin-row" role="row">
+                        <div class="datum" role="cell"><time datetime="2025-10-10">10.10.2025</time></div>
+                        <div class="veranstaltung" role="cell">· Full HD - Grün & Gold</div>
+                        <div class="ort" role="cell">· Heidelberg · 20:00 Uhr</div>
+                      </div>
+
+                      <div class="termin-row" role="row">
+                        <div class="datum" role="cell"><time datetime="2026-05-01">xx.05.2026</time></div>
+                        <div class="veranstaltung" role="cell">· Jugendfestival - ZAK</div>
+                        <div class="ort" role="cell">· Rapperswil-Jona · xx:xx Uhr</div>
+                      </div>
+
+                      <div class="termin-row" role="row">
+                        <div class="datum" role="cell"><time datetime="2026-12-31">xx.yy.zzzz</time></div>
+                        <div class="veranstaltung" role="cell">· in der mache</div>
+                        <div class="ort" role="cell">· Zürich · xx:xx Uhr</div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sub-group" id="acc-beschaeftigt">
+                <button class="sub-toggle" type="button" aria-expanded="false" aria-controls="beschaeftigt-content">
+                  <span class="arrow" aria-hidden="true">►</span>
+                  <span>was mich gerade beschäftigt</span>
+                </button>
+
+                <div class="sub-content" id="beschaeftigt-content">
+                  <p>- - - - - -</p>
+
+                  <div class="collage-window">
+                    <div class="chaos-collage">
+                      <img src="assets/aktuell/er.jpg" alt="style">
+                      <img src="assets/aktuell/qw.jpg" alt="style">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
+            </div>
+          </div>
+
+          <a class="page-link" href="gesehen.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>gesehen</span>
+          </a>
+
+          <a class="page-link" href="plattformen.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>links</span>
+          </a>
+
+        </section>
+      </div>
+    </div>
   </main>
 
   <div class="footer-inline">
     © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
   </div>
+
+  <div class="edge-swipe left"  aria-hidden="true"></div>
+  <div class="edge-swipe right" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+  <script src="swipe-nav.js?v=12" defer></script>
+
+  <script>
+    (function(){
+      const group  = document.querySelector('.page-group.current');
+      const toggle = group?.querySelector('.page-toggle');
+      const panel  = document.querySelector('.scroll-panel');
+
+      function resizePanel(){
+        if(!panel) return;
+        const header = document.querySelector('.header');
+        const main   = document.querySelector('.main');
+
+        const hh = header ? header.offsetHeight : 0;
+        let pt = 0, pb = 0;
+        if(main){
+          const cs = getComputedStyle(main);
+          pt = parseFloat(cs.paddingTop)  || 0;
+          pb = parseFloat(cs.paddingBottom) || 0;
+        }
+
+        const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
+        const vh  = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+
+        let max = vh - hh - pt - pb - gap;
+        if(max < 260) max = 260;
+        panel.style.maxHeight = max + 'px';
+      }
+
+      if(toggle && group){
+        toggle.addEventListener('click', () => {
+          const isOpen = group.classList.contains('open');
+          group.classList.toggle('open', !isOpen);
+          toggle.setAttribute('aria-expanded', String(!isOpen));
+        });
+      }
+
+      document.querySelectorAll('.sub-group').forEach(subGroup => {
+        const btn = subGroup.querySelector('.sub-toggle');
+        if(!btn) return;
+
+        btn.addEventListener('click', () => {
+          const isOpen = subGroup.classList.contains('open');
+          subGroup.classList.toggle('open', !isOpen);
+          btn.setAttribute('aria-expanded', String(!isOpen));
+        });
+      });
+
+      window.addEventListener('load', resizePanel);
+      window.addEventListener('resize', resizePanel);
+      if(window.visualViewport){
+        window.visualViewport.addEventListener('resize', resizePanel);
+      }
+    })();
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const today = new Date();
+
+      document.querySelectorAll('.termin-row').forEach(row => {
+        const timeElem = row.querySelector("time");
+        if (!timeElem) return;
+
+        const dateString = timeElem.getAttribute("datetime");
+        if (!dateString || dateString.includes("xx")) return;
+
+        const date = new Date(dateString);
+        if (date < today) row.classList.add("completed");
+      });
+    });
+  </script>
 </body>
 </html>
