@@ -60,50 +60,64 @@
       background:#000 !important;
     }
 
-    /* ✅ Footer hochkant rechts — wie gesehen.html */
-    .footer-inline{
-      position: fixed !important;
-      right: var(--footer-right-desktop) !important;
-      top: var(--footer-top-desktop) !important;
-      bottom: auto !important;
-      left: auto !important;
-      z-index: 1300 !important; /* über swipe-zone/overlays */
+/* ✅ Footer hochkant rechts – nicht abhängig von fixer Pixel-Höhe */
+.footer-inline{
+  position: fixed !important;
+  right: 6px !important;                 /* kleiner Abstand, verhindert Abschneiden am Rand */
+  top: 50% !important;
+  transform: translateY(-50%) !important; /* immer sauber zentriert */
+  z-index: 2000 !important;
 
-      writing-mode: vertical-rl !important;
-      text-orientation: mixed !important;
+  writing-mode: vertical-rl !important;
+  text-orientation: mixed !important;
 
-      color:#930010 !important;
-      font-size:.82rem !important;
-      padding: 6px 4px !important;
+  color:#930010 !important;
+  font-size: .82rem !important;
+  padding: 6px 4px !important;
 
-      white-space: nowrap !important;
-      display: block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      pointer-events: auto !important;
-    }
+  white-space: nowrap !important;
 
-    .footer-inline a,
-    .footer-inline a:visited,
-    .footer-inline a:active,
-    .footer-inline a:focus{
-      color:#930010 !important;
-      text-decoration:none !important;
-      white-space: nowrap !important;
+  /* verhindert, dass er bei kleinen Fenstern abgeschnitten wird */
+  max-height: calc(100vh - 16px) !important;
 
-      display:inline-block !important; /* größere Tap-Fläche */
-      padding:6px 6px !important;      /* iOS-friendly */
-    }
+  display:block !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  pointer-events:auto !important;
+}
 
-    .footer-inline a:hover{
-      text-decoration: underline !important;
-    }
+/* wenn die Fensterhöhe klein wird: Schrift etwas kleiner */
+@media (max-height: 720px){
+  .footer-inline{ font-size: .74rem !important; }
+}
+@media (max-height: 620px){
+  .footer-inline{ font-size: .68rem !important; }
+}
 
-    @media (max-width:768px){
-      .footer-inline{
-        right: var(--footer-right-mobile) !important;
-        top: var(--footer-top-mobile) !important;
-      }
+.footer-inline a,
+.footer-inline a:visited,
+.footer-inline a:active,
+.footer-inline a:focus{
+  color:#930010 !important;
+  text-decoration:none !important;
+  white-space: nowrap !important;
+
+  display:inline-block !important;
+  padding:6px 6px !important;
+}
+.footer-inline a:hover{ text-decoration: underline !important; }
+
+/* Mobile: optional weiterhin per Variablen steuern */
+@media (max-width: 768px){
+  .footer-inline{
+    right: var(--footer-right-mobile, 6px) !important;
+    top: var(--footer-top-mobile, 50%) !important;
+
+    /* Wenn du Mobile NICHT zentrieren willst: */
+    transform: none !important;
+  }
+}
+
     }
   </style>
 </head>
