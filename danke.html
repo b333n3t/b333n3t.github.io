@@ -60,61 +60,61 @@
       background:#000 !important;
     }
 
-/* ✅ Footer hochkant rechts – nicht abhängig von fixer Pixel-Höhe */
+/* ✅ Footer hochkant rechts – normal wie eingestellt */
 .footer-inline{
-  position: fixed !important;
-  right: 6px !important;                 /* kleiner Abstand, verhindert Abschneiden am Rand */
-  top: 50% !important;
-  transform: translateY(-50%) !important; /* immer sauber zentriert */
-  z-index: 2000 !important;
+  position: fixed;
+  right: var(--footer-right-desktop);
+  top: var(--footer-top-desktop);
+  bottom: auto;
+  left: auto;
+  z-index: 2000;
 
-  writing-mode: vertical-rl !important;
-  text-orientation: mixed !important;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 
   color:#930010 !important;
-  font-size: .82rem !important;
-  padding: 6px 4px !important;
+  font-size:.82rem;
+  padding: 6px 4px;
+  white-space: nowrap;
 
-  white-space: nowrap !important;
-
-  /* verhindert, dass er bei kleinen Fenstern abgeschnitten wird */
-  max-height: calc(100vh - 16px) !important;
-
-  display:block !important;
-  opacity:1 !important;
-  visibility:visible !important;
-  pointer-events:auto !important;
+  /* verhindert “abgeschnitten” */
+  max-height: calc(100vh - 16px);
 }
 
-/* wenn die Fensterhöhe klein wird: Schrift etwas kleiner */
-@media (max-height: 720px){
-  .footer-inline{ font-size: .74rem !important; }
-}
-@media (max-height: 620px){
-  .footer-inline{ font-size: .68rem !important; }
-}
-
+/* Links */
 .footer-inline a,
 .footer-inline a:visited,
 .footer-inline a:active,
 .footer-inline a:focus{
   color:#930010 !important;
-  text-decoration:none !important;
-  white-space: nowrap !important;
-
-  display:inline-block !important;
-  padding:6px 6px !important;
+  text-decoration:none;
+  white-space: nowrap;
+  display:inline-block;
+  padding:6px 6px;
 }
-.footer-inline a:hover{ text-decoration: underline !important; }
+.footer-inline a:hover{ text-decoration: underline; }
 
-/* Mobile: optional weiterhin per Variablen steuern */
-@media (max-width: 768px){
+/* ✅ Mobile weiterhin über Variablen steuern */
+@media (max-width:768px){
   .footer-inline{
-    right: var(--footer-right-mobile, 6px) !important;
-    top: var(--footer-top-mobile, 50%) !important;
+    right: var(--footer-right-mobile);
+    top: var(--footer-top-mobile);
+  }
+}
 
-    /* Wenn du Mobile NICHT zentrieren willst: */
-    transform: none !important;
+/* ✅ Wenn die Fensterhöhe klein wird: lieber unten anheften statt “zu hoch” */
+@media (max-height: 720px){
+  .footer-inline{
+    top: auto !important;
+    bottom: 16px !important;
+    font-size: .78rem;
+  }
+}
+@media (max-height: 620px){
+  .footer-inline{
+    top: auto !important;
+    bottom: 12px !important;
+    font-size: .72rem;
   }
 }
 
