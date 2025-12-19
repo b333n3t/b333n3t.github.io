@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>b3nn3t – „DREI“ | Neues Release</title>
+  <title>b3nn3t „drei“ | neuer release</title>
   <meta name="description" content="„DREI“ – das neue Release von b3nn3t. Deutschrap & Indie-Pop aus der Schweiz." />
   <meta name="robots" content="index,follow,max-image-preview:large" />
 
@@ -32,25 +32,15 @@
     "@context": "https://schema.org",
     "@type": "MusicRecording",
     "name": "DREI",
-    "byArtist": {
-      "@type": "MusicGroup",
-      "name": "b3nn3t"
-    },
-    "inAlbum": {
-      "@type": "MusicAlbum",
-      "name": "DREI"
-    },
+    "byArtist": { "@type": "MusicGroup", "name": "b3nn3t" },
+    "inAlbum": { "@type": "MusicAlbum", "name": "DREI" },
     "image": "https://www.b3nn3t.com/assets/release/drei-cover.png",
     "url": "https://www.b3nn3t.com/release-alles-was-bleibt.html"
   }
   </script>
 
   <!-- LCP-Poster vorladen und priorisieren -->
-  <link
-    rel="preload"
-    as="image"
-    href="assets/release/drei-cover.png"
-    fetchpriority="high">
+  <link rel="preload" as="image" href="assets/release/drei-cover.png" fetchpriority="high">
 
   <style>
     :root {
@@ -58,13 +48,12 @@
       --page-max-width: 960px;
       --awb-bg: #930010;
 
-      /* NEU: einheitliche Abstände */
-      --block-title-gap: 0.95rem;   /* Abstand unter h2 */
-      --block-par-gap: 0.7rem;      /* Abstand zwischen Absätzen */
+      --block-title-gap: 0.95rem;
+      --block-par-gap: 0.7rem;
 
-      /* NEU: Abstände um den b3nn3t-Link im "mehr von b3nn3t"-Block */
-      --more-link-gap-top: 0.85rem;
-      --more-link-gap-bottom: 0.95rem;
+      --more-link-gap-top: 0.65rem;
+      --more-link-gap-bottom: 0.75rem;
+      --more-link-indent: 0.25rem;
     }
 
     html, body {
@@ -99,7 +88,6 @@
       gap: clamp(1.6rem, 2.4vw, 2.2rem);
     }
 
-    /* Obere Zeile */
     .topline {
       display: flex;
       flex-wrap: wrap;
@@ -118,10 +106,7 @@
       cursor: pointer;
     }
 
-    .count-label {
-      text-transform: none;
-      opacity: 0.9;
-    }
+    .count-label { text-transform: none; opacity: 0.9; }
 
     #awb-countdown-timer {
       font-variant-numeric: tabular-nums;
@@ -132,17 +117,14 @@
     }
 
     /* Titel */
-   .song-title {
-  margin: 0;
-  font-weight: 700;
-  text-transform: none;      /* ← keine Großschreibung */
-  letter-spacing: normal;    /* ← kein Extra-Abstand */
-  font-size: clamp(1.7rem, 3vw, 2.4rem);
-  margin-bottom: clamp(1.8rem, 3vw, 2.5rem);
-}
+    .song-title {
+      margin: 0;
+      font-weight: 600;
+      text-transform: lowercase;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      margin-bottom: clamp(0.9rem, 1.5vw, 1.25rem);
+    }
 
-
-    /* Video */
     .video-wrap {
       margin: 0 auto clamp(2rem, 3vw, 2.8rem);
       max-width: 720px;
@@ -165,42 +147,36 @@
       object-fit: cover;
     }
 
-    /* Sektionen */
     section.block {
       margin-bottom: clamp(1.8rem, 2.6vw, 2.4rem);
     }
 
-    /* NEU: Abstand nach h2 überall gleich */
     section.block h2 {
       margin: 0 0 var(--block-title-gap);
       font-size: 1.06rem;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.04em;
       text-transform: lowercase;
-      font-weight: 700;
+      font-weight: 600;
     }
 
-    /* NEU: keine extra Top-Margins mehr -> saubere Symmetrie */
     section.block p {
       margin: 0;
       line-height: 1.7;
+      letter-spacing: 0.04em;
       max-width: 60rem;
       font-size: 1rem;
     }
 
-    /* Abstand zwischen mehreren Absätzen innerhalb eines Blocks */
     section.block p + p {
       margin-top: var(--block-par-gap);
     }
 
-    /* Streaming-Icons */
-    .social-section {
-      margin: 0 0 0.8rem; /* NEU: keine Top-Margin -> kommt vom h2 */
+    /* kein Abstand zwischen erklärbär-Absätzen */
+    section.block p.no-gap + p {
+      margin-top: 0 !important;
     }
 
-    section.block > h2 + .social-section,
-    section.block > h2 + .social-icons {
-      margin-top: 0;
-    }
+    .social-section { margin: 0 0 0.8rem; }
 
     .social-icons {
       display: flex;
@@ -223,52 +199,65 @@
       display: block;
     }
 
-    .neon-link {
-      display: inline-flex;
-      align-items: center;
-      font-size: clamp(1.05rem, 0.9vw + 0.8rem, 1.25rem);
-      font-weight: 800;
-      letter-spacing: 0.09em;
-      line-height: 1;
-      text-decoration: none;
-
-      color: transparent;
-      -webkit-text-stroke: 0.85px #ffffff;
-              text-stroke: 0.85px #ffffff;
-
-      background: none;
-      border: none;
-      padding: 0;
-      margin-top: 0.45rem;
-      cursor: pointer;
-    }
-
-    /* NEU: macht den b3nn3t-Link im "mehr von b3nn3t"-Block markanter (mehr Abstand oben/unten) */
     .more-link {
       display: inline-block;
       margin-top: var(--more-link-gap-top);
       margin-bottom: var(--more-link-gap-bottom);
-       margin-left: 0.8rem; /* ← NEU: leichte Einrückung nach rechts */
+      padding-left: var(--more-link-indent);
     }
 
     @media (max-width: 768px) {
-      .page-wrap {
-        padding: 2.4rem 1.2rem 3rem;
-      }
-      .topline {
-        font-size: 0.87rem;
-        gap: 0.45rem;
-      }
-      .song-title {
-        letter-spacing: 0.26em;
-      }
+      .page-wrap { padding: 2.4rem 1.2rem 3rem; }
+      .topline { font-size: 0.87rem; gap: 0.45rem; }
+      .song-title { letter-spacing: 0.26em; }
     }
 
     @media (min-width: 1024px) {
-      .page-wrap {
-        padding-top: 4rem;
-        padding-bottom: 5rem;
-      }
+      .page-wrap { padding-top: 4rem; padding-bottom: 5rem; }
+    }
+
+    /* =========================================================
+       ✅ FULLSCREEN CROSSHAIR (lange linien)
+       ========================================================= */
+    #crosshair{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    /* horizontale Linie */
+    #crosshair .line-x{
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100vw;
+      height: 1px;
+      background: #ffffff;
+      opacity: 0.9;
+      transform: translateY(-0.5px);
+    }
+
+    /* vertikale Linie */
+    #crosshair .line-y{
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100vh;
+      background: #ffffff;
+      opacity: 0.9;
+      transform: translateX(-0.5px);
+    }
+
+    /* auf touch aus */
+    @media (pointer: coarse){
+      #crosshair{ display:none; }
+    }
+
+    /* reduced motion respektieren */
+    @media (prefers-reduced-motion: reduce){
+      #crosshair{ display:none; }
     }
   </style>
 </head>
@@ -280,7 +269,7 @@
 
         <div class="topline" aria-label="Release Countdown">
           <a class="brand-link" href="index.html">b3nn3t</a>
-          <span class="count-label">  -  neues release in</span>
+          <span class="count-label">released in</span>
           <span id="awb-countdown-timer">--:--:--</span>
         </div>
 
@@ -308,14 +297,13 @@
         </section>
 
         <section aria-label="Story zum Song" class="block">
-          <h2>story zum song</h2>
-          <p>
-            ... aller guten dinge sind drei. dreifaltigkeit, dreidimensional oder einfach nur :3. die zahl der harmonie, weisheit und erkenntnis...???
-          </p>
+          <h2>erklärbär</h2>
+          <p class="no-gap">drei songs die mir sehr am herzen liegen, neues zimmer, neuer b3nn3t, neue musik.</p>
+          <p>vergangene ereignisse werden verarbeitet wie sonne bei solar, liebe grüsse an alle die checken :3</p>
         </section>
 
         <section aria-label="Streaming" class="block">
-          <h2>jetzt folgen</h2>
+          <h2>kuck hier</h2>
 
           <div class="social-section" aria-label="Social Media Links">
             <div class="social-icons">
@@ -362,49 +350,99 @@
 
             </div>
           </div>
-
-          <p>
-            folge b3nn3t auf deinen lieblingsplattformen und
-            bleib bei neuen releases direkt am start.
-          </p>
         </section>
 
         <section aria-label="Mehr von b3nn3t" class="block">
-          <h2>mehr von b3nn3t</h2>
-          <p>auf der webseite:</p>
-          <a class="brand-link more-link" href="https://www.b3nn3t.com/index.html">b3nn3t</a>
-          <p>mehr impulse. mehr perspektiven. mehr blickwinkel.</p>
+          <p>mehr auf meiner webseite :p</p>
+          <a class="brand-link more-link" href="https://www.b3nn3t.com/index.html">b3nn3t.com</a>
         </section>
 
       </main>
     </div>
   </div>
 
+  <!-- ✅ Fullscreen Crosshair Element -->
+  <div id="crosshair" aria-hidden="true">
+    <div class="line-x"></div>
+    <div class="line-y"></div>
+  </div>
+
+  <!-- ✅ Countdown läuft jetzt live und aktualisiert jede Sekunde -->
   <script>
     (function () {
-      const targetDate = new Date("2025-12-20T00:00:00+01:00").getTime();
+      const targetDate = new Date("2026-01-09T00:00:00+01:00").getTime();
       const el = document.getElementById("awb-countdown-timer");
       if (!el) return;
 
-      const now = Date.now();
-      const diff = targetDate - now;
+      function updateCountdown() {
+        const now = Date.now();
+        const diff = targetDate - now;
 
-      if (diff <= 0) {
-        el.textContent = "OUT NOW";
+        if (diff <= 0) {
+          el.textContent = "OUT NOW";
+          clearInterval(timer);
+          return;
+        }
+
+        const seconds = Math.floor(diff / 1000);
+        const days = Math.floor(seconds / (3600 * 24));
+        const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        const hh = String(hours).padStart(2, "0");
+        const mm = String(mins).padStart(2, "0");
+        const ss = String(secs).padStart(2, "0");
+
+        el.textContent = (days > 0)
+          ? (days + "d " + hh + ":" + mm + ":" + ss)
+          : (hh + ":" + mm + ":" + ss);
+      }
+
+      updateCountdown();
+      const timer = setInterval(updateCountdown, 1000);
+    })();
+  </script>
+
+  <!-- ✅ Fullscreen Crosshair folgt der Maus -->
+  <script>
+    (function(){
+      const cross = document.getElementById('crosshair');
+      const lineX = cross?.querySelector('.line-x');
+      const lineY = cross?.querySelector('.line-y');
+      if(!cross || !lineX || !lineY) return;
+
+      // nur desktop (maus), kein touch
+      if(!window.matchMedia('(pointer: fine)').matches){
+        cross.style.display = 'none';
         return;
       }
 
-      const seconds = Math.floor(diff / 1000);
-      const days = Math.floor(seconds / (3600 * 24));
-      const hours = Math.floor((seconds % (3600 * 24)) / 3600);
-      const mins = Math.floor((seconds % 3600) / 60);
-      const secs = seconds % 60;
+      // reduced motion -> aus
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        cross.style.display = 'none';
+        return;
+      }
 
-      const hh = String(hours).padStart(2, "0");
-      const mm = String(mins).padStart(2, "0");
-      const ss = String(secs).padStart(2, "0");
+      let x = -9999, y = -9999;
+      let raf = null;
 
-      el.textContent = (days > 0) ? (days + "d " + hh + ":" + mm + ":" + ss) : (hh + ":" + mm + ":" + ss);
+      function render(){
+        lineX.style.top = y + 'px';
+        lineY.style.left = x + 'px';
+        raf = null;
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        if(!raf) raf = requestAnimationFrame(render);
+      }, { passive: true });
+
+      window.addEventListener('mouseleave', () => {
+        x = -9999; y = -9999;
+        render();
+      });
     })();
   </script>
 </body>
