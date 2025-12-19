@@ -101,18 +101,20 @@
     .site-menu a:hover{ background:rgba(0,0,0,.06); }
 
     /* ========================= */
+    
+/* unsichtbares Scrollpanel */
+.scroll-panel{
+  max-width:min(1000px,94vw);
+  max-height: calc(100dvh - 70px);
+  overflow-y:auto;
+  scrollbar-width:none;
 
-    /* unsichtbares Scrollpanel */
-    .scroll-panel{
-      max-width:min(1000px,94vw);
-       max-height: calc(100dvh - 70px); /* 70px ≈ Header/Breathing room, ggf. anpassen */
-      padding:1.25rem 1rem 1.5rem;
-      overflow-y:auto;
-      scrollbar-width:none;
-    }
-    .scroll-panel::-webkit-scrollbar{display:none;}
+  /* vorher: padding:1.25rem 1rem 1.5rem; */
+  padding: 1.25rem 1rem calc(4rem + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+.scroll-panel::-webkit-scrollbar{display:none;}
 
-    .content-offset{ padding-top:1.5rem; }
 
     .grid{
       display:flex;
