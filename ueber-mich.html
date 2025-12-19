@@ -3,384 +3,409 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>über mich (b3nn3t)</title>
+  <meta name="description" content="über mich — b3nn3t"/>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles_nav_arrows.css"/>
+  <link rel="stylesheet" href="swipe-helper.css"/>
 
-  <!-- ✅ SEO -->
-  <title>Über mich – b3nn3t | Musik, Haltung & Weg</title>
-  <meta name="description" content="Erfahre mehr über b3nn3t – Musiker & Songwriter. Einblicke in seine Welt, seine Gedanken, seine Haltung und die Geschichten hinter der Musik." />
+  <style>
+    :root{
+      --bottom-gap: 60px;
 
-  <meta name="robots" content="index,follow"/>
+      /* ✅ Footer (hochkant rechts) – feinjustierbar */
+      --footer-top-desktop: 430px;
+      --footer-right-desktop: 0px;
 
-  <!-- ✅ Canonical & hreflang (DACH) -->
-  <link rel="canonical" href="https://www.b3nn3t.com/ueber-mich.html"/>
-  <link rel="alternate" hreflang="de"    href="https://www.b3nn3t.com/ueber-mich.html"/>
-  <link rel="alternate" hreflang="de-DE" href="https://www.b3nn3t.de/ueber-mich.html"/>
-  <link rel="alternate" hreflang="de-CH" href="https://www.b3nn3t.ch/ueber-mich.html"/>
-  <link rel="alternate" hreflang="de-AT" href="https://www.b3nn3t.at/ueber-mich.html"/>
-  <link rel="alternate" hreflang="x-default" href="https://www.b3nn3t.com/ueber-mich.html"/>
-
-  <!-- ✅ Open Graph / Twitter -->
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://www.b3nn3t.com/ueber-mich.html"/>
-  <meta property="og:title" content="b3nn3t – Über mich"/>
-  <meta property="og:description" content="Deutschrap & Indie-Pop aus der Schweiz. Einblicke in b3nn3ts Welt – Musik, Texte und Haltung hinter den Songs." />
-  <meta property="og:image" content="https://www.b3nn3t.com/assets/index/bennet_index1.jpg"/>
-  <meta property="og:site_name" content="b3nn3t"/>
-  <meta property="og:locale" content="de_DE"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="b3nn3t – Über mich"/>
- <meta name="twitter:description" content="Einblicke in b3nn3ts Welt – Deutschrap & Indie-Pop, Texte, Haltung und Geschichten hinter den Songs." />
-  <meta name="twitter:image" content="https://www.b3nn3t.com/assets/index/bennet_index1.jpg"/>
-
-  <!-- ✅ Strukturierte Daten (JSON-LD) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": "https://www.b3nn3t.com/#website",
-        "url": "https://www.b3nn3t.com/",
-        "name": "b3nn3t",
-        "inLanguage": "de-DE",
-        "publisher": { "@id": "https://www.b3nn3t.com/#org" }
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://www.b3nn3t.com/ueber-mich.html",
-        "url": "https://www.b3nn3t.com/ueber-mich.html",
-        "name": "b3nn3t – Über mich",
-        "description": "Über mich: b3nn3t – Deutschrap & Indie-Pop, deutscher Musiker mit Homebase Schweiz.",
-        "isPartOf": { "@id": "https://www.b3nn3t.com/#website" },
-        "inLanguage": "de-DE"
-      },
-      {
-        "@type": "Person",
-        "@id": "https://www.b3nn3t.com/#person",
-        "name": "b3nn3t",
-        "alternateName": ["b3nn3t®"],
-        "nationality": "DE",
-        "homeLocation": { "@type": "Country", "name": "CH" },
-        "jobTitle": "Musiker & Songwriter",
-        "genre": ["Deutschrap", "Indie Pop"],
-        "url": "https://www.b3nn3t.com/",
-        "sameAs": [
-          "https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A",
-          "https://music.apple.com/ch/artist/b3nn3t/1786857463?l=de-DE",
-          "https://www.youtube.com/@b333nn3t",
-          "https://www.instagram.com/b333nn3t?igsh=MWphMjcxdXZwZ2s1ZQ==",
-          "https://soundcloud.com/b3nn3t-music?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
-          "https://mx3.ch/b3nn3t",
-          "https://genius.com/artists/B3nn3t"
-        ],
-        "affiliation": { "@id": "https://www.b3nn3t.com/#org" }
-      },
-      {
-        "@type": "MusicGroup",
-        "@id": "https://www.b3nn3t.com/#org",
-        "name": "b3nn3t",
-        "url": "https://www.b3nn3t.com/",
-        "alternateName": ["b3nn3t.com","b3nn3t.de","b3nn3t.ch","b3nn3t.at"],
-        "genre": "Indie Pop",
-        "areaServed": ["DE","CH","AT"],
-        "address": { "@type": "PostalAddress", "addressCountry": "CH" },
-        "member": { "@id": "https://www.b3nn3t.com/#person" }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Start", "item": "https://www.b3nn3t.com/" },
-          { "@type": "ListItem", "position": 2, "name": "Über mich", "item": "https://www.b3nn3t.com/ueber-mich.html" }
-        ]
-      }
-    ]
-  }
-  </script>
-
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-
-<!-- Favicons: PNG, ICO, Apple, Android -->
-<link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192.png">
-
-  <link href="styles.css" rel="stylesheet">
-  <link href="styles_nav_arrows.css" rel="stylesheet"/>
-  <link href="swipe-helper.css" rel="stylesheet"/>
-
-  <!-- 👇 Mobile: grauer Container näher am unteren Rand -->
-<style>
-  @media (max-width: 768px) {
-    :root {
-      --bottom-gap: 20px; /* einheitlich wie diskografie & aktuell */
+      --footer-top-mobile: 520px;   /* ← höher = kleinerer Wert */
+      --footer-right-mobile: 0.2px;  /* ← näher rechts = kleinerer Wert */
     }
-  }
-</style>
+    @media (max-width: 768px){
+      :root{ --bottom-gap: 20px; }
+    }
 
-  
-<style>
-/* === Scroll-Panel (transparent über halbtransparentem Hintergrund) === */
-.scroll-panel {
-  overflow: auto;
-  max-height: 75vh;
-  -webkit-overflow-scrolling: touch;
-  background: transparent;
-  border-radius: 12px;
-  box-shadow: none;
-  padding: 1.25rem 1rem;
-  margin-top: 1rem;
-  margin-left: 0;
-  max-width: 650px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.scroll-panel::-webkit-scrollbar { display: none; }
+    html, body{ overflow: hidden; }
+    @media (max-width: 767px){
+      html, body{ overflow: auto; -webkit-overflow-scrolling: touch; }
+    }
 
-/* === Hamburger-Menü === */
-.hamburger {
-  position: fixed;
-  top: 14px;
-  right: 18px;
-  width: 20px;
-  height: 20px;
-  border: none;
-  background: transparent;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  z-index: 1200;
-  padding: 0;
-}
-.hamburger span {
-  display: block;
-  width: 12px;
-  height: 1.4px;
-  margin: 1.5px 0;
-  background: #000;
-  border-radius: 2px;
-  transition: transform .2s ease, opacity .2s ease;
-}
-body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
-body.menu-open .hamburger span:nth-child(2){opacity:0}
-body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
+    body{ min-height:100vh; display:flex; flex-direction:column; }
 
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.08);
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
-  z-index: 1099;
-}
-body.menu-open #menu-overlay{display:block}
-#menu-overlay[hidden]{display:none}
+    main.main{
+      flex:1 0 auto;
+      border-radius:12px;
+      padding:0;
+      position:relative;
+      z-index:1;
+      overflow:visible;
+      background:transparent !important;
+      box-shadow:none !important;
+    }
 
-.site-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: auto;
-  max-height: 90vh;
-  width: min(40vw,150px);
-  background: rgba(255,255,255,.32);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  box-shadow: 0 20px 50px rgba(0,0,0,.08);
-  transform: translateX(100%);
-  transition: transform .25s ease;
-  z-index: 1101;
-  padding: 46px 10px 14px;
-}
-body.menu-open .site-menu{transform:translateX(0)}
-.site-menu ul{list-style:none;margin:0;padding:0}
-.site-menu li{margin:0 0 10px 0}
-.site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
-.site-menu a{
-  display:block;
-  padding:8px 6px;
-  border-radius:10px;
-  color:#000;
-  text-decoration:none;
-  font-size:1rem;
-  font-weight:500;
-}
-.site-menu a:hover{background:rgba(0,0,0,.05)}
-.nav-arrow{z-index:1000}
-</style>
+    .nav-arrow, .scroll-cue{
+      display:none !important;
+      opacity:0 !important;
+      visibility:hidden !important;
+      pointer-events:none !important;
+    }
 
-<!-- Glasiger Rahmen + fester Abstand unten -->
-<style id="align-like-aktuell">
-  :root{
-    --frame-pad: clamp(18px, 3vw, 28px);
-    --bottom-gap: 60px;
-  }
+    .hamburger{
+      position:fixed;top:14px;right:18px;width:20px;height:20px;
+      border:0;background:transparent;display:grid;place-items:center;
+      cursor:pointer;z-index:1200;padding:0
+    }
+    .hamburger span{
+      display:block;width:12px;height:1.4px;margin:1.5px 0;
+      background:#000;border-radius:2px;
+      transition:transform .2s,opacity .2s
+    }
+    body.menu-open .hamburger span:nth-child(1){ transform:translateY(3.5px) rotate(45deg) }
+    body.menu-open .hamburger span:nth-child(2){ opacity:0 }
+    body.menu-open .hamburger span:nth-child(3){ transform:translateY(-3.5px) rotate(-45deg) }
 
-  .main{
-    background: rgba(255,255,255,.32);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    border-radius: 12px;
-    padding: var(--frame-pad);
-    margin-bottom: var(--bottom-gap);
-  }
+    .menu-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.08);
+      backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
+      z-index:1099
+    }
+    body.menu-open #menu-overlay{display:block}
+    #menu-overlay[hidden]{display:none}
 
-  .main .scroll-panel{
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 650px;
-  }
+    .site-menu{
+      position:fixed;top:0;right:0;height:auto;max-height:90vh;
+      width:min(40vw,150px);
+      background:rgba(255,255,255,.32);
+      backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+      box-shadow:0 20px 50px rgba(0,0,0,.08);
+      transform:translateX(100%);transition:transform .25s;
+      z-index:1101;padding:46px 10px 14px
+    }
+    body.menu-open .site-menu{transform:translateX(0)}
+    .site-menu ul{list-style:none;margin:0;padding:0}
+    .site-menu li{margin:0 0 10px}
+    .site-menu li.sep{
+      margin-top:18px;padding-top:8px;
+      border-top:1px solid rgba(0,0,0,.08)
+    }
+    .site-menu a{
+      display:block;
+      padding:8px 6px;
+      border-radius:10px;
+      color:#000;
+      text-decoration:none;
+      font-size:1rem;
+      font-weight:500;
+    }
+    .site-menu a:hover{background:rgba(0,0,0,.05)}
 
-  .scroll-panel h1{ margin: 0 0 .6rem; }
-</style>
+    .scroll-panel{
+      max-width: min(1000px, 94vw);
+      max-height: 75vh;
+      margin:0;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
 
-<!-- Seiten-Scroll verbergen, Scroll nur im Panel (Desktop) / Mobile freigeben -->
-<style>
-html, body { overflow-y: hidden; }
+      background:transparent;
+      backdrop-filter:none;
+      -webkit-backdrop-filter:none;
+      border-radius:0;
+      box-shadow:none;
 
-.scroll-panel {
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.scroll-panel::-webkit-scrollbar { display: none; }
+      padding:1.25rem 1rem 1.5rem;
 
-@media (max-width: 767px) {
-  html, body {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    font-size: 1rem; /* angepasst: gleich wie aktuell.html */
-  }
-  .main {
-    margin-bottom: var(--bottom-gap) !important;
-  }
-  .scroll-panel {
-    max-height: unset;
-    padding-bottom: var(--bottom-gap);
-  }
-}
-</style>
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+    .scroll-panel::-webkit-scrollbar{display:none;}
 
-<!-- ===== NEU: Inline-Footer-Styles (schwarze Linkfarbe) ===== -->
-<style>
-  .footer-inline{
-    text-align:center;
-    font-size:.82rem;
-    margin: 0 0 1rem 0;
-  }
-  .footer-inline a{
-    color:#000;
-    text-decoration:none;
-  }
-  .footer-inline a:hover{
-    text-decoration:underline;
-  }
-</style>
+    .content-offset{ padding-top:1.5rem; }
+
+    .grid{
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+    }
+
+    .page-link{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:1.1rem;
+      text-decoration:none;
+      color:inherit;
+    }
+    .page-link .arrow{
+      display:inline-block;
+      transition:transform .2s ease;
+    }
+    .page-link:active .arrow{ transform:rotate(90deg); }
+
+    .page-toggle{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:1.1rem;
+      background:transparent;
+      border:none;
+      padding:0;
+      color:inherit;
+      cursor:pointer;
+
+      font-family: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      line-height: inherit;
+    }
+    .page-toggle .arrow{
+      display:inline-block;
+      transition:transform .2s ease;
+    }
+
+    .page-group .page-content{
+      display:none;
+      margin-left:18px;
+      margin-top:.75rem;
+    }
+    .page-group.open .page-content{ display:block; }
+    .page-group.open .page-toggle .arrow{ transform:rotate(90deg); }
+
+    .page-content h1{ margin-top:0; }
+
+    /* ✅ Footer hochkant rechts (Desktop + Mobile), ohne Umbruch */
+    .footer-inline{
+      position: fixed;
+      right: var(--footer-right-desktop);
+      top: var(--footer-top-desktop);
+      bottom: auto;
+      z-index: 1300; /* ✅ über swipe-zone */
+
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+
+      color:#930010 !important;
+      font-size:.82rem;
+      padding: 6px 4px;
+
+      white-space: nowrap;
+    }
+    .footer-inline a,
+    .footer-inline a:visited,
+    .footer-inline a:active,
+    .footer-inline a:focus{
+      color:#930010 !important;
+      text-decoration:none;
+      white-space: nowrap;
+
+      display:inline-block; /* ✅ größere Tap-Fläche */
+      padding:6px 6px;      /* ✅ iOS-friendly */
+    }
+    .footer-inline a:hover{ text-decoration:underline; }
+
+    /* Mobile: Footer bleibt hochkant rechts, aber AUF den Cards */
+    @media (max-width: 768px){
+      .footer-inline{
+        right: var(--footer-right-mobile);
+        top: var(--footer-top-mobile);
+      }
+    }
+
+    /* swipe helper */
+    .edge-swipe{
+      position:fixed;
+      top:0; bottom:0;
+      width:28px;
+      z-index:1201;
+      background:transparent;
+      pointer-events:none;
+    }
+    .edge-swipe.left{ left:0; }
+    .edge-swipe.right{ right:0; }
+    @media (pointer:coarse){
+      .edge-swipe{ pointer-events:auto; }
+      .edge-swipe.right{ pointer-events:none !important; } /* ✅ blockiert Footer nicht */
+    }
+
+    .page-content h1,
+    .page-content h2,
+    .page-content p{
+      font-family: 'Press Start 2P', Arial, sans-serif;
+      font-size: 1.1rem !important;
+      font-weight: 400 !important;
+      letter-spacing: 0.03em !important;
+      line-height: 1.6 !important;
+      color: #fff;
+    }
+
+    .page-content h1{ margin-bottom: 0.4rem; }
+
+    /* Standard-Abstand zwischen Absätzen */
+    .page-content p{
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    /* ✅ Wenn du nach einem Absatz keinen Abstand willst */
+    .page-content p.no-gap{
+      margin-bottom: 0 !important;
+    }
+
+    main.main{
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      filter: none !important;
+      opacity: 1 !important;
+    }
+    main.main::before,
+    main.main::after{
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      filter: none !important;
+      opacity: 0 !important;
+    }
+
+    body{ color:#fff; }
+    a{ color:#fff; }
+
+    .hamburger span{ background:#000; }
+
+    .brand{ color:#fff !important; }
+  </style>
 </head>
 
 <body>
-<header class="header">
-  <a aria-label="b3nn3t Home" class="brand" href="index.html">
-    <img src="favicon.svg" alt="b3nn3t logo" aria-hidden="true"><strong>b3nn3t</strong>
-  </a>
-</header>
+  <header class="header">
+    <a class="brand" href="index.html" aria-label="b3nn3t Home">
+      <img src="favicon.svg" alt="b3nn3t logo" aria-hidden="true"><strong>b3nn3t</strong>
+    </a>
+  </header>
 
-<!-- Burger-Menü -->
-<button aria-controls="site-menu" aria-expanded="false" aria-label="Menü öffnen" class="hamburger">
-  <span></span><span></span><span></span>
-</button>
-<div class="menu-overlay" hidden id="menu-overlay"></div>
-<nav aria-hidden="true" class="site-menu" id="site-menu">
-  <ul>
-    <li><a href="ueber-mich.html">über mich</a></li>
-    <li><a href="diskografie.html">diskografie</a></li>
-    <li><a href="kontakt.html">kontakt</a></li>
-    <li><a href="aktuell.html">aktuell</a></li>
-    <li><a href="gesehen.html">gesehen</a></li>
-    <li><a href="plattformen.html">plattformen</a></li>
-    <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
-  </ul>
-</nav>
+  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div id="menu-overlay" class="menu-overlay" hidden></div>
+  <nav id="site-menu" class="site-menu" aria-hidden="true">
+    <ul>
+      <li><a href="ueber-mich.html">über mich</a></li>
+      <li><a href="diskografie.html">diskografie</a></li>
+      <li><a href="kontakt.html">kontakt</a></li>
+      <li><a href="aktuell.html">aktuell</a></li>
+      <li><a href="gesehen.html">gesehen</a></li>
+      <li><a href="plattformen.html">links</a></li>
+      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+    </ul>
+  </nav>
 
-<a aria-label="Vorherige Seite" class="nav-arrow left" href="index.html">←</a>
-<a aria-label="Nächste Seite" class="nav-arrow right" href="diskografie.html">→</a>
+  <main class="main">
+    <div class="scroll-panel">
+      <div class="content-offset">
+        <section class="grid" aria-label="Seitenübersicht">
 
-<main class="main">
-  <div class="scroll-panel">
-    <h1>über mich</h1>
+          <div class="page-group current open">
+            <button class="page-toggle" type="button" aria-expanded="true">
+              <span class="arrow" aria-hidden="true">►</span>
+              <span>über mich</span>
+            </button>
 
-    <p>hey, ich bin <strong>b3nn3t</strong> – geboren 2006 im norden deutschlands, aufgewachsen zwischen schweizer bergen und gedanken, die manchmal lauter sind als worte.</p>
+            <div class="page-content">
 
-    <p>musik ist für mich mehr als klang – sie ist mein tagebuch, mein spiegel, mein zuhause.</p>
+              <h1>( ◡́.◡̀)(^◡^ )</h1>
 
-    <p>ich schreibe über das, was bleibt, wenn alles andere still wird: zweifel, sehnsucht, hoffnung, liebe – über nächte, in denen die welt zu groß wirkt, und momente, in denen musik für mich spricht.</p>
+              <!-- ✅ kein Abstand zwischen diesen beiden Absätzen -->
+              <p class="no-gap">hallo ich bin bennet, 19 jahre und künstler (oder so) aus st. gallen.</p>
+              <p>++ich gib ratschläge, die      ich eigentlich     selber bräuchte.</p>
 
-    <p>jeder song ist ein stück von mir – ehrlich, ungeschliffen, echt. vielleicht findest du dich darin wieder. vielleicht hilft dir ein satz, den ich eigentlich für mich geschrieben habe. dann hat alles sinn gemacht.</p>
+              <p>irgendjemandem      wirds        schon helfen     so        yk. :p</p>
 
-    <p>danke, dass du da bist und meine welt mit deiner zeit berührst. 🖤</p>
+              <p>liebe grüsse &lt;3333³3³³33³</p>
 
-    <h3>mein name, mein versprechen</h3>
+              <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
+            </div>
+          </div>
 
-    <p><strong>b3nn3t</strong> ist für mich mehr als nur ein künstlername – er steht für alles, was ich bin, was ich fühle und erschaffe. aus einer idee wurde etwas echtes, etwas, das mit mir gewachsen ist.</p>
+          <a class="page-link" href="diskografie.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>diskografie</span>
+          </a>
 
-    <p>heute ist <strong>b3nn3t®</strong> offiziell als marke in der schweiz eingetragen – ein kleiner meilenstein. für mich ist das mehr als ein papier – es ist ein versprechen: weiterzumachen, zu wachsen und echt zu bleiben.</p>
+          <a class="page-link" href="kontakt.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>kontakt</span>
+          </a>
 
-    <p>danke, dass ihr mich auf diesem weg begleitet. ohne euch wäre all das nicht möglich. 🖤</p>
+          <a class="page-link" href="aktuell.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>aktuell</span>
+          </a>
 
-    <!-- ===== Button am Ende des Textes ===== -->
-    <a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a>
+          <a class="page-link" href="gesehen.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>gesehen</span>
+          </a>
 
-    <!-- ===== Drei Zeilen Abstand ===== -->
-    <br><br><br>
+          <a class="page-link" href="plattformen.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>links</span>
+          </a>
 
-    <!-- ===== Inline-Footer im grauen Container ===== -->
-    <div class="footer-inline">
-      © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+        </section>
+      </div>
     </div>
+  </main>
+
+  <div class="footer-inline">
+    © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
   </div>
-</main>
 
-<!-- Entfernt: alter separater Button + Footer am Seitenende -->
-<!-- <a aria-label="Zur Startseite" class="home-btn" href="index.html">Startseite</a> -->
-<!-- <footer>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></footer> -->
+  <div class="edge-swipe left" aria-hidden="true"></div>
+  <div class="edge-swipe right" aria-hidden="true"></div>
 
-<script src="script.js"></script>
-<script defer src="swipe-nav.js?v=6"></script>
+  <script src="script.js"></script>
+  <script src="swipe-nav.js?v=6" defer></script>
 
-<script>
-(function() {
-  function resizePanel() {
-    const panel  = document.querySelector('.scroll-panel');
-    if (!panel) return;
+  <script>
+    (function(){
+      const group  = document.querySelector('.page-group.current');
+      const toggle = group?.querySelector('.page-toggle');
+      const panel  = document.querySelector('.scroll-panel');
 
-    const header = document.querySelector('.header');
-    const footer = document.querySelector('footer');
-    const main   = document.querySelector('.main');
+      function resizePanel(){
+        if(!panel) return;
+        const header = document.querySelector('.header');
+        const main   = document.querySelector('.main');
 
-    const hh = header ? header.offsetHeight : 0;
-    const fh = footer ? footer.offsetHeight : 0; // bleibt 0, da Footer entfernt
-    let pt = 0, pb = 0;
-    if (main) {
-      const cs = getComputedStyle(main);
-      pt = parseFloat(cs.paddingTop)  || 0;
-      pb = parseFloat(cs.paddingBottom) || 0;
-    }
+        const hh = header ? header.offsetHeight : 0;
+        let pt = 0, pb = 0;
+        if(main){
+          const cs = getComputedStyle(main);
+          pt = parseFloat(cs.paddingTop)  || 0;
+          pb = parseFloat(cs.paddingBottom) || 0;
+        }
 
-    const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
-    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    let max = vh - hh - fh - pt - pb - gap;
-    if (max < 260) max = 260;
+        const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
+        const vh  = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
 
-    panel.style.maxHeight = max + 'px';
-    panel.style.overflowY = 'auto';
-    panel.style.webkitOverflowScrolling = 'touch';
-  }
+        let max = vh - hh - pt - pb - gap;
+        if(max < 260) max = 260;
+        panel.style.maxHeight = max + 'px';
+      }
 
-  window.addEventListener('load', resizePanel);
-  window.addEventListener('resize', resizePanel);
-  if (window.visualViewport) window.visualViewport.addEventListener('resize', resizePanel);
-})();
-</script>
+      if(toggle && group){
+        toggle.addEventListener('click', () => {
+          const isOpen = group.classList.contains('open');
+          group.classList.toggle('open', !isOpen);
+          toggle.setAttribute('aria-expanded', String(!isOpen));
+        });
+      }
+
+      window.addEventListener('load', resizePanel);
+      window.addEventListener('resize', resizePanel);
+      if(window.visualViewport){
+        window.visualViewport.addEventListener('resize', resizePanel);
+      }
+    })();
+  </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="utf-8" />
@@ -6,7 +6,7 @@
 
   <!-- Basis-SEO -->
   <title>b3nn3t – Deutschrap & Indie-Pop aus der Schweiz | Songwriter & Musiker</title>
-  <meta name="description" content="b3nn3t – Deutschrap und Indie-Pop aus der Schweiz. Moderner Sound, starke Texte und authentische Songs. Jetzt Musik, Releases, Videos, News und Termine entdecken." />
+  <meta name="description" content="b3nn3t – Deutschrap und Indie-Pop aus der Schweiz. Moderner Sound, starke Texte und authentische Songs. Jetzt Musik, Releases, Videos, News, Termine entdecken." />
   <meta name="robots" content="index,follow" />
 
   <!-- Favicons: SVG, PNG, ICO, Apple -->
@@ -55,9 +55,7 @@
         "name": "b3nn3t",
         "inLanguage": "de-DE",
         "description": "b3nn3t – Deutschrap & Indie-Pop aus der Schweiz. Musik, Veröffentlichungen und Projekte von b3nn3t.",
-        "publisher": {
-          "@id": "https://www.b3nn3t.com/#org"
-        }
+        "publisher": { "@id": "https://www.b3nn3t.com/#org" }
       },
       {
         "@type": "WebPage",
@@ -66,9 +64,7 @@
         "name": "b3nn3t – Offizielle Startseite",
         "description": "Startseite von b3nn3t mit Überblick zu Musik, Releases, News, Terminen und Plattformen.",
         "inLanguage": "de-DE",
-        "isPartOf": {
-          "@id": "https://www.b3nn3t.com/#website"
-        }
+        "isPartOf": { "@id": "https://www.b3nn3t.com/#website" }
       },
       {
         "@type": "Person",
@@ -76,10 +72,7 @@
         "name": "b3nn3t",
         "alternateName": "b3nn3t",
         "url": "https://www.b3nn3t.com/",
-        "image": {
-          "@type": "ImageObject",
-          "url": "https://www.b3nn3t.com/assets/index/bennet_index1.jpg"
-        },
+        "image": { "@type": "ImageObject", "url": "https://www.b3nn3t.com/assets/index/bennet_index1.jpg" },
         "description": "b3nn3t ist ein Deutschrap- und Indie-Pop-Künstler aus der Schweiz.",
         "sameAs": [
           "https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A",
@@ -87,7 +80,7 @@
           "https://mx3.ch/b3nn3t",
           "https://genius.com/artists/B3nn3t",
           "https://soundcloud.com/b3nn3t-music",
-          "https://www.instagram.com/b333nn3t",
+          "https://www.instagram.com/b3nn3t",
           "https://www.youtube.com/@b333nn3t"
         ]
       },
@@ -98,23 +91,13 @@
         "url": "https://www.b3nn3t.com/",
         "genre": "Deutschrap & Indie Pop",
         "areaServed": ["DE", "CH", "AT"],
-        "address": {
-          "@type": "PostalAddress",
-          "addressCountry": "CH"
-        },
-        "member": {
-          "@id": "https://www.b3nn3t.com/#person"
-        }
+        "address": { "@type": "PostalAddress", "addressCountry": "CH" },
+        "member": { "@id": "https://www.b3nn3t.com/#person" }
       },
       {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Start",
-            "item": "https://www.b3nn3t.com/"
-          }
+          { "@type": "ListItem", "position": 1, "name": "Start", "item": "https://www.b3nn3t.com/" }
         ]
       }
     ]
@@ -129,11 +112,9 @@
         const fromIntro = document.referrer && /tv-intro\.html(?:$|[?#])/.test(document.referrer);
         const bypass    = location.search.includes("nointro=1");
 
-        // einfache Bot-Erkennung über User-Agent (erweitert um Lighthouse & Co.)
         const ua    = navigator.userAgent || "";
-        const isBot = /bot|crawl|slurp|spider|preview|Chrome-Lighthouse|Lighthouse|Google-InspectionTool|Google-Site-Verification|Google-PageRenderer|Google-StructuredDataTestingTool/i.test(ua);
+        const isBot = /bot|crawl|slurp|spider|preview|Chrome-Lighthouse|Lighthouse|Google-InspectionTool|Google-Site-Verification|Google-PageRenderer|Google-StructuredDataTestingTool|Google-StructuredDataTestingTool/i.test(ua);
 
-        // Nur echte Besucher sehen das Intro
         if (!isBot && !played && !fromIntro && !bypass) {
           const returnUrl =
             (location.pathname || "index.html") +
@@ -141,17 +122,15 @@
             (location.hash || "");
 
           sessionStorage.setItem("introReturn", returnUrl);
-
           location.replace("tv-intro.html");
         }
-      } catch (e) {
-        /* Fehler ignorieren */
-      }
+      } catch (e) {}
     })();
   </script>
 
   <!-- Externe Styles -->
   <link rel="stylesheet" href="styles.css" />
+  <!-- ✅ styles_nav_arrows.css bleibt drin, aber wir überschreiben unten ALLES -->
   <link rel="stylesheet" href="styles_nav_arrows.css" />
   <link rel="stylesheet" href="swipe-helper.css" />
 
@@ -166,85 +145,253 @@
   </style>
 
   <style>
-    /* ===== Header / Menü ===== */
-    .hamburger{position:fixed;top:14px;right:18px;width:20px;height:20px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;z-index:1200;padding:0}
-    .hamburger span{display:block;width:12px;height:1.4px;margin:1.5px 0;background:#000;border-radius:2px;transition:transform .2s,opacity .2s}
-    body.menu-open .hamburger span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
-    body.menu-open .hamburger span:nth-child(2){opacity:0}
-    body.menu-open .hamburger span:nth-child(3){transform:translateY(-3.5px) rotate(-45deg)}
-    .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:1099}
-    body.menu-open #menu-overlay{display:block}
-    #menu-overlay[hidden]{display:none}
-    .site-menu{position:fixed;top:0;right:0;height:auto;max-height:90vh;width:min(40vw,150px);background:rgba(255,255,255,.32);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 20px 50px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .25s;z-index:1101;padding:46px 10px 14px}
-    body.menu-open .site-menu{transform:translateX(0)}
-    .site-menu ul{list-style:none;margin:0;padding:0}
-    .site-menu li{margin:0 0 10px}
-    .site-menu li.sep{margin-top:18px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)}
-    .site-menu a{display:block;padding:8px 6px;border-radius:10px;color:#000;text-decoration:none;font-size:1rem;font-weight:500}
-    .site-menu a:hover{background:rgba(0,0,0,.05)}
+:root{
+  --bottom-gap: 60px;
 
-    /* ===== FIXED Glas-Overlay ===== */
-    #page-glass{
-      position:fixed; left:0; right:0; top:0; bottom:0;
-      pointer-events:none;
-      z-index:0;
-    }
-    #page-glass .glass-fade{
-      position:absolute; left:0; right:0; top:100vh; height:10vh;
-      background:linear-gradient(to bottom,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.32) 100%);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-    }
-    #page-glass .glass-solid{
-      position:absolute; left:0; right:0; top:110vh; bottom:0;
-      background:rgba(255,255,255,.32);
-      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-    }
+  /* ✅ Footer (hochkant rechts) – feinjustierbar */
+  --footer-top-desktop: 430px;
+  --footer-right-desktop: 0px;
 
-    body .main,
-    body .main::before,
-    body .main::after{
-      background:transparent !important;
-      backdrop-filter:none !important;
-      -webkit-backdrop-filter:none !important;
-      box-shadow:none !important;
-    }
-    .main{
-      border-radius:12px;
-      padding:1.25rem 1rem;
-      position:relative;
-      z-index:1;
-      overflow:auto;
-      -webkit-overflow-scrolling:touch;
-      scrollbar-width:none; -ms-overflow-style:none;
-    }
-    .main::-webkit-scrollbar{display:none}
-    .main .content-offset{padding-top:105vh}
-    .main{padding-bottom:3.5rem}
+  --footer-top-mobile: 520px;   /* ← höher = kleinerer Wert */
+  --footer-right-mobile: 0.2px;  /* ← näher rechts = kleinerer Wert */
+}
+@media (max-width: 768px){
+  :root{ --bottom-gap: 20px; }
+}
 
-    .nav-arrow{z-index:1000 !important}
-    .scroll-cue{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.4);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 4px 12px rgba(0,0,0,.08);display:grid;place-items:center;z-index:900;opacity:0;transition:opacity .2s;pointer-events:none}
-    .scroll-cue svg{width:16px;height:16px}
-    .scroll-cue.visible{opacity:1}
-    .scroll-cue.hidden{opacity:0}
+/* Seite selbst scrollt nicht – nur das Panel */
+html, body{ overflow: hidden; }
+@media (max-width: 767px){
+  html, body{ overflow: auto; -webkit-overflow-scrolling: touch; }
+}
 
-    .grid{display:flex;flex-direction:column;gap:1rem}
-    .grid .card{width:100%}
-    .panel-photo{margin:1rem -1rem 0;border-radius:12px;overflow:hidden;line-height:0;box-shadow:0 6px 24px rgba(0,0,0,.15)}
-    .panel-photo img{display:block;width:100%;height:auto;object-fit:cover;object-position:center}
+/* Body als Flex-Container */
+body{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
 
-    footer{text-align:center;margin-top:2rem;font-size:.82rem}
-    .footer-inline{text-align:center;font-size:.82rem;margin-bottom:1rem}
-    .footer-inline a { color: rgba(0,0,0,0.65); text-decoration: none; }
-    .footer-inline a:hover { text-decoration: underline; color: #000; }
+/* ===== Header / Menü ===== */
+.hamburger{
+  position:fixed;top:14px;right:18px;width:20px;height:20px;
+  border:0;background:transparent;display:grid;place-items:center;
+  cursor:pointer;z-index:1200;padding:0
+}
+.hamburger span{
+  display:block;width:12px;height:1.4px;margin:1.5px 0;
+  background:#000;border-radius:2px;
+  transition:transform .2s,opacity .2s
+}
+body.menu-open .hamburger span:nth-child(1){ transform:translateY(3.5px) rotate(45deg) }
+body.menu-open .hamburger span:nth-child(2){ opacity:0 }
+body.menu-open .hamburger span:nth-child(3){ transform:translateY(-3.5px) rotate(-45deg) }
+
+.menu-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.08);
+  backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
+  z-index:1099
+}
+body.menu-open #menu-overlay{display:block}
+#menu-overlay[hidden]{display:none}
+
+.site-menu{
+  position:fixed;top:0;right:0;height:auto;max-height:90vh;
+  width:min(40vw,150px);
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  box-shadow:0 20px 50px rgba(0,0,0,.08);
+  transform:translateX(100%);transition:transform .25s;
+  z-index:1101;padding:46px 10px 14px
+}
+body.menu-open .site-menu{transform:translateX(0)}
+
+.site-menu ul{list-style:none;margin:0;padding:0}
+.site-menu li{margin:0 0 10px}
+.site-menu li.sep{
+  margin-top:18px;padding-top:8px;
+  border-top:1px solid rgba(0,0,0,.08)
+}
+.site-menu a{
+  display:block;
+  padding:8px 6px;
+  border-radius:10px;
+  color:#222;
+  text-decoration:none;
+  font-size:1rem;
+  font-weight:500;
+  text-shadow:none;
+}
+.site-menu a:hover{ background:rgba(0,0,0,.06); }
+
+/* ===== FIXED Glas-Overlay ===== */
+#page-glass{
+  position:fixed; left:0; right:0; top:0; bottom:0;
+  pointer-events:none;
+  z-index:0;
+}
+#page-glass .glass-fade{
+  position:absolute; left:0; right:0; top:100vh; height:10vh;
+  background:linear-gradient(to bottom,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.32) 100%);
+  backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+}
+#page-glass .glass-solid{
+  position:absolute; left:0; right:0; top:110vh; bottom:0;
+  background:rgba(255,255,255,.32);
+  backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+}
+
+/* main selbst ist nur Rahmen – kein Scroll-Container */
+body .main,
+body .main::before,
+body .main::after{
+  background:transparent !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  box-shadow:none !important;
+}
+.main{
+  flex:1 0 auto;
+  border-radius:12px;
+  padding:0;
+  position:relative;
+  z-index:1;
+  overflow:visible;
+}
+
+/* UNSICHTBARES Scroll-Panel */
+.scroll-panel{
+  max-width:min(1000px,94vw);
+  max-height:75vh; /* wird per JS korrigiert */
+  margin:0;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+
+  background:transparent;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  border-radius:0;
+  box-shadow:none;
+
+  padding:1.25rem 1rem 1.5rem;
+
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+.scroll-panel::-webkit-scrollbar{display:none}
+
+/* Inhalt oben */
+.content-offset{ padding-top:1.5rem; }
+
+/* Grid – nur Textblöcke */
+.grid{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+
+/* Seitennamen mit Pfeil */
+.page-link{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:1.1rem;
+  text-decoration:none;
+  color:inherit;
+}
+.page-link .arrow{
+  display:inline-block;
+  transition:transform .2s ease;
+}
+.page-link:active .arrow{ transform:rotate(90deg); }
+
+/* ✅ Footer hochkant rechts (Desktop + Mobile), ohne Umbruch */
+.footer-inline{
+  position: fixed;
+  right: var(--footer-right-desktop);
+  top: var(--footer-top-desktop);
+  bottom: auto;
+  z-index: 1300; /* ✅ über swipe-zone */
+
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+
+  color:#930010;
+  font-size:.82rem;
+  padding: 6px 4px;
+
+  white-space: nowrap;
+}
+.footer-inline a,
+.footer-inline a:visited,
+.footer-inline a:active,
+.footer-inline a:focus{
+  color:#930010 !important;
+  text-decoration:none;
+  white-space: nowrap;
+
+  display:inline-block; /* ✅ größere Tap-Fläche */
+  padding:6px 6px;      /* ✅ iOS-friendly */
+}
+.footer-inline a:hover{ text-decoration:underline; }
+
+/* Mobile: Footer bleibt hochkant rechts, aber AUF den Cards */
+@media (max-width: 768px){
+  .footer-inline{
+    right: var(--footer-right-mobile);
+    top: var(--footer-top-mobile);
+  }
+}
+
+/* ✅✅✅ WICHTIG: Pfeile links/rechts/unten IMMER aus (Desktop & Mobile) */
+.nav-arrow,
+.scroll-cue{
+  display:none !important;
+}
+
+/* swipe helper */
+.edge-swipe{
+  position:fixed;
+  top:0; bottom:0;
+  width:28px;
+  z-index:1201;
+  background:transparent;
+  pointer-events:none;
+}
+.edge-swipe.left{ left:0; }
+.edge-swipe.right{ right:0; }
+@media (pointer:coarse){
+  .edge-swipe{ pointer-events:auto; }
+  .edge-swipe.right{ pointer-events:none !important; } /* ✅ blockiert Footer nicht */
+}
+
+/* =========================================================
+   ✅ WHITE THEME OVERRIDES (wie ueber-mich/diskografie/etc.)
+   ========================================================= */
+body{ color:#fff; }
+
+/* Header Brand (b3nn3t) weiß */
+.header .brand,
+.header .brand strong{
+  color:#fff !important;
+}
+
+/* Startseiten-Links weiß */
+.page-link,
+.page-link:visited{
+  color:#fff !important;
+}
+
+/* Footer: NICHT mehr weiß überschreiben -> bewusst entfernt */
   </style>
 
-  <!-- ✅ Nur Performance: Verbindungen vorbereiten (keine Layout-Änderung) -->
+  <!-- ✅ Nur Performance: Verbindungen vorbereiten -->
   <link rel="preconnect" href="https://open.spotify.com" crossorigin>
   <link rel="preconnect" href="https://i.scdn.co" crossorigin>
 
-  <!-- ✅ Spotify-Warmup: Lighthouse-safe mode (Start nach 1,5 s) -->
+  <!-- ✅ Spotify-Warmup -->
   <script>
     (function(){
       const DISCO_SPOTIFY_URLS = [
@@ -268,16 +415,9 @@
       }
 
       function startWarmup(){
-        // Datensparen respektieren
-        if ('connection' in navigator && navigator.connection && navigator.connection.saveData) {
-          return;
-        }
-
-        // Tools wie Lighthouse / PageSpeed Insights überspringen
+        if ('connection' in navigator && navigator.connection && navigator.connection.saveData) return;
         const ua = navigator.userAgent || "";
-        if (/Lighthouse|Chrome-Lighthouse|PageSpeed|Speed Insights/i.test(ua)) {
-          return;
-        }
+        if (/Lighthouse|Chrome-Lighthouse|PageSpeed|Speed Insights/i.test(ua)) return;
 
         const DELAY = 80, MAX = 6;
         let active = 0, i = 0;
@@ -291,11 +431,9 @@
             });
           }
         }
-
         next();
       }
 
-      // Erst nach vollständigem Laden + kleiner Pause starten
       window.addEventListener('load', function () {
         setTimeout(startWarmup, 1500);
       });
@@ -321,6 +459,7 @@
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
+  <!-- Burger-Menü -->
   <nav id="site-menu" class="site-menu">
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
@@ -328,114 +467,65 @@
       <li><a href="kontakt.html">kontakt</a></li>
       <li><a href="aktuell.html">aktuell</a></li>
       <li><a href="gesehen.html">gesehen</a></li>
-      <li><a href="plattformen.html">plattformen</a></li>
+      <li><a href="plattformen.html">links</a></li>
       <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
     </ul>
   </nav>
 
   <main class="main">
-    <div class="content-offset">
-      <h1>
-        moin und willkommen
-        <span style="opacity:0; display:inline-block; height:0; overflow:hidden;">
-          b3nn3t – Deutschrap & Indie-Pop aus der Schweiz
-        </span>
-      </h1>
+    <div class="scroll-panel">
+      <div class="content-offset">
 
-      <p>
-        bei <strong>b3nn3t</strong> – bock auf browsen... dann los
-        <span style="opacity:0; display:block; height:0; overflow:hidden;">
-          – Musiker und Songwriter aus der Schweiz.
-          Hier findest du Deutschrap und Indie-Pop, meine Releases, News, Videos
-          und alle Plattformen, auf denen du meine Musik hören kannst.
-        </span>
-      </p>
+        <section class="grid" aria-label="Seitenübersicht">
 
-      <section class="grid" aria-label="Seitenübersicht">
-        <a class="card" href="ueber-mich.html">über mich<small>Bio & Einblicke</small></a>
-        <figure class="panel-photo">
-          <picture>
-            <source
-              srcset="assets/index/bennet_index1.avif"
-              type="image/avif"
-              sizes="(min-width: 900px) 800px, 100vw">
-            <source
-              srcset="assets/index/bennet_index1.webp"
-              type="image/webp"
-              sizes="(min-width: 900px) 800px, 100vw">
-            <img
-              src="assets/index/bennet_index1.jpg"
-              alt="b3nn3t liegt kopfüber auf dem Boden einer U-Bahn-Station">
-          </picture>
-        </figure>
+          <a class="page-link" href="ueber-mich.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>über mich</span>
+          </a>
 
-        <a class="card" href="diskografie.html">diskografie<small>Releases & Projekte</small></a>
-        <figure class="panel-photo">
-          <picture>
-            <source
-              srcset="assets/index/bennet_index2.avif"
-              type="image/avif"
-              sizes="(min-width: 900px) 800px, 100vw">
-            <source
-              srcset="assets/index/bennet_index2.webp"
-              type="image/webp"
-              sizes="(min-width: 900px) 800px, 100vw">
-            <img
-              src="assets/index/bennet_index2.jpg"
-              alt="b3nn3t sitzt in Hocke im Profil, mit Lederjacke und Jeans"
-              loading="lazy">
-          </picture>
-        </figure>
+          <a class="page-link" href="diskografie.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>diskografie</span>
+          </a>
 
-        <a class="card" href="kontakt.html">kontakt<small>Booking & Mail</small></a>
-        <a class="card" href="aktuell.html">aktuell<small>News & Termine</small></a>
-        <figure class="panel-photo">
-          <picture>
-            <source
-              srcset="assets/index/bennet_index3.avif"
-              type="image/avif"
-              sizes="(min-width: 900px) 800px, 100vw">
-            <source
-              srcset="assets/index/bennet_index3.webp"
-              type="image/webp"
-              sizes="(min-width: 900px) 800px, 100vw">
-            <img
-              src="assets/index/bennet_index3.jpg"
-              alt="b3nn3t hängt akrobatisch an einem Drehkreuz in einer U-Bahn-Station"
-              loading="lazy">
-          </picture>
-        </figure>
+          <a class="page-link" href="kontakt.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>kontakt</span>
+          </a>
 
-        <a class="card" href="intro.html">gesehen<small>Inspiration & Notizen</small></a>
-        <a class="card" href="plattformen.html">plattformen<small>Social & Streaming</small></a>
+          <a class="page-link" href="aktuell.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>aktuell</span>
+          </a>
 
-        <br><br><br>
+          <a class="page-link" href="gesehen.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>gesehen</span>
+          </a>
 
-        <div class="footer-inline">
-          © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
-        </div>
-      </section>
+          <a class="page-link" href="plattformen.html">
+            <span class="arrow" aria-hidden="true">►</span>
+            <span>links</span>
+          </a>
+
+        </section>
+
+      </div>
     </div>
   </main>
 
-  <div class="scroll-cue" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
+  <!-- Fester Footer (hochkant rechts) -->
+  <div class="footer-inline">
+    © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
   </div>
+
+  <div class="edge-swipe left" aria-hidden="true"></div>
+  <div class="edge-swipe right" aria-hidden="true"></div>
 
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <script>
-    const cue = document.querySelector('.scroll-cue');
-    const scroller = document.querySelector('.main');
-    window.addEventListener('load', () => cue.classList.add('visible'));
-    scroller.addEventListener('scroll', () => {
-      cue.classList.toggle('hidden', scroller.scrollTop > 50);
-    }, {passive:true});
-  </script>
-
+  <!-- Glas-Overlay-Positionierung -->
   <script>
     (function () {
       const glass = document.getElementById('page-glass');
@@ -449,6 +539,7 @@
         const cs = getComputedStyle(panel);
         glass.style.borderRadius = cs.borderRadius || '12px';
       }
+
       window.addEventListener('load', positionGlass);
       window.addEventListener('resize', positionGlass);
       window.addEventListener('scroll', positionGlass, { passive: true });
@@ -460,6 +551,40 @@
       }
       tick();
       setTimeout(()=>cancelAnimationFrame(raf), 800);
+    })();
+  </script>
+
+  <!-- Dynamische Höhe des Scroll-Panels -->
+  <script>
+    (function(){
+      const panel = document.querySelector('.scroll-panel');
+      if (!panel) return;
+
+      function resizePanel(){
+        const header = document.querySelector('.header');
+        const main   = document.querySelector('.main');
+
+        const hh = header ? header.offsetHeight : 0;
+        let pt = 0, pb = 0;
+        if(main){
+          const cs = getComputedStyle(main);
+          pt = parseFloat(cs.paddingTop)  || 0;
+          pb = parseFloat(cs.paddingBottom) || 0;
+        }
+
+        const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bottom-gap')) || 0;
+        const vh  = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+
+        let max = vh - hh - pt - pb - gap;
+        if (max < 260) max = 260;
+        panel.style.maxHeight = max + 'px';
+      }
+
+      window.addEventListener('load', resizePanel);
+      window.addEventListener('resize', resizePanel);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', resizePanel);
+      }
     })();
   </script>
 </body>

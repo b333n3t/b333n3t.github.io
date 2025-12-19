@@ -4,27 +4,96 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Danke — b3nn3t</title>
-  <meta name="description" content="Dankeschön Nachricht von b3nn3t – für die Kontaktaufnahme und Nachricht" />
+
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* NUR: Glas-/Milch-Layer vom main abschalten (Layout aus styles.css bleibt!) */
+    main.main::before,
+    main.main::after{
+      content: none !important;
+      display: none !important;
+    }
+
+    /* optional: falls styles.css dem main selbst blur/filter gibt */
+    main.main{
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      filter: none !important;
+    }
+
+    /* Danke-Seite: Textfeld selbst darf nicht milchig sein */
+    main.main{
+      background: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    /* ===== WHITE THEME ===== */
+    body{ color:#fff !important; }
+
+    /* b3nn3t im Header weiß */
+    .header .brand,
+    .header .brand strong{
+      color:#fff !important;
+    }
+
+    /* Buttons/Links im Content weiß */
+    main.main a,
+    main.main a:visited{
+      color:#fff !important;
+    }
+
+    /* Burger-Menü (falls vorhanden) bleibt schwarz */
+    .hamburger span{
+      background:#000 !important;
+    }
+
+    /* ===== FOOTER: rechtsbündig + rot (#930010) ===== */
+    .footer-inline{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:40px;
+
+      text-align:right;        /* ← rechtsbündig */
+      padding-right:18px;      /* ← Abstand zum Rand */
+      padding-left:18px;
+
+      font-size:.82rem;
+      z-index:910;
+      color:#930010;
+    }
+    .footer-inline a,
+    .footer-inline a:visited,
+    .footer-inline a:active,
+    .footer-inline a:focus{
+      color:#930010;
+      text-decoration:none;
+    }
+    .footer-inline a:hover{
+      text-decoration: underline;
+    }
+  </style>
 </head>
+
 <body>
-<header class="header">
-  <a class="brand" href="https://www.b3nn3t.com/index.html" aria-label="b3nn3t Home">
-    <img alt="" src="favicon.svg"><strong>b3nn3t</strong>
-  </a>
-</header>
+  <header class="header">
+    <a class="brand" href="index.html" aria-label="b3nn3t Home">
+      <img alt="" src="favicon.svg" aria-hidden="true"><strong>b3nn3t</strong>
+    </a>
+  </header>
 
-<main class="main">
-  <h1>Danke!</h1>
-  <p>Deine Nachricht wurde erfolgreich gesendet. Ich melde mich so bald wie möglich zurück.</p>
-  <a class="btn" href="https://www.b3nn3t.com/index.html">Zurück zur Startseite</a>
-</main>
+  <main class="main">
+    <h1>danke!</h1>
+    <p>deine nachricht wurde erfolgreich gesendet. ich melde mich so bald wie möglich zurück.</p>
+    <a class="btn" href="index.html">zurück zur startseite</a>
+  </main>
 
-<footer>
-  © b3nn3t ·
-  <a href="https://www.b3nn3t.com/impressum.html">Impressum / Datenschutz</a>
-</footer>
-
+  <div class="footer-inline">
+    © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+  </div>
 </body>
 </html>

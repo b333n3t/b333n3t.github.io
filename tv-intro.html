@@ -1,18 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- ✅ SEO: Intro soll nicht indexiert werden -->
   <meta name="robots" content="noindex,follow" />
-  <!-- ✅ Canonical auf die eigentliche Startseite -->
   <link rel="canonical" href="https://www.b3nn3t.com/" />
 
   <title>TV-Intro – b3nn3t | Intro-Annimation &amp; Visuals</title>
-  <meta name="description" content="Das offizielle Intro von b3nn3t – Sound, Atmosphäre und visuelle Identität. Ein Übergang in die künstlerisch-musikalische Welt von b3nn3t." />
+  <meta name="description" content="Das offizielle Intro von b3nn3t – Sound, Atmosphäre und visuelle Identität. Ein kurzer Einblick in die Welt hinter dem Intro." />
 
-  <!-- (Optional) Spekulations-Regeln: Startseite vorladen/prerendern -->
   <script type="speculationrules">
   {
     "prefetch": [{ "source": "document", "urls": ["index.html"] }],
@@ -21,147 +19,135 @@
   </script>
 
   <style>
-    :root {
-      --fade-ms: 1000ms; /* Dauer der Ein-/Ausblendung */
-    }
+    :root { --fade-ms: 1000ms; --bg:#930010; }
 
-    html,body {
-      margin:0;
-      height:100%;
-      background:#000;          /* schwarzer Hintergrund */
+    html,body{
+      margin:0;height:100%;
+      background:var(--bg);
       overflow:hidden;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
-    /* Canvas weich ein-/ausblenden */
-    canvas#c {
+    canvas#c{
+      position:fixed; inset:0;
+      width:100vw; height:100vh;
       display:block;
-      width:100vw;
-      height:100vh;
       image-rendering:pixelated;
       image-rendering:crisp-edges;
       opacity:0;
-      transition: opacity var(--fade-ms) ease;
+      transition:opacity var(--fade-ms) ease;
+      z-index:1;
     }
+    body.ready canvas#c{opacity:1;}
+    body.fadeout canvas#c{opacity:0;}
 
-    body.ready canvas#c  { opacity:1; }  /* Fade-In */
-    body.fadeout canvas#c{ opacity:0; }  /* Fade-Out */
-
-    /* Skip-Button (Intro überspringen) */
-    .skip {
+    .skip{
       position:fixed; top:14px; right:14px; z-index:10;
       background:#fff; color:#000; border:0; border-radius:999px;
       padding:.45rem .8rem; font-weight:700; cursor:pointer;
     }
-    .skip:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+    .skip:focus-visible{outline:2px solid #fff; outline-offset:2px;}
 
-    /* Barrierefreiheit: Nutzer mit reduzierter Bewegung -> sofort weiter */
-    @media (prefers-reduced-motion: reduce) {
-      body { animation:none !important; }
-      canvas#c { transition:none; }
+    .loaderWrap{
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0;
+      transition:opacity var(--fade-ms) ease;
+      z-index:5;
+      pointer-events:none;
+    }
+    body.ready .loaderWrap{opacity:1;}
+    body.fadeout .loaderWrap{opacity:0;}
+
+    .loader{
+      width:min(720px,78vw);
+      padding:18px 18px 16px;
+      box-sizing:border-box;
+    }
+
+    .barFrame{
+      width:100%; height:16px;
+      border:2px solid #fff;
+      border-radius:0;
+      padding:2px;
+      box-sizing:border-box;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.6),
+        inset 0 0 0 1px rgba(0,0,0,0.6);
+    }
+
+    .bar{
+      height:100%;
+      width:0%;
+      border-radius:0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #fff 0px,
+          #fff 6px,
+          rgba(255,255,255,0.65) 6px,
+          rgba(255,255,255,0.65) 8px
+        );
+    }
+
+    .hint{
+      margin-top:10px;
+      color:rgba(255,255,255,.9);
+      font-size:14px;
+      letter-spacing:.2px;
+      text-align:center;
+      user-select:none;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.35);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      body{animation:none !important;}
+      canvas#c,.loaderWrap{transition:none;}
     }
   </style>
 
-  <!-- No-JS-Fallback: sofort weiterleiten -->
   <noscript>
     <meta http-equiv="refresh" content="0; url=index.html?nointro=1">
     <style>
-      body { display:flex; align-items:center; justify-content:center; color:#fff; }
-      a { color:#fff; text-decoration:underline; }
+      body{display:flex;align-items:center;justify-content:center;color:#fff;}
+      a{color:#fff;text-decoration:underline;}
     </style>
     <p>Weiter zur <a href="index.html?nointro=1">Startseite</a>…</p>
   </noscript>
 </head>
 <body>
 
-  <!-- 🔽 Hauptinhalt semantisch markiert -->
-  <main role="main">
-    <!-- Skip-Button -->
-    <button class="skip" type="button" aria-label="Intro überspringen">Skip</button>
+<main role="main">
+  <button class="skip" type="button" aria-label="Intro überspringen">Skip</button>
+  <canvas id="c" aria-hidden="true"></canvas>
 
-    <canvas id="c" aria-hidden="true"></canvas>
-
-    <!-- Kurze Status-Anzeige für Screenreader -->
-    <div aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
-      Intro läuft. Du kannst „Skip“ drücken, um direkt zur Startseite zu wechseln.
+  <div class="loaderWrap" aria-hidden="true">
+    <div class="loader">
+      <div class="barFrame"><div class="bar" id="bar"></div></div>
+      <div class="hint">Loading…</div>
     </div>
-  </main>
+  </div>
+
+  <div aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+    Intro läuft. Du kannst „Skip“ drücken, um direkt zur Startseite zu wechseln.
+  </div>
+</main>
 
 <script>
-/* ================== EINSTELLUNGEN ================== */
-const USE_HEAD_IMAGE   = true;
-const HEAD_IMG_URL     = "assets/tv-intro/dein-pixel.webp?v=1"; // dein Kopf (mit/ohne Alpha)
+/* ================== Redirect Ziel ================== */
+const INTRO_RETURN_URL =
+  (sessionStorage.getItem("introReturn") || "index.html") +
+  (location.search.includes('nointro=1') ? "" : (location.search ? "&" : "?") + "nointro=1");
 
-// Kopf-Keying (nur nötig, wenn das Bild keinen Alpha-Kanal hat)
-const KEY_TOLERANCE    = 65;
-const KEY_SOFTNESS     = 0.45;
-const KEY_CUTOFF       = 0.10;
-const KEY_DESPECKLE    = 1;
-
-// Bewegung & Layout
-const RUN_TO_RIGHT     = true;
-const WORD             = "b3nn3t";
-const HAMMER_MS        = 680;    // „Hammer“-Zeit je Buchstabe
-const SPARK_COUNT      = 12;
-const HEAD_SCALE       = 26;
-const BODY_SCALE       = 16;
-
-// Buchstaben-Darstellung
-const LETTER_SIZE      = 24;     // in PX()-Einheiten
-const LETTER_GAP       = 18;
-const LETTER_TILT_MAX  = 6;      // max. zufällige Schiefstellung in Grad
-const LETTER_JITTER_Y  = 2;      // vertikale Zufallsabweichung in PX()
-
-// „t“ kippen + kurze Pause NUR dann
-const TILT_TRIGGER_PX  = 42;     // Abstand zur Kante (in PX())
-const TILT_TARGET_DEG  = 24;     // Kippwinkel nach rechts
-const TILT_MS          = 500;    // bis max. Neigung
-const TILT_WOBBLE_MS   = 5800;   // Wackeln
-const TILT_PAUSE_MS    = 3000;   // Figur-Standzeit beim gekippten „t“
-
-// (Optional) Weißer Glow & Welle – wie vorher
-const GLOW_DELAY_MS    = 140;
-const GLOW_MS          = 650;
-const WAVE_DELAY_MS    = 800;
-const WAVE_MS          = 1600;
-const WAVE_STRENGTH    = 1.0;
-
-/* ===== Wipe-Fade der Linie ===== */
-const LINE_ERASE_MS = 1200; // Dauer des Links→Rechts-Wipes (langsamer = größer)
-let lineFadeStart = null;   // Startzeitpunkt des Wipes
-
-/* ===== Rücksprungziel für Redirect nach dem Intro ===== */
-const INTRO_RETURN_URL = (sessionStorage.getItem("introReturn") || "index.html") + (location.search.includes('nointro=1') ? "" : (location.search ? "&" : "?") + "nointro=1");
-/* ==================================================== */
-
-const c = document.getElementById('c');
-const ctx = c.getContext('2d');
-let W=0,H=0,DPR=1;
-
-/* ===== PRELOAD: Bilder & Videos ===== */
+/* ================== PRELOAD bleibt drin ================== */
 const preloadImages = [
-  // --- Startseite ---
-  "assets/index/bennet_index1.avif",
-  "assets/index/bennet_index1.webp",
- 
-  "assets/index/bennet_index2.avif",
-  "assets/index/bennet_index2.webp",
-
-  "assets/index/bennet_index3.avif",
-  "assets/index/bennet_index3.webp",
-
-  // --- Gesehen ---
-  "assets/gesehen/insta1.webp",
-  "assets/gesehen/insta2.webp",
-  "assets/gesehen/insta3.webp",
-  "assets/gesehen/insta4.webp",
-
-  "assets/gesehen/reel1.avif",
-  "assets/gesehen/reel2.avif",
-  "assets/gesehen/reel3.avif",
-  "assets/gesehen/reel4.avif",
-  "assets/gesehen/reel5.avif",
-  "assets/gesehen/reel6.avif",
-  "assets/gesehen/reel7.avif",
+  "assets/index/bennet_index1.avif","assets/index/bennet_index1.webp",
+  "assets/index/bennet_index2.avif","assets/index/bennet_index2.webp",
+  "assets/index/bennet_index3.avif","assets/index/bennet_index3.webp",
+  "assets/gesehen/insta1.webp","assets/gesehen/insta2.webp","assets/gesehen/insta3.webp","assets/gesehen/insta4.webp",
+  "assets/gesehen/reel1.avif","assets/gesehen/reel2.avif","assets/gesehen/reel3.avif","assets/gesehen/reel4.avif",
+  "assets/gesehen/reel5.avif","assets/gesehen/reel6.avif","assets/gesehen/reel7.avif",
+  "assets/gesehen/instagram_poster.jpg",
   "https://img.youtube.com/vi/ZSaj_FuqPN8/hqdefault.jpg",
   "https://img.youtube.com/vi/DMNl40Tip1w/hqdefault.jpg",
   "https://img.youtube.com/vi/K5pKG0Smdfc/hqdefault.jpg",
@@ -170,406 +156,244 @@ const preloadImages = [
   "https://img.youtube.com/vi/rV1U891RKLo/hqdefault.jpg",
   "https://img.youtube.com/vi/fq8zhAQMam0/hqdefault.jpg"
 ];
-
 const preloadVideos = [ "assets/gesehen/B3NN3T.mp4" ];
 
 function preloadAllImages(urls){
   urls.forEach(url=>{
-    const img = new Image();
-    img.referrerPolicy = "no-referrer";
-    img.src = url;
+    const img=new Image();
+    img.referrerPolicy="no-referrer";
+    img.src=url;
   });
 }
 function preloadAllVideos(urls){
   urls.forEach(url=>{
-    const v = document.createElement('video');
-    v.preload = 'auto';
-    v.muted = true;
-    v.src = url;
+    const v=document.createElement('video');
+    v.preload='auto';
+    v.muted=true;
+    v.src=url;
     v.load();
   });
 }
-
-/* 🔥 Bilder IMMER sofort preloaden (einmal pro Session) */
-if (!window._introPreloadImagesDone) {
-  window._introPreloadImagesDone = true;
+if(!window._preloaded){
+  window._preloaded=true;
   preloadAllImages(preloadImages);
-}
-
-/* 🎯 Smart-Preload nur für das MP4:
-   - erst nach 1 Sekunde
-   - nur wenn Verbindung NICHT „2g/3g/slow-2g“
-   - nur wenn kein Datensparen aktiv ist
-*/
-function smartPreloadVideos() {
-  if (window._introPreloadVideosDone) return;
-
-  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-
-  if (conn) {
-    if (conn.saveData) {
-      // Datensparen aktiv → kein Video-Preload
-      return;
-    }
-    const type = (conn.effectiveType || "").toLowerCase();
-    if (type === "slow-2g" || type === "2g" || type === "3g") {
-      // zu langsame Verbindung → kein Video-Preload
-      return;
-    }
-    // 4g, gutes WLAN oder unbekannt → ok
-  }
-
-  window._introPreloadVideosDone = true;
   preloadAllVideos(preloadVideos);
 }
 
-// ⏱ nach 1 Sekunde versuchen, das MP4 smart zu preladen
-setTimeout(smartPreloadVideos, 1000);
+/* ================== Canvas Setup ================== */
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
 
-function PX(){return Math.max(2,Math.floor(Math.min(W,H)/240));}
-function lineY(){return Math.floor(H*2/3);} 
-function lineEndX(){return Math.floor(W*0.82);} 
+let W=0,H=0,DPR=1;
 
 function resize(){
-  DPR=Math.max(1,Math.floor(window.devicePixelRatio||1));
-  W=c.width=Math.floor(innerWidth*DPR);
-  H=c.height=Math.floor(innerHeight*DPR);
-  c.style.width=innerWidth+'px';
-  c.style.height=innerHeight+'px';
-  ctx.imageSmoothingEnabled=false;
-  _baseX=null;
+  DPR = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+  W = c.width  = Math.floor(innerWidth * DPR);
+  H = c.height = Math.floor(innerHeight * DPR);
+  c.style.width  = innerWidth + 'px';
+  c.style.height = innerHeight + 'px';
+  ctx.imageSmoothingEnabled = false;
 }
-addEventListener('resize',resize);resize();
+addEventListener('resize', resize);
+resize();
 
-/* ===== Kopf laden & Keying ===== */
-let headReady=false, headImg;
-if(USE_HEAD_IMAGE){
-  const raw=new Image();raw.crossOrigin="anonymous";
-  raw.onload=()=>{
-    headImg=removeBGSmart(raw,{
-      tolerance:KEY_TOLERANCE,softness:KEY_SOFTNESS,cutoff:KEY_CUTOFF,despeckle:KEY_DESPECKLE
-    });
-    headReady=true;
-  };
-  raw.onerror=()=>{headReady=false;};
-  raw.src=HEAD_IMG_URL;
-}
-function removeBGSmart(image,{tolerance=60,softness=.4,cutoff=.1,despeckle=1}={}){
-  const w=image.naturalWidth||image.width,h=image.naturalHeight||image.height;
-  const off=document.createElement('canvas');off.width=w;off.height=h;
-  const octx=off.getContext('2d',{willReadFrequently:true});
-  octx.imageSmoothingEnabled=false;octx.drawImage(image,0,0,w,h);
-  const img=octx.getImageData(0,0,w,h),d=img.data;
-  let sumR=0,sumG=0,sumB=0,count=0; const add=(ix)=>{sumR+=d[ix];sumG+=d[ix+1];sumB+=d[ix+2];count++;};
-  for(let x=0;x<w;x++){add((x<<2));add((((h-1)*w+x)<<2));}
-  for(let y=0;y<h;y++){add(((y*w)<<2));add(((y*w+(w-1))<<2));}
-  const keyR=(sumR/count)|0,keyG=(sumG/count)|0,keyB=(sumB/count)|0;
-  const rgb2ycbcr=(r,g,b)=>[0.299*r+0.587*g+0.114*b,-0.168736*r-0.331264*g+0.5*b+128,0.5*r-0.418688*g-0.081312*b+128];
-  const [ky,kcb,kcr]=rgb2ycbcr(keyR,keyG,keyB);const tol=Math.max(1,tolerance);
-  const smooth=(t)=>t<=0?0:t>=1?1:t*t*(3-2*t);
-  for(let i=0;i<d.length;i+=4){
-    const [y,cb,cr]=rgb2ycbcr(d[i],d[i+1],d[i+2]);
-    const dist=Math.hypot(cb-kcb,cr-kcr)*0.9+Math.abs(y-ky)*0.1;
-    let a=(dist-tol*cutoff)/Math.max(1,tol*(1-cutoff));
-    a=smooth(a*(1+softness));a=Math.max(0,Math.min(1,a));
-    d[i+3]=Math.round(255*a);
-  }
-  octx.putImageData(img,0,0);
-  if(despeckle>0){
-    const pass=octx.getImageData(0,0,w,h),p=pass.data,thr=140;
-    const neigh=(x,y)=>{let n=0;for(let yy=-1;yy<=1;yy++)for(let xx=-1;xx<=1;xx++){if(!xx&&!yy)continue;const X=x+xx,Y=y+yy;if(X<0||Y<0||X>=w||Y>=h)continue;if(p[((Y*w+X)<<2)+3]>thr)n++;}return n;};
-    for(let y=1;y<h-1;y++){for(let x=1;x<w-1;x++){const ai=((y*w+x)<<2)+3;if(p[ai]<=thr&&neigh(x,y)>=(despeckle===2?5:7))p[ai]=0;}}
-    octx.putImageData(pass,0,0);
-  }
-  return off;
+/* ================== Line Helpers (fein, stabil) ================== */
+const snap = (v)=>Math.round(v);
+const clamp01 = (t)=>Math.max(0,Math.min(1,t));
+function hash01(n){ const x=Math.sin(n*127.1)*43758.5453123; return x-Math.floor(x); }
+function smoothstep(t){ t=clamp01(t); return t*t*(3-2*t); }
+function noise1D(seed, t){
+  const s=t*10, i=Math.floor(s), f=s-i;
+  const a=hash01(seed*1000+i*19.19), b=hash01(seed*1000+(i+1)*19.19);
+  const u=smoothstep(f);
+  return (a*(1-u)+b*u)*2-1;
 }
 
-/* ===== Zeichenhilfen ===== */
-function rect(x,y,w,h,fill){
-  ctx.fillStyle=fill;ctx.fillRect(x,y,w,h);
-  ctx.fillStyle='#000';
-  ctx.fillRect(x-1,y,w+2,1);
-  ctx.fillRect(x-1,y+h-1,w+2,1);
-  ctx.fillRect(x-1,y,1,h);
-  ctx.fillRect(x+w-1,y,1,h);
-}
+/* ============== 80s Vector-Scope Drift ==============
+   - Linien bleiben “sauberer” als Kritzel
+   - Aber bekommen Oszilloskop-Drift: leicht sinus + leicht noise
+   - Drift ist zeitabhängig, aber langsam -> kein Flimmern
+*/
+function scopeLine(x1,y1,x2,y2,seed,alpha,width){
+  const dx=x2-x1, dy=y2-y1;
+  const len=Math.hypot(dx,dy)||1;
+  const nx=-dy/len, ny=dx/len;
 
-/* ===== Linie zeichnen – Links→Rechts „wegradieren“ ===== */
-function drawLine(){
-  const now = performance.now();
-  const y   = lineY();
-  const lw  = 2*PX();         // Linienbreite
-  const end = lineEndX();
+  // segmentiert, aber smooth
+  const segs=Math.max(16, Math.min(90, Math.floor(len/(10*DPR))));
+  const tNow = performance.now()*0.001;
 
-  // Fortschritt 0..1: wie weit von links schon „wegradiert“
-  let t = 0;
-  if(lineFadeStart){
-    t = (now - lineFadeStart) / LINE_ERASE_MS;
-    if(t < 0) t = 0;
-    if(t > 1) t = 1;
-  }
-
-  // Linke Kante des sichtbaren Restsegments
-  const startX = Math.round(end * t);
+  // “Scope”-Parameter (ruhig)
+  const freq = 1.2 + (hash01(seed*3.3))*1.1;   // 1.2..2.3
+  const wob  = (0.7 + hash01(seed*7.7))*1.8;   // 0.7..2.5
+  const amp  = (0.55 + hash01(seed*11.1))*2.2 * DPR; // 1.2..~4.0px
+  const phase = (hash01(seed*5.5))*Math.PI*2;
 
   ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.lineWidth = width;
+  ctx.lineCap='round';
+  ctx.lineJoin='round';
 
-  // Nur den Bereich ab startX nach rechts sichtbar machen
+  // Weißer Kern
+  ctx.strokeStyle = 'rgba(255,255,255,0.58)';
   ctx.beginPath();
-  ctx.rect(startX, y - lw, end - startX, lw*2);
-  ctx.clip();
+  for(let i=0;i<=segs;i++){
+    const t=i/segs;
 
-  // Linie normal zeichnen
-  ctx.strokeStyle = '#fff';
-  ctx.lineWidth   = lw;
-  ctx.beginPath();
-  ctx.moveTo(0, y);
-  ctx.lineTo(end, y);
+    let x=x1+dx*t;
+    let y=y1+dy*t;
+
+    // Drift: sinus entlang der Linie + sehr leichte noise
+    const sin = Math.sin((t*freq*2*Math.PI) + phase + tNow*0.55*wob);
+    const n   = noise1D(seed, t + tNow*0.06);
+
+    const off = (sin*0.70 + n*0.30) * amp;
+
+    x = snap(x + nx*off);
+    y = snap(y + ny*off);
+
+    if(i===0) ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+
+  // Neon “afterglow” (subtil, 80s)
+  ctx.globalCompositeOperation='lighter';
+  ctx.strokeStyle = 'rgba(0,255,255,0.10)';
+  ctx.lineWidth = width + 0.8*DPR;
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(255,0,200,0.08)';
+  ctx.lineWidth = width + 1.3*DPR;
   ctx.stroke();
 
   ctx.restore();
 }
 
-/* ===== Avatar (walk | hammer | pause | fall) ===== */
-const avatar={
-  state:'walk', x:-40*PX(), y:lineY()-3*PX(),
-  vx:2.2, vy:0, gravity:.35, step:0,
-  headScale:HEAD_SCALE, bodyScale:BODY_SCALE,
-  hammerUntil:0, pauseUntil:0,
-  didPauseJump:false
-};
-
-// Kopf etwas tiefer, Oberkörper etwas höher
-function drawHead(x,y){
-  const p=PX(),s=avatar.headScale*p,w=s,h=s;
-  const top = y - avatar.bodyScale*p - s + 2*p;
-  if(USE_HEAD_IMAGE&&headReady){
-    ctx.drawImage(headImg,Math.round(x-w/2),Math.round(top),Math.round(w),Math.round(h));
-    return;
-  }
-  rect(Math.round(x-w/2),Math.round(top),w,Math.round(h*0.6),'#caa134');
-  rect(Math.round(x-w/2),Math.round(top+h*0.45),w,Math.round(h*0.5),'#f2b59a');
-  ctx.fillStyle='#1a5cff';
-  ctx.fillRect(Math.round(x+w*0.1),Math.round(top+h*0.62),2*p,2*p);
-  ctx.fillRect(Math.round(x+w*0.22),Math.round(top+h*0.62),2*p,2*p);
-}
-function drawBody(x,y){
-  const p=PX(),bodyH=avatar.bodyScale*p,bodyW=Math.round(10*p),legLen=Math.round(12*p),armLen=Math.round(9*p);
-  const torsoX=Math.round(x-bodyW/2), torsoY=Math.round(y-bodyH-2*p);
-  rect(torsoX,torsoY,bodyW,bodyH,'#2b3a56');
-
-  const hammering=avatar.state==='hammer' && performance.now()<avatar.hammerUntil;
-  const armTh=3*p,legTh=4*p;
-  const walkFactor=(avatar.state==='walk')?1:0.1;
-  const armSwing=hammering?-2*p:Math.sin(avatar.step)*1.2*p;
-
-  rect(Math.round(x+4*p),torsoY+Math.round(3*p)+Math.round(armSwing),armTh,armLen,'#2b3a56');
-  rect(Math.round(x-7*p),torsoY+Math.round(3*p)-Math.round(armSwing),armTh,armLen,'#2b3a56');
-
-  const legSwing=Math.sin(avatar.step)*1.2*p*walkFactor;
-  rect(Math.round(x+1*p),y-legLen+Math.round(legSwing),legTh,legLen,'#233047');
-  rect(Math.round(x-4*p),y-legLen-Math.round(legSwing),legTh,legLen,'#233047');
-
-  rect(Math.round(x+1*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
-  rect(Math.round(x-4*p),Math.round(lineY()-3*p),7*p,3*p,'#7a4f1f');
-
-  if(hammering){
-    const hx=Math.round(x+10*p),hy=Math.round(torsoY+7*p);
-    ctx.fillStyle='#7a4f1f';ctx.fillRect(hx,hy,1*p,9*p);
-    ctx.fillStyle='#c0c0c0';ctx.fillRect(hx-3*p,hy,7*p,2*p);
-    ctx.fillStyle='#000';
-    ctx.fillRect(hx-3*p-1,hy,1,2*p);
-    ctx.fillRect(hx+7*p-1,hy,1,2*p);
-    ctx.fillRect(hx-3*p-1,hy-1,7*p+2,1);
-    ctx.fillRect(hx-3*p-1,hy+2*p-1,7*p+2,1);
-  }
-}
-
-/* ===== Schatten ===== */
-function drawFallShadow(){
-  if(avatar.state!=='fall')return;
-  const p=PX(),baseY=lineY()+2*p,dist=Math.max(0,avatar.y-lineY());
-  const maxW=28*p,minW=10*p,w=Math.max(minW,maxW-dist*0.15),h=Math.max(2*p,6*p-dist*0.08);
-  const a=Math.max(0.05,Math.min(0.35,0.35-dist*0.0015));
-  ctx.save();ctx.translate(Math.round(avatar.x),Math.round(baseY));ctx.scale(w,h);
-  ctx.beginPath();ctx.fillStyle=`rgba(0,0,0,${a})`;ctx.arc(0,0,1,0,Math.PI*2);ctx.fill();ctx.restore();
-}
-
-/* ===== Buchstaben (schief) + weißer Glow & Welle ===== */
-let baseX=null;
-function ensureBaseX(){if(baseX!==null)return;const p=PX(),s=LETTER_GAP*p;const total=(WORD.length-1)*s;baseX=Math.round(W/2-total/2);} 
-function letterTargetX(i){ensureBaseX();const p=PX(),s=LETTER_GAP*p;return baseX+i*s;}
-function letterTargetY(){
-  const p=PX(), s=avatar.headScale*p, base = avatar.y - avatar.bodyScale*p - s*0.35;
-  return base - (LETTER_SIZE*p)*0.5; // halbe Buchstabenhöhe höher
-}
-
-const letters=[]; // {ch,x,y,angle,tiltStart,baseY}
-let nextLetterIndex=0;
-
-const sparks=[];
-function spawnSparks(x,y){
-  const p=PX();
-  for(let i=0;i<SPARK_COUNT;i++){
-    const ang=Math.random()*Math.PI-Math.PI/2,spd=(0.8+Math.random()*0.8)*6*p;
-    sparks.push({x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd-1*p,life:450+Math.random()*250,b:performance.now(),a:1});
-  }
-}
-function updateSparks(){
-  const now=performance.now(),p=PX();
-  for(let i=sparks.length-1;i>=0;i--){
-    const s=sparks[i],t=now-s.b;
-    if(t>s.life){sparks.splice(i,1);continue;}
-    s.vy+=0.02*p;s.x+=s.vx*0.016;s.y+=s.vy*0.016;s.a=1-(t/s.life);
-  }
-}
-function drawSparks(){
-  const p=PX();
-  for(const s of sparks){
-    ctx.globalAlpha=Math.max(0,Math.min(1,s.a));
-    ctx.fillStyle='#ffd966';
-    ctx.fillRect(Math.round(s.x/p)*p,Math.round(s.y/p)*p,2*p,2*p);
-  }
-  ctx.globalAlpha=1;
-}
-
-/* Weißer Glow um Buchstaben */
-function drawLetters(glowAlpha=0){
-  const p=PX();
-  ctx.font=(LETTER_SIZE*p)+'px monospace';
-  ctx.textBaseline='middle';
-
-  for(const L of letters){
-    ctx.save();
-    const x=Math.round(L.x), y=Math.round(L.y);
-    if(L.angle){ ctx.translate(x,y); ctx.rotate(L.angle*Math.PI/180); ctx.translate(-x,-y); }
-
-    // Weißer Glow (additiv)
-    if(glowAlpha>0){
-      ctx.globalCompositeOperation='lighter';
-      ctx.lineWidth=6*p; ctx.strokeStyle=`rgba(255,255,255,${0.25*glowAlpha})`;
-      ctx.strokeText(L.ch,x,y);
-      ctx.lineWidth=4*p; ctx.strokeStyle=`rgba(255,255,255,${0.35*glowAlpha})`;
-      ctx.strokeText(L.ch,x,y);
-      ctx.lineWidth=2*p; ctx.strokeStyle=`rgba(255,255,255,${0.45*glowAlpha})`;
-      ctx.strokeText(L.ch,x,y);
-      ctx.globalCompositeOperation='source-over';
-    }
-
-    // Outline + Füllung
-    ctx.lineWidth=2*p; ctx.strokeStyle='#000'; ctx.strokeText(L.ch,x,y);
-    ctx.fillStyle='#f2f2f2'; ctx.fillText(L.ch,x,y);
-    ctx.restore();
-  }
-}
-
-/* Glow/Welle-Timing (wie zuvor) */
-let wordComplete=false;
-let glowStartAt=null;
-let waveStartAt=null;
-let waveOrigin=null;
-
-function maybeHammerNext(){
-  if(nextLetterIndex>=WORD.length) return;
-  const i=nextLetterIndex, tx=letterTargetX(i), ty=letterTargetY(), reach=8*PX();
-  if(avatar.x>=tx-reach && avatar.state==='walk'){
-    const p=PX();
-    const angle = (Math.random()*2*LETTER_TILT_MAX - LETTER_TILT_MAX);
-    const jitterY = (Math.random()*2*LETTER_JITTER_Y - LETTER_JITTER_Y)*p;
-    letters.push({ch:WORD[i],x:tx,y:ty+jitterY,angle,tiltStart:null, baseY:ty+jitterY});
-
-    avatar.hammerUntil = performance.now()+HAMMER_MS;
-    avatar.state = 'hammer';
-    spawnSparks(tx,ty);
-    nextLetterIndex++;
-
-    if(nextLetterIndex===WORD.length){
-      wordComplete = true;
-      const firstX = letterTargetX(0), lastX = letterTargetX(WORD.length-1);
-      waveOrigin = { x: (firstX+lastX)/2, y: ty };
-      glowStartAt = null;
-      waveStartAt = null;
-    }
-  }
-}
-
-/* „t“ kippen + EINZIGE Pause */
-function updateTiltAndPause(){
-  if(letters.length<WORD.length) return;
-  const last=letters[letters.length-1]; // "t"
-  const p=PX();
-  if(!last.tiltStart && avatar.x >= lineEndX() - TILT_TRIGGER_PX*p){
-    last.tiltStart = performance.now();
-    avatar.state = 'pause';
-    avatar.pauseUntil = last.tiltStart + TILT_PAUSE_MS;
-
-    // (kein Preload mehr hier – das macht jetzt smartPreloadVideos oben)
-    // Glow/Welle-Anstoß
-    if(!glowStartAt){
-      glowStartAt = performance.now() + GLOW_DELAY_MS;
-      waveStartAt = performance.now() + WAVE_DELAY_MS;
-    }
-  }
-
-  if(last.tiltStart){
-    const t=(performance.now()-last.tiltStart);
-    if(t<TILT_MS){
-      const e=1-Math.pow(1-t/TILT_MS,3);
-      last.angle=TILT_TARGET_DEG*e;
-      // deutlicher Hüpfer des „t“
-      last.y = last.baseY - Math.sin(e*Math.PI)*6*PX();
-    }else{
-      const wobbleT=(t-TILT_MS)/TILT_WOBBLE_MS;
-      if(wobbleT<=1){
-        const amp=(1-wobbleT)*TILT_TARGET_DEG*0.5;
-        last.angle=TILT_TARGET_DEG + Math.sin(wobbleT*Math.PI*6)*amp;
-        last.y = last.baseY;
-      }else{
-        last.angle=TILT_TARGET_DEG;
-        last.y = last.baseY;
-      }
-    }
-  }
-}
-
-/* Weiße Lichtwelle (radial) */
-function drawWave(){
-  if(!waveStartAt || !waveOrigin) return;
-  const now=performance.now();
-  const t = (now - waveStartAt) / WAVE_MS;
-  if(t<0 || t>1) return;
-
-  const p=PX();
-  const rMax = Math.hypot(W,H);
-  const r = rMax * t;
-  const band = 34*p;
-
-  const grad = ctx.createRadialGradient(
-    waveOrigin.x, waveOrigin.y, Math.max(1, r-band),
-    waveOrigin.x, waveOrigin.y, r
-  );
-  grad.addColorStop(0.00, "rgba(255,255,255,0)");
-  grad.addColorStop(0.35, `rgba(255,255,255,${0.22*WAVE_STRENGTH*(1-t)})`);
-  grad.addColorStop(0.70, `rgba(255,255,255,${0.35*WAVE_STRENGTH*(1-t)})`);
-  grad.addColorStop(1.00, "rgba(255,255,255,0)");
-
-  ctx.save();
-  ctx.globalCompositeOperation='lighter';
-  ctx.fillStyle=grad;
+/* ================== Tunnel-Grid (Vector-Scope) ================== */
+function drawTunnelGrid(now, reveal01){
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#930010';
   ctx.fillRect(0,0,W,H);
-  ctx.restore();
+
+  const outer = [
+    {x:0, y:0}, {x:W, y:0}, {x:W, y:H}, {x:0, y:H}
+  ];
+
+  const cx = W*0.5, cy = H*0.5;
+  const innerW = W*0.44;
+  const innerH = H*0.32;
+  const inner = [
+    {x:cx - innerW/2, y:cy - innerH/2},
+    {x:cx + innerW/2, y:cy - innerH/2},
+    {x:cx + innerW/2, y:cy + innerH/2},
+    {x:cx - innerW/2, y:cy + innerH/2}
+  ];
+
+  const RINGS = 34;
+  const RAD   = 26;
+
+  const ringCount = Math.max(1, Math.floor(reveal01 * RINGS));
+  const radCount  = Math.max(2, Math.floor(reveal01 * RAD));
+
+  const speed = 0.00038;
+  const phase = (now*speed) % 1;
+
+  // Breite minimal, “vector” look
+  const baseW = Math.max(0.75, 0.85*DPR);
+
+  // Radials
+  for(let i=0;i<=radCount;i++){
+    const t = i/radCount;
+
+    const A = { x: outer[0].x + (outer[1].x-outer[0].x)*t, y: outer[0].y };
+    const B = { x: inner[0].x + (inner[1].x-inner[0].x)*t, y: inner[0].y };
+    scopeLine(A.x,A.y,B.x,B.y, 10+i*0.13, 0.62, baseW);
+
+    const C = { x: outer[3].x + (outer[2].x-outer[3].x)*t, y: outer[3].y };
+    const D = { x: inner[3].x + (inner[2].x-inner[3].x)*t, y: inner[3].y };
+    scopeLine(C.x,C.y,D.x,D.y, 20+i*0.13, 0.62, baseW);
+  }
+  for(let i=0;i<=radCount;i++){
+    const t = i/radCount;
+
+    const A = { x: outer[0].x, y: outer[0].y + (outer[3].y-outer[0].y)*t };
+    const B = { x: inner[0].x, y: inner[0].y + (inner[3].y-inner[0].y)*t };
+    scopeLine(A.x,A.y,B.x,B.y, 30+i*0.13, 0.62, baseW);
+
+    const C = { x: outer[1].x, y: outer[1].y + (outer[2].y-outer[1].y)*t };
+    const D = { x: inner[1].x, y: inner[1].y + (inner[2].y-inner[1].y)*t };
+    scopeLine(C.x,C.y,D.x,D.y, 40+i*0.13, 0.62, baseW);
+  }
+
+  // Rings (Tiefe)
+  for(let i=0;i<ringCount;i++){
+    const u = (i/(RINGS-1));
+    let z = u*u;
+    z = (z + phase*0.22) % 1;
+    z = z*z;
+
+    const q0 = { x: outer[0].x + (inner[0].x-outer[0].x)*z, y: outer[0].y + (inner[0].y-outer[0].y)*z };
+    const q1 = { x: outer[1].x + (inner[1].x-outer[1].x)*z, y: outer[1].y + (inner[1].y-outer[1].y)*z };
+    const q2 = { x: outer[2].x + (inner[2].x-outer[2].x)*z, y: outer[2].y + (inner[2].y-outer[2].y)*z };
+    const q3 = { x: outer[3].x + (inner[3].x-outer[3].x)*z, y: outer[3].y + (inner[3].y-outer[3].y)*z };
+
+    const front = (1 - z);
+    const alpha = 0.10 + 0.26*front;
+
+    scopeLine(q0.x,q0.y,q1.x,q1.y, 100+i*0.21, alpha, baseW);
+    scopeLine(q1.x,q1.y,q2.x,q2.y, 200+i*0.21, alpha, baseW);
+    scopeLine(q2.x,q2.y,q3.x,q3.y, 300+i*0.21, alpha, baseW);
+    scopeLine(q3.x,q3.y,q0.x,q0.y, 400+i*0.21, alpha, baseW);
+  }
+
+  // Portal Outline etwas kräftiger
+  scopeLine(inner[0].x,inner[0].y,inner[1].x,inner[1].y, 900, 0.78, baseW+0.2*DPR);
+  scopeLine(inner[1].x,inner[1].y,inner[2].x,inner[2].y, 901, 0.78, baseW+0.2*DPR);
+  scopeLine(inner[2].x,inner[2].y,inner[3].x,inner[3].y, 902, 0.78, baseW+0.2*DPR);
+  scopeLine(inner[3].x,inner[3].y,inner[0].x,inner[0].y, 903, 0.78, baseW+0.2*DPR);
 }
 
-/* ===== Redirect nach Intro ===== */
+/* ================== Loader Timing ================== */
+const START_DELAY_MS = 1000;
+const INTRO_MS = 3500;
+const FADEOUT_MS = 1700;
+const EXTRA_MS = 300;
+
 function startTransition(){
   sessionStorage.setItem("introPlayed","1");
   document.body.classList.add('fadeout');
-  const fadeMs = 1700;
-  const extra  = 300;
-  setTimeout(()=>{ window.location.href = INTRO_RETURN_URL; }, fadeMs + extra);
+  setTimeout(()=>{ window.location.href = INTRO_RETURN_URL; }, FADEOUT_MS + EXTRA_MS);
 }
 
-/* ===== Skip-Button & Reduced-Motion ===== */
+function startProgressAndTunnel(){
+  const bar = document.getElementById('bar');
+  const start = performance.now();
+
+  function frame(now){
+    const t = (now - start) / INTRO_MS;
+    const clamped = Math.max(0, Math.min(1, t));
+    const reveal = Math.min(1, clamped * 1.20);
+
+    drawTunnelGrid(now, reveal);
+
+    const steps = 32;
+    const stepped = Math.floor(clamped * steps) / steps;
+    bar.style.width = (stepped * 100).toFixed(2) + "%";
+
+    if(clamped >= 1){
+      bar.style.width = "100%";
+      startTransition();
+      return;
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ================== Skip & A11y ================== */
 (function setupSkipAndA11y(){
   const skipBtn = document.querySelector('.skip');
   function goNow(){
@@ -579,7 +403,6 @@ function startTransition(){
   }
   if (skipBtn) skipBtn.addEventListener('click', goNow);
 
-  // Nutzer:innen mit reduzierter Bewegung -> sofort weiter
   try {
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       goNow();
@@ -588,76 +411,11 @@ function startTransition(){
   } catch(e){}
 })();
 
-/* ===== Hauptloop ===== */
-function tick(){
-  ctx.clearRect(0,0,W,H);
-  drawLine();
-
-  maybeHammerNext();
-  updateTiltAndPause();
-  updateSparks();
-
-  // Glow-Alpha
-  let glowAlpha = 0;
-  if(glowStartAt){
-    const t = (performance.now() - glowStartAt) / GLOW_MS;
-    if(t>=0 && t<=1){ glowAlpha = 1 - Math.pow(1-t, 3); }
-  }
-
-  drawLetters(glowAlpha);
-  drawSparks();
-  drawWave();
-
-  const p=PX(),speed=avatar.vx*p;
-
-  if(avatar.state==='walk'){
-    avatar.x+=speed; avatar.step+=.15;
-    avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*2)*0.5*p);
-    const last = letters[letters.length-1];
-    const pauseOver = !last?.tiltStart || performance.now() >= (last.tiltStart + TILT_PAUSE_MS);
-    if(avatar.x>=lineEndX()-6*p && pauseOver){ 
-      avatar.state='fall'; avatar.vy=0;
-      // (Optionales Sicherheitsnetz: falls der Wipe noch nicht lief)
-      if(!lineFadeStart){ lineFadeStart = performance.now(); }
-    }
-  }else if(avatar.state==='hammer'){
-    if(performance.now()>=avatar.hammerUntil){ avatar.state='walk'; }
-    else { avatar.step+=.08; avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.3*p); }
-  }else if(avatar.state==='pause'){
-    // kurz vor dem Sprung (~600 ms vor Pausenende) → HIER Wipe starten
-    if(!avatar.didPauseJump && performance.now() >= avatar.pauseUntil - 600){
-      if(!lineFadeStart){ lineFadeStart = performance.now(); } // Wipe-Start!
-      avatar.didPauseJump = true;
-      avatar.vy = -7*PX(); // Sprung auslösen
-    }
-
-    if(avatar.didPauseJump){
-      avatar.vy += avatar.gravity*p*0.9; // sanftere Schwerkraft im Sprung
-      avatar.y += avatar.vy;
-      if(avatar.y > lineY()-3*p){ avatar.y = lineY()-3*p; avatar.vy = 0; }
-    } else {
-      // leichtes Atmen, solange noch nicht gesprungen
-      avatar.step+=.05; 
-      avatar.y=lineY()-3*p+Math.round(Math.sin(avatar.step*3)*0.25*p);
-    }
-    if(performance.now()>=avatar.pauseUntil){ avatar.state='walk'; }
-  }else if(avatar.state==='fall'){
-    avatar.vy+=avatar.gravity*p*.6; avatar.y+=avatar.vy; avatar.x+=speed*.2;
-    drawFallShadow();
-    if(avatar.y>H+40*p){ avatar.state='done'; startTransition(); }
-  }
-
-  drawBody(avatar.x,avatar.y);
-  drawHead(avatar.x,avatar.y);
-
-  requestAnimationFrame(tick);
-}
-
-// ⏱ Wartezeit vor dem Start der Animation (z. B. 1000 ms = 1 Sekunde)
+/* ================== Start ================== */
 setTimeout(() => {
-  document.body.classList.add('ready'); // sanft einblenden
-  requestAnimationFrame(tick);          // Animation starten
-}, 1000);
+  document.body.classList.add('ready');
+  startProgressAndTunnel();
+}, START_DELAY_MS);
 </script>
 </body>
 </html>
