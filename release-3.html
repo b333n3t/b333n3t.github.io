@@ -8,13 +8,13 @@
   <meta name="description" content="„drei“ – das neue Release von b3nn3t. Deutschrap & Indie-Pop aus der Schweiz." />
   <meta name="robots" content="index,follow,max-image-preview:large" />
 
-<!-- Favicons: Google, Browser, Apple -->
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <!-- Favicons: Google, Browser, Apple -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
- <link rel="canonical" href="https://www.b3nn3t.com/release-3.html" />
+  <link rel="canonical" href="https://www.b3nn3t.com/release-3.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="music.song">
@@ -37,14 +37,14 @@
     "@type": "MusicRecording",
     "name": "DREI",
     "byArtist": { "@type": "MusicGroup", "name": "b3nn3t" },
-    "inAlbum": { "@type": "MusicAlbum", "name": "DREI" },
+    "inAlbum": { "@type": "MusicAlbum", "name": "drei" },
     "image": "https://www.b3nn3t.com/assets/release/drei-cover.webp",
     "url": "https://www.b3nn3t.com/release-3.html"
   }
   </script>
 
   <!-- LCP-Poster vorladen und priorisieren -->
-<link rel="preload" as="image" href="/assets/release/drei-cover.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="/assets/release/drei-cover.webp" fetchpriority="high">
 
   <style>
     :root {
@@ -140,6 +140,9 @@
       overflow: hidden;
       background: #000;
       aspect-ratio: 16 / 9;
+
+      /* ✅ wichtig fürs Overlay */
+      position: relative;
     }
 
     .release-video {
@@ -149,6 +152,18 @@
       border-radius: inherit;
       background: #000;
       object-fit: cover;
+    }
+
+    /* ✅ Audio Overlay Styling */
+    .audio-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      padding: 0.6rem;
+      background: rgba(0,0,0,0.55);
+      box-sizing: border-box;
     }
 
     section.block {
@@ -277,22 +292,25 @@
           <span id="awb-countdown-timer">--:--:--</span>
         </div>
 
-        <section class="video-wrap" aria-label="Video zum Song">
+        <!-- ✅ COVER BLEIBT + AUDIO PLAYER (anstatt VIDEO) -->
+        <section class="video-wrap" aria-label="Audio zum Song">
           <div class="video-inner">
-            <video
-              id="release-video"
-              class="release-video"
+            <!-- Cover -->
+            <img
+              src="/assets/release/drei-cover.webp"
+              alt="Cover – drei von b3nn3t"
+              class="release-video">
+
+            <!-- Audio Controls overlay -->
+            <audio
+              id="release-audio"
+              class="audio-overlay"
               controls
-              muted
-              playsinline
-              preload="metadata"
-              poster="assets/release/drei-cover.webp"
-              fetchpriority="high"
-              width="1280"
-              height="720">
-              <source src="assets/gesehen/B3NN3T.mp4" type="video/mp4">
-              Dein Browser unterstützt dieses Videoformat nicht.
-            </video>
+              preload="metadata">
+              <!-- ✅ ROOT-RELATIVE PATH damit es auf b3nn3t.com UND in subfoldern funktioniert -->
+              <source src="/assets/release/drei.prelisten.mp3">
+              Dein Browser unterstützt dieses Audioformat nicht.
+            </audio>
           </div>
         </section>
 
