@@ -3,13 +3,15 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>über mich – b3nn3</title>
+
+  <title>über mich – b3nn3t</title>
   <meta name="description" content="über mich — b3nn3t - Deutschrap & Indie-Pop, Gedanken, Updates und Links zur Musik."/>
+
   <!-- Favicons: Google, Browser, Apple -->
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="styles_nav_arrows.css"/>
@@ -23,7 +25,7 @@
       --footer-top-desktop: 430px;
       --footer-right-desktop: 0px;
 
-      --footer-top-mobile: 520px;   /* ← höher = kleinerer Wert */
+      --footer-top-mobile: 520px;    /* ← höher = kleinerer Wert */
       --footer-right-mobile: 0.2px;  /* ← näher rechts = kleinerer Wert */
     }
     @media (max-width: 768px){
@@ -74,7 +76,6 @@
       backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
       z-index:1099
     }
-    body.menu-open #menu-overlay{display:block}
     #menu-overlay[hidden]{display:none}
 
     .site-menu{
@@ -84,7 +85,10 @@
       backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
       box-shadow:0 20px 50px rgba(0,0,0,.08);
       transform:translateX(100%);transition:transform .25s;
-      z-index:1101;padding:46px 10px 14px
+      z-index:1101;padding:46px 10px 14px;
+
+      /* ✅ Fokus-Ring sichtbar, wenn nav fokussiert wird */
+      outline: none;
     }
     body.menu-open .site-menu{transform:translateX(0)}
     .site-menu ul{list-style:none;margin:0;padding:0}
@@ -103,6 +107,10 @@
       font-weight:500;
     }
     .site-menu a:hover{background:rgba(0,0,0,.05)}
+    .site-menu a:focus-visible{
+      outline: 2px solid rgba(0,0,0,0.55);
+      outline-offset: 2px;
+    }
 
     .scroll-panel{
       max-width: min(1000px, 94vw);
@@ -177,26 +185,35 @@
 
     .page-content h1{ margin-top:0; }
 
-/* ✅ Footer hochkant rechts (Desktop + Mobile), ohne Umbruch */
 .footer-inline{
   position: fixed;
   right: var(--footer-right-desktop);
   top: var(--footer-top-desktop);
   bottom: auto;
   left: auto;
-  z-index: 1300; /* ✅ über swipe-zone */
+  z-index: 1300;
 
   writing-mode: vertical-rl;
   text-orientation: mixed;
+
+  /* wieder wie vorher */
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 
   color:#930010 !important;
   font-size:.82rem;
   padding: 6px 4px;
 
   white-space: nowrap;
-
-  /* ✅ verhindert Abschneiden */
   max-height: calc(100vh - 16px);
+
+  /* ✅ “unsichtbarer” Kontrast-Boost (sieht wie vorher aus) */
+  text-shadow:
+    0 0 1px rgba(255,255,255,0.55),
+    0 0 2px rgba(255,255,255,0.35),
+    0 1px 0 rgba(0,0,0,0.25);
 }
 
 .footer-inline a,
@@ -206,13 +223,19 @@
   color:#930010 !important;
   text-decoration:none;
   white-space: nowrap;
+  display:inline-block;
+  padding:6px 6px;
 
-  display:inline-block; /* ✅ größere Tap-Fläche */
-  padding:6px 6px;      /* ✅ iOS-friendly */
+  /* gleicher Kontrast-Boost für den Link */
+  text-shadow:
+    0 0 1px rgba(255,255,255,0.55),
+    0 0 2px rgba(255,255,255,0.35),
+    0 1px 0 rgba(0,0,0,0.25);
 }
-.footer-inline a:hover{ text-decoration:underline; }
 
-/* Mobile: Footer bleibt hochkant rechts, wie eingestellt */
+.footer-inline a:hover{ text-decoration: underline; }
+
+/* Mobile wie vorher */
 @media (max-width: 768px){
   .footer-inline{
     right: var(--footer-right-mobile);
@@ -221,7 +244,7 @@
   }
 }
 
-/* ✅ FALLBACK: wenn Fensterhöhe klein wird → lieber unten statt zu weit oben */
+/* kleine Viewports wie vorher */
 @media (max-height: 720px){
   .footer-inline{
     top: auto !important;
@@ -236,6 +259,7 @@
     font-size: .72rem;
   }
 }
+
 
     /* swipe helper */
     .edge-swipe{
@@ -266,13 +290,11 @@
 
     .page-content h1{ margin-bottom: 0.4rem; }
 
-    /* Standard-Abstand zwischen Absätzen */
     .page-content p{
       margin-top: 0;
       margin-bottom: 1rem;
     }
 
-    /* ✅ Wenn du nach einem Absatz keinen Abstand willst */
     .page-content p.no-gap{
       margin-bottom: 0 !important;
     }
@@ -303,19 +325,22 @@
 </head>
 
 <body>
-<header class="header">
-  <a class="brand" href="index.html" aria-label="b3nn3t Home">
-    <img src="/favicon.svg" alt="b3nn3t logo" aria-hidden="true">
-    <strong>b3nn3t</strong>
-  </a>
-</header>
-
+  <header class="header">
+    <a class="brand" href="index.html" aria-label="b3nn3t Home">
+      <!-- ✅ (3) Logo-Fix: alt + keine aria-hidden, plus width/height -->
+      <img src="/favicon.svg" alt="b3nn3t Logo" width="24" height="24">
+      <strong>b3nn3t</strong>
+    </a>
+  </header>
 
   <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
     <span></span><span></span><span></span>
   </button>
+
   <div id="menu-overlay" class="menu-overlay" hidden></div>
-  <nav id="site-menu" class="site-menu" aria-hidden="true">
+
+  <!-- ✅ (1) WCAG-Fix: kein aria-hidden, stattdessen hidden -->
+  <nav id="site-menu" class="site-menu" hidden tabindex="-1">
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
       <li><a href="diskografie.html">diskografie</a></li>
@@ -342,7 +367,6 @@
 
               <h1>( ◡́.◡̀)(^◡^ )</h1>
 
-              <!-- ✅ kein Abstand zwischen diesen beiden Absätzen -->
               <p class="no-gap">hallo ich bin bennet, 19 jahre und künstler (oder so) aus st. gallen.</p>
               <p>++ich gib ratschläge, die      ich eigentlich     selber bräuchte.</p>
 
@@ -391,9 +415,88 @@
   <div class="edge-swipe left" aria-hidden="true"></div>
   <div class="edge-swipe right" aria-hidden="true"></div>
 
+  <!-- Wenn script.js Menü-Logik enthält, bitte dort entfernen, sonst doppelt -->
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=6" defer></script>
 
+  <!-- ✅ (1) WCAG-Menü-JS: hidden + aria-expanded + Fokus zurück + Escape + Overlay + Focus Trap -->
+  <script>
+    (() => {
+      const btn = document.querySelector('.hamburger');
+      const menu = document.getElementById('site-menu');
+      const overlay = document.getElementById('menu-overlay');
+      if (!btn || !menu || !overlay) return;
+
+      let lastFocus = null;
+
+      const focusableSelector =
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+      function getFocusable() {
+        return Array.from(menu.querySelectorAll(focusableSelector))
+          .filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
+      }
+
+      function isOpen() {
+        return !menu.hasAttribute('hidden');
+      }
+
+      function openMenu() {
+        lastFocus = document.activeElement;
+
+        menu.removeAttribute('hidden');
+        overlay.hidden = false;
+        document.body.classList.add('menu-open');
+        btn.setAttribute('aria-expanded', 'true');
+
+        const focusables = getFocusable();
+        if (focusables.length) focusables[0].focus();
+        else menu.focus();
+      }
+
+      function closeMenu() {
+        menu.setAttribute('hidden', '');
+        overlay.hidden = true;
+        document.body.classList.remove('menu-open');
+        btn.setAttribute('aria-expanded', 'false');
+
+        if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+      }
+
+      btn.addEventListener('click', () => {
+        isOpen() ? closeMenu() : openMenu();
+      });
+
+      overlay.addEventListener('click', closeMenu);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen()) {
+          e.preventDefault();
+          closeMenu();
+          return;
+        }
+
+        // Focus Trap
+        if (e.key === 'Tab' && isOpen()) {
+          const focusables = getFocusable();
+          if (!focusables.length) return;
+
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+    })();
+  </script>
+
+  <!-- Dein bestehendes Panel/Toggle Script -->
   <script>
     (function(){
       const group  = document.querySelector('.page-group.current');
