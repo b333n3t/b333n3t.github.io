@@ -304,58 +304,42 @@
     }
     .video-close:hover{background:rgba(255,255,255,0.9);color:#000;}
 
-/* ✅ Footer – wie vorher (vertikal rechts), aber Kontrast-Fix ohne Kasten */
+/* ✅ Footer hochkant rechts – bevorzugt deine Position, fällt nach unten zurück */
 .footer-inline{
   position: fixed;
   right: var(--footer-right-desktop);
   top: var(--footer-top-desktop);
   bottom: auto;
   left: auto;
-  z-index: 1300;
+  z-index: 1300; /* ✅ über swipe-zone */
 
   writing-mode: vertical-rl;
   text-orientation: mixed;
 
-  /* wieder wie vorher */
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-
-  color:#930010 !important;
+  color:#930010;
   font-size:.82rem;
   padding: 6px 4px;
 
   white-space: nowrap;
-  max-height: calc(100vh - 16px);
 
-  /* ✅ “unsichtbarer” Kontrast-Boost (sieht wie vorher aus) */
-  text-shadow:
-    0 0 1px rgba(255,255,255,0.55),
-    0 0 2px rgba(255,255,255,0.35),
-    0 1px 0 rgba(0,0,0,0.25);
+  /* ✅ verhindert Abschneiden */
+  max-height: calc(100vh - 16px);
 }
 
 .footer-inline a,
 .footer-inline a:visited,
 .footer-inline a:active,
 .footer-inline a:focus{
-  color:#930010 !important;
+  color:#930010;
   text-decoration:none;
   white-space: nowrap;
-  display:inline-block;
-  padding:6px 6px;
 
-  /* gleicher Kontrast-Boost für den Link */
-  text-shadow:
-    0 0 1px rgba(255,255,255,0.55),
-    0 0 2px rgba(255,255,255,0.35),
-    0 1px 0 rgba(0,0,0,0.25);
+  display:inline-block; /* ✅ größere Tap-Fläche */
+  padding:6px 6px;      /* ✅ iOS-friendly */
 }
-
 .footer-inline a:hover{ text-decoration: underline; }
 
-/* Mobile wie vorher */
+/* Mobile: Footer bleibt hochkant rechts, wie eingestellt */
 @media (max-width: 768px){
   .footer-inline{
     right: var(--footer-right-mobile);
@@ -364,7 +348,7 @@
   }
 }
 
-/* kleine Viewports wie vorher */
+/* ✅ FALLBACK: wenn Fensterhöhe klein wird → lieber unten statt zu weit oben */
 @media (max-height: 720px){
   .footer-inline{
     top: auto !important;
@@ -379,7 +363,6 @@
     font-size: .72rem;
   }
 }
-
 
     /* swipe helper */
     .edge-swipe{
