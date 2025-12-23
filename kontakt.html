@@ -87,15 +87,13 @@
   }
   </script>
 
-<!-- Favicons: Google, Browser, Apple -->
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-
+  <!-- Favicons: Google, Browser, Apple -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <link rel="stylesheet" href="styles.css"/>
-  <!-- bleibt drin, aber Pfeile werden unten zuverlässig deaktiviert -->
   <link rel="stylesheet" href="styles_nav_arrows.css"/>
   <link rel="stylesheet" href="swipe-helper.css"/>
 
@@ -103,16 +101,14 @@
     :root{
       --bottom-gap:60px;
 
-      /* ✅ Footer (hochkant rechts) – feinjustierbar */
       --footer-top-desktop: 430px;
       --footer-right-desktop: 0px;
 
-      --footer-top-mobile: 520px;   /* ← höher = kleinerer Wert */
-      --footer-right-mobile: 0.2px;  /* ← näher rechts = kleinerer Wert */
+      --footer-top-mobile: 520px;
+      --footer-right-mobile: 0.2px;
     }
     @media (max-width:768px){ :root{ --bottom-gap:20px; } }
 
-    /* Hintergrund fix, nur Panel scrollt */
     html, body{ overflow:hidden; }
     @media (max-width:767px){
       html, body{ overflow:auto; -webkit-overflow-scrolling:touch; }
@@ -124,7 +120,6 @@
       flex-direction:column;
     }
 
-    /* main ohne Innenabstand – wie index / über mich */
     main.main{
       flex:1 0 auto;
       border-radius:12px;
@@ -136,7 +131,7 @@
       box-shadow:none !important;
     }
 
-    /* ✅✅✅ Pfeile links/rechts/unten: komplett AUS (Desktop & Mobile) */
+    /* Pfeile komplett AUS */
     .nav-arrow,
     .scroll-cue{
       display:none !important;
@@ -145,7 +140,7 @@
       pointer-events:none !important;
     }
 
-    /* ===== Hamburger-Menü (wie index) ===== */
+    /* ===== Hamburger-Menü ===== */
     .hamburger{
       position:fixed;top:14px;right:18px;width:20px;height:20px;
       border:0;background:transparent;display:grid;place-items:center;
@@ -199,10 +194,10 @@
     }
     .site-menu a:hover{background:rgba(0,0,0,.05)}
 
-    /* ===== UNSICHTBARES Scroll-Panel ===== */
+    /* ===== Scroll-Panel ===== */
     .scroll-panel{
       max-width:min(1000px,94vw);
-      max-height:75vh; /* wird per JS angepasst */
+      max-height:75vh;
       margin:0;
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
@@ -228,7 +223,6 @@
       gap:1rem;
     }
 
-    /* ===== Link-/Toggle-Optik 1:1 wie index / über mich ===== */
     .page-link{
       display:flex;
       align-items:center;
@@ -333,65 +327,60 @@
     .form-status.error{ display:block; color:#b00020; }
     .form-status.success{ display:block; color:#0a7a0a; }
 
-/* ✅ Footer hochkant rechts – bevorzugt deine Position, fällt nach unten zurück */
-.footer-inline{
-  position: fixed;
-  right: var(--footer-right-desktop);
-  top: var(--footer-top-desktop);
-  bottom: auto;
-  left: auto;
-  z-index: 1300; /* ✅ über swipe-zone */
+    /* Footer */
+    .footer-inline{
+      position: fixed;
+      right: var(--footer-right-desktop);
+      top: var(--footer-top-desktop);
+      bottom: auto;
+      left: auto;
+      z-index: 1300;
 
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
 
-  color:#930010;
-  font-size:.82rem;
-  padding: 6px 4px;
+      color:#930010;
+      font-size:.82rem;
+      padding: 6px 4px;
 
-  white-space: nowrap;
+      white-space: nowrap;
+      max-height: calc(100vh - 16px);
+    }
 
-  /* ✅ verhindert Abschneiden */
-  max-height: calc(100vh - 16px);
-}
+    .footer-inline a,
+    .footer-inline a:visited,
+    .footer-inline a:active,
+    .footer-inline a:focus{
+      color:#930010 !important;
+      text-decoration:none;
+      white-space: nowrap;
+      display:inline-block;
+      padding:6px 6px;
+    }
+    .footer-inline a:hover{ text-decoration:underline; }
 
-.footer-inline a,
-.footer-inline a:visited,
-.footer-inline a:active,
-.footer-inline a:focus{
-  color:#930010 !important;
-  text-decoration:none;
-  white-space: nowrap;
+    @media (max-width: 768px){
+      .footer-inline{
+        right: var(--footer-right-mobile);
+        top: var(--footer-top-mobile);
+        bottom: auto;
+      }
+    }
 
-  display:inline-block; /* ✅ größere Tap-Fläche */
-  padding:6px 6px;      /* ✅ iOS-friendly */
-}
-.footer-inline a:hover{ text-decoration:underline; }
-
-/* Mobile: Footer bleibt hochkant rechts, wie eingestellt */
-@media (max-width: 768px){
-  .footer-inline{
-    right: var(--footer-right-mobile);
-    top: var(--footer-top-mobile);
-    bottom: auto;
-  }
-}
-
-/* ✅ FALLBACK: wenn Fensterhöhe klein wird → lieber unten statt zu weit oben */
-@media (max-height: 720px){
-  .footer-inline{
-    top: auto !important;
-    bottom: 16px !important;
-    font-size: .78rem;
-  }
-}
-@media (max-height: 620px){
-  .footer-inline{
-    top: auto !important;
-    bottom: 12px !important;
-    font-size: .72rem;
-  }
-}
+    @media (max-height: 720px){
+      .footer-inline{
+        top: auto !important;
+        bottom: 16px !important;
+        font-size: .78rem;
+      }
+    }
+    @media (max-height: 620px){
+      .footer-inline{
+        top: auto !important;
+        bottom: 12px !important;
+        font-size: .72rem;
+      }
+    }
 
     /* swipe helper */
     .edge-swipe {
@@ -407,73 +396,21 @@
     .edge-swipe.right { right: 0; }
     @media (pointer: coarse){
       .edge-swipe{ pointer-events: auto; }
-      .edge-swipe.right{ pointer-events: none !important; } /* ✅ blockiert Footer nicht */
+      .edge-swipe.right{ pointer-events: none !important; }
     }
 
-    /* ===== Titel + Untertitel auf Akkordeon-Niveau ===== */
-    .page-content h1,
-    .page-content h2,
-    .page-content p{
-      font-family: 'Press Start 2P', Arial, sans-serif;
-      font-size: 1.1rem !important;
-      font-weight: 400 !important;
-      letter-spacing: 0.03em !important;
-      line-height: 1.6 !important;
-      color: #fff; /* <- weiss */
-    }
-
-    /* etwas Abstand zwischen Titel und Unterzeile */
-    .page-content h1{
-      margin-bottom: 0.4rem;
-    }
-    .page-content p{
-      margin-top: 0;
-      margin-bottom: 1rem;
-    }
-
-    /* NUR der große Content-Block (main) soll keinen Glas-Schleier haben */
-    main.main{
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      filter: none !important;
-      opacity: 1 !important;
-    }
-
-    /* falls der "milchige" Look über Pseudo-Elemente kommt */
-    main.main::before,
-    main.main::after{
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      filter: none !important;
-      opacity: 0 !important;   /* <- nimmt den Schleier raus */
-    }
-
-    /* ===================================================
-       PRO SEITE: WHITE TEXT (wie ueber-mich / diskografie)
-       - Menü bleibt schwarz
-       - Hamburger bleibt schwarz
-       =================================================== */
+    /* White Text */
     body{ color:#fff; }
-
-    /* Links auf der Seite weiß (Menü bleibt schwarz, weil .site-menu a spezifischer ist) */
     a{ color:#fff; }
-
-    /* Brand im Header weiß */
     .brand{ color:#fff !important; }
-
-    /* Form-Labels & Texte im Formular weiß */
     form, form label, form p{ color:#fff; }
-
-    /* Status-Text bleibt wie definiert (error/success Farben) */
   </style>
 </head>
 
 <body>
   <header class="header">
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
-    <img src="/favicon.svg" alt="b3nn3t logo" aria-hidden="true"><strong>b3nn3t</strong>
+      <img src="/favicon.svg" alt="b3nn3t logo" aria-hidden="true"><strong>b3nn3t</strong>
     </a>
   </header>
 
@@ -482,19 +419,19 @@
     <span></span><span></span><span></span>
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
-  <nav id="site-menu" class="site-menu" aria-hidden="true">
+
+  <!-- ✅ ARIA FIX: aria-hidden + inert + tabindex=-1 solange geschlossen -->
+  <nav id="site-menu" class="site-menu" aria-hidden="true" inert>
     <ul>
-      <li><a href="ueber-mich.html">über mich</a></li>
-      <li><a href="diskografie.html">diskografie</a></li>
-      <li><a href="kontakt.html">kontakt</a></li>
-      <li><a href="aktuell.html">aktuell</a></li>
-      <li><a href="gesehen.html">gesehen</a></li>
-      <li><a href="plattformen.html">links</a></li>
-      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+      <li><a href="ueber-mich.html" tabindex="-1">über mich</a></li>
+      <li><a href="diskografie.html" tabindex="-1">diskografie</a></li>
+      <li><a href="kontakt.html" tabindex="-1">kontakt</a></li>
+      <li><a href="aktuell.html" tabindex="-1">aktuell</a></li>
+      <li><a href="gesehen.html" tabindex="-1">gesehen</a></li>
+      <li><a href="plattformen.html" tabindex="-1">links</a></li>
+      <li class="sep"><a href="impressum.html" tabindex="-1">Impressum / Datenschutz</a></li>
     </ul>
   </nav>
-
-  <!-- ✅ Seitenpfeile komplett entfernt (kein HTML mehr) -->
 
   <main class="main">
     <div class="scroll-panel">
@@ -589,6 +526,90 @@
 
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
+
+  <!-- ✅ ARIA/WCAG FIX: Menü-Fokus sauber steuern -->
+  <script>
+  (function(){
+    const btn = document.querySelector('.hamburger');
+    const nav = document.getElementById('site-menu');
+    const overlay = document.getElementById('menu-overlay');
+    if(!btn || !nav || !overlay) return;
+
+    const focusablesSelector = 'a, button, input, select, textarea, [tabindex]';
+
+    function setMenuFocus(enabled){
+      const items = nav.querySelectorAll(focusablesSelector);
+      items.forEach(el => {
+        if (el.tagName.toLowerCase() === 'a') {
+          el.tabIndex = enabled ? 0 : -1;
+        } else {
+          el.tabIndex = enabled ? 0 : -1;
+        }
+      });
+    }
+
+    function openMenu(){
+      document.body.classList.add('menu-open');
+      btn.setAttribute('aria-expanded','true');
+      btn.setAttribute('aria-label','Menü schließen');
+
+      nav.setAttribute('aria-hidden','false');
+      nav.removeAttribute('inert');
+
+      overlay.hidden = false;
+
+      setMenuFocus(true);
+
+      const firstLink = nav.querySelector('a');
+      if(firstLink) firstLink.focus({ preventScroll: true });
+    }
+
+    function closeMenu(){
+      document.body.classList.remove('menu-open');
+      btn.setAttribute('aria-expanded','false');
+      btn.setAttribute('aria-label','Menü öffnen');
+
+      nav.setAttribute('aria-hidden','true');
+      nav.setAttribute('inert','');
+
+      overlay.hidden = true;
+
+      setMenuFocus(false);
+
+      btn.focus({ preventScroll: true });
+    }
+
+    // initial sicher
+    setMenuFocus(false);
+    nav.setAttribute('aria-hidden','true');
+    nav.setAttribute('inert','');
+    overlay.hidden = true;
+
+    // capture + stopImmediatePropagation: gewinnt gegen evtl. script.js-handler
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const isOpen = document.body.classList.contains('menu-open');
+      if(isOpen) closeMenu();
+      else openMenu();
+    }, true);
+
+    overlay.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      closeMenu();
+    }, true);
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && document.body.classList.contains('menu-open')) closeMenu();
+    });
+
+    // Klick auf Menü-Link -> schließen
+    nav.querySelectorAll('a').forEach(a=>{
+      a.addEventListener('click', closeMenu);
+    });
+  })();
+  </script>
 
   <!-- Panelhöhe dynamisch + Accordion toggle -->
   <script>
