@@ -1,8 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <meta name="robots" content="noindex,follow">
@@ -202,24 +201,18 @@ function noise1D(seed, t){
   return (a*(1-u)+b*u)*2-1;
 }
 
-/* ============== 80s Vector-Scope Drift ==============
-   - Linien bleiben “sauberer” als Kritzel
-   - Aber bekommen Oszilloskop-Drift: leicht sinus + leicht noise
-   - Drift ist zeitabhängig, aber langsam -> kein Flimmern
-*/
+/* ============== 80s Vector-Scope Drift ============== */
 function scopeLine(x1,y1,x2,y2,seed,alpha,width){
   const dx=x2-x1, dy=y2-y1;
   const len=Math.hypot(dx,dy)||1;
   const nx=-dy/len, ny=dx/len;
 
-  // segmentiert, aber smooth
   const segs=Math.max(16, Math.min(90, Math.floor(len/(10*DPR))));
   const tNow = performance.now()*0.001;
 
-  // “Scope”-Parameter (ruhig)
-  const freq = 1.2 + (hash01(seed*3.3))*1.1;   // 1.2..2.3
-  const wob  = (0.7 + hash01(seed*7.7))*1.8;   // 0.7..2.5
-  const amp  = (0.55 + hash01(seed*11.1))*2.2 * DPR; // 1.2..~4.0px
+  const freq = 1.2 + (hash01(seed*3.3))*1.1;
+  const wob  = (0.7 + hash01(seed*7.7))*1.8;
+  const amp  = (0.55 + hash01(seed*11.1))*2.2 * DPR;
   const phase = (hash01(seed*5.5))*Math.PI*2;
 
   ctx.save();
@@ -228,7 +221,6 @@ function scopeLine(x1,y1,x2,y2,seed,alpha,width){
   ctx.lineCap='round';
   ctx.lineJoin='round';
 
-  // Weißer Kern
   ctx.strokeStyle = 'rgba(255,255,255,0.58)';
   ctx.beginPath();
   for(let i=0;i<=segs;i++){
@@ -237,7 +229,6 @@ function scopeLine(x1,y1,x2,y2,seed,alpha,width){
     let x=x1+dx*t;
     let y=y1+dy*t;
 
-    // Drift: sinus entlang der Linie + sehr leichte noise
     const sin = Math.sin((t*freq*2*Math.PI) + phase + tNow*0.55*wob);
     const n   = noise1D(seed, t + tNow*0.06);
 
@@ -251,7 +242,6 @@ function scopeLine(x1,y1,x2,y2,seed,alpha,width){
   }
   ctx.stroke();
 
-  // Neon “afterglow” (subtil, 80s)
   ctx.globalCompositeOperation='lighter';
   ctx.strokeStyle = 'rgba(0,255,255,0.10)';
   ctx.lineWidth = width + 0.8*DPR;
@@ -294,10 +284,8 @@ function drawTunnelGrid(now, reveal01){
   const speed = 0.00038;
   const phase = (now*speed) % 1;
 
-  // Breite minimal, “vector” look
   const baseW = Math.max(0.75, 0.85*DPR);
 
-  // Radials
   for(let i=0;i<=radCount;i++){
     const t = i/radCount;
 
@@ -307,7 +295,7 @@ function drawTunnelGrid(now, reveal01){
 
     const C = { x: outer[3].x + (outer[2].x-outer[3].x)*t, y: outer[3].y };
     const D = { x: inner[3].x + (inner[2].x-inner[3].x)*t, y: inner[3].y };
-    scopeLine(C.x,C.y,D.x,D.y, 20+i*0.13, 0.62, baseW);
+    scopeLine(C.x,C.y,D.x,D.y, 20+i*0.13, 0.'s62, baseW);
   }
   for(let i=0;i<=radCount;i++){
     const t = i/radCount;
@@ -321,7 +309,6 @@ function drawTunnelGrid(now, reveal01){
     scopeLine(C.x,C.y,D.x,D.y, 40+i*0.13, 0.62, baseW);
   }
 
-  // Rings (Tiefe)
   for(let i=0;i<ringCount;i++){
     const u = (i/(RINGS-1));
     let z = u*u;
@@ -342,7 +329,6 @@ function drawTunnelGrid(now, reveal01){
     scopeLine(q3.x,q3.y,q0.x,q0.y, 400+i*0.21, alpha, baseW);
   }
 
-  // Portal Outline etwas kräftiger
   scopeLine(inner[0].x,inner[0].y,inner[1].x,inner[1].y, 900, 0.78, baseW+0.2*DPR);
   scopeLine(inner[1].x,inner[1].y,inner[2].x,inner[2].y, 901, 0.78, baseW+0.2*DPR);
   scopeLine(inner[2].x,inner[2].y,inner[3].x,inner[3].y, 902, 0.78, baseW+0.2*DPR);
