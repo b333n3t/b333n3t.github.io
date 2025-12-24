@@ -136,6 +136,24 @@ const INTRO_RETURN_URL =
   (sessionStorage.getItem("introReturn") || "index.html") +
   (location.search.includes('nointro=1') ? "" : (location.search ? "&" : "?") + "nointro=1");
 
+/* ================== Skip & A11y (SOFORT aktiv) ================== */
+(function setupSkipAndA11y(){
+  const skipBtn = document.querySelector('.skip');
+  function goNow(){
+    try { sessionStorage.setItem("introPlayed","1"); } catch(e){}
+    document.body.classList.add('fadeout');
+    setTimeout(()=>location.replace(INTRO_RETURN_URL), 250);
+  }
+  if (skipBtn) skipBtn.addEventListener('click', goNow);
+
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      goNow();
+      return;
+    }
+  } catch(e){}
+})();
+
 /* ================== PRELOAD bleibt drin ================== */
 const preloadImages = [
   "assets/gesehen/reel1.avif","assets/gesehen/reel2.avif","assets/gesehen/reel3.avif","assets/gesehen/reel4.avif",
@@ -174,227 +192,218 @@ if(!window._preloaded){
 
 /* ================== Canvas Setup ================== */
 const c = document.getElementById('c');
-const ctx = c.getContext('2d');
+const ctx = c && c.getContext ? c.getContext('2d') : null;
 
-let W=0,H=0,DPR=1;
+// Falls Canvas nicht verfügbar: nicht crashen (Skip bleibt nutzbar)
+if(!ctx){
+  document.body.classList.add('ready');
+  console.warn("Canvas/2D context nicht verfügbar.");
+} else {
 
-function resize(){
-  DPR = Math.max(1, Math.floor(window.devicePixelRatio || 1));
-  W = c.width  = Math.floor(innerWidth * DPR);
-  H = c.height = Math.floor(innerHeight * DPR);
-  c.style.width  = innerWidth + 'px';
-  c.style.height = innerHeight + 'px';
-  ctx.imageSmoothingEnabled = false;
-}
-addEventListener('resize', resize);
-resize();
+  let W=0,H=0,DPR=1;
 
-/* ================== Line Helpers (fein, stabil) ================== */
-const snap = (v)=>Math.round(v);
-const clamp01 = (t)=>Math.max(0,Math.min(1,t));
-function hash01(n){ const x=Math.sin(n*127.1)*43758.5453123; return x-Math.floor(x); }
-function smoothstep(t){ t=clamp01(t); return t*t*(3-2*t); }
-function noise1D(seed, t){
-  const s=t*10, i=Math.floor(s), f=s-i;
-  const a=hash01(seed*1000+i*19.19), b=hash01(seed*1000+(i+1)*19.19);
-  const u=smoothstep(f);
-  return (a*(1-u)+b*u)*2-1;
-}
-
-/* ============== 80s Vector-Scope Drift ============== */
-function scopeLine(x1,y1,x2,y2,seed,alpha,width){
-  const dx=x2-x1, dy=y2-y1;
-  const len=Math.hypot(dx,dy)||1;
-  const nx=-dy/len, ny=dx/len;
-
-  const segs=Math.max(16, Math.min(90, Math.floor(len/(10*DPR))));
-  const tNow = performance.now()*0.001;
-
-  const freq = 1.2 + (hash01(seed*3.3))*1.1;
-  const wob  = (0.7 + hash01(seed*7.7))*1.8;
-  const amp  = (0.55 + hash01(seed*11.1))*2.2 * DPR;
-  const phase = (hash01(seed*5.5))*Math.PI*2;
-
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.lineWidth = width;
-  ctx.lineCap='round';
-  ctx.lineJoin='round';
-
-  ctx.strokeStyle = 'rgba(255,255,255,0.58)';
-  ctx.beginPath();
-  for(let i=0;i<=segs;i++){
-    const t=i/segs;
-
-    let x=x1+dx*t;
-    let y=y1+dy*t;
-
-    const sin = Math.sin((t*freq*2*Math.PI) + phase + tNow*0.55*wob);
-    const n   = noise1D(seed, t + tNow*0.06);
-
-    const off = (sin*0.70 + n*0.30) * amp;
-
-    x = snap(x + nx*off);
-    y = snap(y + ny*off);
-
-    if(i===0) ctx.moveTo(x,y);
-    else ctx.lineTo(x,y);
+  function resize(){
+    DPR = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+    W = c.width  = Math.floor(innerWidth * DPR);
+    H = c.height = Math.floor(innerHeight * DPR);
+    c.style.width  = innerWidth + 'px';
+    c.style.height = innerHeight + 'px';
+    ctx.imageSmoothingEnabled = false;
   }
-  ctx.stroke();
+  addEventListener('resize', resize);
+  resize();
 
-  ctx.globalCompositeOperation='lighter';
-  ctx.strokeStyle = 'rgba(0,255,255,0.10)';
-  ctx.lineWidth = width + 0.8*DPR;
-  ctx.stroke();
-
-  ctx.strokeStyle = 'rgba(255,0,200,0.08)';
-  ctx.lineWidth = width + 1.3*DPR;
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-/* ================== Tunnel-Grid (Vector-Scope) ================== */
-function drawTunnelGrid(now, reveal01){
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = '#930010';
-  ctx.fillRect(0,0,W,H);
-
-  const outer = [
-    {x:0, y:0}, {x:W, y:0}, {x:W, y:H}, {x:0, y:H}
-  ];
-
-  const cx = W*0.5, cy = H*0.5;
-  const innerW = W*0.44;
-  const innerH = H*0.32;
-  const inner = [
-    {x:cx - innerW/2, y:cy - innerH/2},
-    {x:cx + innerW/2, y:cy - innerH/2},
-    {x:cx + innerW/2, y:cy + innerH/2},
-    {x:cx - innerW/2, y:cy + innerH/2}
-  ];
-
-  const RINGS = 34;
-  const RAD   = 26;
-
-  const ringCount = Math.max(1, Math.floor(reveal01 * RINGS));
-  const radCount  = Math.max(2, Math.floor(reveal01 * RAD));
-
-  const speed = 0.00038;
-  const phase = (now*speed) % 1;
-
-  const baseW = Math.max(0.75, 0.85*DPR);
-
-  for(let i=0;i<=radCount;i++){
-    const t = i/radCount;
-
-    const A = { x: outer[0].x + (outer[1].x-outer[0].x)*t, y: outer[0].y };
-    const B = { x: inner[0].x + (inner[1].x-inner[0].x)*t, y: inner[0].y };
-    scopeLine(A.x,A.y,B.x,B.y, 10+i*0.13, 0.62, baseW);
-
-    const C = { x: outer[3].x + (outer[2].x-outer[3].x)*t, y: outer[3].y };
-    const D = { x: inner[3].x + (inner[2].x-inner[3].x)*t, y: inner[3].y };
-    scopeLine(C.x,C.y,D.x,D.y, 20+i*0.13, 0.'s62, baseW);
-  }
-  for(let i=0;i<=radCount;i++){
-    const t = i/radCount;
-
-    const A = { x: outer[0].x, y: outer[0].y + (outer[3].y-outer[0].y)*t };
-    const B = { x: inner[0].x, y: inner[0].y + (inner[3].y-inner[0].y)*t };
-    scopeLine(A.x,A.y,B.x,B.y, 30+i*0.13, 0.62, baseW);
-
-    const C = { x: outer[1].x, y: outer[1].y + (outer[2].y-outer[1].y)*t };
-    const D = { x: inner[1].x, y: inner[1].y + (inner[2].y-inner[1].y)*t };
-    scopeLine(C.x,C.y,D.x,D.y, 40+i*0.13, 0.62, baseW);
+  /* ================== Line Helpers (fein, stabil) ================== */
+  const snap = (v)=>Math.round(v);
+  const clamp01 = (t)=>Math.max(0,Math.min(1,t));
+  function hash01(n){ const x=Math.sin(n*127.1)*43758.5453123; return x-Math.floor(x); }
+  function smoothstep(t){ t=clamp01(t); return t*t*(3-2*t); }
+  function noise1D(seed, t){
+    const s=t*10, i=Math.floor(s), f=s-i;
+    const a=hash01(seed*1000+i*19.19), b=hash01(seed*1000+(i+1)*19.19);
+    const u=smoothstep(f);
+    return (a*(1-u)+b*u)*2-1;
   }
 
-  for(let i=0;i<ringCount;i++){
-    const u = (i/(RINGS-1));
-    let z = u*u;
-    z = (z + phase*0.22) % 1;
-    z = z*z;
+  /* ============== 80s Vector-Scope Drift ============== */
+  function scopeLine(x1,y1,x2,y2,seed,alpha,width){
+    const dx=x2-x1, dy=y2-y1;
+    const len=Math.hypot(dx,dy)||1;
+    const nx=-dy/len, ny=dx/len;
 
-    const q0 = { x: outer[0].x + (inner[0].x-outer[0].x)*z, y: outer[0].y + (inner[0].y-outer[0].y)*z };
-    const q1 = { x: outer[1].x + (inner[1].x-outer[1].x)*z, y: outer[1].y + (inner[1].y-outer[1].y)*z };
-    const q2 = { x: outer[2].x + (inner[2].x-outer[2].x)*z, y: outer[2].y + (inner[2].y-outer[2].y)*z };
-    const q3 = { x: outer[3].x + (inner[3].x-outer[3].x)*z, y: outer[3].y + (inner[3].y-outer[3].y)*z };
+    const segs=Math.max(16, Math.min(90, Math.floor(len/(10*DPR))));
+    const tNow = performance.now()*0.001;
 
-    const front = (1 - z);
-    const alpha = 0.10 + 0.26*front;
+    const freq = 1.2 + (hash01(seed*3.3))*1.1;
+    const wob  = (0.7 + hash01(seed*7.7))*1.8;
+    const amp  = (0.55 + hash01(seed*11.1))*2.2 * DPR;
+    const phase = (hash01(seed*5.5))*Math.PI*2;
 
-    scopeLine(q0.x,q0.y,q1.x,q1.y, 100+i*0.21, alpha, baseW);
-    scopeLine(q1.x,q1.y,q2.x,q2.y, 200+i*0.21, alpha, baseW);
-    scopeLine(q2.x,q2.y,q3.x,q3.y, 300+i*0.21, alpha, baseW);
-    scopeLine(q3.x,q3.y,q0.x,q0.y, 400+i*0.21, alpha, baseW);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth = width;
+    ctx.lineCap='round';
+    ctx.lineJoin='round';
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.58)';
+    ctx.beginPath();
+    for(let i=0;i<=segs;i++){
+      const t=i/segs;
+
+      let x=x1+dx*t;
+      let y=y1+dy*t;
+
+      const sin = Math.sin((t*freq*2*Math.PI) + phase + tNow*0.55*wob);
+      const n   = noise1D(seed, t + tNow*0.06);
+
+      const off = (sin*0.70 + n*0.30) * amp;
+
+      x = snap(x + nx*off);
+      y = snap(y + ny*off);
+
+      if(i===0) ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+
+    ctx.globalCompositeOperation='lighter';
+    ctx.strokeStyle = 'rgba(0,255,255,0.10)';
+    ctx.lineWidth = width + 0.8*DPR;
+    ctx.stroke();
+
+    ctx.strokeStyle = 'rgba(255,0,200,0.08)';
+    ctx.lineWidth = width + 1.3*DPR;
+    ctx.stroke();
+
+    ctx.restore();
   }
 
-  scopeLine(inner[0].x,inner[0].y,inner[1].x,inner[1].y, 900, 0.78, baseW+0.2*DPR);
-  scopeLine(inner[1].x,inner[1].y,inner[2].x,inner[2].y, 901, 0.78, baseW+0.2*DPR);
-  scopeLine(inner[2].x,inner[2].y,inner[3].x,inner[3].y, 902, 0.78, baseW+0.2*DPR);
-  scopeLine(inner[3].x,inner[3].y,inner[0].x,inner[0].y, 903, 0.78, baseW+0.2*DPR);
-}
+  /* ================== Tunnel-Grid (Vector-Scope) ================== */
+  function drawTunnelGrid(now, reveal01){
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#930010';
+    ctx.fillRect(0,0,W,H);
 
-/* ================== Loader Timing ================== */
-const START_DELAY_MS = 1000;
-const INTRO_MS = 3500;
-const FADEOUT_MS = 1700;
-const EXTRA_MS = 300;
+    const outer = [
+      {x:0, y:0}, {x:W, y:0}, {x:W, y:H}, {x:0, y:H}
+    ];
 
-function startTransition(){
-  sessionStorage.setItem("introPlayed","1");
-  document.body.classList.add('fadeout');
-  setTimeout(()=>{ window.location.href = INTRO_RETURN_URL; }, FADEOUT_MS + EXTRA_MS);
-}
+    const cx = W*0.5, cy = H*0.5;
+    const innerW = W*0.44;
+    const innerH = H*0.32;
+    const inner = [
+      {x:cx - innerW/2, y:cy - innerH/2},
+      {x:cx + innerW/2, y:cy - innerH/2},
+      {x:cx + innerW/2, y:cy + innerH/2},
+      {x:cx - innerW/2, y:cy + innerH/2}
+    ];
 
-function startProgressAndTunnel(){
-  const bar = document.getElementById('bar');
-  const start = performance.now();
+    const RINGS = 34;
+    const RAD   = 26;
 
-  function frame(now){
-    const t = (now - start) / INTRO_MS;
-    const clamped = Math.max(0, Math.min(1, t));
-    const reveal = Math.min(1, clamped * 1.20);
+    const ringCount = Math.max(1, Math.floor(reveal01 * RINGS));
+    const radCount  = Math.max(2, Math.floor(reveal01 * RAD));
 
-    drawTunnelGrid(now, reveal);
+    const speed = 0.00038;
+    const phase = (now*speed) % 1;
 
-    const steps = 32;
-    const stepped = Math.floor(clamped * steps) / steps;
-    bar.style.width = (stepped * 100).toFixed(2) + "%";
+    const baseW = Math.max(0.75, 0.85*DPR);
 
-    if(clamped >= 1){
-      bar.style.width = "100%";
-      startTransition();
-      return;
+    for(let i=0;i<=radCount;i++){
+      const t = i/radCount;
+
+      const A = { x: outer[0].x + (outer[1].x-outer[0].x)*t, y: outer[0].y };
+      const B = { x: inner[0].x + (inner[1].x-inner[0].x)*t, y: inner[0].y };
+      scopeLine(A.x,A.y,B.x,B.y, 10+i*0.13, 0.62, baseW);
+
+      const C = { x: outer[3].x + (outer[2].x-outer[3].x)*t, y: outer[3].y };
+      const D = { x: inner[3].x + (inner[2].x-inner[3].x)*t, y: inner[3].y };
+      /* ✅ HIER war der Crash: 0.'s62 -> 0.62 */
+      scopeLine(C.x,C.y,D.x,D.y, 20+i*0.13, 0.62, baseW);
+    }
+
+    for(let i=0;i<=radCount;i++){
+      const t = i/radCount;
+
+      const A = { x: outer[0].x, y: outer[0].y + (outer[3].y-outer[0].y)*t };
+      const B = { x: inner[0].x, y: inner[0].y + (inner[3].y-inner[0].y)*t };
+      scopeLine(A.x,A.y,B.x,B.y, 30+i*0.13, 0.62, baseW);
+
+      const C = { x: outer[1].x, y: outer[1].y + (outer[2].y-outer[1].y)*t };
+      const D = { x: inner[1].x, y: inner[1].y + (inner[2].y-inner[1].y)*t };
+      scopeLine(C.x,C.y,D.x,D.y, 40+i*0.13, 0.62, baseW);
+    }
+
+    for(let i=0;i<ringCount;i++){
+      const u = (i/(RINGS-1));
+      let z = u*u;
+      z = (z + phase*0.22) % 1;
+      z = z*z;
+
+      const q0 = { x: outer[0].x + (inner[0].x-outer[0].x)*z, y: outer[0].y + (inner[0].y-outer[0].y)*z };
+      const q1 = { x: outer[1].x + (inner[1].x-outer[1].x)*z, y: outer[1].y + (inner[1].y-outer[1].y)*z };
+      const q2 = { x: outer[2].x + (inner[2].x-outer[2].x)*z, y: outer[2].y + (inner[2].y-outer[2].y)*z };
+      const q3 = { x: outer[3].x + (inner[3].x-outer[3].x)*z, y: outer[3].y + (inner[3].y-outer[3].y)*z };
+
+      const front = (1 - z);
+      const alpha = 0.10 + 0.26*front;
+
+      scopeLine(q0.x,q0.y,q1.x,q1.y, 100+i*0.21, alpha, baseW);
+      scopeLine(q1.x,q1.y,q2.x,q2.y, 200+i*0.21, alpha, baseW);
+      scopeLine(q2.x,q2.y,q3.x,q3.y, 300+i*0.21, alpha, baseW);
+      scopeLine(q3.x,q3.y,q0.x,q0.y, 400+i*0.21, alpha, baseW);
+    }
+
+    scopeLine(inner[0].x,inner[0].y,inner[1].x,inner[1].y, 900, 0.78, baseW+0.2*DPR);
+    scopeLine(inner[1].x,inner[1].y,inner[2].x,inner[2].y, 901, 0.78, baseW+0.2*DPR);
+    scopeLine(inner[2].x,inner[2].y,inner[3].x,inner[3].y, 902, 0.78, baseW+0.2*DPR);
+    scopeLine(inner[3].x,inner[3].y,inner[0].x,inner[0].y, 903, 0.78, baseW+0.2*DPR);
+  }
+
+  /* ================== Loader Timing ================== */
+  const START_DELAY_MS = 1000;
+  const INTRO_MS = 3500;
+  const FADEOUT_MS = 1700;
+  const EXTRA_MS = 300;
+
+  function startTransition(){
+    sessionStorage.setItem("introPlayed","1");
+    document.body.classList.add('fadeout');
+    setTimeout(()=>{ window.location.href = INTRO_RETURN_URL; }, FADEOUT_MS + EXTRA_MS);
+  }
+
+  function startProgressAndTunnel(){
+    const bar = document.getElementById('bar');
+    const start = performance.now();
+
+    function frame(now){
+      const t = (now - start) / INTRO_MS;
+      const clamped = Math.max(0, Math.min(1, t));
+      const reveal = Math.min(1, clamped * 1.20);
+
+      drawTunnelGrid(now, reveal);
+
+      const steps = 32;
+      const stepped = Math.floor(clamped * steps) / steps;
+      if(bar) bar.style.width = (stepped * 100).toFixed(2) + "%";
+
+      if(clamped >= 1){
+        if(bar) bar.style.width = "100%";
+        startTransition();
+        return;
+      }
+      requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+
+  /* ================== Start ================== */
+  setTimeout(() => {
+    document.body.classList.add('ready');
+    startProgressAndTunnel();
+  }, START_DELAY_MS);
 }
-
-/* ================== Skip & A11y ================== */
-(function setupSkipAndA11y(){
-  const skipBtn = document.querySelector('.skip');
-  function goNow(){
-    try { sessionStorage.setItem("introPlayed","1"); } catch(e){}
-    document.body.classList.add('fadeout');
-    setTimeout(()=>location.replace(INTRO_RETURN_URL), 250);
-  }
-  if (skipBtn) skipBtn.addEventListener('click', goNow);
-
-  try {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      goNow();
-      return;
-    }
-  } catch(e){}
-})();
-
-/* ================== Start ================== */
-setTimeout(() => {
-  document.body.classList.add('ready');
-  startProgressAndTunnel();
-}, START_DELAY_MS);
 </script>
 </body>
 </html>
