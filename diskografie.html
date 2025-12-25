@@ -4,14 +4,13 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <title>Diskografie – b3nn3t</title>
+  <title>diskografie (b3nn3t)</title>
   <meta name="description" content="Alle Releases von b3nn3t – Alben, EPs & Singles."/>
   <!-- Favicons: Google, Browser, Apple -->
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="styles_nav_arrows.css"/>
@@ -106,21 +105,20 @@
     .site-menu a:hover{ background:rgba(0,0,0,.06); }
 
     /* ========================= */
-    
-/* unsichtbares Scrollpanel */
-.scroll-panel{
-  max-width:min(1000px,94vw);
-  max-height: calc(100dvh - 70px);
-  overflow-y:auto;
-  scrollbar-width:none;
 
-  /* vorher: padding:1.25rem 1rem 1.5rem; */
-  padding: 1.25rem 1rem calc(4rem + env(safe-area-inset-bottom));
-  box-sizing: border-box;
-}
-.scroll-panel::-webkit-scrollbar{display:none;}
+    /* unsichtbares Scrollpanel */
+    .scroll-panel{
+      max-width:min(1000px,94vw);
+      max-height: calc(100dvh - 70px);
+      overflow-y:auto;
+      scrollbar-width:none;
 
-.content-offset{ padding-top:1.5rem; }
+      padding: 1.25rem 1rem calc(4rem + env(safe-area-inset-bottom));
+      box-sizing: border-box;
+    }
+    .scroll-panel::-webkit-scrollbar{display:none;}
+
+    .content-offset{ padding-top:1.5rem; }
 
     .grid{
       display:flex;
@@ -256,65 +254,65 @@
       border-radius:8px;
     }
 
-/* ✅ Footer hochkant rechts – bevorzugt deine Position, fällt nach unten zurück */
-.footer-inline{
-  position: fixed;
-  right: var(--footer-right-desktop);
-  top: var(--footer-top-desktop);
-  bottom: auto;
-  left: auto;
-  z-index: 1300; /* ✅ über swipe-zone */
+    /* ✅ Footer hochkant rechts – bevorzugt deine Position, fällt nach unten zurück */
+    .footer-inline{
+      position: fixed;
+      right: var(--footer-right-desktop);
+      top: var(--footer-top-desktop);
+      bottom: auto;
+      left: auto;
+      z-index: 1300; /* ✅ über swipe-zone */
 
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
 
-  color:#930010;
-  font-size:.82rem;
-  padding: 6px 4px;
+      color:#930010;
+      font-size:.82rem;
+      padding: 6px 4px;
 
-  white-space: nowrap;
+      white-space: nowrap;
 
-  /* ✅ verhindert Abschneiden */
-  max-height: calc(100vh - 16px);
-}
+      /* ✅ verhindert Abschneiden */
+      max-height: calc(100vh - 16px);
+    }
 
-.footer-inline a,
-.footer-inline a:visited,
-.footer-inline a:active,
-.footer-inline a:focus{
-  color:#930010;
-  text-decoration:none;
-  white-space: nowrap;
+    .footer-inline a,
+    .footer-inline a:visited,
+    .footer-inline a:active,
+    .footer-inline a:focus{
+      color:#930010;
+      text-decoration:none;
+      white-space: nowrap;
 
-  display:inline-block; /* ✅ größere Tap-Fläche */
-  padding:6px 6px;      /* ✅ iOS-friendly */
-}
-.footer-inline a:hover{ text-decoration: underline; }
+      display:inline-block; /* ✅ größere Tap-Fläche */
+      padding:6px 6px;      /* ✅ iOS-friendly */
+    }
+    .footer-inline a:hover{ text-decoration: underline; }
 
-/* Mobile: Footer bleibt hochkant rechts, wie eingestellt */
-@media (max-width: 768px){
-  .footer-inline{
-    right: var(--footer-right-mobile);
-    top: var(--footer-top-mobile);
-    bottom: auto;
-  }
-}
+    /* Mobile: Footer bleibt hochkant rechts, wie eingestellt */
+    @media (max-width: 768px){
+      .footer-inline{
+        right: var(--footer-right-mobile);
+        top: var(--footer-top-mobile);
+        bottom: auto;
+      }
+    }
 
-/* ✅ FALLBACK: wenn Fensterhöhe klein wird → lieber unten statt zu weit oben */
-@media (max-height: 720px){
-  .footer-inline{
-    top: auto !important;
-    bottom: 16px !important;
-    font-size: .78rem;
-  }
-}
-@media (max-height: 620px){
-  .footer-inline{
-    top: auto !important;
-    bottom: 12px !important;
-    font-size: .72rem;
-  }
-}
+    /* ✅ FALLBACK: wenn Fensterhöhe klein wird → lieber unten statt zu weit oben */
+    @media (max-height: 720px){
+      .footer-inline{
+        top: auto !important;
+        bottom: 16px !important;
+        font-size: .78rem;
+      }
+    }
+    @media (max-height: 620px){
+      .footer-inline{
+        top: auto !important;
+        bottom: 12px !important;
+        font-size: .72rem;
+      }
+    }
 
     /* swipe helper */
     .edge-swipe{
@@ -390,6 +388,33 @@
     .release{ color:#000; }
     .release a{ color:#000; }
     .release .meta{ color:#444; }
+
+    /* ===================================================
+       ✅ EPs: Text wird beim Klick durchgestrichen (Animation rechts -> links)
+       =================================================== */
+    .ep-strike{
+      position: relative;
+      display:inline-block;
+    }
+    .ep-strike::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      height:2px;
+      background: currentColor;
+
+      transform: translateY(-50%) scaleX(0);
+      transform-origin: right; /* Start rechts */
+      transition: transform .28s ease;
+      pointer-events:none;
+      opacity:.95;
+    }
+    .ep-strike.striked::after{
+      transform: translateY(-50%) scaleX(1);
+      transform-origin: left; /* läuft nach links fertig */
+    }
   </style>
 </head>
 
@@ -437,13 +462,11 @@
           </button>
 
           <div class="page-content">
-            <h1>musikalische chronik
- - kreationen, einflüsse und entwicklung</h1>
-            <p>meine releases &amp; kollabos</p>
+            <h1>meine hörbaren haeutungsreste^^</h1>
 
             <!-- ===== ALBEN ===== -->
             <div class="page-group">
-              <button class="page-toggle" type="button" aria-expanded="false"><span class="arrow">►</span><span>Alben</span></button>
+              <button class="page-toggle" type="button" aria-expanded="false"><span class="arrow">►</span><span>alben</span></button>
               <div class="page-content">
                 <div class="disco-grid">
 
@@ -465,45 +488,30 @@
 
             <!-- ===== EPs ===== -->
             <div class="page-group">
-              <button class="page-toggle" type="button" aria-expanded="false"><span class="arrow">►</span><span>EPs</span></button>
+              <button class="page-toggle" id="eps-toggle" type="button" aria-expanded="false">
+                <span class="arrow">►</span><span class="ep-strike">ep's</span>
+              </button>
               <div class="page-content">
                 <div class="disco-grid">
-
-                  <article class="release">
-                    <img src="assets/diskografie/EPs/st3rne.jpg" alt="st3rne☆*">
-                    <div class="title"><a href="https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI" target="_blank" rel="noopener noreferrer">st3rne☆*</a></div>
-                    <div class="meta">2025</div>
-                  </article>
-
-                  <article class="release">
-                    <img src="assets/diskografie/EPs/hundert grad.jpg" alt="hundert grad">
-                    <div class="title"><a href="https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz" target="_blank" rel="noopener noreferrer">hundert grad</a></div>
-                    <div class="meta">2024</div>
-                  </article>
-
-                  <article class="release">
-                    <img src="assets/diskografie/EPs/gesund_krank.jpg" alt="gesund/krank">
-                    <div class="title"><a href="https://open.spotify.com/album/63meNbUfVkmao1NCuiplaf" target="_blank" rel="noopener noreferrer">gesund/krank</a></div>
-                    <div class="meta">2023</div>
-                  </article>
-
+                  <h1>keine ep bis jetzt</h1>
                 </div>
               </div>
             </div>
 
             <!-- ===== SINGLES ===== -->
             <div class="page-group">
-              <button class="page-toggle" type="button" aria-expanded="false"><span class="arrow">►</span><span>Singles (inkl. Kollabos)</span></button>
+              <button class="page-toggle" type="button" aria-expanded="false"><span class="arrow">►</span><span>singles</span></button>
               <div class="page-content">
                 <div class="disco-grid">
+                  <!-- (deine Singles bleiben hier wie im Code) -->
 
                   <article class="release">
                     <picture>
-                      <source srcset="assets/diskografie/Singles/wer bist du wenn keiner schaut.webp" type="image/webp">
-                      <img src="assets/diskografie/Singles/wer bist du wenn keiner schaut.jpg" alt="Cover: wer bist du wenn keiner schaut??" class="cover" loading="lazy" />
+                      <source srcset="assets/diskografie/Singles/sterne still.webp" type="image/webp">
+                      <img src="assets/diskografie/Singles/sterne still.jpg" alt="Cover: sterne still" class="cover" loading="lazy" />
                     </picture>
                     <div class="title">
-                      <a href="https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM" target="_blank" rel="noopener noreferrer">wer bist du wenn keiner schaut??</a>
+                      <a href="https://open.spotify.com/intl-de/album/2JNdpSBPVtEoDlXrGSybco?si" target="_blank" rel="noopener noreferrer">sterne still (mit sotbarn)</a>
                       <span class="badge">Single</span>
                     </div>
                     <div class="meta">2025</div>
@@ -523,13 +531,19 @@
 
                   <article class="release">
                     <picture>
-                      <source srcset="assets/diskografie/Singles/kreative perspektiven.webp" type="image/webp">
-                      <img src="assets/diskografie/Singles/kreative perspektiven.jpg" alt="Cover: kreative perspektiven" class="cover" loading="lazy" />
+                      <source srcset="assets/diskografie/Singles/wer bist du wenn keiner schaut.webp" type="image/webp">
+                      <img src="assets/diskografie/Singles/wer bist du wenn keiner schaut.jpg" alt="Cover: wer bist du wenn keiner schaut??" class="cover" loading="lazy" />
                     </picture>
                     <div class="title">
-                      <a href="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" target="_blank" rel="noopener noreferrer">kreative perspektiven</a>
+                      <a href="https://open.spotify.com/track/1xDwlGUQyPBzaHL6iDJphM" target="_blank" rel="noopener noreferrer">wer bist du wenn keiner schaut??</a>
                       <span class="badge">Single</span>
                     </div>
+                    <div class="meta">2025</div>
+                  </article>
+
+                  <article class="release">
+                    <img src="assets/diskografie/EPs/st3rne.jpg" alt="st3rne☆*">
+                    <div class="title"><a href="https://open.spotify.com/album/3d7F0wnumMBtTKar2t2cgI" target="_blank" rel="noopener noreferrer">st3rne☆*</a></div>
                     <div class="meta">2025</div>
                   </article>
 
@@ -539,7 +553,7 @@
                       <img src="assets/diskografie/Singles/mani matter.jpg" alt="Cover: mani matter (mit XYZ)" class="cover" loading="lazy" />
                     </picture>
                     <div class="title">
-                      <a href="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" target="_blank" rel="noopener noreferrer">mani matter (mit XYZ)</a>
+                      <a href="https://open.spotify.com/track/2Xp7qD73hYkVhxdjTYbepU" target="_blank" rel="noopener noreferrer">mani matter (mit marcello83)</a>
                       <span class="badge">Single · Kollabo</span>
                     </div>
                     <div class="meta">2025</div>
@@ -559,11 +573,23 @@
 
                   <article class="release">
                     <picture>
+                      <source srcset="assets/diskografie/Singles/kreative perspektiven.webp" type="image/webp">
+                      <img src="assets/diskografie/Singles/kreative perspektiven.jpg" alt="Cover: kreative perspektiven" class="cover" loading="lazy" />
+                    </picture>
+                    <div class="title">
+                      <a href="https://open.spotify.com/track/3Ja7f0z3lM23ieRq58FcDM" target="_blank" rel="noopener noreferrer">kreative perspektiven</a>
+                      <span class="badge">Single</span>
+                    </div>
+                    <div class="meta">2025</div>
+                  </article>
+
+                  <article class="release">
+                    <picture>
                       <source srcset="assets/diskografie/Singles/TRÄUME BRÜCKEN ZÄUNE.webp" type="image/webp">
                       <img src="assets/diskografie/Singles/TRÄUME BRÜCKEN ZÄUNE.jpg" alt="Cover: TRÄUME BRÜCKEN ZÄUNE" class="cover" loading="lazy" />
                     </picture>
                     <div class="title">
-                      <a href="https://open.spotify.com/track/0s8XyPtRo8lCWzDfZ7gqSD" target="_blank" rel="noopener noreferrer">TRÄUME BRÜCKEN ZÄUNE</a>
+                      <a href="https://open.spotify.com/track/0s8XyPtRo8lCWzDfZ7gqSD" target="_blank" rel="noopener noreferrer">TRÄUME BRÜCKEN ZÄUNE (mit sotbarn)</a>
                       <span class="badge">Single</span>
                     </div>
                     <div class="meta">2025</div>
@@ -583,13 +609,31 @@
 
                   <article class="release">
                     <picture>
-                      <source srcset="assets/diskografie/Singles/seit wieviel jahren leuchten sterne.webp" type="image/webp">
-                      <img src="assets/diskografie/Singles/seit wieviel jahren leuchten sterne.jpg" alt="Cover: seit wieviel jahren leuchten sterne??" class="cover" loading="lazy" />
+                      <source srcset="assets/diskografie/Singles/raucherschaeden.webp" type="image/webp">
+                      <img src="assets/diskografie/Singles/raucherschaeden.jpg" alt="Cover: raucherschaeden (mit sotbarn)" class="cover" loading="lazy" />
                     </picture>
                     <div class="title">
-                      <a href="https://open.spotify.com/album/0UfKvNdoEEc00LcgmwL7TE" target="_blank" rel="noopener noreferrer">seit wieviel jahren leuchten sterne??</a>
+                      <a href="https://open.spotify.com/track/24vQfWDt2rj60Bek47cKzv" target="_blank" rel="noopener noreferrer">raucherschaeden (mit sotbarn)</a>
+                      <span class="badge">Single · Kollabo</span>
+                    </div>
+                    <div class="meta">2024</div>
+                  </article>
+
+                  <article class="release">
+                    <picture>
+                      <source srcset="assets/diskografie/Singles/anwesenheit.webp" type="image/webp">
+                      <img src="assets/diskografie/Singles/anwesenheit.jpg" alt="Cover: anwesenheit" class="cover" loading="lazy" />
+                    </picture>
+                    <div class="title">
+                      <a href="https://open.spotify.com/album/25NBwRCESVSN4xLGy8yJPE" target="_blank" rel="noopener noreferrer">anwesenheit (mit marcello83</a>
                       <span class="badge">Single</span>
                     </div>
+                    <div class="meta">2024</div>
+                  </article>
+
+                  <article class="release">
+                    <img src="assets/diskografie/EPs/hundert grad.jpg" alt="hundert grad">
+                    <div class="title"><a href="https://open.spotify.com/album/363ITnyvTfkJ4p5yu3K0Bz" target="_blank" rel="noopener noreferrer">hundert grad</a></div>
                     <div class="meta">2024</div>
                   </article>
 
@@ -600,6 +644,42 @@
                     </picture>
                     <div class="title">
                       <a href="https://open.spotify.com/track/0K3Wl0QNxPvVb599JsXFGx" target="_blank" rel="noopener noreferrer">kinderleicht</a>
+                      <span class="badge">Single</span>
+                    </div>
+                    <div class="meta">2024</div>
+                  </article>
+
+                  <article class="release">
+                    <picture>
+                      <source srcset="assets/diskografie/Singles/seit wieviel jahren leuchten sterne.webp" type="image/webp">
+                      <img src="assets/diskografie/Singles/seit wieviel jahren leuchten sterne.jpg" alt="Cover: seit wieviel jahren leuchten sterne??" class="cover" loading="lazy" />
+                    </picture>
+                    <div class="title">
+                      <a href="https://open.spotify.com/album/0UfKvNdoEEc00LcgmwL7TE" target="_blank" rel="noopener noreferrer">seit wieviel jahren leuchten sterne?? (mit strangerperson)</a>
+                      <span class="badge">Single</span>
+                    </div>
+                    <div class="meta">2024</div>
+                  </article>
+
+                  <article class="release">
+                    <picture>
+                      <source srcset="assets/diskografie/Singles/ohne waffe.webp" type="image/webp">
+                      <img src="assets/diskografie/Singles/ohne waffe.jpg" alt="Cover: ohne waffe" class="cover" loading="lazy" />
+                    </picture>
+                    <div class="title">
+                      <a href="https://open.spotify.com/album/07IwWTYKTqq73hG0NEAJxZ" target="_blank" rel="noopener noreferrer">ohne waffe</a>
+                      <span class="badge">Single</span>
+                    </div>
+                    <div class="meta">2024</div>
+                  </article>
+
+                  <article class="release">
+                    <picture>
+                      <source srcset="assets/diskografie/Singles/was wir möchten.webp" type="image/webp">
+                      <img src="assets/diskografie/Singles/was wir möchten.jpg" alt="Cover: was wir möchten" class="cover" loading="lazy" />
+                    </picture>
+                    <div class="title">
+                      <a href="https://open.spotify.com/album/3lArtOVk2ifWSw6kcFos11" target="_blank" rel="noopener noreferrer">was wir möchten</a>
                       <span class="badge">Single</span>
                     </div>
                     <div class="meta">2024</div>
@@ -643,62 +723,20 @@
 
                   <article class="release">
                     <picture>
-                      <source srcset="assets/diskografie/Singles/raucherschaeden.webp" type="image/webp">
-                      <img src="assets/diskografie/Singles/raucherschaeden.jpg" alt="Cover: raucherschaeden (mit sotbarn)" class="cover" loading="lazy" />
-                    </picture>
-                    <div class="title">
-                      <a href="https://open.spotify.com/track/24vQfWDt2rj60Bek47cKzv" target="_blank" rel="noopener noreferrer">raucherschaeden (mit sotbarn)</a>
-                      <span class="badge">Single · Kollabo</span>
-                    </div>
-                    <div class="meta">2024</div>
-                  </article>
-
-                  <article class="release">
-                    <picture>
-                      <source srcset="assets/diskografie/Singles/was wir möchten.webp" type="image/webp">
-                      <img src="assets/diskografie/Singles/was wir möchten.jpg" alt="Cover: was wir möchten" class="cover" loading="lazy" />
-                    </picture>
-                    <div class="title">
-                      <a href="https://open.spotify.com/album/3lArtOVk2ifWSw6kcFos11" target="_blank" rel="noopener noreferrer">was wir möchten</a>
-                      <span class="badge">Single</span>
-                    </div>
-                    <div class="meta">2024</div>
-                  </article>
-
-                  <article class="release">
-                    <picture>
                       <source srcset="assets/diskografie/Singles/unsere ferne.webp" type="image/webp">
                       <img src="assets/diskografie/Singles/unsere ferne.jpg" alt="Cover: unsere ferne/ein paar memorie" class="cover" loading="lazy" />
                     </picture>
                     <div class="title">
-                      <a href="https://open.spotify.com/album/00rRbuG4SzPFLo5mucA97W" target="_blank" rel="noopener noreferrer">unsere ferne/ein paar memorie</a>
+                      <a href="https://open.spotify.com/album/00rRbuG4SzPFLo5mucA97W" target="_blank" rel="noopener noreferrer">unsere ferne/ein paar bei memorie</a>
                       <span class="badge">Single</span>
                     </div>
                     <div class="meta">2024</div>
                   </article>
 
                   <article class="release">
-                    <picture>
-                      <source srcset="assets/diskografie/Singles/anwesenheit.webp" type="image/webp">
-                      <img src="assets/diskografie/Singles/anwesenheit.jpg" alt="Cover: anwesenheit" class="cover" loading="lazy" />
-                    </picture>
-                    <div class="title">
-                      <a href="https://open.spotify.com/album/25NBwRCESVSN4xLGy8yJPE" target="_blank" rel="noopener noreferrer">anwesenheit</a>
-                      <span class="badge">Single</span>
-                    </div>
-                    <div class="meta">2024</div>
-                  </article>
-
-                  <article class="release">
-                    <picture>
-                      <source srcset="assets/diskografie/Singles/ohne waffe.webp" type="image/webp">
-                      <img src="assets/diskografie/Singles/ohne waffe.jpg" alt="Cover: ohne waffe" class="cover" loading="lazy" />
-                    </picture>
-                    <div class="title">
-                      <a href="https://open.spotify.com/album/07IwWTYKTqq73hG0NEAJxZ" target="_blank" rel="noopener noreferrer">ohne waffe</a>
-                      <span class="badge">Single</span>
-                    </div>
-                    <div class="meta">2024</div>
+                    <img src="assets/diskografie/EPs/gesund_krank.jpg" alt="gesund/krank">
+                    <div class="title"><a href="https://open.spotify.com/album/63meNbUfVkmao1NCuiplaf" target="_blank" rel="noopener noreferrer">gesund/krank</a></div>
+                    <div class="meta">2023</div>
                   </article>
 
                   <article class="release">
@@ -708,6 +746,18 @@
                     </picture>
                     <div class="title">
                       <a href="https://open.spotify.com/album/7dSgBqlyFyTep2QhdkZIyB" target="_blank" rel="noopener noreferrer">zwei stunden</a>
+                      <span class="badge">Single</span>
+                    </div>
+                    <div class="meta">2023</div>
+                  </article>
+
+                  <article class="release">
+                    <picture>
+                      <source srcset="assets/diskografie/Singles/fast wie lego baun.webp" type="image/webp">
+                      <img src="assets/diskografie/Singles/fast wie lego baun.jpg" alt="Cover: fast wie lego baun" class="cover" loading="lazy" />
+                    </picture>
+                    <div class="title">
+                      <a href="https://open.spotify.com/intl-de/album/4rw4OrtCGXvOsSw11lPiX9?si" target="_blank" rel="noopener noreferrer">fast wie lego baun</a>
                       <span class="badge">Single</span>
                     </div>
                     <div class="meta">2023</div>
@@ -876,6 +926,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = toggleWrap.querySelector('button');
     btn.addEventListener('click', () => openPlayerForCard(card));
   });
+
+  // ✅ EPs: Durchstreichen beim Klick (rechts -> links)
+  const epsToggle = document.getElementById('eps-toggle');
+  if(epsToggle){
+    epsToggle.addEventListener('click', ()=>{
+      const label = epsToggle.querySelector('.ep-strike');
+      if(label) label.classList.toggle('striked');
+    });
+  }
 
   document.querySelectorAll('.page-toggle').forEach(btn=>{
     const group = btn.closest('.page-group');

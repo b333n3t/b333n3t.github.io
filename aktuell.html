@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aktuell – b3nn3t | Neuigkeiten & Termine</title>
+  <title>aktuell (b3nn3t) | neuigkeiten & termine</title>
   <meta name="description" content="Aktuelle Neuigkeiten von b3nn3t – Updates zu Musik, Releases, Projekten, Events und besonderen Momenten." />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://www.b3nn3t.com/aktuell.html" />
@@ -206,7 +206,7 @@
     .page-group.open > .page-content{display:block;}
     .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
-    /* Unter-Akkordeons */
+    /* Unter-Akkordeons (nur noch für termine gebraucht) */
     .sub-toggle{
       display:flex;
       align-items:center;
@@ -365,41 +365,6 @@
       .release-card img { width: 75%; height: auto; }
     }
 
-    /* Collage */
-    .collage-window {
-      position: relative;
-      max-width: 650px;
-      margin: 2rem 0;
-      background: transparent !important;
-      box-shadow: none !important;
-      padding: 0;
-      border-radius: 0;
-      overflow: visible;
-    }
-    .chaos-collage {
-      position: relative;
-      width: 100%;
-      height: 400px;
-    }
-    .chaos-collage img {
-      position: absolute;
-      width: 45%;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-      transition: transform 0.4s ease;
-      object-fit: cover;
-    }
-    .chaos-collage img:hover {
-      transform: scale(1.05) rotate(0deg);
-      z-index: 3;
-    }
-    .chaos-collage img:nth-child(1){top:10%;left:5%;transform:rotate(-8deg);}
-    .chaos-collage img:nth-child(2){top:5%;right:8%;transform:rotate(7deg);}
-    @media (max-width:600px){
-      .chaos-collage{height:300px;}
-      .chaos-collage img{width:60%;}
-    }
-
     /* Termine */
     .termine-list {
       display: grid;
@@ -516,33 +481,29 @@
           <div class="page-group current open" id="page-aktuell">
             <button class="page-toggle" type="button" aria-expanded="true" aria-controls="page-aktuell-content">
               <span class="arrow" aria-hidden="true">►</span>
-              <span>aktuell</span>
+              <!-- ✅ titel wird animiert -->
+              <span id="aktuell-title">aktuell</span>
             </button>
 
             <div class="page-content" id="page-aktuell-content">
-              <h1>relevant und geplant</h1>
-              <p>was steht an...</p>
+              <h1></h1>
+              <p></p>
 
-              <div class="sub-group open" id="acc-neuigkeiten">
-                <button class="sub-toggle" type="button" aria-expanded="true" aria-controls="neuigkeiten-content">
-                  <span class="arrow" aria-hidden="true">►</span>
-                  <span>neuigkeiten</span>
-                </button>
+              <!-- ✅ neuigkeiten titel/pfeil weg, content bleibt direkt sichtbar -->
+              <div class="sub-content" id="neuigkeiten-content">
+                <p>lowkey bald ein neuer release</p>
 
-                <div class="sub-content" id="neuigkeiten-content">
-                  <p style="margin-top: 2rem;">- lasst euch überraschen ;) bin am kochen -</p>
-
-                  <a class="release-card" href="https://www.b3nn3t.com/release-3.html" target="_blank" rel="noopener noreferrer">
-                    <img src="assets/release/drei-cover.webp" alt="Cover: 3" width="120" height="120" decoding="async" fetchpriority="high" loading="eager">
-                    <div class="release-info">
-                      <div class="subtitle">🎧 neues release</div>
-                      <div class="songtitle"> drei </div>
-                      <div class="desc">jetzt reinhören & preview-video ansehen!</div>
-                    </div>
-                  </a>
-                </div>
+                <a class="release-card" href="https://www.b3nn3t.com/release-3.html" target="_blank" rel="noopener noreferrer">
+                  <img src="assets/release/drei-cover.webp" alt="Cover: 3" width="120" height="120" decoding="async" fetchpriority="high" loading="eager">
+                  <div class="release-info">
+                    <div class="subtitle"> </div>
+                    <div class="songtitle"> drei </div>
+                    <div class="desc">  hörprobe hier o.O</div>
+                  </div>
+                </a>
               </div>
 
+              <!-- ✅ termine bleibt ausklappbar -->
               <div class="sub-group" id="acc-termine">
                 <button class="sub-toggle" type="button" aria-expanded="false" aria-controls="termine-content">
                   <span class="arrow" aria-hidden="true">►</span>
@@ -550,71 +511,53 @@
                 </button>
 
                 <div class="sub-content" id="termine-content">
-                  <p>- - - auftritte - - -</p>
+                  <p></p>
 
                   <div class="termine-responsive" style="margin-top: 2rem;">
                     <div class="termine-list" role="table" aria-label="Termine">
 
                       <div class="termin-row" role="row">
                         <div class="datum" role="cell"><time datetime="2024-07-10">10.07.2024</time></div>
-                        <div class="veranstaltung" role="cell">· RAPCITY-Contest - OpenAir Frauenfeld</div>
-                        <div class="ort" role="cell">· Frauenfeld · 17:15 Uhr</div>
+                        <div class="veranstaltung" role="cell">· rap city contest (openair frauenfeld)</div>
+                        <div class="ort" role="cell"> frauenfeld · 17:15 Uhr</div>
                       </div>
 
                       <div class="termin-row" role="row">
                         <div class="datum" role="cell"><time datetime="2025-06-13">13.06.2025</time></div>
-                        <div class="veranstaltung" role="cell">· Jugend Festival beim ZAK</div>
-                        <div class="ort" role="cell">· Jona · 18:00 Uhr</div>
+                        <div class="veranstaltung" role="cell">· jugendfestival 2025 (ZAK)</div>
+                        <div class="ort" role="cell"> jona · 20:00 Uhr</div>
                       </div>
 
                       <div class="termin-row" role="row">
                         <div class="datum" role="cell"><time datetime="2025-06-28">28.06.2025</time></div>
-                        <div class="veranstaltung" role="cell">· booted open air</div>
-                        <div class="ort" role="cell">· Wien · 20:30 Uhr</div>
+                        <div class="veranstaltung" role="cell">· booted up open air (gleis19)</div>
+                        <div class="ort" role="cell"> wien · 20:30 Uhr</div>
                       </div>
 
                       <div class="termin-row" role="row">
                         <div class="datum" role="cell"><time datetime="2025-08-02">02.08.2025</time></div>
-                        <div class="veranstaltung" role="cell">· OYA - OPEN AIR - abgesagt</div>
-                        <div class="ort" role="cell">· Wien · 20:00 Uhr</div>
+                        <div class="veranstaltung" role="cell">· oya open air (gleis19)(abgesagt)</div>
+                        <div class="ort" role="cell"> wien · 20:00 Uhr</div>
                       </div>
 
                       <div class="termin-row" role="row">
                         <div class="datum" role="cell"><time datetime="2025-09-20">20.09.2025</time></div>
-                        <div class="veranstaltung" role="cell">· Kinder- und Jugendarbeitsfest - Rüti ZH</div>
-                        <div class="ort" role="cell">· Rüti · 18:00 Uhr</div>
+                        <div class="veranstaltung" role="cell">· kinder- und jugendarbeitsfest (feuerwehr rüti)</div>
+                        <div class="ort" role="cell"> rüti · 18:00 Uhr</div>
                       </div>
 
                       <div class="termin-row" role="row">
                         <div class="datum" role="cell"><time datetime="2025-10-10">10.10.2025</time></div>
-                        <div class="veranstaltung" role="cell">· Full HD - Grün & Gold</div>
-                        <div class="ort" role="cell">· Heidelberg · 20:00 Uhr</div>
+                        <div class="veranstaltung" role="cell">· full HD (grün&gold)</div>
+                        <div class="ort" role="cell"> heidelberg · 21:00 Uhr</div>
                       </div>
 
                       <div class="termin-row" role="row">
                         <div class="datum" role="cell"><time datetime="2026-06-13">13.06.2026</time></div>
-                        <div class="veranstaltung" role="cell">· Jugendfestival - ZAK</div>
-                        <div class="ort" role="cell">· Rapperswil-Jona · 19:00 Uhr</div>
+                        <div class="veranstaltung" role="cell">· jugendfestival 2026 (ZAK)</div>
+                        <div class="ort" role="cell"> jona · ≈19:00 Uhr</div>
                       </div>
 
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="sub-group" id="acc-beschaeftigt">
-                <button class="sub-toggle" type="button" aria-expanded="false" aria-controls="beschaeftigt-content">
-                  <span class="arrow" aria-hidden="true">►</span>
-                  <span>was mich gerade beschäftigt</span>
-                </button>
-
-                <div class="sub-content" id="beschaeftigt-content">
-                  <p>- - - - - -</p>
-
-                  <div class="collage-window">
-                    <div class="chaos-collage">
-                      <img src="assets/aktuell/er.jpg" alt="style">
-                      <img src="assets/aktuell/qw.jpg" alt="style">
                     </div>
                   </div>
                 </div>
@@ -670,9 +613,7 @@
         menu.setAttribute('aria-hidden','false');
         overlay.hidden = false;
 
-        // optional, falls unterstützt
         if ('inert' in menu) menu.inert = false;
-
         setMenuFocusable(true);
       }
 
@@ -684,7 +625,6 @@
         menu.setAttribute('aria-hidden','true');
         overlay.hidden = true;
 
-        // Links aus dem Tab-Flow, dann menu wirklich verstecken
         setMenuFocusable(false);
         menu.hidden = true;
 
@@ -692,7 +632,6 @@
       }
 
       document.addEventListener('DOMContentLoaded', () => {
-        // Startzustand: geschlossen & nicht fokussierbar
         if(menu){
           menu.hidden = true;
           menu.setAttribute('aria-hidden','true');
@@ -714,11 +653,65 @@
     })();
   </script>
 
+  <!-- ✅ aktuell-title typewriter + accordions -->
   <script>
     (function(){
       const group  = document.querySelector('.page-group.current');
       const toggle = group?.querySelector('.page-toggle');
       const panel  = document.querySelector('.scroll-panel');
+      const titleEl = document.getElementById('aktuell-title');
+
+      const BASE = 'aktuell';
+      const SUFFIX = '/termine';
+
+      let timer = null;
+
+      function stopAnim(){
+        if(timer) clearInterval(timer);
+        timer = null;
+      }
+
+      function typeSuffix(){
+        if(!titleEl) return;
+        stopAnim();
+
+        // falls schon drin, nix tun
+        if(titleEl.textContent === BASE + SUFFIX) return;
+
+        titleEl.textContent = BASE; // sauber starten
+        let i = 0;
+        timer = setInterval(() => {
+          i++;
+          titleEl.textContent = BASE + SUFFIX.slice(0, i);
+          if(i >= SUFFIX.length){
+            stopAnim();
+          }
+        }, 55);
+      }
+
+      function eraseSuffix(){
+        if(!titleEl) return;
+        stopAnim();
+
+        const full = BASE + SUFFIX;
+        let current = titleEl.textContent;
+
+        // falls irgendwas schief war: auf full setzen und dann löschen
+        if(current !== full && current !== BASE){
+          current = full;
+          titleEl.textContent = current;
+        }
+
+        let len = titleEl.textContent.length;
+        timer = setInterval(() => {
+          len--;
+          titleEl.textContent = titleEl.textContent.slice(0, len);
+          if(len <= BASE.length){
+            titleEl.textContent = BASE;
+            stopAnim();
+          }
+        }, 40);
+      }
 
       function resizePanel(){
         if(!panel) return;
@@ -741,7 +734,14 @@
         panel.style.maxHeight = max + 'px';
       }
 
-      document.addEventListener('DOMContentLoaded', resizePanel);
+      document.addEventListener('DOMContentLoaded', () => {
+        resizePanel();
+
+        // startzustand: wenn aktuell offen ist, suffix schreiben
+        if(group?.classList.contains('open')) typeSuffix();
+        else if(titleEl) titleEl.textContent = BASE;
+      });
+
       window.addEventListener('load', resizePanel);
       window.addEventListener('resize', resizePanel);
       if(window.visualViewport){
@@ -753,9 +753,14 @@
           const isOpen = group.classList.contains('open');
           group.classList.toggle('open', !isOpen);
           toggle.setAttribute('aria-expanded', String(!isOpen));
+
+          // ✅ titel animation
+          if(!isOpen) typeSuffix();
+          else eraseSuffix();
         });
       }
 
+      // ✅ nur termine bleibt togglebar
       document.querySelectorAll('.sub-group').forEach(subGroup => {
         const btn = subGroup.querySelector('.sub-toggle');
         if(!btn) return;

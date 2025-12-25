@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
   <!-- ✅ SEO-optimiert -->
-  <title>Kontakt – b3nn3t | Booking & Nachrichten & Anfragen</title>
+  <title>kontakt (b3nn3t) | booking & nachrichten</title>
   <meta name="description" content="Schreibe b3nn3t für Booking, Kooperationen, Presse oder Fragen. Einfach und direkt über das Kontaktformular." />
   <meta name="robots" content="index,follow"/>
 
@@ -279,15 +279,33 @@
     form{ margin:0; display:grid; gap:.8rem; max-width:650px; }
     form label{ font-weight:600; }
 
-    form input:not([type="checkbox"]), form textarea{
+    /* ✅ Felder transparent + Text weiss */
+    form input:not([type="checkbox"]),
+    form textarea{
       width:100%;
-      border:1px solid #ccc;
+      border:1px solid rgba(255,255,255,0.45);
       border-radius:8px;
       padding:.6rem;
-      background:rgba(255,255,255,0.85);
+
+      background: transparent; /* <- transparent */
+      color:#fff;
+
       font:inherit;
+      outline:none;
     }
     form textarea{ min-height:120px; overflow:auto; }
+
+    /* Placeholder etwas heller */
+    form input::placeholder,
+    form textarea::placeholder{
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* Optional: Fokus etwas sichtbarer */
+    form input:focus,
+    form textarea:focus{
+      border-color: rgba(255,255,255,0.8);
+    }
 
     form input[type="checkbox"]{
       width:auto; margin:.25rem .5rem 0 0; padding:0; border:none; vertical-align:top;
@@ -296,13 +314,63 @@
     form label input[type="checkbox"]{ float:left; }
     form label input[type="checkbox"] + *{ display:block; }
 
+    /* ✅ Button: Hintergrund weiss + Schrift #930010 */
     form button{
       margin-top:.6rem; margin-bottom:0.4rem;
-      border:none; border-radius:8px; padding:.6rem 1.2rem;
-      background:#111; color:#fff; font-weight:600; cursor:pointer;
+      border:none;
+      border-radius:8px;
+      padding:.6rem 1.2rem;
+
+      background:#ffffff;   /* <- weiss */
+      color:#930010;        /* <- rot */
+      font-weight:700;
+      cursor:pointer;
     }
     form button[disabled]{ opacity:0.6; cursor:default; }
 
+/* ===== Custom Checkbox (weiss + roter Haken) ===== */
+form input[type="checkbox"]{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 16px;
+  height: 16px;
+  margin: .3rem .6rem 0 0;
+
+  border: 1.5px solid #ffffff;
+  border-radius: 3px;
+  background: #ffffff;
+
+  display: inline-grid;
+  place-content: center;
+
+  cursor: pointer;
+}
+
+/* roter Haken */
+form input[type="checkbox"]::before{
+  content: "";
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #930010;
+  border-bottom: 2px solid #930010;
+  transform: rotate(-45deg) scale(0);
+  transition: transform .12s ease-in-out;
+}
+
+/* aktiv */
+form input[type="checkbox"]:checked::before{
+  transform: rotate(-45deg) scale(1);
+}
+
+/* Fokus (optional, dezent) */
+form input[type="checkbox"]:focus{
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(147,0,16,0.25);
+}
+
+    
     /* ===== Spinner & Status ===== */
     .sending-indicator{
       display:none;
@@ -457,33 +525,30 @@
 
             <div class="page-content">
               <h1>formular</h1>
-              <p>
-                schreib mir – du sendest deine nachricht direkt per e-mail an mich 🖤🖤🖤
                 <span style="opacity:0; height:0; overflow:hidden; display:block;">
                   kontakt & booking für b3nn3t – deutschrap & indie-pop aus der schweiz.
                   hier erreichst du mich für auftritte, anfragen, kollabos und nachrichten.
                 </span>
-              </p>
 
               <form id="kontakt-form">
-                <label for="name">Name</label>
-                <input id="name" name="name" type="text" placeholder="Dein Name" required />
+                <label for="name">name</label>
+                <input id="name" name="name" type="text" placeholder="dein name oder so" required />
 
-                <label for="email">E-Mail</label>
-                <input id="email" name="email" type="email" placeholder="dein@mail.ch" required />
+                <label for="email">e-mail</label>
+                <input id="email" name="email" type="email" placeholder="deine@mail.com" required />
 
-                <label for="subject">Betreff</label>
-                <input id="subject" name="subject" type="text" placeholder="Worum geht’s?" />
+                <label for="subject">betreff</label>
+                <input id="subject" name="subject" type="text" placeholder="um was gehts?" />
 
-                <label for="message">Nachricht</label>
-                <textarea id="message" name="message" placeholder="Hi b3nn3t, ..." required></textarea>
+                <label for="message">nachricht</label>
+                <textarea id="message" name="message" placeholder="hallo b3nn3t, ..." required></textarea>
 
                 <label style="font-weight:400">
                   <input type="checkbox" name="privacy" value="zugestimmt" required />
-                  Ich stimme zu, dass meine Angaben zur Beantwortung meiner Anfrage gespeichert und verarbeitet werden.
+                  meine angaben dürfen zur beantwortung/verarbeitung gespeichert werden
                 </label>
 
-                <button type="submit" id="kontakt-submit">Nachricht senden</button>
+                <button type="submit" id="kontakt-submit">nachricht senden</button>
 
                 <div class="sending-indicator" id="sending-indicator" aria-hidden="true">
                   <div class="spinner"></div>
@@ -540,11 +605,7 @@
     function setMenuFocus(enabled){
       const items = nav.querySelectorAll(focusablesSelector);
       items.forEach(el => {
-        if (el.tagName.toLowerCase() === 'a') {
-          el.tabIndex = enabled ? 0 : -1;
-        } else {
-          el.tabIndex = enabled ? 0 : -1;
-        }
+        el.tabIndex = enabled ? 0 : -1;
       });
     }
 

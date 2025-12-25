@@ -4,8 +4,8 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <title>über mich – b3nn3t</title>
-  <meta name="description" content="über mich — b3nn3t - Deutschrap & Indie-Pop, Gedanken, Updates und Links zur Musik."/>
+  <title>über mich (b3nn3t)</title>
+  <meta name="description" content="über mich (b3nn3t) - deutschrap & indie-pop, links zur musik."/>
 
   <!-- Favicons: Google, Browser, Apple -->
   <link rel="icon" href="/favicon.ico" sizes="any">
@@ -87,7 +87,6 @@
       transform:translateX(100%);transition:transform .25s;
       z-index:1101;padding:46px 10px 14px;
 
-      /* ✅ Fokus-Ring sichtbar, wenn nav fokussiert wird */
       outline: none;
     }
     body.menu-open .site-menu{transform:translateX(0)}
@@ -185,65 +184,62 @@
 
     .page-content h1{ margin-top:0; }
 
-/* ✅ Footer hochkant rechts – bevorzugt deine Position, fällt nach unten zurück */
-.footer-inline{
-  position: fixed;
-  right: var(--footer-right-desktop);
-  top: var(--footer-top-desktop);
-  bottom: auto;
-  left: auto;
-  z-index: 1300; /* ✅ über swipe-zone */
+    /* ✅ Footer hochkant rechts – bevorzugt deine Position, fällt nach unten zurück */
+    .footer-inline{
+      position: fixed;
+      right: var(--footer-right-desktop);
+      top: var(--footer-top-desktop);
+      bottom: auto;
+      left: auto;
+      z-index: 1300;
 
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
 
-  color:#930010;
-  font-size:.82rem;
-  padding: 6px 4px;
+      color:#930010;
+      font-size:.82rem;
+      padding: 6px 4px;
 
-  white-space: nowrap;
+      white-space: nowrap;
+      max-height: calc(100vh - 16px);
+    }
 
-  /* ✅ verhindert Abschneiden */
-  max-height: calc(100vh - 16px);
-}
+    .footer-inline a,
+    .footer-inline a:visited,
+    .footer-inline a:active,
+    .footer-inline a:focus{
+      color:#930010;
+      text-decoration:none;
+      white-space: nowrap;
 
-.footer-inline a,
-.footer-inline a:visited,
-.footer-inline a:active,
-.footer-inline a:focus{
-  color:#930010;
-  text-decoration:none;
-  white-space: nowrap;
+      display:inline-block;
+      padding:6px 6px;
+    }
+    .footer-inline a:hover{ text-decoration: underline; }
 
-  display:inline-block; /* ✅ größere Tap-Fläche */
-  padding:6px 6px;      /* ✅ iOS-friendly */
-}
-.footer-inline a:hover{ text-decoration: underline; }
+    @media (max-width: 768px){
+      .footer-inline{
+        right: var(--footer-right-mobile);
+        top: var(--footer-top-mobile);
+        bottom: auto;
+      }
+    }
 
-/* Mobile: Footer bleibt hochkant rechts, wie eingestellt */
-@media (max-width: 768px){
-  .footer-inline{
-    right: var(--footer-right-mobile);
-    top: var(--footer-top-mobile);
-    bottom: auto;
-  }
-}
+    @media (max-height: 720px){
+      .footer-inline{
+        top: auto !important;
+        bottom: 16px !important;
+        font-size: .78rem;
+      }
+    }
+    @media (max-height: 620px){
+      .footer-inline{
+        top: auto !important;
+        bottom: 12px !important;
+        font-size: .72rem;
+      }
+    }
 
-/* ✅ FALLBACK: wenn Fensterhöhe klein wird → lieber unten statt zu weit oben */
-@media (max-height: 720px){
-  .footer-inline{
-    top: auto !important;
-    bottom: 16px !important;
-    font-size: .78rem;
-  }
-}
-@media (max-height: 620px){
-  .footer-inline{
-    top: auto !important;
-    bottom: 12px !important;
-    font-size: .72rem;
-  }
-}
     /* swipe helper */
     .edge-swipe{
       position:fixed;
@@ -257,7 +253,7 @@
     .edge-swipe.right{ right:0; }
     @media (pointer:coarse){
       .edge-swipe{ pointer-events:auto; }
-      .edge-swipe.right{ pointer-events:none !important; } /* ✅ blockiert Footer nicht */
+      .edge-swipe.right{ pointer-events:none !important; }
     }
 
     .page-content h1,
@@ -310,7 +306,6 @@
 <body>
   <header class="header">
     <a class="brand" href="index.html" aria-label="b3nn3t Home">
-      <!-- ✅ (3) Logo-Fix: alt + keine aria-hidden, plus width/height -->
       <img src="/favicon.svg" alt="b3nn3t Logo" width="24" height="24">
       <strong>b3nn3t</strong>
     </a>
@@ -322,7 +317,6 @@
 
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
-  <!-- ✅ (1) WCAG-Fix: kein aria-hidden, stattdessen hidden -->
   <nav id="site-menu" class="site-menu" hidden tabindex="-1">
     <ul>
       <li><a href="ueber-mich.html">über mich</a></li>
@@ -350,12 +344,13 @@
 
               <h1>( ◡́.◡̀)(^◡^ )</h1>
 
-              <p class="no-gap">hallo ich bin bennet, 19 jahre und künstler (oder so) aus st. gallen.</p>
-              <p>++ich gib ratschläge, die      ich eigentlich     selber bräuchte.</p>
-
-              <p>irgendjemandem      wirds        schon helfen     so        yk. :p</p>
-
-              <p>liebe grüsse &lt;3333³3³³33³</p>
+              <!-- ✅ typewriter target: originale texte stecken in data-full -->
+              <div id="about-typewriter">
+                <p class="no-gap type-line" data-full="hallo ich bin bennet, 19 jahre und künstler (oder so) aus st. gallen."></p>
+                <p class="type-line" data-full="++ich gib ratschläge, die      ich eigentlich     selber bräuchte."></p>
+                <p class="type-line" data-full="irgendjemandem      wirds        schon helfen     so        yk. :p"></p>
+                <p class="type-line" data-full="liebe grüsse &lt;3333³3³³33³"></p>
+              </div>
 
               <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
             </div>
@@ -398,11 +393,10 @@
   <div class="edge-swipe left" aria-hidden="true"></div>
   <div class="edge-swipe right" aria-hidden="true"></div>
 
-  <!-- Wenn script.js Menü-Logik enthält, bitte dort entfernen, sonst doppelt -->
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=6" defer></script>
 
-  <!-- ✅ (1) WCAG-Menü-JS: hidden + aria-expanded + Fokus zurück + Escape + Overlay + Focus Trap -->
+  <!-- ✅ WCAG-Menü-JS -->
   <script>
     (() => {
       const btn = document.querySelector('.hamburger');
@@ -459,7 +453,6 @@
           return;
         }
 
-        // Focus Trap
         if (e.key === 'Tab' && isOpen()) {
           const focusables = getFocusable();
           if (!focusables.length) return;
@@ -479,12 +472,76 @@
     })();
   </script>
 
-  <!-- Dein bestehendes Panel/Toggle Script -->
+  <!-- ✅ Panel/Toggle Script + Typewriter -->
   <script>
     (function(){
       const group  = document.querySelector('.page-group.current');
       const toggle = group?.querySelector('.page-toggle');
       const panel  = document.querySelector('.scroll-panel');
+
+      // ===== typewriter =====
+      const container = document.getElementById('about-typewriter');
+      const lines = container ? Array.from(container.querySelectorAll('.type-line')) : [];
+      let typingTimer = null;
+      let cancelled = false;
+
+      function stopTyping(){
+        cancelled = true;
+        if(typingTimer) clearTimeout(typingTimer);
+        typingTimer = null;
+      }
+
+      function clearLines(){
+        lines.forEach(p => p.textContent = '');
+      }
+
+      function typeLine(p, text, i, cb){
+        if(cancelled) return;
+        p.textContent = text.slice(0, i);
+        if(i >= text.length){
+          cb && cb();
+          return;
+        }
+        typingTimer = setTimeout(() => typeLine(p, text, i + 1, cb), 18);
+      }
+
+      function startTyping(){
+        if(!container || !lines.length) return;
+        stopTyping();
+        cancelled = false;
+        clearLines();
+
+        let idx = 0;
+        const next = () => {
+          if(cancelled) return;
+          const p = lines[idx];
+          const full = p.getAttribute('data-full') || '';
+          // HTML entities wieder als text darstellen (wir wollen genau das sehen)
+          const tmp = document.createElement('textarea');
+          tmp.innerHTML = full;
+          const decoded = tmp.value;
+
+          typeLine(p, decoded, 0, () => {
+            idx++;
+            if(idx < lines.length){
+              typingTimer = setTimeout(next, 140);
+            }
+          });
+        };
+
+        next();
+      }
+
+      function showFullInstant(){
+        if(!container || !lines.length) return;
+        stopTyping();
+        lines.forEach(p => {
+          const full = p.getAttribute('data-full') || '';
+          const tmp = document.createElement('textarea');
+          tmp.innerHTML = full;
+          p.textContent = tmp.value;
+        });
+      }
 
       function resizePanel(){
         if(!panel) return;
@@ -507,18 +564,33 @@
         panel.style.maxHeight = max + 'px';
       }
 
+      // initial: wenn über mich offen ist -> tippen
+      window.addEventListener('load', () => {
+        resizePanel();
+        if(group?.classList.contains('open')) startTyping();
+        else showFullInstant();
+      });
+
+      window.addEventListener('resize', resizePanel);
+      if(window.visualViewport){
+        window.visualViewport.addEventListener('resize', resizePanel);
+      }
+
       if(toggle && group){
         toggle.addEventListener('click', () => {
           const isOpen = group.classList.contains('open');
           group.classList.toggle('open', !isOpen);
           toggle.setAttribute('aria-expanded', String(!isOpen));
-        });
-      }
 
-      window.addEventListener('load', resizePanel);
-      window.addEventListener('resize', resizePanel);
-      if(window.visualViewport){
-        window.visualViewport.addEventListener('resize', resizePanel);
+          // ✅ beim öffnen: typewriter
+          if(!isOpen){
+            startTyping();
+          }else{
+            // ✅ beim schliessen: text einfach weg (weil content hidden ist)
+            stopTyping();
+            clearLines();
+          }
+        });
       }
     })();
   </script>
