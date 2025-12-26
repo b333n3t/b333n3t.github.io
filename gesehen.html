@@ -523,16 +523,17 @@
 
                 <div class="card" id="yt2" data-embed-src="https://www.youtube.com/embed/DMNl40Tip1w">
                   <img class="thumb"
-                    src="assets/gesehen/reel2-640.avif"
-                    srcset="
-                      assets/gesehen/reel2-320.avif 320w,
-                      assets/gesehen/reel2-640.avif 640w"
-                    sizes="(max-width: 820px) 92vw, 341px"
-                    alt="YouTube-Vorschau"
-                    width="960" height="540"
-                    loading="lazy"
-                    decoding="async"
-                    data-fallback-id="DMNl40Tip1w">
+  src="assets/gesehen/reel2-640.avif"
+  srcset="
+    assets/gesehen/reel2-320.avif 320w,
+    assets/gesehen/reel2-640.avif 640w"
+  sizes="(max-width: 820px) 92vw, 341px"
+  alt="YouTube-Vorschau"
+  width="960" height="540"
+  loading="eager"
+  fetchpriority="high"
+  decoding="async"
+  data-fallback-id="DMNl40Tip1w">
                   <span class="play-label">▶︎ YouTube 2</span>
                   <small>YouTube</small>
                 </div>
