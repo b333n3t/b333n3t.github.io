@@ -19,16 +19,14 @@
 
   <link rel="preconnect" href="https://www.youtube.com" crossorigin>
   <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
-<link rel="preload" as="image"
-      href="/assets/gesehen/reel1.avif"
-      fetchpriority="high"
-      imagesizes="(max-width: 820px) 100vw, 350px">
-<link rel="preload" as="image"
-      href="/assets/gesehen/reel2.avif"
-      fetchpriority="high"
-      imagesizes="(max-width: 820px) 100vw, 350px">
 
-
+  <!-- 1) ✅ LCP: erstes Thumbnail früh laden + responsive preload (nutzt dein sizes) -->
+  <link rel="preload"
+        as="image"
+        href="/assets/gesehen/reel1-640.avif"
+        imagesrcset="/assets/gesehen/reel1-320.avif 320w, /assets/gesehen/reel1-640.avif 640w, /assets/gesehen/reel1-960.avif 960w"
+        imagesizes="(max-width: 820px) 100vw, 350px"
+        fetchpriority="high">
 
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
@@ -467,7 +465,7 @@
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
-  <!-- WCAG FIX: aria-hidden + inert + tabindex=-1, solange geschlossen -->
+  <!-- 4) ✅ WCAG: aria-hidden + inert + tabindex=-1, solange geschlossen -->
   <nav id="site-menu" class="site-menu" aria-hidden="true" inert>
     <ul>
       <li><a href="ueber-mich.html" tabindex="-1">über mich</a></li>
@@ -506,103 +504,126 @@
               <h1></h1>
               <p></p>
 
-              <!-- ✅ Thumbnails DIREKT im HTML (LCP/PSI freundlich)
-                   - yt1: fetchpriority=high + loading=eager
-                   - rest: loading=lazy
-                   - width/height gesetzt (stabileres Layout)
-                   - srcset nur optional (unten per JS nur wenn wirklich vorhanden) -->
+              <!-- 2) ✅ Responsive Thumbs (320/640/960) + sizes
+                   3) ✅ LCP: nur yt1 eager+fetchpriority, rest lazy -->
               <section class="grid-seen" aria-label="Videos">
 
                 <div class="card" id="yt1" data-embed-src="https://www.youtube.com/embed/ZSaj_FuqPN8">
                   <img class="thumb"
-                       src="assets/gesehen/reel1.avif"
-                       alt="YouTube-Vorschau"
-                       width="960" height="540"
-                       loading="eager"
-                       fetchpriority="high"
-                       decoding="async"
-                       data-fallback-id="ZSaj_FuqPN8"
-                       sizes="(max-width: 820px) 100vw, 350px">
+                    src="assets/gesehen/reel1-640.avif"
+                    srcset="
+                      assets/gesehen/reel1-320.avif 320w,
+                      assets/gesehen/reel1-640.avif 640w,
+                      assets/gesehen/reel1-960.avif 960w"
+                    sizes="(max-width: 820px) 100vw, 350px"
+                    alt="YouTube-Vorschau"
+                    width="960" height="540"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    data-fallback-id="ZSaj_FuqPN8">
                   <span class="play-label">▶︎ YouTube 1</span>
                   <small>YouTube</small>
                 </div>
 
                 <div class="card" id="yt2" data-embed-src="https://www.youtube.com/embed/DMNl40Tip1w">
-                 <img class="thumb"
-     src="assets/gesehen/reel2.avif"
-     alt="YouTube-Vorschau"
-     width="960" height="540"
-     loading="eager"
-     fetchpriority="high"
-     decoding="async"
-     data-fallback-id="DMNl40Tip1w"
-     sizes="(max-width: 820px) 100vw, 350px">
-
+                  <img class="thumb"
+                    src="assets/gesehen/reel2-640.avif"
+                    srcset="
+                      assets/gesehen/reel2-320.avif 320w,
+                      assets/gesehen/reel2-640.avif 640w,
+                      assets/gesehen/reel2-960.avif 960w"
+                    sizes="(max-width: 820px) 100vw, 350px"
+                    alt="YouTube-Vorschau"
+                    width="960" height="540"
+                    loading="lazy"
+                    decoding="async"
+                    data-fallback-id="DMNl40Tip1w">
                   <span class="play-label">▶︎ YouTube 2</span>
                   <small>YouTube</small>
                 </div>
 
                 <div class="card" id="yt3" data-embed-src="https://www.youtube.com/embed/K5pKG0Smdfc">
                   <img class="thumb"
-                       src="assets/gesehen/reel3.avif"
-                       alt="YouTube-Vorschau"
-                       width="960" height="540"
-                       loading="lazy"
-                       decoding="async"
-                       data-fallback-id="K5pKG0Smdfc"
-                       sizes="(max-width: 820px) 100vw, 350px">
+                    src="assets/gesehen/reel3-640.avif"
+                    srcset="
+                      assets/gesehen/reel3-320.avif 320w,
+                      assets/gesehen/reel3-640.avif 640w,
+                      assets/gesehen/reel3-960.avif 960w"
+                    sizes="(max-width: 820px) 100vw, 350px"
+                    alt="YouTube-Vorschau"
+                    width="960" height="540"
+                    loading="lazy"
+                    decoding="async"
+                    data-fallback-id="K5pKG0Smdfc">
                   <span class="play-label">▶︎ YouTube 3</span>
                   <small>YouTube</small>
                 </div>
 
                 <div class="card" id="yt4" data-embed-src="https://www.youtube.com/embed/4I9vlcGvFGQ">
                   <img class="thumb"
-                       src="assets/gesehen/reel4.avif"
-                       alt="YouTube-Vorschau"
-                       width="960" height="540"
-                       loading="lazy"
-                       decoding="async"
-                       data-fallback-id="4I9vlcGvFGQ"
-                       sizes="(max-width: 820px) 100vw, 350px">
+                    src="assets/gesehen/reel4-640.avif"
+                    srcset="
+                      assets/gesehen/reel4-320.avif 320w,
+                      assets/gesehen/reel4-640.avif 640w,
+                      assets/gesehen/reel4-960.avif 960w"
+                    sizes="(max-width: 820px) 100vw, 350px"
+                    alt="YouTube-Vorschau"
+                    width="960" height="540"
+                    loading="lazy"
+                    decoding="async"
+                    data-fallback-id="4I9vlcGvFGQ">
                   <span class="play-label">▶︎ YouTube 4</span>
                   <small>YouTube</small>
                 </div>
 
                 <div class="card" id="yt5" data-embed-src="https://www.youtube.com/embed/w0pNdnlb96M">
                   <img class="thumb"
-                       src="assets/gesehen/reel5.avif"
-                       alt="YouTube-Vorschau"
-                       width="960" height="540"
-                       loading="lazy"
-                       decoding="async"
-                       data-fallback-id="w0pNdnlb96M"
-                       sizes="(max-width: 820px) 100vw, 350px">
+                    src="assets/gesehen/reel5-640.avif"
+                    srcset="
+                      assets/gesehen/reel5-320.avif 320w,
+                      assets/gesehen/reel5-640.avif 640w,
+                      assets/gesehen/reel5-960.avif 960w"
+                    sizes="(max-width: 820px) 100vw, 350px"
+                    alt="YouTube-Vorschau"
+                    width="960" height="540"
+                    loading="lazy"
+                    decoding="async"
+                    data-fallback-id="w0pNdnlb96M">
                   <span class="play-label">▶︎ YouTube 5</span>
                   <small>YouTube</small>
                 </div>
 
                 <div class="card" id="yt6" data-embed-src="https://www.youtube.com/embed/rV1U891RKLo">
                   <img class="thumb"
-                       src="assets/gesehen/reel6.avif"
-                       alt="YouTube-Vorschau"
-                       width="960" height="540"
-                       loading="lazy"
-                       decoding="async"
-                       data-fallback-id="rV1U891RKLo"
-                       sizes="(max-width: 820px) 100vw, 350px">
+                    src="assets/gesehen/reel6-640.avif"
+                    srcset="
+                      assets/gesehen/reel6-320.avif 320w,
+                      assets/gesehen/reel6-640.avif 640w,
+                      assets/gesehen/reel6-960.avif 960w"
+                    sizes="(max-width: 820px) 100vw, 350px"
+                    alt="YouTube-Vorschau"
+                    width="960" height="540"
+                    loading="lazy"
+                    decoding="async"
+                    data-fallback-id="rV1U891RKLo">
                   <span class="play-label">▶︎ YouTube 6</span>
                   <small>YouTube</small>
                 </div>
 
                 <div class="card" id="yt7" data-embed-src="https://www.youtube.com/embed/fq8zhAQMam0">
                   <img class="thumb"
-                       src="assets/gesehen/reel7.avif"
-                       alt="YouTube-Vorschau"
-                       width="960" height="540"
-                       loading="lazy"
-                       decoding="async"
-                       data-fallback-id="fq8zhAQMam0"
-                       sizes="(max-width: 820px) 100vw, 350px">
+                    src="assets/gesehen/reel7-640.avif"
+                    srcset="
+                      assets/gesehen/reel7-320.avif 320w,
+                      assets/gesehen/reel7-640.avif 640w,
+                      assets/gesehen/reel7-960.avif 960w"
+                    sizes="(max-width: 820px) 100vw, 350px"
+                    alt="YouTube-Vorschau"
+                    width="960" height="540"
+                    loading="lazy"
+                    decoding="async"
+                    data-fallback-id="fq8zhAQMam0">
                   <span class="play-label">▶︎ YouTube 7</span>
                   <small>YouTube</small>
                 </div>
@@ -630,7 +651,7 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- Intro-Button gewinnt gegen swipe-nav -->
+  <!-- 5) ✅ Intro-Button gewinnt gegen swipe-nav -->
   <script>
   (function(){
     const btn = document.getElementById('intro-arrow');
@@ -781,29 +802,6 @@
         window.visualViewport.addEventListener('resize', resizePanel);
       }
     })();
-  </script>
-
-  <!-- ✅ Optional: srcset nur setzen, wenn du wirklich mehrere Größen hast.
-       (So kann nix "kaputt" gehen, wenn keine Dateien existieren.) -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    try {
-      const srcsetMap = {
-        // Beispiel (erst aktivieren, wenn Dateien wirklich existieren):
-        // yt1: "assets/gesehen/reel1-640.avif 640w, assets/gesehen/reel1-960.avif 960w",
-        // yt2: "assets/gesehen/reel2-640.avif 640w, assets/gesehen/reel2-960.avif 960w",
-      };
-
-      Object.entries(srcsetMap).forEach(([cardId, srcset]) => {
-        const card = document.getElementById(cardId);
-        const img = card?.querySelector('img.thumb');
-        if(!img) return;
-        if(typeof srcset === 'string' && srcset.trim()){
-          img.setAttribute('srcset', srcset.trim());
-        }
-      });
-    } catch (e) {}
-  });
   </script>
 
   <!-- ✅ Fallback: wenn lokale AVIF nicht lädt -> YouTube Thumbnail -->
