@@ -19,6 +19,16 @@
 
   <link rel="preconnect" href="https://www.youtube.com" crossorigin>
   <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
+<link rel="preload" as="image"
+      href="/assets/gesehen/reel1.avif"
+      fetchpriority="high"
+      imagesizes="(max-width: 820px) 100vw, 350px">
+<link rel="preload" as="image"
+      href="/assets/gesehen/reel2.avif"
+      fetchpriority="high"
+      imagesizes="(max-width: 820px) 100vw, 350px">
+
+
 
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="styles_nav_arrows.css" />
@@ -304,65 +314,65 @@
     }
     .video-close:hover{background:rgba(255,255,255,0.9);color:#000;}
 
-/* ✅ Footer hochkant rechts – bevorzugt deine Position, fällt nach unten zurück */
-.footer-inline{
-  position: fixed;
-  right: var(--footer-right-desktop);
-  top: var(--footer-top-desktop);
-  bottom: auto;
-  left: auto;
-  z-index: 1300; /* ✅ über swipe-zone */
+    /* ✅ Footer hochkant rechts – bevorzugt deine Position, fällt nach unten zurück */
+    .footer-inline{
+      position: fixed;
+      right: var(--footer-right-desktop);
+      top: var(--footer-top-desktop);
+      bottom: auto;
+      left: auto;
+      z-index: 1300; /* ✅ über swipe-zone */
 
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
 
-  color:#930010;
-  font-size:.82rem;
-  padding: 6px 4px;
+      color:#930010;
+      font-size:.82rem;
+      padding: 6px 4px;
 
-  white-space: nowrap;
+      white-space: nowrap;
 
-  /* ✅ verhindert Abschneiden */
-  max-height: calc(100vh - 16px);
-}
+      /* ✅ verhindert Abschneiden */
+      max-height: calc(100vh - 16px);
+    }
 
-.footer-inline a,
-.footer-inline a:visited,
-.footer-inline a:active,
-.footer-inline a:focus{
-  color:#930010;
-  text-decoration:none;
-  white-space: nowrap;
+    .footer-inline a,
+    .footer-inline a:visited,
+    .footer-inline a:active,
+    .footer-inline a:focus{
+      color:#930010;
+      text-decoration:none;
+      white-space: nowrap;
 
-  display:inline-block; /* ✅ größere Tap-Fläche */
-  padding:6px 6px;      /* ✅ iOS-friendly */
-}
-.footer-inline a:hover{ text-decoration: underline; }
+      display:inline-block; /* ✅ größere Tap-Fläche */
+      padding:6px 6px;      /* ✅ iOS-friendly */
+    }
+    .footer-inline a:hover{ text-decoration: underline; }
 
-/* Mobile: Footer bleibt hochkant rechts, wie eingestellt */
-@media (max-width: 768px){
-  .footer-inline{
-    right: var(--footer-right-mobile);
-    top: var(--footer-top-mobile);
-    bottom: auto;
-  }
-}
+    /* Mobile: Footer bleibt hochkant rechts, wie eingestellt */
+    @media (max-width: 768px){
+      .footer-inline{
+        right: var(--footer-right-mobile);
+        top: var(--footer-top-mobile);
+        bottom: auto;
+      }
+    }
 
-/* ✅ FALLBACK: wenn Fensterhöhe klein wird → lieber unten statt zu weit oben */
-@media (max-height: 720px){
-  .footer-inline{
-    top: auto !important;
-    bottom: 16px !important;
-    font-size: .78rem;
-  }
-}
-@media (max-height: 620px){
-  .footer-inline{
-    top: auto !important;
-    bottom: 12px !important;
-    font-size: .72rem;
-  }
-}
+    /* ✅ FALLBACK: wenn Fensterhöhe klein wird → lieber unten statt zu weit oben */
+    @media (max-height: 720px){
+      .footer-inline{
+        top: auto !important;
+        bottom: 16px !important;
+        font-size: .78rem;
+      }
+    }
+    @media (max-height: 620px){
+      .footer-inline{
+        top: auto !important;
+        bottom: 12px !important;
+        font-size: .72rem;
+      }
+    }
 
     /* swipe helper */
     .edge-swipe{
@@ -496,14 +506,107 @@
               <h1></h1>
               <p></p>
 
+              <!-- ✅ Thumbnails DIREKT im HTML (LCP/PSI freundlich)
+                   - yt1: fetchpriority=high + loading=eager
+                   - rest: loading=lazy
+                   - width/height gesetzt (stabileres Layout)
+                   - srcset nur optional (unten per JS nur wenn wirklich vorhanden) -->
               <section class="grid-seen" aria-label="Videos">
-                <div class="card" id="yt1" data-embed-src="https://www.youtube.com/embed/ZSaj_FuqPN8">▶︎ YouTube 1<small>YouTube</small></div>
-                <div class="card" id="yt2" data-embed-src="https://www.youtube.com/embed/DMNl40Tip1w">▶︎ YouTube 2<small>YouTube</small></div>
-                <div class="card" id="yt3" data-embed-src="https://www.youtube.com/embed/K5pKG0Smdfc">▶︎ YouTube 3<small>YouTube</small></div>
-                <div class="card" id="yt4" data-embed-src="https://www.youtube.com/embed/4I9vlcGvFGQ">▶︎ YouTube 4<small>YouTube</small></div>
-                <div class="card" id="yt5" data-embed-src="https://www.youtube.com/embed/w0pNdnlb96M">▶︎ YouTube 5<small>YouTube</small></div>
-                <div class="card" id="yt6" data-embed-src="https://www.youtube.com/embed/rV1U891RKLo">▶︎ YouTube 6<small>YouTube</small></div>
-                <div class="card" id="yt7" data-embed-src="https://www.youtube.com/embed/fq8zhAQMam0">▶︎ YouTube 7<small>YouTube</small></div>
+
+                <div class="card" id="yt1" data-embed-src="https://www.youtube.com/embed/ZSaj_FuqPN8">
+                  <img class="thumb"
+                       src="assets/gesehen/reel1.avif"
+                       alt="YouTube-Vorschau"
+                       width="960" height="540"
+                       loading="eager"
+                       fetchpriority="high"
+                       decoding="async"
+                       data-fallback-id="ZSaj_FuqPN8"
+                       sizes="(max-width: 820px) 100vw, 350px">
+                  <span class="play-label">▶︎ YouTube 1</span>
+                  <small>YouTube</small>
+                </div>
+
+                <div class="card" id="yt2" data-embed-src="https://www.youtube.com/embed/DMNl40Tip1w">
+                 <img class="thumb"
+     src="assets/gesehen/reel2.avif"
+     alt="YouTube-Vorschau"
+     width="960" height="540"
+     loading="eager"
+     fetchpriority="high"
+     decoding="async"
+     data-fallback-id="DMNl40Tip1w"
+     sizes="(max-width: 820px) 100vw, 350px">
+
+                  <span class="play-label">▶︎ YouTube 2</span>
+                  <small>YouTube</small>
+                </div>
+
+                <div class="card" id="yt3" data-embed-src="https://www.youtube.com/embed/K5pKG0Smdfc">
+                  <img class="thumb"
+                       src="assets/gesehen/reel3.avif"
+                       alt="YouTube-Vorschau"
+                       width="960" height="540"
+                       loading="lazy"
+                       decoding="async"
+                       data-fallback-id="K5pKG0Smdfc"
+                       sizes="(max-width: 820px) 100vw, 350px">
+                  <span class="play-label">▶︎ YouTube 3</span>
+                  <small>YouTube</small>
+                </div>
+
+                <div class="card" id="yt4" data-embed-src="https://www.youtube.com/embed/4I9vlcGvFGQ">
+                  <img class="thumb"
+                       src="assets/gesehen/reel4.avif"
+                       alt="YouTube-Vorschau"
+                       width="960" height="540"
+                       loading="lazy"
+                       decoding="async"
+                       data-fallback-id="4I9vlcGvFGQ"
+                       sizes="(max-width: 820px) 100vw, 350px">
+                  <span class="play-label">▶︎ YouTube 4</span>
+                  <small>YouTube</small>
+                </div>
+
+                <div class="card" id="yt5" data-embed-src="https://www.youtube.com/embed/w0pNdnlb96M">
+                  <img class="thumb"
+                       src="assets/gesehen/reel5.avif"
+                       alt="YouTube-Vorschau"
+                       width="960" height="540"
+                       loading="lazy"
+                       decoding="async"
+                       data-fallback-id="w0pNdnlb96M"
+                       sizes="(max-width: 820px) 100vw, 350px">
+                  <span class="play-label">▶︎ YouTube 5</span>
+                  <small>YouTube</small>
+                </div>
+
+                <div class="card" id="yt6" data-embed-src="https://www.youtube.com/embed/rV1U891RKLo">
+                  <img class="thumb"
+                       src="assets/gesehen/reel6.avif"
+                       alt="YouTube-Vorschau"
+                       width="960" height="540"
+                       loading="lazy"
+                       decoding="async"
+                       data-fallback-id="rV1U891RKLo"
+                       sizes="(max-width: 820px) 100vw, 350px">
+                  <span class="play-label">▶︎ YouTube 6</span>
+                  <small>YouTube</small>
+                </div>
+
+                <div class="card" id="yt7" data-embed-src="https://www.youtube.com/embed/fq8zhAQMam0">
+                  <img class="thumb"
+                       src="assets/gesehen/reel7.avif"
+                       alt="YouTube-Vorschau"
+                       width="960" height="540"
+                       loading="lazy"
+                       decoding="async"
+                       data-fallback-id="fq8zhAQMam0"
+                       sizes="(max-width: 820px) 100vw, 350px">
+                  <span class="play-label">▶︎ YouTube 7</span>
+                  <small>YouTube</small>
+                </div>
+
               </section>
 
               <a class="home-btn" href="index.html" aria-label="Zur Startseite">Startseite</a>
@@ -558,7 +661,6 @@
           if (el.hasAttribute('data-orig-tabindex')) {
             el.tabIndex = parseInt(el.getAttribute('data-orig-tabindex'), 10);
           } else {
-            // Links sollen normal fokusierbar sein
             el.tabIndex = 0;
           }
         } else {
@@ -610,13 +712,11 @@
       else openMenu();
     }
 
-    // initial
     nav.setAttribute('aria-hidden','true');
     nav.setAttribute('inert','');
     overlay.hidden = true;
     setFocusable(false);
 
-    // ✅ capture: gewinnt gegen andere Listener aus script.js
     btn.addEventListener('click', function(e){
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -632,7 +732,6 @@
       if(e.key === 'Escape' && isOpen()) closeMenu();
     });
 
-    // wenn im Menü ein Link geklickt wird -> schließen
     nav.addEventListener('click', function(e){
       const a = e.target.closest('a');
       if(a && isOpen()) closeMenu();
@@ -682,6 +781,43 @@
         window.visualViewport.addEventListener('resize', resizePanel);
       }
     })();
+  </script>
+
+  <!-- ✅ Optional: srcset nur setzen, wenn du wirklich mehrere Größen hast.
+       (So kann nix "kaputt" gehen, wenn keine Dateien existieren.) -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const srcsetMap = {
+        // Beispiel (erst aktivieren, wenn Dateien wirklich existieren):
+        // yt1: "assets/gesehen/reel1-640.avif 640w, assets/gesehen/reel1-960.avif 960w",
+        // yt2: "assets/gesehen/reel2-640.avif 640w, assets/gesehen/reel2-960.avif 960w",
+      };
+
+      Object.entries(srcsetMap).forEach(([cardId, srcset]) => {
+        const card = document.getElementById(cardId);
+        const img = card?.querySelector('img.thumb');
+        if(!img) return;
+        if(typeof srcset === 'string' && srcset.trim()){
+          img.setAttribute('srcset', srcset.trim());
+        }
+      });
+    } catch (e) {}
+  });
+  </script>
+
+  <!-- ✅ Fallback: wenn lokale AVIF nicht lädt -> YouTube Thumbnail -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('img.thumb[data-fallback-id]').forEach(img => {
+      img.addEventListener('error', () => {
+        const id = img.getAttribute('data-fallback-id');
+        if(!id) return;
+        img.removeAttribute('data-fallback-id');
+        img.src = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+      }, { once: true });
+    });
+  });
   </script>
 
   <!-- Player -->
@@ -801,38 +937,6 @@
   });
   </script>
 
-  <!-- YouTube Thumbnails -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    try {
-      const map = {
-        yt1: { file: 'assets/gesehen/reel1.avif', id: 'ZSaj_FuqPN8' },
-        yt2: { file: 'assets/gesehen/reel2.avif', id: 'DMNl40Tip1w' },
-        yt3: { file: 'assets/gesehen/reel3.avif', id: 'K5pKG0Smdfc' },
-        yt4: { file: 'assets/gesehen/reel4.avif', id: '4I9vlcGvFGQ' },
-        yt5: { file: 'assets/gesehen/reel5.avif', id: 'w0pNdnlb96M' },
-        yt6: { file: 'assets/gesehen/reel6.avif', id: 'rV1U891RKLo' },
-        yt7: { file: 'assets/gesehen/reel7.avif', id: 'fq8zhAQMam0' }
-      };
-      Object.entries(map).forEach(([id, cfg]) => {
-        const card = document.getElementById(id);
-        if (!card || card.querySelector('img.thumb')) return;
-        const img = new Image();
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        img.className = 'thumb';
-        img.alt = 'YouTube-Vorschau';
-        img.src = cfg.file;
-        img.onerror = () => {
-          img.onerror = null;
-          img.src = `https://img.youtube.com/vi/${cfg.id}/hqdefault.jpg`;
-        };
-        card.insertBefore(img, card.firstChild);
-      });
-    } catch (err) {}
-  });
-  </script>
-
   <!-- YouTube Titel automatisch -->
   <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -854,23 +958,8 @@
             const title = (data && data.title) ? data.title : '';
             if (!title) return;
 
-            const thumb = card.querySelector('img.thumb');
-            let small  = card.querySelector('small');
-            if (!small) {
-              small = document.createElement('small');
-              small.textContent = 'YouTube';
-              card.appendChild(small);
-            }
-
-            Array.from(card.childNodes).forEach(node => {
-              if (node === thumb || node === small) return;
-              card.removeChild(node);
-            });
-
-            const label = document.createElement('span');
-            label.className = 'play-label';
-            label.textContent = `▶︎ ${title}`;
-            card.insertBefore(label, small);
+            const label = card.querySelector('.play-label');
+            if(label) label.textContent = `▶︎ ${title}`;
           })
           .catch(() => {});
       });
