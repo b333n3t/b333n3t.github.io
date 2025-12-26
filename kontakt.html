@@ -272,25 +272,6 @@
     .page-group.open > .page-content{display:block;}
     .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
-/* ✅ exakt wie page-toggle/page-link */
-.page-content h1{
-  margin: 0 0 1rem 0;
-  font-size: 1.1rem;
-  font-weight: inherit;
-  letter-spacing: inherit;
-  line-height: inherit;
-}
-/* Formular-Titel soll wie Menüpunk "kontakt" aussehen */
-.page-content .form-title{
-  font-size: 1.1rem !important;     /* wie .page-link / .page-toggle */
-  font-weight: 600 !important;      /* wie "kontakt" (leicht fett) */
-  letter-spacing: inherit !important;
-  line-height: inherit !important;
-  font-family: inherit !important;
-
-  margin: 0 0 1rem 0 !important;    /* Abstand nach unten */
-}
-
 
     /* ===== Kontaktformular ===== */
     form{ margin:0; display:grid; gap:.8rem; max-width:650px; }
@@ -490,14 +471,17 @@ form input[type="checkbox"]:focus{
     .brand{ color:#fff !important; }
     form, form label, form p{ color:#fff; }
     
-    /* ✅ Formular-Titel exakt wie Menüpunkt (kontakt, diskografie, über mich) */
+/* ✅ "formular" soll exakt wie Menüpunkt aussehen (Größe, Fettung, Einrückung) */
 .page-content h1.form-title{
-  font-size: 1.1rem !important;   /* gleiche Größe */
-  font-weight: 600 !important;    /* gleiche Fettung */
-  margin: 0 0 1rem 0 !important;  /* gleiche Einrückung/Abstand */
-  letter-spacing: 0 !important;
-  line-height: 1.2 !important;
+  font-size: 1.1rem !important;     /* wie .page-link/.page-toggle */
+  font-weight: 600 !important;      /* wie "kontakt" */
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  font-family: inherit !important;
+
+  margin: 0 0 1rem -18px !important; /* ✅ gleicht .page-content margin-left:18px aus */
 }
+
 
   </style>
 </head>
