@@ -20,11 +20,18 @@
   <link rel="preconnect" href="https://www.youtube.com" crossorigin>
   <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
 
-  <!-- 1) ✅ LCP: erstes Thumbnail früh laden + responsive preload (nutzt dein sizes) -->
+  <!-- 1) ✅ LCP: erste(und zweite) Vorschau früh laden + responsive preload -->
   <link rel="preload"
         as="image"
         href="/assets/gesehen/reel1-640.avif"
         imagesrcset="/assets/gesehen/reel1-320.avif 320w, /assets/gesehen/reel1-640.avif 640w, /assets/gesehen/reel1-960.avif 960w"
+        imagesizes="(max-width: 820px) 100vw, 350px"
+        fetchpriority="high">
+
+  <link rel="preload"
+        as="image"
+        href="/assets/gesehen/reel2-640.avif"
+        imagesrcset="/assets/gesehen/reel2-320.avif 320w, /assets/gesehen/reel2-640.avif 640w, /assets/gesehen/reel2-960.avif 960w"
         imagesizes="(max-width: 820px) 100vw, 350px"
         fetchpriority="high">
 
@@ -505,7 +512,7 @@
               <p></p>
 
               <!-- 2) ✅ Responsive Thumbs (320/640/960) + sizes
-                   3) ✅ LCP: nur yt1 eager+fetchpriority, rest lazy -->
+                   3) ✅ LCP: yt1 & yt2 eager+fetchpriority, rest lazy -->
               <section class="grid-seen" aria-label="Videos">
 
                 <div class="card" id="yt1" data-embed-src="https://www.youtube.com/embed/ZSaj_FuqPN8">
@@ -536,7 +543,8 @@
                     sizes="(max-width: 820px) 100vw, 350px"
                     alt="YouTube-Vorschau"
                     width="960" height="540"
-                    loading="lazy"
+                    loading="eager"
+                    fetchpriority="high"
                     decoding="async"
                     data-fallback-id="DMNl40Tip1w">
                   <span class="play-label">▶︎ YouTube 2</span>
