@@ -280,6 +280,14 @@
   letter-spacing: inherit;
   line-height: inherit;
 }
+/* ✅ "formular" soll wie die anderen Schriften wirken */
+.page-content .form-title{
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem !important;   /* <- zwingt die Größe */
+  font-weight: 600;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
 
     /* ===== Kontaktformular ===== */
     form{ margin:0; display:grid; gap:.8rem; max-width:650px; }
@@ -530,7 +538,7 @@ form input[type="checkbox"]:focus{
             </button>
 
             <div class="page-content">
-              <h1>formular</h1>
+              <h1 class="form-title">formular</h1>
                 <span style="opacity:0; height:0; overflow:hidden; display:block;">
                   kontakt & booking für b3nn3t – deutschrap & indie-pop aus der schweiz.
                   hier erreichst du mich für auftritte, anfragen, kollabos und nachrichten.
