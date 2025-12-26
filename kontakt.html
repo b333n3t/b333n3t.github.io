@@ -272,8 +272,14 @@
     .page-group.open > .page-content{display:block;}
     .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
-    .page-content h1{margin-top:0;}
-    .page-content p{margin:0 0 1rem 0;}
+/* ✅ exakt wie page-toggle/page-link */
+.page-content h1{
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
 
     /* ===== Kontaktformular ===== */
     form{ margin:0; display:grid; gap:.8rem; max-width:650px; }
