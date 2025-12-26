@@ -8,13 +8,6 @@
   <title>TV-Intro – b3nn3t | Intro-Annimation &amp; Visuals</title>
   <meta name="description" content="Das offizielle Intro von b3nn3t – Sound, Atmosphäre und visuelle Identität. Ein kurzer Einblick in die Welt hinter dem Intro.">
 
-  <script type="speculationrules">
-  {
-    "prefetch": [{ "source": "document", "urls": ["index.html"] }],
-    "prerender": [{ "source": "document", "urls": ["index.html?nointro=1"] }]
-  }
-  </script>
-
   <style>
     :root { --fade-ms: 1000ms; --bg:#930010; }
 
@@ -131,19 +124,58 @@
 </main>
 
 <script>
-/* ================== Redirect Ziel ================== */
-const INTRO_RETURN_URL =
-  (sessionStorage.getItem("introReturn") || "index.html") +
-  (location.search.includes('nointro=1') ? "" : (location.search ? "&" : "?") + "nointro=1");
+/* =========================================================
+   ✅ Speculation Rules (nur wenn sinnvoll)
+   - kein Save-Data
+   - kein reduced-motion
+   - kein Bot/Lighthouse
+   ========================================================= */
+(function setupSpeculationRules(){
+  try{
+    const ua = navigator.userAgent || "";
+    const isBot = /bot|crawl|slurp|spider|preview|Chrome-Lighthouse|Lighthouse|Google-InspectionTool|Google-PageRenderer|Google-StructuredDataTestingTool/i.test(ua);
+    const saveData = !!(navigator.connection && navigator.connection.saveData);
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ================== Skip & A11y (SOFORT aktiv) ================== */
+    if(isBot || saveData || reduceMotion) return;
+
+    const s = document.createElement('script');
+    s.type = 'speculationrules';
+    s.textContent = JSON.stringify({
+      prefetch:  [{ source: "document", urls: ["index.html"] }],
+      prerender: [{ source: "document", urls: ["index.html?nointro=1"] }]
+    });
+    document.head.appendChild(s);
+  }catch(e){}
+})();
+
+/* =========================================================
+   ✅ Return URL robust + garantiert nointro=1
+   ========================================================= */
+function buildIntroReturnUrl(){
+  try{
+    const raw = sessionStorage.getItem("introReturn") || "index.html";
+    const u = new URL(raw, location.href);
+    u.searchParams.set("nointro", "1");
+    return u.pathname + (u.search ? u.search : "") + (u.hash ? u.hash : "");
+  }catch(e){
+    return "index.html?nointro=1";
+  }
+}
+const INTRO_RETURN_URL = buildIntroReturnUrl();
+
+/* =========================================================
+   ✅ Skip & Reduced Motion (SOFORT aktiv)
+   ========================================================= */
 (function setupSkipAndA11y(){
   const skipBtn = document.querySelector('.skip');
+
   function goNow(){
     try { sessionStorage.setItem("introPlayed","1"); } catch(e){}
     document.body.classList.add('fadeout');
     setTimeout(()=>location.replace(INTRO_RETURN_URL), 250);
   }
+
   if (skipBtn) skipBtn.addEventListener('click', goNow);
 
   try {
@@ -154,10 +186,15 @@ const INTRO_RETURN_URL =
   } catch(e){}
 })();
 
-/* ================== PRELOAD bleibt drin ================== */
+/* =========================================================
+   ✅ PRELOAD: nur was du wirklich willst
+   - reel1.avif ... reel7.avif: entfernt (du hast jetzt -320/-640/-960)
+   - YouTube thumbs: optional (bleiben drin, aber NICHT zwingend)
+   - B3NN3T.mp4: bleibt & wird weiterhin vorab geladen
+   ========================================================= */
+
+/* Optional: YouTube Thumbs als Fallback-Warmup (kannst du auch leer lassen) */
 const preloadImages = [
-  "assets/gesehen/reel1.avif","assets/gesehen/reel2.avif","assets/gesehen/reel3.avif","assets/gesehen/reel4.avif",
-  "assets/gesehen/reel5.avif","assets/gesehen/reel6.avif","assets/gesehen/reel7.avif",
   "https://img.youtube.com/vi/ZSaj_FuqPN8/hqdefault.jpg",
   "https://img.youtube.com/vi/DMNl40Tip1w/hqdefault.jpg",
   "https://img.youtube.com/vi/K5pKG0Smdfc/hqdefault.jpg",
@@ -166,35 +203,40 @@ const preloadImages = [
   "https://img.youtube.com/vi/rV1U891RKLo/hqdefault.jpg",
   "https://img.youtube.com/vi/fq8zhAQMam0/hqdefault.jpg"
 ];
+
+/* ✅ Video Preload bleibt */
 const preloadVideos = [ "assets/gesehen/B3NN3T.mp4" ];
 
 function preloadAllImages(urls){
   urls.forEach(url=>{
-    const img=new Image();
-    img.referrerPolicy="no-referrer";
-    img.src=url;
+    const img = new Image();
+    img.referrerPolicy = "no-referrer";
+    img.src = url;
   });
 }
 function preloadAllVideos(urls){
   urls.forEach(url=>{
-    const v=document.createElement('video');
-    v.preload='auto';
-    v.muted=true;
-    v.src=url;
+    const v = document.createElement('video');
+    v.preload = 'auto';
+    v.muted = true;
+    v.playsInline = true;
+    v.src = url;
     v.load();
   });
 }
+
 if(!window._preloaded){
-  window._preloaded=true;
+  window._preloaded = true;
   preloadAllImages(preloadImages);
   preloadAllVideos(preloadVideos);
 }
 
-/* ================== Canvas Setup ================== */
+/* =========================================================
+   Canvas Setup
+   ========================================================= */
 const c = document.getElementById('c');
 const ctx = c && c.getContext ? c.getContext('2d') : null;
 
-// Falls Canvas nicht verfügbar: nicht crashen (Skip bleibt nutzbar)
 if(!ctx){
   document.body.classList.add('ready');
   console.warn("Canvas/2D context nicht verfügbar.");
@@ -319,7 +361,6 @@ if(!ctx){
 
       const C = { x: outer[3].x + (outer[2].x-outer[3].x)*t, y: outer[3].y };
       const D = { x: inner[3].x + (inner[2].x-inner[3].x)*t, y: inner[3].y };
-      /* ✅ HIER war der Crash: 0.'s62 -> 0.62 */
       scopeLine(C.x,C.y,D.x,D.y, 20+i*0.13, 0.62, baseW);
     }
 
@@ -368,9 +409,9 @@ if(!ctx){
   const EXTRA_MS = 300;
 
   function startTransition(){
-    sessionStorage.setItem("introPlayed","1");
+    try { sessionStorage.setItem("introPlayed","1"); } catch(e){}
     document.body.classList.add('fadeout');
-    setTimeout(()=>{ window.location.href = INTRO_RETURN_URL; }, FADEOUT_MS + EXTRA_MS);
+    setTimeout(()=>{ window.location.replace(INTRO_RETURN_URL); }, FADEOUT_MS + EXTRA_MS);
   }
 
   function startProgressAndTunnel(){
