@@ -43,8 +43,13 @@
   }
   </script>
 
-  <!-- LCP-Poster vorladen und priorisieren -->
-  <link rel="preload" as="image" href="/assets/release/drei-cover.webp" fetchpriority="high">
+  <!-- ✅ LCP-Poster vorladen (responsive) + priorisieren -->
+  <link rel="preload"
+        as="image"
+        href="/assets/release/drei-cover-384.webp"
+        imagesrcset="/assets/release/drei-cover-192.webp 192w, /assets/release/drei-cover-384.webp 384w, /assets/release/drei-cover-768.webp 768w"
+        imagesizes="(max-width: 768px) 92vw, 720px"
+        fetchpriority="high">
 
   <style>
     :root {
@@ -295,11 +300,18 @@
         <!-- ✅ COVER BLEIBT + AUDIO PLAYER (anstatt VIDEO) -->
         <section class="video-wrap" aria-label="Audio zum Song">
           <div class="video-inner">
-            <!-- Cover -->
+            <!-- ✅ Cover responsive + LCP-Priority -->
             <img
-              src="/assets/release/drei-cover.webp"
+              src="/assets/release/drei-cover-384.webp"
+              srcset="/assets/release/drei-cover-192.webp 192w, /assets/release/drei-cover-384.webp 384w, /assets/release/drei-cover-768.webp 768w"
+              sizes="(max-width: 768px) 92vw, 720px"
+              width="720"
+              height="405"
               alt="Cover – drei von b3nn3t"
-              class="release-video">
+              class="release-video"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async">
 
             <!-- Audio Controls overlay -->
             <audio
