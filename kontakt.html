@@ -280,15 +280,17 @@
   letter-spacing: inherit;
   line-height: inherit;
 }
-/* Formular-Titel exakt wie Menüpunkt "kontakt" */
+/* Formular-Titel soll wie Menüpunk "kontakt" aussehen */
 .page-content .form-title{
-  font-size: 1.1rem;        /* exakt wie .page-link / .page-toggle */
-  font-weight: 600;         /* gleich wie "kontakt" */
-  letter-spacing: inherit;
-  line-height: inherit;
+  font-size: 1.1rem !important;     /* wie .page-link / .page-toggle */
+  font-weight: 600 !important;      /* wie "kontakt" (leicht fett) */
+  letter-spacing: inherit !important;
+  line-height: inherit !important;
+  font-family: inherit !important;
 
-  margin: 0 0 1rem 0;       /* etwas Abstand nach unten */
+  margin: 0 0 1rem 0 !important;    /* Abstand nach unten */
 }
+
 
     /* ===== Kontaktformular ===== */
     form{ margin:0; display:grid; gap:.8rem; max-width:650px; }
