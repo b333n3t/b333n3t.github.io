@@ -20,7 +20,7 @@
   <meta name="twitter:description" content="Neuigkeiten, Releases & Termine von b3nn3t." />
   <meta name="twitter:image" content="https://www.b3nn3t.com/assets/index/bennet_index1.webp" />
 
-  <!-- Favicons -->
+  <!-- Favicons: Google, Browser, Apple -->
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -34,6 +34,7 @@
     :root{
       --bottom-gap:60px;
 
+      /* Footer (hochkant rechts) – feinjustierbar */
       --footer-top-desktop: 430px;
       --footer-right-desktop: 0px;
 
@@ -86,17 +87,11 @@
       pointer-events:none !important;
     }
 
-    /* ✅ Safety: Header darf Burger nicht blocken */
-    .header{ pointer-events:none; }
-    .header .brand{ pointer-events:auto; }
-
-    /* Hamburger */
+    /* ===== Hamburger-Menü ===== */
     .hamburger{
       position:fixed;top:14px;right:18px;width:20px;height:20px;
       border:0;background:transparent;display:grid;place-items:center;
-      cursor:pointer;z-index:9999;padding:0;
-      pointer-events:auto;
-      touch-action:manipulation;
+      cursor:pointer;z-index:2200;padding:0; /* über allem */
       -webkit-tap-highlight-color: transparent;
     }
     .hamburger span{
@@ -111,7 +106,7 @@
     .menu-overlay{
       position:fixed;inset:0;background:rgba(0,0,0,.08);
       backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
-      z-index:9000;
+      z-index:1099
     }
     #menu-overlay[hidden]{display:none}
 
@@ -121,10 +116,9 @@
       background:rgba(255,255,255,.32);
       backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
       box-shadow:0 20px 50px rgba(0,0,0,.08);
-      transform:translateX(100%);
-      transition:transform .25s;
-      z-index:9500;
-      padding:46px 10px 14px;
+      transform:translateX(100%);transition:transform .25s;
+      z-index:1101;padding:46px 10px 14px;
+      will-change: transform;
     }
     body.menu-open .site-menu{transform:translateX(0)}
     .site-menu ul{list-style:none;margin:0;padding:0}
@@ -147,7 +141,7 @@
     /* Scroll-Panel */
     .scroll-panel{
       max-width:min(1000px,94vw);
-      max-height:75vh;
+      max-height:75vh; /* wird per JS angepasst */
       margin:0;
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
@@ -213,7 +207,7 @@
     .page-group.open > .page-content{display:block;}
     .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
-    /* Unter-Akkordeons (nur termine) */
+    /* Unter-Akkordeons (nur noch für termine gebraucht) */
     .sub-toggle{
       display:flex;
       align-items:center;
@@ -244,19 +238,24 @@
     .sub-group.open > .sub-toggle .arrow{transform:rotate(90deg);}
     .sub-group + .sub-group{ margin-top:1.0rem; }
 
-    /* Footer */
+    /* Footer (WICHTIG: über Menü + klickbar) */
     .footer-inline{
       position: fixed;
       right: var(--footer-right-desktop);
       top: var(--footer-top-desktop);
       bottom: auto;
       left: auto;
-      z-index: 1300;
+
+      z-index: 2100;            /* ✅ über site-menu (1101) + overlay (1099) */
+      pointer-events: auto;     /* ✅ immer klickbar */
+
       writing-mode: vertical-rl;
       text-orientation: mixed;
+
       color:#930010;
       font-size:.82rem;
       padding: 6px 4px;
+
       white-space: nowrap;
       max-height: calc(100vh - 16px);
     }
@@ -451,17 +450,13 @@
     </a>
   </header>
 
-  <button class="hamburger" id="hamburger"
-          aria-label="Menü öffnen"
-          aria-expanded="false"
-          aria-controls="site-menu"
-          type="button">
+  <!-- Burger -->
+  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu" type="button">
     <span></span><span></span><span></span>
   </button>
-
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
-  <!-- ✅ WCAG/PSI sauber: solange geschlossen -> aria-hidden + inert + tabindex=-1 -->
+  <!-- ✅ wie plattformen.html: aria-hidden + inert + tabindex=-1 solange geschlossen -->
   <nav id="site-menu" class="site-menu" aria-hidden="true" inert>
     <ul>
       <li><a href="ueber-mich.html" tabindex="-1">über mich</a></li>
@@ -597,23 +592,24 @@
   <div class="edge-swipe left" aria-hidden="true"></div>
   <div class="edge-swipe right" aria-hidden="true"></div>
 
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- ✅ Burger-Menü: "unkaputtbar" wie gesehen.html (capture + stopImmediatePropagation) -->
+  <!-- ✅ Burger-Menü: exakt robust wie plattformen.html (capture + stopImmediatePropagation) -->
   <script>
   (function(){
-    const btn = document.getElementById('hamburger');
+    const btn = document.querySelector('.hamburger');
     const nav = document.getElementById('site-menu');
     const overlay = document.getElementById('menu-overlay');
     if(!btn || !nav || !overlay) return;
 
-    function setTabIndex(open){
-      nav.querySelectorAll('a').forEach(a => a.tabIndex = open ? 0 : -1);
-    }
+    const focusablesSelector = 'a, button, input, select, textarea, [tabindex]';
 
-    function isOpen(){
-      return document.body.classList.contains('menu-open');
+    function setMenuFocus(enabled){
+      const items = nav.querySelectorAll(focusablesSelector);
+      items.forEach(el => {
+        el.tabIndex = enabled ? 0 : -1;
+      });
     }
 
     function openMenu(){
@@ -625,7 +621,11 @@
       nav.removeAttribute('inert');
 
       overlay.hidden = false;
-      setTabIndex(true);
+
+      setMenuFocus(true);
+
+      const firstLink = nav.querySelector('a');
+      if(firstLink) firstLink.focus({ preventScroll: true });
     }
 
     function closeMenu(){
@@ -637,19 +637,25 @@
       nav.setAttribute('inert','');
 
       overlay.hidden = true;
-      setTabIndex(false);
+
+      setMenuFocus(false);
+
+      btn.focus({ preventScroll: true });
     }
 
-    // initial
+    // initial sicher
+    setMenuFocus(false);
     nav.setAttribute('aria-hidden','true');
     nav.setAttribute('inert','');
     overlay.hidden = true;
-    setTabIndex(false);
 
+    // capture + stopImmediatePropagation: gewinnt gegen evtl. script.js-handler
     btn.addEventListener('click', function(e){
       e.preventDefault();
       e.stopImmediatePropagation();
-      isOpen() ? closeMenu() : openMenu();
+      const isOpen = document.body.classList.contains('menu-open');
+      if(isOpen) closeMenu();
+      else openMenu();
     }, true);
 
     overlay.addEventListener('click', function(e){
@@ -659,17 +665,16 @@
     }, true);
 
     document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape' && isOpen()) closeMenu();
+      if(e.key === 'Escape' && document.body.classList.contains('menu-open')) closeMenu();
     });
 
-    nav.addEventListener('click', function(e){
-      const a = e.target.closest('a');
-      if(a && isOpen()) closeMenu();
+    nav.querySelectorAll('a').forEach(a=>{
+      a.addEventListener('click', closeMenu);
     });
   })();
   </script>
 
-  <!-- ✅ aktuell-title typewriter + accordions -->
+  <!-- ✅ aktuell-title typewriter + accordions + Panelhöhe -->
   <script>
     (function(){
       const group  = document.querySelector('.page-group.current');
@@ -706,8 +711,10 @@
         stopAnim();
 
         const full = BASE + SUFFIX;
-        if(titleEl.textContent !== full && titleEl.textContent !== BASE){
-          titleEl.textContent = full;
+        let current = titleEl.textContent;
+        if(current !== full && current !== BASE){
+          current = full;
+          titleEl.textContent = current;
         }
 
         let len = titleEl.textContent.length;
@@ -759,6 +766,7 @@
           const isOpen = group.classList.contains('open');
           group.classList.toggle('open', !isOpen);
           toggle.setAttribute('aria-expanded', String(!isOpen));
+
           if(!isOpen) typeSuffix();
           else eraseSuffix();
         });
