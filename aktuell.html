@@ -20,7 +20,7 @@
   <meta name="twitter:description" content="Neuigkeiten, Releases & Termine von b3nn3t." />
   <meta name="twitter:image" content="https://www.b3nn3t.com/assets/index/bennet_index1.webp" />
 
-  <!-- Favicons: Google, Browser, Apple -->
+  <!-- Favicons -->
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -34,7 +34,6 @@
     :root{
       --bottom-gap:60px;
 
-      /* Footer (hochkant rechts) – feinjustierbar */
       --footer-top-desktop: 430px;
       --footer-right-desktop: 0px;
 
@@ -87,11 +86,18 @@
       pointer-events:none !important;
     }
 
+    /* ✅ Safety: Header darf Burger nicht blocken */
+    .header{ pointer-events:none; }
+    .header .brand{ pointer-events:auto; }
+
     /* Hamburger */
     .hamburger{
       position:fixed;top:14px;right:18px;width:20px;height:20px;
       border:0;background:transparent;display:grid;place-items:center;
-      cursor:pointer;z-index:1200;padding:0
+      cursor:pointer;z-index:9999;padding:0;
+      pointer-events:auto;
+      touch-action:manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .hamburger span{
       display:block;width:12px;height:1.4px;margin:1.5px 0;
@@ -105,9 +111,8 @@
     .menu-overlay{
       position:fixed;inset:0;background:rgba(0,0,0,.08);
       backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
-      z-index:1099
+      z-index:9000;
     }
-    body.menu-open #menu-overlay{display:block}
     #menu-overlay[hidden]{display:none}
 
     .site-menu{
@@ -116,8 +121,10 @@
       background:rgba(255,255,255,.32);
       backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
       box-shadow:0 20px 50px rgba(0,0,0,.08);
-      transform:translateX(100%);transition:transform .25s;
-      z-index:1101;padding:46px 10px 14px
+      transform:translateX(100%);
+      transition:transform .25s;
+      z-index:9500;
+      padding:46px 10px 14px;
     }
     body.menu-open .site-menu{transform:translateX(0)}
     .site-menu ul{list-style:none;margin:0;padding:0}
@@ -206,7 +213,7 @@
     .page-group.open > .page-content{display:block;}
     .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
-    /* Unter-Akkordeons (nur noch für termine gebraucht) */
+    /* Unter-Akkordeons (nur termine) */
     .sub-toggle{
       display:flex;
       align-items:center;
@@ -245,14 +252,11 @@
       bottom: auto;
       left: auto;
       z-index: 1300;
-
       writing-mode: vertical-rl;
       text-orientation: mixed;
-
       color:#930010;
       font-size:.82rem;
       padding: 6px 4px;
-
       white-space: nowrap;
       max-height: calc(100vh - 16px);
     }
@@ -450,22 +454,23 @@
   <button class="hamburger" id="hamburger"
           aria-label="Menü öffnen"
           aria-expanded="false"
-          aria-controls="site-menu">
+          aria-controls="site-menu"
+          type="button">
     <span></span><span></span><span></span>
   </button>
 
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
-  <!-- ✅ WICHTIG: hidden + aria-hidden -> keine fokussierbaren Links im "versteckten" Menü -->
-  <nav id="site-menu" class="site-menu" aria-hidden="true" hidden>
+  <!-- ✅ WCAG/PSI sauber: solange geschlossen -> aria-hidden + inert + tabindex=-1 -->
+  <nav id="site-menu" class="site-menu" aria-hidden="true" inert>
     <ul>
-      <li><a href="ueber-mich.html">über mich</a></li>
-      <li><a href="diskografie.html">diskografie</a></li>
-      <li><a href="kontakt.html">kontakt</a></li>
-      <li><a href="aktuell.html">aktuell</a></li>
-      <li><a href="gesehen.html">gesehen</a></li>
-      <li><a href="plattformen.html">links</a></li>
-      <li class="sep"><a href="impressum.html">Impressum / Datenschutz</a></li>
+      <li><a href="ueber-mich.html" tabindex="-1">über mich</a></li>
+      <li><a href="diskografie.html" tabindex="-1">diskografie</a></li>
+      <li><a href="kontakt.html" tabindex="-1">kontakt</a></li>
+      <li><a href="aktuell.html" tabindex="-1">aktuell</a></li>
+      <li><a href="gesehen.html" tabindex="-1">gesehen</a></li>
+      <li><a href="plattformen.html" tabindex="-1">links</a></li>
+      <li class="sep"><a href="impressum.html" tabindex="-1">Impressum / Datenschutz</a></li>
     </ul>
   </nav>
 
@@ -481,7 +486,6 @@
           <div class="page-group current open" id="page-aktuell">
             <button class="page-toggle" type="button" aria-expanded="true" aria-controls="page-aktuell-content">
               <span class="arrow" aria-hidden="true">►</span>
-              <!-- ✅ titel wird animiert -->
               <span id="aktuell-title">aktuell</span>
             </button>
 
@@ -489,35 +493,32 @@
               <h1></h1>
               <p></p>
 
-              <!-- ✅ neuigkeiten titel/pfeil weg, content bleibt direkt sichtbar -->
               <div class="sub-content" id="neuigkeiten-content">
                 <p>lowkey bald ein neuer release</p>
 
                 <a class="release-card" href="https://www.b3nn3t.com/release-3.html" target="_blank" rel="noopener noreferrer">
-  <img
-    src="assets/release/drei-cover-192.webp"
-    srcset="
-      assets/release/drei-cover-192.webp 192w,
-      assets/release/drei-cover-384.webp 384w,
-      assets/release/drei-cover-768.webp 768w"
-    sizes="(max-width: 600px) 75vw, 120px"
-    alt="Cover: 3"
-    width="120"
-    height="120"
-    decoding="async"
-    fetchpriority="high"
-    loading="eager">
+                  <img
+                    src="assets/release/drei-cover-192.webp"
+                    srcset="
+                      assets/release/drei-cover-192.webp 192w,
+                      assets/release/drei-cover-384.webp 384w,
+                      assets/release/drei-cover-768.webp 768w"
+                    sizes="(max-width: 600px) 75vw, 120px"
+                    alt="Cover: 3"
+                    width="120"
+                    height="120"
+                    decoding="async"
+                    fetchpriority="high"
+                    loading="eager">
 
-  <div class="release-info">
-    <div class="subtitle"></div>
-    <div class="songtitle"> drei </div>
-    <div class="desc">hörprobe hier o.O</div>
-  </div>
-</a>
-
+                  <div class="release-info">
+                    <div class="subtitle"></div>
+                    <div class="songtitle"> drei </div>
+                    <div class="desc">hörprobe hier o.O</div>
+                  </div>
+                </a>
               </div>
 
-              <!-- ✅ termine bleibt ausklappbar -->
               <div class="sub-group" id="acc-termine">
                 <button class="sub-toggle" type="button" aria-expanded="false" aria-controls="termine-content">
                   <span class="arrow" aria-hidden="true">►</span>
@@ -596,75 +597,76 @@
   <div class="edge-swipe left" aria-hidden="true"></div>
   <div class="edge-swipe right" aria-hidden="true"></div>
 
-<script src="script.js" defer></script>
-<script src="swipe-nav.js?v=12" defer></script>
+  <script src="script.js" defer></script>
+  <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- ✅ FIX: Menü ARIA + hidden sauber toggeln (PSI-Fehler weg) -->
+  <!-- ✅ Burger-Menü: "unkaputtbar" wie gesehen.html (capture + stopImmediatePropagation) -->
   <script>
-    (function(){
-      const body = document.body;
-      const burger = document.getElementById('hamburger');
-      const overlay = document.getElementById('menu-overlay');
-      const menu = document.getElementById('site-menu');
+  (function(){
+    const btn = document.getElementById('hamburger');
+    const nav = document.getElementById('site-menu');
+    const overlay = document.getElementById('menu-overlay');
+    if(!btn || !nav || !overlay) return;
 
-      function setMenuFocusable(isOpen){
-        const links = menu ? menu.querySelectorAll('a') : [];
-        links.forEach(a => {
-          if(isOpen){
-            a.removeAttribute('tabindex');
-          }else{
-            a.setAttribute('tabindex','-1');
-          }
-        });
-      }
+    function setTabIndex(open){
+      nav.querySelectorAll('a').forEach(a => a.tabIndex = open ? 0 : -1);
+    }
 
-      function openMenu(){
-        if(!burger || !menu || !overlay) return;
-        body.classList.add('menu-open');
-        burger.setAttribute('aria-expanded','true');
+    function isOpen(){
+      return document.body.classList.contains('menu-open');
+    }
 
-        menu.hidden = false;
-        menu.setAttribute('aria-hidden','false');
-        overlay.hidden = false;
+    function openMenu(){
+      document.body.classList.add('menu-open');
+      btn.setAttribute('aria-expanded','true');
+      btn.setAttribute('aria-label','Menü schließen');
 
-        if ('inert' in menu) menu.inert = false;
-        setMenuFocusable(true);
-      }
+      nav.setAttribute('aria-hidden','false');
+      nav.removeAttribute('inert');
 
-      function closeMenu(){
-        if(!burger || !menu || !overlay) return;
-        body.classList.remove('menu-open');
-        burger.setAttribute('aria-expanded','false');
+      overlay.hidden = false;
+      setTabIndex(true);
+    }
 
-        menu.setAttribute('aria-hidden','true');
-        overlay.hidden = true;
+    function closeMenu(){
+      document.body.classList.remove('menu-open');
+      btn.setAttribute('aria-expanded','false');
+      btn.setAttribute('aria-label','Menü öffnen');
 
-        setMenuFocusable(false);
-        menu.hidden = true;
+      nav.setAttribute('aria-hidden','true');
+      nav.setAttribute('inert','');
 
-        if ('inert' in menu) menu.inert = true;
-      }
+      overlay.hidden = true;
+      setTabIndex(false);
+    }
 
-      document.addEventListener('DOMContentLoaded', () => {
-        if(menu){
-          menu.hidden = true;
-          menu.setAttribute('aria-hidden','true');
-          if ('inert' in menu) menu.inert = true;
-          setMenuFocusable(false);
-        }
-        if(overlay) overlay.hidden = true;
+    // initial
+    nav.setAttribute('aria-hidden','true');
+    nav.setAttribute('inert','');
+    overlay.hidden = true;
+    setTabIndex(false);
 
-        burger?.addEventListener('click', () => {
-          const isOpen = body.classList.contains('menu-open');
-          isOpen ? closeMenu() : openMenu();
-        });
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      isOpen() ? closeMenu() : openMenu();
+    }, true);
 
-        overlay?.addEventListener('click', closeMenu);
-        document.addEventListener('keydown', (e) => {
-          if(e.key === 'Escape') closeMenu();
-        });
-      });
-    })();
+    overlay.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      closeMenu();
+    }, true);
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && isOpen()) closeMenu();
+    });
+
+    nav.addEventListener('click', function(e){
+      const a = e.target.closest('a');
+      if(a && isOpen()) closeMenu();
+    });
+  })();
   </script>
 
   <!-- ✅ aktuell-title typewriter + accordions -->
@@ -688,18 +690,14 @@
       function typeSuffix(){
         if(!titleEl) return;
         stopAnim();
-
-        // falls schon drin, nix tun
         if(titleEl.textContent === BASE + SUFFIX) return;
 
-        titleEl.textContent = BASE; // sauber starten
+        titleEl.textContent = BASE;
         let i = 0;
         timer = setInterval(() => {
           i++;
           titleEl.textContent = BASE + SUFFIX.slice(0, i);
-          if(i >= SUFFIX.length){
-            stopAnim();
-          }
+          if(i >= SUFFIX.length) stopAnim();
         }, 55);
       }
 
@@ -708,12 +706,8 @@
         stopAnim();
 
         const full = BASE + SUFFIX;
-        let current = titleEl.textContent;
-
-        // falls irgendwas schief war: auf full setzen und dann löschen
-        if(current !== full && current !== BASE){
-          current = full;
-          titleEl.textContent = current;
+        if(titleEl.textContent !== full && titleEl.textContent !== BASE){
+          titleEl.textContent = full;
         }
 
         let len = titleEl.textContent.length;
@@ -750,8 +744,6 @@
 
       document.addEventListener('DOMContentLoaded', () => {
         resizePanel();
-
-        // startzustand: wenn aktuell offen ist, suffix schreiben
         if(group?.classList.contains('open')) typeSuffix();
         else if(titleEl) titleEl.textContent = BASE;
       });
@@ -767,14 +759,11 @@
           const isOpen = group.classList.contains('open');
           group.classList.toggle('open', !isOpen);
           toggle.setAttribute('aria-expanded', String(!isOpen));
-
-          // ✅ titel animation
           if(!isOpen) typeSuffix();
           else eraseSuffix();
         });
       }
 
-      // ✅ nur termine bleibt togglebar
       document.querySelectorAll('.sub-group').forEach(subGroup => {
         const btn = subGroup.querySelector('.sub-toggle');
         if(!btn) return;
