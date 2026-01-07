@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -26,7 +26,7 @@
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="„drei“ – neues Release von b3nn3t">
+  <meta name="twitter:title" content="„DREI“ – neues Release von b3nn3t">
   <meta name="twitter:description" content="Deutschrap & Indie-Pop aus der Schweiz – das neue Release „DREI“ von b3nn3t.">
   <meta name="twitter:image" content="https://www.b3nn3t.com/assets/release/drei-cover.webp">
 
@@ -60,19 +60,15 @@
       --block-title-gap: 0.95rem;
       --block-par-gap: 0.7rem;
 
+      --more-link-gap-top: 0.65rem;
+      --more-link-gap-bottom: 0.75rem;
       --more-link-indent: 0.25rem;
 
-      /* ✅ main gap als Variable, damit wir es exakt “aufheben” können */
+      /* ✅ main gap als Variable, damit wir es gezielt “aufheben” können */
       --main-gap: clamp(1.6rem, 2.4vw, 2.2rem);
 
-      /* ✅ gewünschter Abstand: Icons -> “mehr...” (wie normale Textzeile) */
-      --icons-to-more-gap: 0.45rem;
-
-      /* ✅ NEU: "kuck hier:" -> Icons etwas grösserer Abstand */
-      --kuck-to-icons-gap: 1.35rem;
-
-      /* ✅ NEU: "vorsichern" Text -> Button (ohne Extra-Abstand, wie erklärbär) */
-      --vorsichern-to-button-gap: var(--block-title-gap);
+      /* ✅ Abstand Icons -> “mehr…” (ca. eine Zeile) */
+      --icons-to-more-gap: 0.5rem; /* ✅ war 0.35rem */
     }
 
     html, body {
@@ -135,6 +131,7 @@
       display: inline-block;
     }
 
+    /* Titel */
     .song-title {
       margin: 0;
       font-weight: 600;
@@ -166,6 +163,7 @@
       object-fit: cover;
     }
 
+    /* ✅ Audio Overlay Styling */
     .audio-overlay {
       position: absolute;
       left: 0;
@@ -201,11 +199,14 @@
       margin-top: var(--block-par-gap);
     }
 
+    /* kein Abstand zwischen erklärbär-Absätzen */
     section.block p.no-gap + p {
       margin-top: 0 !important;
     }
 
+    /* ✅ Streaming Icons */
     .social-section { margin: 0; }
+
     .social-icons {
       display: flex;
       flex-wrap: wrap;
@@ -213,9 +214,6 @@
       align-items: center;
       margin: 0;
       padding: 0;
-
-      /* ✅ NEU: Abstand von "kuck hier:" zu den Icons */
-      margin-top: var(--kuck-to-icons-gap);
     }
 
     .social-link {
@@ -231,85 +229,23 @@
       display: block;
     }
 
-    /* ✅ kein Abstand NACH den Icons (Section selbst) */
+    /* ✅ WICHTIG: verhindere, dass nach "kuck hier" ein grosser Block-Abstand kommt */
     section.block.streaming-block {
       margin-bottom: 0 !important;
       padding-bottom: 0 !important;
     }
 
-    /* ✅ entfernt das grosse main-gap NUR zwischen streaming-block und more-block */
+    /* ✅ NUR zwischen Icons und "mehr..." das grosse main-gap ersetzen durch icons-to-more-gap */
     section.block.more-block {
       margin-top: calc(-1 * var(--main-gap) + var(--icons-to-more-gap)) !important;
       padding-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-
-    section.block.more-block p {
-      margin-top: 0 !important;
     }
 
     .more-link {
       display: inline-block;
-      margin-top: 0.1rem;
-      margin-bottom: 0;
+      margin-top: var(--more-link-gap-top);
+      margin-bottom: var(--more-link-gap-bottom);
       padding-left: var(--more-link-indent);
-    }
-
-    .presave-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.9rem;
-
-      /* ✅ GEÄNDERT: zusätzlicher Abstand bei "vorsichern:" entfernt */
-      margin-top: var(--vorsichern-to-button-gap);
-    }
-
-    .presave-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.78rem 1.35rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.85);
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 0.92rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: lowercase;
-      background: #ffffff;
-      color: var(--awb-bg);
-      box-shadow:
-        0 0 18px rgba(0,0,0,0.25),
-        0 0 40px rgba(0,0,0,0.18);
-      transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .presave-button:hover {
-      transform: translateY(-1px) scale(1.02);
-      filter: brightness(1.02);
-      box-shadow:
-        0 0 26px rgba(0,0,0,0.32),
-        0 0 55px rgba(0,0,0,0.22);
-    }
-
-    .presave-button:focus-visible {
-      outline: 2px solid rgba(255,255,255,0.95);
-      outline-offset: 3px;
-    }
-
-    .presave-icon {
-      width: 1.15rem;
-      height: 1.15rem;
-      display: block;
-      border-radius: 4px;
-      object-fit: cover;
-    }
-
-    .presave-hint {
-      opacity: 0.88;
-      font-size: 0.95rem;
     }
 
     @media (max-width: 768px) {
@@ -322,6 +258,9 @@
       .page-wrap { padding-top: 4rem; padding-bottom: 5rem; }
     }
 
+    /* =========================================================
+       ✅ FULLSCREEN CROSSHAIR (lange linien)
+       ========================================================= */
     #crosshair{
       position: fixed;
       inset: 0;
@@ -329,6 +268,7 @@
       z-index: 99999;
     }
 
+    /* horizontale Linie */
     #crosshair .line-x{
       position: absolute;
       left: 0;
@@ -340,6 +280,7 @@
       transform: translateY(-0.5px);
     }
 
+    /* vertikale Linie */
     #crosshair .line-y{
       position: absolute;
       top: 0;
@@ -351,10 +292,12 @@
       transform: translateX(-0.5px);
     }
 
+    /* auf touch aus */
     @media (pointer: coarse){
       #crosshair{ display:none; }
     }
 
+    /* reduced motion respektieren */
     @media (prefers-reduced-motion: reduce){
       #crosshair{ display:none; }
     }
@@ -372,8 +315,10 @@
           <span id="awb-countdown-timer">--:--:--</span>
         </div>
 
+        <!-- ✅ COVER BLEIBT + AUDIO PLAYER (anstatt VIDEO) -->
         <section class="video-wrap" aria-label="Audio zum Song">
           <div class="video-inner">
+            <!-- ✅ Cover responsive + LCP-Priority -->
             <img
               src="/assets/release/drei-cover-384.webp"
               srcset="/assets/release/drei-cover-192.webp 192w, /assets/release/drei-cover-384.webp 384w, /assets/release/drei-cover-768.webp 768w"
@@ -386,11 +331,13 @@
               fetchpriority="high"
               decoding="async">
 
+            <!-- Audio Controls overlay -->
             <audio
               id="release-audio"
               class="audio-overlay"
               controls
               preload="metadata">
+              <!-- ✅ ROOT-RELATIVE PATH damit es auf b3nn3t.com UND in subfoldern funktioniert -->
               <source src="/assets/release/drei.prelisten.mp3">
               Dein Browser unterstützt dieses Audioformat nicht.
             </audio>
@@ -405,23 +352,6 @@
           <h2>erklärbär:</h2>
           <p class="no-gap">drei songs die mir sehr am herzen liegen, neues zimmer, neuer b3nn3t, neue musik.</p>
           <p>vergangene ereignisse werden verarbeitet wie sonne bei solar, liebe grüsse an alle die checken :3</p>
-        </section>
-
-        <section aria-label="vorsichern:" class="block">
-          <h2>vorsichern:</h2>
-          <p class="presave-hint">dann ist „drei“ am 23. januar direkt in deiner bibliothek</p>
-
-          <div class="presave-row">
-            <a class="presave-button"
-               href="https://bfan.link/drei"
-               target="_blank"
-               rel="noopener noreferrer">
-              <img class="presave-icon"
-                   src="/assets/release/drei-cover.png"
-                   alt="Cover „drei“">
-              pre-save
-            </a>
-          </div>
         </section>
 
         <section aria-label="Streaming" class="block streaming-block">
@@ -483,11 +413,13 @@
     </div>
   </div>
 
+  <!-- ✅ Fullscreen Crosshair Element -->
   <div id="crosshair" aria-hidden="true">
     <div class="line-x"></div>
     <div class="line-y"></div>
   </div>
 
+  <!-- ✅ Countdown läuft jetzt live und aktualisiert jede Sekunde -->
   <script>
     (function () {
       const targetDate = new Date("2026-01-23T00:00:00+01:00").getTime();
@@ -524,6 +456,7 @@
     })();
   </script>
 
+  <!-- ✅ Fullscreen Crosshair folgt der Maus -->
   <script>
     (function(){
       const cross = document.getElementById('crosshair');
@@ -531,11 +464,13 @@
       const lineY = cross?.querySelector('.line-y');
       if(!cross || !lineX || !lineY) return;
 
+      // nur desktop (maus), kein touch
       if(!window.matchMedia('(pointer: fine)').matches){
         cross.style.display = 'none';
         return;
       }
 
+      // reduced motion -> aus
       if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
         cross.style.display = 'none';
         return;
