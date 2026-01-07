@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -359,6 +359,16 @@
       #crosshair{ display:none; }
     }
   </style>
+
+<!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-EzlW5dU-S2zSeddQlfKac.js"></script>
+<script>
+  window.plausible = window.plausible || function () {
+    (plausible.q = plausible.q || []).push(arguments)
+  };
+  plausible.init();
+</script>
+
 </head>
 
 <body>
@@ -413,6 +423,7 @@
 
           <div class="presave-row">
             <a class="presave-button"
+               plausible-event-name="Pre save"
                href="https://bfan.link/drei"
                target="_blank"
                rel="noopener noreferrer">
