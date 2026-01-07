@@ -63,6 +63,12 @@
       --more-link-gap-top: 0.65rem;
       --more-link-gap-bottom: 0.75rem;
       --more-link-indent: 0.25rem;
+
+      /* ✅ main gap als Variable, damit wir es gezielt “aufheben” können */
+      --main-gap: clamp(1.6rem, 2.4vw, 2.2rem);
+
+      /* ✅ Abstand Icons -> “mehr…” (ca. eine Zeile) */
+      --icons-to-more-gap: 0.5rem; /* ✅ war 0.35rem */
     }
 
     html, body {
@@ -94,7 +100,7 @@
     main.main {
       display: flex;
       flex-direction: column;
-      gap: clamp(1.6rem, 2.4vw, 2.2rem);
+      gap: var(--main-gap);
     }
 
     .topline {
@@ -104,7 +110,7 @@
       gap: 0.7rem;
       font-size: 0.92rem;
       letter-spacing: 0.04em;
-      margin-bottom: clamp(1.6rem, 2.4vw, 2.2rem);
+      margin-bottom: var(--main-gap);
     }
 
     .brand-link {
@@ -145,8 +151,6 @@
       overflow: hidden;
       background: #000;
       aspect-ratio: 16 / 9;
-
-      /* ✅ wichtig fürs Overlay */
       position: relative;
     }
 
@@ -200,14 +204,16 @@
       margin-top: 0 !important;
     }
 
-    .social-section { margin: 0 0 0.8rem; }
+    /* ✅ Streaming Icons */
+    .social-section { margin: 0; }
 
     .social-icons {
       display: flex;
       flex-wrap: wrap;
       gap: clamp(1.1rem, 1.6vw, 1.6rem);
       align-items: center;
-      margin-bottom: 0.4rem;
+      margin: 0;
+      padding: 0;
     }
 
     .social-link {
@@ -221,6 +227,18 @@
       width: clamp(1.6rem, 1.3vw + 1rem, 2.2rem);
       height: auto;
       display: block;
+    }
+
+    /* ✅ WICHTIG: verhindere, dass nach "kuck hier" ein grosser Block-Abstand kommt */
+    section.block.streaming-block {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* ✅ NUR zwischen Icons und "mehr..." das grosse main-gap ersetzen durch icons-to-more-gap */
+    section.block.more-block {
+      margin-top: calc(-1 * var(--main-gap) + var(--icons-to-more-gap)) !important;
+      padding-top: 0 !important;
     }
 
     .more-link {
@@ -331,13 +349,13 @@
         </section>
 
         <section aria-label="Story zum Song" class="block">
-          <h2>erklärbär</h2>
+          <h2>erklärbär:</h2>
           <p class="no-gap">drei songs die mir sehr am herzen liegen, neues zimmer, neuer b3nn3t, neue musik.</p>
           <p>vergangene ereignisse werden verarbeitet wie sonne bei solar, liebe grüsse an alle die checken :3</p>
         </section>
 
-        <section aria-label="Streaming" class="block">
-          <h2>kuck hier</h2>
+        <section aria-label="Streaming" class="block streaming-block">
+          <h2>kuck hier:</h2>
 
           <div class="social-section" aria-label="Social Media Links">
             <div class="social-icons">
@@ -386,7 +404,7 @@
           </div>
         </section>
 
-        <section aria-label="Mehr von b3nn3t" class="block">
+        <section aria-label="Mehr von b3nn3t" class="block more-block">
           <p>mehr auf meiner webseite :p</p>
           <a class="brand-link more-link" href="https://www.b3nn3t.com/index.html">b3nn3t.com</a>
         </section>
