@@ -549,6 +549,79 @@
     })();
   </script>
 
+  <!-- ✅ Plausible: Audio-Tracking (Start/Progress pro Besuch + jedes Play als Total) -->
+  <script>
+    (function () {
+      const audio = document.getElementById('release-audio');
+      if (!audio) return;
+
+      function track(name) {
+        if (typeof plausible === 'function') plausible(name);
+      }
+
+      const KEY_PREFIX = 'r3_audio_';
+      const fired = {
+        start: sessionStorage.getItem(KEY_PREFIX + 'start') === '1',
+        p25:   sessionStorage.getItem(KEY_PREFIX + '25') === '1',
+        p50:   sessionStorage.getItem(KEY_PREFIX + '50') === '1',
+        p75:   sessionStorage.getItem(KEY_PREFIX + '75') === '1',
+        p100:  sessionStorage.getItem(KEY_PREFIX + '100') === '1'
+      };
+
+      // 🔊 JEDES Play (auch mehrfach pro Besuch)
+      audio.addEventListener('play', function () {
+        track('Release 3: Audio Play (Total)');
+      });
+
+      // ▶️ Start pro Besuch (max 1×)
+      audio.addEventListener('play', function () {
+        if (fired.start) return;
+        fired.start = true;
+        sessionStorage.setItem(KEY_PREFIX + 'start', '1');
+        track('Release 3: Audio Start (Session)');
+      });
+
+      function checkProgress() {
+        const d = audio.duration;
+        if (!Number.isFinite(d) || d <= 0) return;
+
+        const r = audio.currentTime / d;
+
+        if (r >= 0.25 && !fired.p25) {
+          fired.p25 = true;
+          sessionStorage.setItem(KEY_PREFIX + '25', '1');
+          track('Release 3: Audio 25% (Session)');
+        }
+        if (r >= 0.5 && !fired.p50) {
+          fired.p50 = true;
+          sessionStorage.setItem(KEY_PREFIX + '50', '1');
+          track('Release 3: Audio 50% (Session)');
+        }
+        if (r >= 0.75 && !fired.p75) {
+          fired.p75 = true;
+          sessionStorage.setItem(KEY_PREFIX + '75', '1');
+          track('Release 3: Audio 75% (Session)');
+        }
+        if (r >= 0.995 && !fired.p100) {
+          fired.p100 = true;
+          sessionStorage.setItem(KEY_PREFIX + '100', '1');
+          track('Release 3: Audio 100% (Session)');
+        }
+      }
+
+      audio.addEventListener('timeupdate', checkProgress);
+      audio.addEventListener('seeked', checkProgress);
+
+      audio.addEventListener('ended', function () {
+        if (!fired.p100) {
+          fired.p100 = true;
+          sessionStorage.setItem(KEY_PREFIX + '100', '1');
+          track('Release 3: Audio 100% (Session)');
+        }
+      });
+    })();
+  </script>
+
   <script>
     (function(){
       const cross = document.getElementById('crosshair');
