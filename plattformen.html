@@ -364,7 +364,8 @@
                   </picture>
                   <a href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A"
                      target="_blank" rel="noopener"
-                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'spotify'}})">spotify</a>
+                     class="plausible-outbound"
+                     data-plausible-event="Plattformen: Spotify Click">spotify</a>
                 </li>
 
                 <li>
@@ -374,7 +375,8 @@
                   </picture>
                   <a href="https://music.apple.com/ch/artist/b3nn3t/1786857463?l=de-DE"
                      target="_blank" rel="noopener"
-                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'apple_music'}})">apple music</a>
+                     class="plausible-outbound"
+                     data-plausible-event="Plattformen: Apple Music Click">apple music</a>
                 </li>
 
                 <li>
@@ -384,7 +386,8 @@
                   </picture>
                   <a href="https://www.instagram.com/b333nn3t?igsh=MWphMjcxdXZwZ2s1ZQ=="
                      target="_blank" rel="noopener"
-                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'instagram'}})">instagram</a>
+                     class="plausible-outbound"
+                     data-plausible-event="Plattformen: Instagram Click">instagram</a>
                 </li>
 
                 <li>
@@ -392,8 +395,10 @@
                     <source srcset="assets/plattformen/youtube_128.webp" type="image/webp">
                     <img src="assets/plattformen/youtube_128.png" alt="YouTube Logo" width="28" height="28" loading="lazy" decoding="async">
                   </picture>
-                  <a href="https://www.youtube.com/@b333nn3t" target="_blank" rel="noopener"
-                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'youtube'}})">youtube</a>
+                  <a href="https://www.youtube.com/@b333nn3t"
+                     target="_blank" rel="noopener"
+                     class="plausible-outbound"
+                     data-plausible-event="Plattformen: YouTube Click">youtube</a>
                 </li>
 
                 <li>
@@ -403,17 +408,21 @@
                   </picture>
                   <a href="https://soundcloud.com/b3nn3t-music?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
                      target="_blank" rel="noopener"
-                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'soundcloud'}})">soundcloud</a>
+                     class="plausible-outbound"
+                     data-plausible-event="Plattformen: SoundCloud Click">soundcloud</a>
+                </li>
 
-                  <li style="height:10px;"></li>
+                <li style="height:10px;"></li>
 
                 <li>
                   <picture>
                     <source srcset="assets/plattformen/mx3_128.webp" type="image/webp">
                     <img src="assets/plattformen/mx3_128.png" alt="MX3 Logo" width="28" height="28" decoding="async">
                   </picture>
-                  <a href="https://mx3.ch/b3nn3t" target="_blank" rel="noopener"
-                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'mx3'}})">mx3</a>
+                  <a href="https://mx3.ch/b3nn3t"
+                     target="_blank" rel="noopener"
+                     class="plausible-outbound"
+                     data-plausible-event="Plattformen: MX3 Click">mx3</a>
                 </li>
 
                 <li>
@@ -421,11 +430,12 @@
                     <source srcset="assets/plattformen/genius_128.webp" type="image/webp">
                     <img src="assets/plattformen/genius_128.png" alt="Genius Logo" width="28" height="28" decoding="async">
                   </picture>
-                  <a href="https://genius.com/artists/B3nn3t" target="_blank" rel="noopener"
-                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'genius'}})">genius</a>
+                  <a href="https://genius.com/artists/B3nn3t"
+                     target="_blank" rel="noopener"
+                     class="plausible-outbound"
+                     data-plausible-event="Plattformen: Genius Click">genius</a>
                 </li>
 
-                </li>
               </ul>
             </div>
           </div>
@@ -567,5 +577,39 @@
       }
     })();
   </script>
+
+  <!-- ✅ Plausible: sichere Outbound-Tracking-Events (pro Plattform eigenes Goal) -->
+  <script>
+  (function () {
+    function openInNewTab(url) {
+      window.open(url, '_blank', 'noopener');
+    }
+
+    document.querySelectorAll('a.plausible-outbound[data-plausible-event]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        const url = a.href;
+        const eventName = a.getAttribute('data-plausible-event');
+
+        // Wenn plausible blockiert ist, einfach normal öffnen
+        if (!eventName || typeof window.plausible !== 'function') return;
+
+        e.preventDefault();
+
+        // Event senden, dann öffnen (zuverlässig bei target=_blank)
+        window.plausible(eventName, {
+          callback: function () {
+            openInNewTab(url);
+          }
+        });
+
+        // Fallback falls callback nicht kommt (Safari / Blocker / Timing)
+        setTimeout(function () {
+          openInNewTab(url);
+        }, 700);
+      }, { passive: false });
+    });
+  })();
+  </script>
+
 </body>
 </html>
