@@ -298,8 +298,8 @@
     }
   </style>
 
-<!-- Plausible Analytics -->
-<script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
+  <!-- Plausible Analytics -->
+  <script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
 
 </head>
 
@@ -363,7 +363,8 @@
                     <img src="assets/plattformen/spotify_128.png" alt="Spotify Logo" width="28" height="28" loading="lazy" decoding="async">
                   </picture>
                   <a href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A"
-                     target="_blank" rel="noopener">spotify</a>
+                     target="_blank" rel="noopener"
+                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'spotify'}})">spotify</a>
                 </li>
 
                 <li>
@@ -372,7 +373,8 @@
                     <img src="assets/plattformen/apple_music_128.png" alt="Apple Music Logo" width="28" height="28" loading="lazy" decoding="async">
                   </picture>
                   <a href="https://music.apple.com/ch/artist/b3nn3t/1786857463?l=de-DE"
-                     target="_blank" rel="noopener">apple music</a>
+                     target="_blank" rel="noopener"
+                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'apple_music'}})">apple music</a>
                 </li>
 
                 <li>
@@ -381,7 +383,8 @@
                     <img src="assets/plattformen/instagram_128.png" alt="Instagram Logo" width="28" height="28" loading="lazy" decoding="async">
                   </picture>
                   <a href="https://www.instagram.com/b333nn3t?igsh=MWphMjcxdXZwZ2s1ZQ=="
-                     target="_blank" rel="noopener">instagram</a>
+                     target="_blank" rel="noopener"
+                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'instagram'}})">instagram</a>
                 </li>
 
                 <li>
@@ -389,7 +392,8 @@
                     <source srcset="assets/plattformen/youtube_128.webp" type="image/webp">
                     <img src="assets/plattformen/youtube_128.png" alt="YouTube Logo" width="28" height="28" loading="lazy" decoding="async">
                   </picture>
-                  <a href="https://www.youtube.com/@b333nn3t" target="_blank" rel="noopener">youtube</a>
+                  <a href="https://www.youtube.com/@b333nn3t" target="_blank" rel="noopener"
+                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'youtube'}})">youtube</a>
                 </li>
 
                 <li>
@@ -398,16 +402,18 @@
                     <img src="assets/plattformen/soundcloud_128.png" alt="SoundCloud Logo" width="28" height="28" loading="lazy" decoding="async">
                   </picture>
                   <a href="https://soundcloud.com/b3nn3t-music?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
-                     target="_blank" rel="noopener">soundcloud</a>
-                  
+                     target="_blank" rel="noopener"
+                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'soundcloud'}})">soundcloud</a>
+
                   <li style="height:10px;"></li>
-              
+
                 <li>
                   <picture>
                     <source srcset="assets/plattformen/mx3_128.webp" type="image/webp">
                     <img src="assets/plattformen/mx3_128.png" alt="MX3 Logo" width="28" height="28" decoding="async">
                   </picture>
-                  <a href="https://mx3.ch/b3nn3t" target="_blank" rel="noopener">mx3</a>
+                  <a href="https://mx3.ch/b3nn3t" target="_blank" rel="noopener"
+                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'mx3'}})">mx3</a>
                 </li>
 
                 <li>
@@ -415,9 +421,10 @@
                     <source srcset="assets/plattformen/genius_128.webp" type="image/webp">
                     <img src="assets/plattformen/genius_128.png" alt="Genius Logo" width="28" height="28" decoding="async">
                   </picture>
-                  <a href="https://genius.com/artists/B3nn3t" target="_blank" rel="noopener">genius</a>
+                  <a href="https://genius.com/artists/B3nn3t" target="_blank" rel="noopener"
+                     onclick="plausible('Platform Click', {props: {page: 'plattformen', platform: 'genius'}})">genius</a>
                 </li>
-                
+
                 </li>
               </ul>
             </div>
