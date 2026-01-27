@@ -388,37 +388,10 @@
     .release{ color:#000; }
     .release a{ color:#000; }
     .release .meta{ color:#444; }
-
-    /* ===================================================
-       ✅ EPs: Text wird beim Klick durchgestrichen (Animation rechts -> links)
-       =================================================== */
-    .ep-strike{
-      position: relative;
-      display:inline-block;
-    }
-    .ep-strike::after{
-      content:"";
-      position:absolute;
-      left:0;
-      right:0;
-      top:50%;
-      height:2px;
-      background: currentColor;
-
-      transform: translateY(-50%) scaleX(0);
-      transform-origin: right; /* Start rechts */
-      transition: transform .28s ease;
-      pointer-events:none;
-      opacity:.95;
-    }
-    .ep-strike.striked::after{
-      transform: translateY(-50%) scaleX(1);
-      transform-origin: left; /* läuft nach links fertig */
-    }
   </style>
 
-<!-- Plausible Analytics -->
-<script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
+  <!-- Plausible Analytics -->
+  <script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
 
 </head>
 
@@ -493,11 +466,23 @@
             <!-- ===== EPs ===== -->
             <div class="page-group">
               <button class="page-toggle" id="eps-toggle" type="button" aria-expanded="false">
-                <span class="arrow">►</span><span class="ep-strike">ep's</span>
+                <span class="arrow">►</span><span>ep's</span>
               </button>
               <div class="page-content">
                 <div class="disco-grid">
-                  <h1>keine ep bis jetzt</h1>
+
+                  <!-- ✅ NEU: "drei" (2026) -->
+                  <article class="release">
+                    <picture>
+                      <source srcset="assets/diskografie/EPs/dreicover.webp" type="image/webp">
+                      <img src="assets/diskografie/EPs/dreicover.jpg" alt="Cover: drei" loading="lazy">
+                    </picture>
+                    <div class="title">
+                      <a href="https://open.spotify.com/intl-de/album/335RZic06ynXmXdbv1XAQ9?si" target="_blank" rel="noopener noreferrer">drei</a>
+                    </div>
+                    <div class="meta">2026</div>
+                  </article>
+
                 </div>
               </div>
             </div>
@@ -930,15 +915,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = toggleWrap.querySelector('button');
     btn.addEventListener('click', () => openPlayerForCard(card));
   });
-
-  // ✅ EPs: Durchstreichen beim Klick (rechts -> links)
-  const epsToggle = document.getElementById('eps-toggle');
-  if(epsToggle){
-    epsToggle.addEventListener('click', ()=>{
-      const label = epsToggle.querySelector('.ep-strike');
-      if(label) label.classList.toggle('striked');
-    });
-  }
 
   document.querySelectorAll('.page-toggle').forEach(btn=>{
     const group = btn.closest('.page-group');
