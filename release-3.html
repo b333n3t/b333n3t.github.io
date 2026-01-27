@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>b3nn3t „drei“ | neuer release am 23.01.2026</title>
+  <title>b3nn3t „drei“ | OUT NOW</title>
   <meta name="description" content="„drei“ – neues Release von b3nn3t. Drei Songs zwischen Deutschrap & Indie-Pop. Erscheint am 23.01.2026." />
   <meta name="robots" content="index,follow,max-image-preview:large" />
 
@@ -43,13 +43,8 @@
   }
   </script>
 
-  <!-- ✅ LCP-Poster vorladen (responsive) + priorisieren -->
-  <link rel="preload"
-        as="image"
-        href="/assets/release/drei-cover-384.webp"
-        imagesrcset="/assets/release/drei-cover-192.webp 192w, /assets/release/drei-cover-384.webp 384w, /assets/release/drei-cover-768.webp 768w"
-        imagesizes="(max-width: 768px) 92vw, 720px"
-        fetchpriority="high">
+  <!-- ✅ NEU: Video als LCP vorladen (statt Cover) -->
+  <link rel="preload" as="video" href="/assets/release/dreivideo.mp4" type="video/mp4">
 
   <style>
     :root {
@@ -157,6 +152,7 @@
       position: relative;
     }
 
+    /* ✅ Video-Element (mit Ton) */
     .release-video {
       width: 100%;
       height: 100%;
@@ -164,17 +160,6 @@
       border-radius: inherit;
       background: #000;
       object-fit: cover;
-    }
-
-    .audio-overlay {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      padding: 0.6rem;
-      background: rgba(0,0,0,0.55);
-      box-sizing: border-box;
     }
 
     section.block {
@@ -376,28 +361,21 @@
           <span id="awb-countdown-timer">--:--:--</span>
         </div>
 
-        <section class="video-wrap" aria-label="Audio zum Song">
+        <!-- ✅ VIDEO statt Cover+MP3 -->
+        <section class="video-wrap" aria-label="Video zum Song">
           <div class="video-inner">
-            <img
-              src="/assets/release/drei-cover-384.webp"
-              srcset="/assets/release/drei-cover-192.webp 192w, /assets/release/drei-cover-384.webp 384w, /assets/release/drei-cover-768.webp 768w"
-              sizes="(max-width: 768px) 92vw, 720px"
-              width="720"
-              height="405"
-              alt="Cover – drei von b3nn3t"
+            <video
+              id="release-video"
               class="release-video"
-              loading="eager"
-              fetchpriority="high"
-              decoding="async">
-
-            <audio
-              id="release-audio"
-              class="audio-overlay"
               controls
-              preload="metadata">
-              <source src="/assets/release/drei.prelisten.mp3">
-              Dein Browser unterstützt dieses Audioformat nicht.
-            </audio>
+              playsinline
+              preload="metadata"
+              poster="/assets/release/drei-cover-384.webp"
+              width="720"
+              height="405">
+              <source src="/assets/release/dreivideo.mp4" type="video/mp4">
+              Dein Browser unterstützt dieses Videoformat nicht.
+            </video>
           </div>
         </section>
 
@@ -409,24 +387,6 @@
           <h2>erklärbär:</h2>
           <p class="no-gap">drei songs die mir sehr am herzen liegen, neues zimmer, neuer b3nn3t, neue musik.</p>
           <p>vergangene ereignisse werden verarbeitet wie sonne bei solar, liebe grüsse an alle die checken :3</p>
-        </section>
-
-        <section aria-label="vorsichern:" class="block">
-          <h2>vorsichern:</h2>
-          <p class="presave-hint">dann ist „drei“ am 23. januar direkt in deiner bibliothek</p>
-
-          <div class="presave-row">
-            <a class="presave-button"
-               href="https://bfan.link/drei"
-               target="_blank"
-               rel="noopener noreferrer"
-               onclick="plausible('Pre save')">
-              <img class="presave-icon"
-                   src="/assets/release/drei-cover.png"
-                   alt="Cover „drei“">
-              pre-save
-            </a>
-          </div>
         </section>
 
         <section aria-label="Streaming" class="block streaming-block">
@@ -500,7 +460,7 @@
         </section>
 
         <section aria-label="Mehr von b3nn3t" class="block more-block">
-          <p>mehr auf meiner webseite :p</p>
+          <p>&+mehr auf meiner webseite :p</p>
           <a class="brand-link more-link" href="https://www.b3nn3t.com/index.html">b3nn3t.com</a>
         </section>
 
@@ -549,17 +509,17 @@
     })();
   </script>
 
-  <!-- ✅ Plausible: Audio-Tracking (Start/Progress pro Besuch + jedes Play als Total) -->
+  <!-- ✅ Plausible: Video-Tracking (Start/Progress pro Besuch + jedes Play als Total) -->
   <script>
     (function () {
-      const audio = document.getElementById('release-audio');
-      if (!audio) return;
+      const video = document.getElementById('release-video');
+      if (!video) return;
 
       function track(name) {
         if (typeof plausible === 'function') plausible(name);
       }
 
-      const KEY_PREFIX = 'r3_audio_';
+      const KEY_PREFIX = 'r3_video_';
       const fired = {
         start: sessionStorage.getItem(KEY_PREFIX + 'start') === '1',
         p25:   sessionStorage.getItem(KEY_PREFIX + '25') === '1',
@@ -568,55 +528,55 @@
         p100:  sessionStorage.getItem(KEY_PREFIX + '100') === '1'
       };
 
-      // 🔊 JEDES Play (auch mehrfach pro Besuch)
-      audio.addEventListener('play', function () {
-        track('Release 3: Audio Play (Total)');
+      // ▶️ JEDES Play (auch mehrfach pro Besuch)
+      video.addEventListener('play', function () {
+        track('Release 3: Video Play (Total)');
       });
 
       // ▶️ Start pro Besuch (max 1×)
-      audio.addEventListener('play', function () {
+      video.addEventListener('play', function () {
         if (fired.start) return;
         fired.start = true;
         sessionStorage.setItem(KEY_PREFIX + 'start', '1');
-        track('Release 3: Audio Start (Session)');
+        track('Release 3: Video Start (Session)');
       });
 
       function checkProgress() {
-        const d = audio.duration;
+        const d = video.duration;
         if (!Number.isFinite(d) || d <= 0) return;
 
-        const r = audio.currentTime / d;
+        const r = video.currentTime / d;
 
         if (r >= 0.25 && !fired.p25) {
           fired.p25 = true;
           sessionStorage.setItem(KEY_PREFIX + '25', '1');
-          track('Release 3: Audio 25% (Session)');
+          track('Release 3: Video 25% (Session)');
         }
         if (r >= 0.5 && !fired.p50) {
           fired.p50 = true;
           sessionStorage.setItem(KEY_PREFIX + '50', '1');
-          track('Release 3: Audio 50% (Session)');
+          track('Release 3: Video 50% (Session)');
         }
         if (r >= 0.75 && !fired.p75) {
           fired.p75 = true;
           sessionStorage.setItem(KEY_PREFIX + '75', '1');
-          track('Release 3: Audio 75% (Session)');
+          track('Release 3: Video 75% (Session)');
         }
         if (r >= 0.995 && !fired.p100) {
           fired.p100 = true;
           sessionStorage.setItem(KEY_PREFIX + '100', '1');
-          track('Release 3: Audio 100% (Session)');
+          track('Release 3: Video 100% (Session)');
         }
       }
 
-      audio.addEventListener('timeupdate', checkProgress);
-      audio.addEventListener('seeked', checkProgress);
+      video.addEventListener('timeupdate', checkProgress);
+      video.addEventListener('seeked', checkProgress);
 
-      audio.addEventListener('ended', function () {
+      video.addEventListener('ended', function () {
         if (!fired.p100) {
           fired.p100 = true;
           sessionStorage.setItem(KEY_PREFIX + '100', '1');
-          track('Release 3: Audio 100% (Session)');
+          track('Release 3: Video 100% (Session)');
         }
       });
     })();
