@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>b3nn3t „drei-viertel“ | neuer release 13.02.2026</title>
+  <meta name="description" content="„drei-viertel“ – das neue Release von b3nn3t. Deutschrap & Indie-Pop aus der Schweiz." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+
+  <!-- Favicons: Google, Browser, Apple -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://www.b3nn3t.com/release-drei-viertel.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="music.song">
+  <meta property="og:site_name" content="b3nn3t">
+  <meta property="og:title" content="„drei-viertel“ – neues Release von b3nn3t">
+  <meta property="og:description" content="Das neue Release von b3nn3t. Cover, Story, Plattformen & mehr.">
+  <meta property="og:image" content="https://www.b3nn3t.com/assets/release/3-4/drei-viertel-cover.webp">
+  <meta property="og:url" content="https://www.b3nn3t.com/release-drei-viertel.html">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="„drei-viertel“ – neues Release von b3nn3t">
+  <meta name="twitter:description" content="Deutschrap & Indie-Pop aus der Schweiz – das neue Release „drei-viertel“ von b3nn3t.">
+  <meta name="twitter:image" content="https://www.b3nn3t.com/assets/release/3-4/drei-viertel-cover.webp">
+
+  <!-- Strukturierte Daten -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicRecording",
+    "name": "¾",
+    "byArtist": { "@type": "MusicGroup", "name": "b3nn3t" },
+    "inAlbum": { "@type": "MusicAlbum", "name": "drei-viertel" },
+    "image": "https://www.b3nn3t.com/assets/release/3-4/drei-viertel-cover.webp",
+    "url": "https://www.b3nn3t.com/release-drei-viertel.html"
+  }
+  </script>
+
+  <!-- LCP-Poster vorladen und priorisieren -->
+  <link rel="preload" as="image" href="/assets/release/3-4/drei-viertel-cover.webp" fetchpriority="high">
+
+  <style>
+    :root {
+      --awb-text-main: #fdfdfd;
+      --page-max-width: 960px;
+      --awb-bg: #930010;
+
+      --block-title-gap: 0.95rem;
+      --block-par-gap: 0.7rem;
+
+      --more-link-gap-top: 0.65rem;
+      --more-link-gap-bottom: 0.75rem;
+      --more-link-indent: 0.25rem;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow-x: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      color: var(--awb-text-main);
+      background: var(--awb-bg);
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: clamp(2.8rem, 4vw, 3.8rem) 1.5rem clamp(3.5rem, 5vw, 4.5rem);
+      box-sizing: border-box;
+    }
+
+    .content {
+      width: 100%;
+      max-width: var(--page-max-width);
+      position: relative;
+    }
+
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.6rem, 2.4vw, 2.2rem);
+    }
+
+    .topline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.7rem;
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+      margin-bottom: clamp(1.6rem, 2.4vw, 2.2rem);
+    }
+
+    .brand-link {
+      color: #ffffff;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .count-label { text-transform: none; opacity: 0.9; }
+
+    #awb-countdown-timer {
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      color: #ffffff;
+      min-width: 8ch;
+      display: inline-block;
+    }
+
+    /* Titel */
+    .song-title {
+      margin: 0;
+      font-weight: 600;
+      text-transform: lowercase;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      margin-bottom: clamp(0.9rem, 1.5vw, 1.25rem);
+    }
+
+    .video-wrap {
+      margin: 0 auto clamp(2rem, 3vw, 2.8rem);
+      max-width: 720px;
+      width: 100%;
+    }
+
+    .video-inner {
+      border-radius: 22px;
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 16 / 9;
+
+      /* ✅ wichtig fürs Overlay */
+      position: relative;
+    }
+
+    .release-video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: inherit;
+      background: #000;
+      object-fit: cover;
+    }
+
+    /* ✅ Audio Overlay Styling */
+    .audio-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      padding: 0.6rem;
+      background: rgba(0,0,0,0.55);
+      box-sizing: border-box;
+    }
+
+    section.block {
+      margin-bottom: clamp(1.8rem, 2.6vw, 2.4rem);
+    }
+
+    section.block h2 {
+      margin: 0 0 var(--block-title-gap);
+      font-size: 1.06rem;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      font-weight: 600;
+    }
+
+    section.block p {
+      margin: 0;
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      max-width: 60rem;
+      font-size: 1rem;
+    }
+
+    section.block p + p {
+      margin-top: var(--block-par-gap);
+    }
+
+    /* kein Abstand zwischen erklärbär-Absätzen */
+    section.block p.no-gap + p {
+      margin-top: 0 !important;
+    }
+
+    .social-section { margin: 0 0 0.8rem; }
+
+    .social-icons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(1.1rem, 1.6vw, 1.6rem);
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .social-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .social-icon-img {
+      width: clamp(1.6rem, 1.3vw + 1rem, 2.2rem);
+      height: auto;
+      display: block;
+    }
+
+    .more-link {
+      display: inline-block;
+      margin-top: var(--more-link-gap-top);
+      margin-bottom: var(--more-link-gap-bottom);
+      padding-left: var(--more-link-indent);
+    }
+
+    @media (max-width: 768px) {
+      .page-wrap { padding: 2.4rem 1.2rem 3rem; }
+      .topline { font-size: 0.87rem; gap: 0.45rem; }
+      .song-title { letter-spacing: 0.26em; }
+    }
+
+    @media (min-width: 1024px) {
+      .page-wrap { padding-top: 4rem; padding-bottom: 5rem; }
+    }
+
+    /* =========================================================
+       ✅ FULLSCREEN CROSSHAIR (lange linien)
+       ========================================================= */
+    #crosshair{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    /* horizontale Linie */
+    #crosshair .line-x{
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100vw;
+      height: 1px;
+      background: #ffffff;
+      opacity: 0.9;
+      transform: translateY(-0.5px);
+    }
+
+    /* vertikale Linie */
+    #crosshair .line-y{
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100vh;
+      background: #ffffff;
+      opacity: 0.9;
+      transform: translateX(-0.5px);
+    }
+
+    /* auf touch aus */
+    @media (pointer: coarse){
+      #crosshair{ display:none; }
+    }
+
+    /* reduced motion respektieren */
+    @media (prefers-reduced-motion: reduce){
+      #crosshair{ display:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrap">
+    <div class="content">
+      <main class="main">
+
+        <div class="topline" aria-label="Release Countdown">
+          <a class="brand-link" href="/index.html">b3nn3t</a>
+          <span class="count-label">new song released in</span>
+          <span id="awb-countdown-timer">--:--:--</span>
+        </div>
+
+        <!-- ✅ COVER BLEIBT + AUDIO PLAYER (anstatt VIDEO) -->
+        <section class="video-wrap" aria-label="Audio zum Song">
+          <div class="video-inner">
+            <!-- Cover -->
+            <img
+              src="/assets/release/3-4/drei-viertel-cover.webp"
+              alt="Cover – drei-viertel von b3nn3t"
+              class="release-video">
+
+            <!-- Audio Controls overlay -->
+            <audio
+              id="release-audio"
+              class="audio-overlay"
+              controls
+              preload="metadata">
+              <!-- ✅ ROOT-RELATIVE PATH damit es auf b3nn3t.com UND in subfoldern funktioniert -->
+              <source src="/assets/release/3-4/drei-viertel.prelisten.mp3">
+              Dein Browser unterstützt dieses Audioformat nicht.
+            </audio>
+          </div>
+          
+        </section>
+
+        <section class="title-section" aria-label="Songtitel">
+          <h1 class="song-title">¾</h1>
+        </section>
+
+        <section aria-label="Story zum Song" class="block">
+          <h2>erklärbär</h2>
+          <p class="no-gap">drei songs die mir sehr am herzen liegen, neues zimmer, neuer b3nn3t, neue musik.</p>
+          <p>vergangene ereignisse werden verarbeitet wie sonne bei solar, liebe grüsse an alle die checken :3</p>
+        </section>
+
+        <section aria-label="Streaming" class="block">
+          <h2>kuck hier</h2>
+
+          <div class="social-section" aria-label="Social Media Links">
+            <div class="social-icons">
+
+              <a href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A"
+                 class="social-link" aria-label="Spotify – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/spotify_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/spotify_128.png" alt="Spotify">
+                </picture>
+              </a>
+
+              <a href="https://music.apple.com/ch/artist/b3nn3t/1786857463?l=de-DE"
+                 class="social-link" aria-label="Apple Music – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/apple_music_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/apple_music_128.png" alt="Apple Music">
+                </picture>
+              </a>
+
+              <a href="https://www.instagram.com/b333nn3t?igsh=MWphMjcxdXZwZ2s1ZQ=="
+                 class="social-link" aria-label="Instagram – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/instagram_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/instagram_128.png" alt="Instagram">
+                </picture>
+              </a>
+
+              <a href="https://www.youtube.com/@b333nn3t"
+                 class="social-link" aria-label="YouTube – @b333nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/youtube_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/youtube_128.png" alt="YouTube">
+                </picture>
+              </a>
+
+              <a href="https://soundcloud.com/b3nn3t-music?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+                 class="social-link" aria-label="SoundCloud – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/soundcloud_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/soundcloud_128.png" alt="SoundCloud">
+                </picture>
+              </a>
+
+            </div>
+          </div>
+        </section>
+
+        <section aria-label="Mehr von b3nn3t" class="block">
+          <p>mehr auf meiner webseite :p</p>
+          <a class="brand-link more-link" href="https://www.b3nn3t.com/index.html">b3nn3t.com</a>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ✅ Fullscreen Crosshair Element -->
+  <div id="crosshair" aria-hidden="true">
+    <div class="line-x"></div>
+    <div class="line-y"></div>
+  </div>
+
+  <!-- ✅ Countdown läuft jetzt live und aktualisiert jede Sekunde -->
+  <script>
+    (function () {
+      const targetDate = new Date("2026-02-13T00:00:00+01:00").getTime();
+      const el = document.getElementById("awb-countdown-timer");
+      if (!el) return;
+
+      function updateCountdown() {
+        const now = Date.now();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+          el.textContent = "OUT NOW";
+          clearInterval(timer);
+          return;
+        }
+
+        const seconds = Math.floor(diff / 1000);
+        const days = Math.floor(seconds / (3600 * 24));
+        const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        const hh = String(hours).padStart(2, "0");
+        const mm = String(mins).padStart(2, "0");
+        const ss = String(secs).padStart(2, "0");
+
+        el.textContent = (days > 0)
+          ? (days + "d " + hh + ":" + mm + ":" + ss)
+          : (hh + ":" + mm + ":" + ss);
+      }
+
+      updateCountdown();
+      const timer = setInterval(updateCountdown, 1000);
+    })();
+  </script>
+
+  <!-- ✅ Fullscreen Crosshair folgt der Maus -->
+  <script>
+    (function(){
+      const cross = document.getElementById('crosshair');
+      const lineX = cross?.querySelector('.line-x');
+      const lineY = cross?.querySelector('.line-y');
+      if(!cross || !lineX || !lineY) return;
+
+      // nur desktop (maus), kein touch
+      if(!window.matchMedia('(pointer: fine)').matches){
+        cross.style.display = 'none';
+        return;
+      }
+
+      // reduced motion -> aus
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        cross.style.display = 'none';
+        return;
+      }
+
+      let x = -9999, y = -9999;
+      let raf = null;
+
+      function render(){
+        lineX.style.top = y + 'px';
+        lineY.style.left = x + 'px';
+        raf = null;
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        if(!raf) raf = requestAnimationFrame(render);
+      }, { passive: true });
+
+      window.addEventListener('mouseleave', () => {
+        x = -9999; y = -9999;
+        render();
+      });
+    })();
+  </script>
+</body>
+</html>
