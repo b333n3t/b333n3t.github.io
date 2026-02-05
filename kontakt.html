@@ -272,7 +272,6 @@
     .page-group.open > .page-content{display:block;}
     .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
-
     /* ===== Kontaktformular ===== */
     form{ margin:0; display:grid; gap:.8rem; max-width:650px; }
     form label{ font-weight:600; }
@@ -285,7 +284,7 @@
       border-radius:8px;
       padding:.6rem;
 
-      background: transparent; /* <- transparent */
+      background: transparent;
       color:#fff;
 
       font:inherit;
@@ -319,56 +318,55 @@
       border-radius:8px;
       padding:.6rem 1.2rem;
 
-      background:#ffffff;   /* <- weiss */
-      color:#930010;        /* <- rot */
+      background:#ffffff;
+      color:#930010;
       font-weight:700;
       cursor:pointer;
     }
     form button[disabled]{ opacity:0.6; cursor:default; }
 
-/* ===== Custom Checkbox (weiss + roter Haken) ===== */
-form input[type="checkbox"]{
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+    /* ===== Custom Checkbox (weiss + roter Haken) ===== */
+    form input[type="checkbox"]{
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
 
-  width: 16px;
-  height: 16px;
-  margin: .3rem .6rem 0 0;
+      width: 16px;
+      height: 16px;
+      margin: .3rem .6rem 0 0;
 
-  border: 1.5px solid #ffffff;
-  border-radius: 3px;
-  background: #ffffff;
+      border: 1.5px solid #ffffff;
+      border-radius: 3px;
+      background: #ffffff;
 
-  display: inline-grid;
-  place-content: center;
+      display: inline-grid;
+      place-content: center;
 
-  cursor: pointer;
-}
+      cursor: pointer;
+    }
 
-/* roter Haken */
-form input[type="checkbox"]::before{
-  content: "";
-  width: 9px;
-  height: 5px;
-  border-left: 2px solid #930010;
-  border-bottom: 2px solid #930010;
-  transform: rotate(-45deg) scale(0);
-  transition: transform .12s ease-in-out;
-}
+    /* roter Haken */
+    form input[type="checkbox"]::before{
+      content: "";
+      width: 9px;
+      height: 5px;
+      border-left: 2px solid #930010;
+      border-bottom: 2px solid #930010;
+      transform: rotate(-45deg) scale(0);
+      transition: transform .12s ease-in-out;
+    }
 
-/* aktiv */
-form input[type="checkbox"]:checked::before{
-  transform: rotate(-45deg) scale(1);
-}
+    /* aktiv */
+    form input[type="checkbox"]:checked::before{
+      transform: rotate(-45deg) scale(1);
+    }
 
-/* Fokus (optional, dezent) */
-form input[type="checkbox"]:focus{
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(147,0,16,0.25);
-}
+    /* Fokus (optional, dezent) */
+    form input[type="checkbox"]:focus{
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(147,0,16,0.25);
+    }
 
-    
     /* ===== Spinner & Status ===== */
     .sending-indicator{
       display:none;
@@ -470,21 +468,19 @@ form input[type="checkbox"]:focus{
     a{ color:#fff; }
     .brand{ color:#fff !important; }
     form, form label, form p{ color:#fff; }
-    
-/* ✅ Formular-Titel exakt wie Menüpunkt (kontakt, diskografie, über mich) */
-.page-content h1.form-title{
-  font-size: 1.1rem !important;   /* gleiche Größe */
-  font-weight: 600 !important;    /* gleiche Fettung */
-  margin: 0 0 1rem 0 !important;  /* gleiche Einrückung/Abstand */
-  letter-spacing: 0 !important;
-  line-height: 1.2 !important;
-}
 
-
+    /* ✅ Formular-Titel exakt wie Menüpunkt */
+    .page-content h1.form-title{
+      font-size: 1.1rem !important;
+      font-weight: 600 !important;
+      margin: 0 0 1rem 0 !important;
+      letter-spacing: 0 !important;
+      line-height: 1.2 !important;
+    }
   </style>
 
-<!-- Plausible Analytics -->
-<script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
+  <!-- Plausible Analytics -->
+  <script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
 
 </head>
 
@@ -538,28 +534,38 @@ form input[type="checkbox"]:focus{
 
             <div class="page-content">
               <h1 class="form-title">formular</h1>
-                <span style="opacity:0; height:0; overflow:hidden; display:block;">
-                  kontakt & booking für b3nn3t – deutschrap & indie-pop aus der schweiz.
-                  hier erreichst du mich für auftritte, anfragen, kollabos und nachrichten.
-                </span>
+              <span style="opacity:0; height:0; overflow:hidden; display:block;">
+                kontakt & booking für b3nn3t – deutschrap & indie-pop aus der schweiz.
+                hier erreichst du mich für auftritte, anfragen, kollabos und nachrichten.
+              </span>
 
               <form id="kontakt-form">
                 <label for="name">name</label>
-                <input id="name" name="name" type="text" placeholder="dein name oder so" required />
+                <input id="name" name="name" type="text" placeholder="dein name oder so" autocomplete="name" required />
 
                 <label for="email">e-mail</label>
-                <input id="email" name="email" type="email" placeholder="deine@mail.com" required />
+                <input id="email" name="email" type="email" placeholder="deine@mail.com" autocomplete="email" required />
 
                 <label for="subject">betreff</label>
-                <input id="subject" name="subject" type="text" placeholder="um was gehts?" />
+                <input id="subject" name="subject" type="text" placeholder="um was gehts?" required />
 
                 <label for="message">nachricht</label>
                 <textarea id="message" name="message" placeholder="hallo b3nn3t, ..." required></textarea>
 
+                <!-- Honeypot (Spam-Falle): muss leer bleiben -->
+                <div style="position:absolute; left:-9999px; height:0; overflow:hidden;" aria-hidden="true">
+                  <label for="website">website</label>
+                  <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+                </div>
+
                 <label style="font-weight:400">
-                  <input type="checkbox" name="privacy" value="zugestimmt" required />
-                  meine angaben dürfen zur beantwortung/verarbeitung gespeichert werden
-                </label>
+  <input type="checkbox" name="privacy" value="zugestimmt" required />
+  meine angaben dürfen zur beantwortung/verarbeitung gespeichert werden
+</label>
+<div style="margin-left:22px; margin-top:2px; font-size:0.9em;">
+  <a href="impressum.html">impressum / datenschutz</a>
+</div>
+
 
                 <button type="submit" id="kontakt-submit">nachricht senden</button>
 
@@ -763,6 +769,15 @@ form input[type="checkbox"]:focus{
         spinner.classList.add("active");
 
         const formData = new FormData(form);
+
+        // Honeypot check (Spam)
+        if (formData.get("website")) {
+          spinner.classList.remove("active");
+          button.disabled = false;
+          statusEl.textContent = "Senden nicht möglich.";
+          statusEl.classList.add("error");
+          return;
+        }
 
         fetch(SCRIPT_URL, {
           method: "POST",
