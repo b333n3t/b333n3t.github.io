@@ -100,10 +100,10 @@
   <style>
     :root{
       --bottom-gap:60px;
-
+      --privacy-checkbox-width: 16px; /* falls du die Checkbox-Grösse anpasst, änderst du hier */
+      --privacy-gap: 0.6rem;
       --footer-top-desktop: 430px;
       --footer-right-desktop: 0px;
-
       --footer-top-mobile: 520px;
       --footer-right-mobile: 0.2px;
     }
@@ -367,6 +367,38 @@
       box-shadow: 0 0 0 2px rgba(147,0,16,0.25);
     }
 
+    /* ===== Privacy-consent layout (neu) ===== */
+    .privacy-consent{
+      display: block;
+      margin-top: 0.4rem;
+    }
+    .privacy-consent label{
+      display: flex;
+      align-items: flex-start;
+      gap: var(--privacy-gap);
+      font-weight: 400;
+      line-height: 1.3;
+    }
+    .privacy-consent input[type="checkbox"]{
+      margin-top: 0.15rem; /* optisch zentrieren */
+      width: var(--privacy-checkbox-width);
+      height: var(--privacy-checkbox-width);
+    }
+    .privacy-consent .consent-text{
+      display: block;
+    }
+    .privacy-consent .privacy-link{
+      display: block;
+      /* bündig unter dem Text: CheckboxBreite + Gap */
+      margin-left: calc(var(--privacy-checkbox-width) + var(--privacy-gap));
+      margin-top: 0.2rem;
+      font-size: 0.9em;
+    }
+    .privacy-consent .privacy-link a{
+      color: inherit;
+      text-decoration: underline;
+    }
+
     /* ===== Spinner & Status ===== */
     .sending-indicator{
       display:none;
@@ -428,6 +460,10 @@
         right: var(--footer-right-mobile);
         top: var(--footer-top-mobile);
         bottom: auto;
+      }
+      /* falls du auf sehr schmalen displays ein bisschen mehr spacing möchtest */
+      .privacy-consent .privacy-link{
+        margin-top: 0.28rem;
       }
     }
 
@@ -558,14 +594,16 @@
                   <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
                 </div>
 
-                <label style="font-weight:400">
-  <input type="checkbox" name="privacy" value="zugestimmt" required />
-  meine angaben dürfen zur beantwortung/verarbeitung gespeichert werden
-</label>
-<div style="margin-left:22px; margin-top:2px; font-size:0.9em;">
-  <a href=("impressum.html">impressum / datenschutz)</a>
-</div>
-
+                <!-- ===== Privacy consent (neue, saubere Struktur) ===== -->
+                <div class="privacy-consent">
+                  <label>
+                    <input type="checkbox" name="privacy" value="zugestimmt" required />
+                    <span class="consent-text">meine angaben dürfen zur beantwortung/verarbeitung gespeichert werden</span>
+                  </label>
+                  <div class="privacy-link">
+                    (<a href="impressum.html">impressum / datenschutz</a>)
+                  </div>
+                </div>
 
                 <button type="submit" id="kontakt-submit">nachricht senden</button>
 
