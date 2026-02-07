@@ -72,7 +72,101 @@
       background: var(--awb-bg);
     }
 
-    
+    /* ✅ Pixel-Striche Layer */
+    #pixel-scribble{
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      image-rendering: pixelated;
+      opacity: 0.95;
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: clamp(2.8rem, 4vw, 3.8rem) 1.5rem clamp(3.5rem, 5vw, 4.5rem);
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1; /* ✅ über dem Canvas */
+    }
+
+    .content {
+      width: 100%;
+      max-width: var(--page-max-width);
+      position: relative;
+    }
+
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.6rem, 2.4vw, 2.2rem);
+    }
+
+    .topline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.7rem;
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+      margin-bottom: clamp(1.6rem, 2.4vw, 2.2rem);
+    }
+
+    .brand-link {
+      color: #ffffff;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .count-label { text-transform: none; opacity: 0.9; }
+
+    #awb-countdown-timer {
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      color: #ffffff;
+      min-width: 8ch;
+      display: inline-block;
+    }
+
+    /* Titel */
+    .song-title {
+      margin: 0;
+      font-weight: 600;
+      text-transform: lowercase;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      margin-bottom: clamp(0.9rem, 1.5vw, 1.25rem);
+    }
+
+    .video-wrap {
+      margin: 0 auto clamp(2rem, 3vw, 2.8rem);
+      max-width: 720px;
+      width: 100%;
+    }
+
+    .video-inner {
+      border-radius: 22px;
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 16 / 9;
+      position: relative;
+    }
+
+    .release-video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: inherit;
+      background: #000;
+      object-fit: cover;
+    }
 
     /* ✅ Audio Overlay Styling */
     .audio-overlay {
