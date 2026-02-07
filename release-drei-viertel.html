@@ -51,7 +51,7 @@
       --awb-text-main: #fdfdfd;
       --page-max-width: 960px;
 
-      /* ✅ NEU: Hintergrundfarbe */
+      /* ✅ Hintergrundfarbe */
       --awb-bg: #587fa6;
 
       --block-title-gap: 0.95rem;
@@ -72,18 +72,6 @@
       background: var(--awb-bg);
     }
 
-    /* ✅ Pixel-Striche Layer */
-    #pixel-scribble{
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      image-rendering: pixelated;
-      opacity: 0.95;
-    }
-
     .page-wrap {
       min-height: 100vh;
       width: 100%;
@@ -93,7 +81,7 @@
       padding: clamp(2.8rem, 4vw, 3.8rem) 1.5rem clamp(3.5rem, 5vw, 4.5rem);
       box-sizing: border-box;
       position: relative;
-      z-index: 1; /* ✅ über dem Canvas */
+      z-index: 1;
     }
 
     .content {
@@ -136,15 +124,6 @@
       display: inline-block;
     }
 
-    /* Titel */
-    .song-title {
-      margin: 0;
-      font-weight: 600;
-      text-transform: lowercase;
-      font-size: clamp(1.7rem, 3vw, 2.4rem);
-      margin-bottom: clamp(0.9rem, 1.5vw, 1.25rem);
-    }
-
     .video-wrap {
       margin: 0 auto clamp(2rem, 3vw, 2.8rem);
       max-width: 720px;
@@ -168,7 +147,6 @@
       object-fit: cover;
     }
 
-    /* ✅ Audio Overlay Styling */
     .audio-overlay {
       position: absolute;
       left: 0;
@@ -204,10 +182,9 @@
       margin-top: var(--block-par-gap);
     }
 
-    /* ✅ NEU: Vorsichern Button */
-    .presave-wrap{
-      margin-top: 0.2rem;
-    }
+    /* ✅ Vorsichern Button */
+    .presave-wrap{ margin-top: 0.2rem; }
+
     .presave-btn{
       display: inline-flex;
       align-items: center;
@@ -271,11 +248,6 @@
     @media (max-width: 768px) {
       .page-wrap { padding: 2.4rem 1.2rem 3rem; }
       .topline { font-size: 0.87rem; gap: 0.45rem; }
-      .song-title { letter-spacing: 0.26em; }
-    }
-
-    @media (min-width: 1024px) {
-      .page-wrap { padding-top: 4rem; padding-bottom: 5rem; }
     }
 
     /* =========================================================
@@ -288,7 +260,6 @@
       z-index: 99999;
     }
 
-    /* horizontale Linie */
     #crosshair .line-x{
       position: absolute;
       left: 0;
@@ -300,7 +271,6 @@
       transform: translateY(-0.5px);
     }
 
-    /* vertikale Linie */
     #crosshair .line-y{
       position: absolute;
       top: 0;
@@ -312,23 +282,17 @@
       transform: translateX(-0.5px);
     }
 
-    /* auf touch aus */
     @media (pointer: coarse){
       #crosshair{ display:none; }
     }
 
-    /* reduced motion respektieren */
     @media (prefers-reduced-motion: reduce){
       #crosshair{ display:none; }
-      #pixel-scribble{ display:none; }
     }
   </style>
 </head>
 
 <body>
-  <!-- ✅ Pixel-Striche Canvas -->
-  <canvas id="pixel-scribble" aria-hidden="true"></canvas>
-
   <div class="page-wrap">
     <div class="content">
       <main class="main">
@@ -339,30 +303,24 @@
           <span id="awb-countdown-timer">--:--:--</span>
         </div>
 
-        <!-- ✅ COVER BLEIBT + AUDIO PLAYER (anstatt VIDEO) -->
         <section class="video-wrap" aria-label="Audio zum Song">
           <div class="video-inner">
-            <!-- Cover -->
             <img
               src="/assets/release/3-4/drei-viertel-cover.webp"
               alt="Cover – drei-viertel von b3nn3t"
               class="release-video">
 
-            <!-- Audio Controls overlay -->
             <audio
               id="release-audio"
               class="audio-overlay"
               controls
               preload="metadata">
-              <!-- ✅ ROOT-RELATIVE PATH damit es auf b3nn3t.com UND in subfoldern funktioniert -->
               <source src="/assets/release/3-4/drei-viertel.prelisten.mp3">
               Dein Browser unterstützt dieses Audioformat nicht.
             </audio>
           </div>
         </section>
 
-
-        <!-- ✅ ERSETZT: erklärbär + text -> vorsichern button -->
         <section aria-label="Vorsichern" class="block">
           <div class="presave-wrap">
             <a class="presave-btn" href="https://bfan.link/dreiviertel" target="_blank" rel="noopener">
@@ -371,7 +329,7 @@
           </div>
         </section>
 
-        <section aria-label="Streaming" class="block">
+        <section aria-label="Streaming" class="block tight-after">
           <h2>kuck hier</h2>
 
           <div class="social-section" aria-label="Social Media Links">
@@ -430,250 +388,11 @@
     </div>
   </div>
 
-  <!-- ✅ Fullscreen Crosshair Element -->
   <div id="crosshair" aria-hidden="true">
     <div class="line-x"></div>
     <div class="line-y"></div>
   </div>
 
-  <style>
-  /* ✅ Pixel-Striche Layer */
-  #pixel-scribble{
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0;
-    pointer-events: none;
-    image-rendering: pixelated;
-    opacity: 0.92;
-    mix-blend-mode: screen; /* macht’s leichter/luftiger */
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    #pixel-scribble{ display:none; }
-  }
-</style>
-
-<script>
-  (function(){
-    const canvas = document.getElementById('pixel-scribble');
-    if(!canvas) return;
-
-    const ctx = canvas.getContext('2d', { alpha: true });
-
-    const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(prefersReduce){
-      canvas.style.display = 'none';
-      return;
-    }
-
-    // Helpers
-    const rand = (min, max) => Math.random() * (max - min) + min;
-    const randi = (min, max) => Math.floor(rand(min, max + 1));
-
-    let W = 0, H = 0, dpr = 1;
-
-    // "Strich"-Objekte (viele, aber dünn)
-    const strokes = [];
-    let STROKE_COUNT = 0;
-
-    function makeStroke(){
-      // Start/End als kleine Polyline (kritzel)
-      const x0 = rand(-W*0.1, W*1.1);
-      const y0 = rand(-H*0.1, H*1.1);
-
-      // Richtung + Länge (mehr "zeichnen" als pixel-cluster)
-      const ang = rand(0, Math.PI * 2);
-      const len = rand(Math.min(W,H)*0.06, Math.min(W,H)*0.22);
-
-      // Geschwindigkeit: schnell hin und her (aber leicht unterschiedlich pro stroke)
-      const vx = rand(-7.5, 7.5);
-      const vy = rand(-7.5, 7.5);
-
-      // wackel/krakel factor
-      const jitter = rand(0.5, 2.0);
-      const segs = randi(7, 18);
-
-      // 1px oder 2px selten
-      const thick = (Math.random() < 0.18) ? 2 : 1;
-
-      // Polyline-Punkte
-      const pts = [];
-      for(let i=0;i<segs;i++){
-        const t = i/(segs-1);
-        const bx = x0 + Math.cos(ang) * len * t;
-        const by = y0 + Math.sin(ang) * len * t;
-
-        // wenig cluster: jitter klein, aber vorhanden
-        pts.push({
-          x: bx + rand(-jitter, jitter),
-          y: by + rand(-jitter, jitter)
-        });
-      }
-
-      return {
-        pts,
-        thick,
-        // "center" movement offset
-        ox: 0,
-        oy: 0,
-        vx,
-        vy,
-        // schnelle "hin und her" Bewegung (sinus) mit random phase
-        phaseX: rand(0, Math.PI*2),
-        phaseY: rand(0, Math.PI*2),
-        ampX: rand(18, 85),
-        ampY: rand(18, 85),
-        freqX: rand(0.12, 0.32), // höher = schneller
-        freqY: rand(0.12, 0.32),
-        // drift, damit es nicht repetitiv wird
-        drift: rand(0.15, 0.55)
-      };
-    }
-
-    function rebuild(){
-      strokes.length = 0;
-
-      // Mehr Striche, aber "luftig"
-      const area = W * H;
-      STROKE_COUNT = Math.max(120, Math.min(420, Math.floor(area / 6500)));
-
-      for(let i=0;i<STROKE_COUNT;i++){
-        strokes.push(makeStroke());
-      }
-    }
-
-    function resize(){
-      dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-      W = window.innerWidth;
-      H = window.innerHeight;
-
-      canvas.width = Math.floor(W * dpr);
-      canvas.height = Math.floor(H * dpr);
-      canvas.style.width = W + 'px';
-      canvas.style.height = H + 'px';
-
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      rebuild();
-    }
-
-    // Zeichnen: echte Pixel-Linien (kein Anti-Aliasing)
-    function drawStroke(st, t){
-      // schnelle hin-und-her offsets + kleiner drift (gegen Wiederholung)
-      const sx = Math.sin(t*st.freqX + st.phaseX) * st.ampX;
-      const sy = Math.cos(t*st.freqY + st.phaseY) * st.ampY;
-
-      // drift addiert "unregelmäßige" Bewegung
-      st.ox += st.vx * st.drift;
-      st.oy += st.vy * st.drift;
-
-      // Wrap-around, damit überall verteilt bleibt
-      if(st.ox > W*1.2) st.ox = -W*1.2;
-      if(st.ox < -W*1.2) st.ox = W*1.2;
-      if(st.oy > H*1.2) st.oy = -H*1.2;
-      if(st.oy < -H*1.2) st.oy = H*1.2;
-
-      // Pixel look: keine weichen Linien, wir plotten kleine 1px rects entlang der segments
-      // Weniger "Häufung": sampling locker, aber genug für Strich
-      const step = 2.2; // größer = weniger Pixel
-      const pts = st.pts;
-
-      for(let i=0;i<pts.length-1;i++){
-        const ax = pts[i].x + st.ox + sx;
-        const ay = pts[i].y + st.oy + sy;
-        const bx = pts[i+1].x + st.ox + sx;
-        const by = pts[i+1].y + st.oy + sy;
-
-        const dx = bx - ax;
-        const dy = by - ay;
-        const dist = Math.hypot(dx, dy) || 1;
-        const n = Math.max(1, Math.floor(dist / step));
-
-        for(let k=0;k<=n;k++){
-          const u = k / n;
-          const x = ax + dx*u;
-          const y = ay + dy*u;
-
-          // snap auf "pixel grid" (Paint feel)
-          const px = Math.round(x);
-          const py = Math.round(y);
-
-          ctx.fillRect(px, py, st.thick, st.thick);
-        }
-      }
-    }
-
-    let last = 0;
-    let raf = null;
-
-    function frame(ts){
-      if(!last) last = ts;
-      const dt = (ts - last) / 1000;
-      last = ts;
-
-      // Minimaler Motion Blur Look: nicht komplett clearen, sondern leicht "ausfaden"
-      // => wirkt "schnell hin und her"
-      ctx.fillStyle = 'rgba(88,127,166,0.20)'; // bg-color als fade
-      ctx.fillRect(0,0,W,H);
-
-      // Strichfarbe
-      ctx.fillStyle = 'rgba(255,255,255,0.88)';
-
-      // Zeit in Sekunden
-      const t = ts / 1000;
-
-      // sehr leichtes random "de-sync": ab und zu einzelne strokes neu bauen
-      // => weniger Muster
-      if(Math.random() < 0.02){
-        const idx = randi(0, strokes.length-1);
-        strokes[idx] = makeStroke();
-      }
-
-      // draw all
-      for(let i=0;i<strokes.length;i++){
-        drawStroke(strokes[i], t);
-      }
-
-      raf = requestAnimationFrame(frame);
-    }
-
-    // Init
-    resize();
-
-    // Start mit gefülltem BG, damit fade sauber ist
-    ctx.fillStyle = 'rgba(88,127,166,1)';
-    ctx.fillRect(0,0,W,H);
-
-    raf = requestAnimationFrame(frame);
-
-    // Resize handling
-    let tmr = null;
-    window.addEventListener('resize', () => {
-      clearTimeout(tmr);
-      tmr = setTimeout(() => {
-        resize();
-        // Reset frame buffer
-        ctx.fillStyle = 'rgba(88,127,166,1)';
-        ctx.fillRect(0,0,W,H);
-      }, 120);
-    });
-
-    // Tab hidden -> stop (CPU)
-    document.addEventListener('visibilitychange', () => {
-      if(document.hidden){
-        if(raf) cancelAnimationFrame(raf);
-        raf = null;
-      }else{
-        last = 0;
-        raf = requestAnimationFrame(frame);
-      }
-    });
-  })();
-</script>
-
-  <!-- ✅ Countdown läuft jetzt live und aktualisiert jede Sekunde -->
   <script>
     (function () {
       const targetDate = new Date("2026-02-13T00:00:00+01:00").getTime();
@@ -710,7 +429,6 @@
     })();
   </script>
 
-  <!-- ✅ Fullscreen Crosshair folgt der Maus -->
   <script>
     (function(){
       const cross = document.getElementById('crosshair');
@@ -718,13 +436,11 @@
       const lineY = cross?.querySelector('.line-y');
       if(!cross || !lineX || !lineY) return;
 
-      // nur desktop (maus), kein touch
       if(!window.matchMedia('(pointer: fine)').matches){
         cross.style.display = 'none';
         return;
       }
 
-      // reduced motion -> aus
       if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
         cross.style.display = 'none';
         return;
