@@ -50,7 +50,9 @@
     :root {
       --awb-text-main: #fdfdfd;
       --page-max-width: 960px;
-      --awb-bg: #930010;
+
+      /* ✅ NEU: Hintergrundfarbe */
+      --awb-bg: #587fa6;
 
       --block-title-gap: 0.95rem;
       --block-par-gap: 0.7rem;
@@ -70,6 +72,18 @@
       background: var(--awb-bg);
     }
 
+    /* ✅ Pixel-Striche Layer */
+    #pixel-scribble{
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      image-rendering: pixelated;
+      opacity: 0.95;
+    }
+
     .page-wrap {
       min-height: 100vh;
       width: 100%;
@@ -78,6 +92,8 @@
       align-items: flex-start;
       padding: clamp(2.8rem, 4vw, 3.8rem) 1.5rem clamp(3.5rem, 5vw, 4.5rem);
       box-sizing: border-box;
+      position: relative;
+      z-index: 1; /* ✅ über dem Canvas */
     }
 
     .content {
@@ -140,8 +156,6 @@
       overflow: hidden;
       background: #000;
       aspect-ratio: 16 / 9;
-
-      /* ✅ wichtig fürs Overlay */
       position: relative;
     }
 
@@ -190,9 +204,38 @@
       margin-top: var(--block-par-gap);
     }
 
-    /* kein Abstand zwischen erklärbär-Absätzen */
-    section.block p.no-gap + p {
-      margin-top: 0 !important;
+    /* ✅ NEU: Vorsichern Button */
+    .presave-wrap{
+      margin-top: 0.2rem;
+    }
+    .presave-btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.95rem 1.2rem;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--awb-bg);
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      border: 2px solid rgba(255,255,255,0.55);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      transition: transform .18s ease, box-shadow .25s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .presave-btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.22);
+    }
+    .presave-btn:active{
+      transform: translateY(0px) scale(0.99);
+    }
+    .presave-btn:focus-visible{
+      outline: 3px solid rgba(255,255,255,0.85);
+      outline-offset: 4px;
     }
 
     .social-section { margin: 0 0 0.8rem; }
@@ -277,11 +320,15 @@
     /* reduced motion respektieren */
     @media (prefers-reduced-motion: reduce){
       #crosshair{ display:none; }
+      #pixel-scribble{ display:none; }
     }
   </style>
 </head>
 
 <body>
+  <!-- ✅ Pixel-Striche Canvas -->
+  <canvas id="pixel-scribble" aria-hidden="true"></canvas>
+
   <div class="page-wrap">
     <div class="content">
       <main class="main">
@@ -312,17 +359,19 @@
               Dein Browser unterstützt dieses Audioformat nicht.
             </audio>
           </div>
-          
         </section>
 
         <section class="title-section" aria-label="Songtitel">
           <h1 class="song-title">¾</h1>
         </section>
 
-        <section aria-label="Story zum Song" class="block">
-          <h2>erklärbär</h2>
-          <p class="no-gap">drei songs die mir sehr am herzen liegen, neues zimmer, neuer b3nn3t, neue musik.</p>
-          <p>vergangene ereignisse werden verarbeitet wie sonne bei solar, liebe grüsse an alle die checken :3</p>
+        <!-- ✅ ERSETZT: erklärbär + text -> vorsichern button -->
+        <section aria-label="Vorsichern" class="block">
+          <div class="presave-wrap">
+            <a class="presave-btn" href="https://bfan.link/dreiviertel" target="_blank" rel="noopener">
+              vorsichern
+            </a>
+          </div>
         </section>
 
         <section aria-label="Streaming" class="block">
@@ -389,6 +438,102 @@
     <div class="line-x"></div>
     <div class="line-y"></div>
   </div>
+
+  <!-- ✅ Pixel-Striche Generator -->
+  <script>
+    (function(){
+      const canvas = document.getElementById('pixel-scribble');
+      if(!canvas) return;
+
+      const ctx = canvas.getContext('2d', { alpha: true });
+
+      // kleine "MS Paint pixel" look
+      function rand(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+      function resize(){
+        const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        canvas.width  = Math.floor(window.innerWidth  * dpr);
+        canvas.height = Math.floor(window.innerHeight * dpr);
+        canvas.style.width  = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        draw();
+      }
+
+      function draw(){
+        // clear
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        // wild viele kurze pixel-linien
+        // (eher "krakel", nicht smooth)
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+
+        // anzahl scribbles abhängig von fläche
+        const scribbles = Math.max(140, Math.floor((W * H) / 9000));
+        for(let s=0; s<scribbles; s++){
+          // startpunkt
+          let x = rand(0, W);
+          let y = rand(0, H);
+
+          // länge & step: "kleinster pixelstift"
+          const steps = rand(18, 120);
+          const stepSize = rand(1, 3);   // pixel step
+          const thickness = rand(1, 2);  // 1-2px dick
+
+          for(let i=0; i<steps; i++){
+            // draw pixel-block
+            ctx.fillRect(x, y, thickness, thickness);
+
+            // wildes gezacke
+            x += rand(-1, 1) * stepSize;
+            y += rand(-1, 1) * stepSize;
+
+            // manchmal springt es stärker -> "ganz wild"
+            if(i % rand(7, 16) === 0){
+              x += rand(-6, 6);
+              y += rand(-6, 6);
+            }
+          }
+        }
+
+        // ein paar lange diagonalen "striche" zusätzlich
+        const longOnes = 18;
+        for(let l=0; l<longOnes; l++){
+          let x = rand(-50, W + 50);
+          let y = rand(-50, H + 50);
+          const steps = rand(120, 260);
+          const dx = rand(-2, 2);
+          const dy = rand(-2, 2);
+
+          for(let i=0; i<steps; i++){
+            ctx.fillRect(x, y, 1, 1);
+            x += dx + rand(-1, 1);
+            y += dy + rand(-1, 1);
+          }
+        }
+      }
+
+      // redraw bei resize + ab und zu leicht neu mischen (subtil)
+      let t = null;
+      window.addEventListener('resize', () => {
+        clearTimeout(t);
+        t = setTimeout(resize, 120);
+      });
+
+      // optional: very slow refresh (keine animation, nur "neu gezeichnet")
+      // respektiere reduced motion:
+      const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(!prefersReduce){
+        setInterval(draw, 12000);
+      }
+
+      resize();
+    })();
+  </script>
 
   <!-- ✅ Countdown läuft jetzt live und aktualisiert jede Sekunde -->
   <script>
