@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -92,7 +91,7 @@
     .hamburger{
       position:fixed;top:14px;right:18px;width:20px;height:20px;
       border:0;background:transparent;display:grid;place-items:center;
-      cursor:pointer;z-index:2200;padding:0; /* über allem */
+      cursor:pointer;z-index:2200;padding:0;
       -webkit-tap-highlight-color: transparent;
     }
     .hamburger span{
@@ -142,7 +141,7 @@
     /* Scroll-Panel */
     .scroll-panel{
       max-width:min(1000px,94vw);
-      max-height:75vh; /* wird per JS angepasst */
+      max-height:75vh;
       margin:0;
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
@@ -208,7 +207,7 @@
     .page-group.open > .page-content{display:block;}
     .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
-    /* Unter-Akkordeons (nur noch für termine gebraucht) */
+    /* Unter-Akkordeons */
     .sub-toggle{
       display:flex;
       align-items:center;
@@ -239,24 +238,28 @@
     .sub-group.open > .sub-toggle .arrow{transform:rotate(90deg);}
     .sub-group + .sub-group{ margin-top:1.0rem; }
 
-    /* Footer (WICHTIG: über Menü + klickbar) */
+    /* ✅ Neuigkeiten-Abstand oben/unten gleich */
+    #neuigkeiten-content{
+      margin-bottom: 2.2rem;
+    }
+    #neuigkeiten-content .release-card{
+      margin: 2.2rem 0 0;
+    }
+
+    /* Footer */
     .footer-inline{
       position: fixed;
       right: var(--footer-right-desktop);
       top: var(--footer-top-desktop);
       bottom: auto;
       left: auto;
-
       z-index: 2100;
       pointer-events: auto;
-
       writing-mode: vertical-rl;
       text-orientation: mixed;
-
       color:#930010;
       font-size:.82rem;
       padding: 6px 4px;
-
       white-space: nowrap;
       max-height: calc(100vh - 16px);
     }
@@ -316,7 +319,6 @@
       display: flex;
       align-items: center;
       gap: 1.6rem;
-      margin: 2.2rem 0;
       padding: 1.6rem 1.6rem;
       width: 100%;
       max-width: 440px;
@@ -443,13 +445,12 @@
     .termine-list, .termin-row, .termin-row *{ color:#fff; }
   </style>
 
-<!-- 
-  Plausible Analytics (derzeit deaktiviert)
--->
-<!--
-<script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
--->
-
+  <!-- 
+    Plausible Analytics (derzeit deaktiviert)
+  -->
+  <!--
+  <script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
+  -->
 </head>
 
 <body>
@@ -465,7 +466,6 @@
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
-  <!-- ✅ wie plattformen.html: aria-hidden + inert + tabindex=-1 solange geschlossen -->
   <nav id="site-menu" class="site-menu" aria-hidden="true" inert>
     <ul>
       <li><a href="ueber-mich.html" tabindex="-1">über mich</a></li>
@@ -500,7 +500,6 @@
               <div class="sub-content" id="neuigkeiten-content">
                 <p>neu: „¾“</p>
 
-                <!-- ✅ NEU: Release-Card "¾" (Teaser) -->
                 <a class="release-card" href="https://www.b3nn3t.com/release-drei-viertel.html" target="_blank" rel="noopener noreferrer">
                   <img
                     src="assets/release/3-4/drei-viertel-cover-192.webp"
@@ -518,11 +517,11 @@
 
                   <div class="release-info">
                     <div class="subtitle"></div>
-                    <div class="songtitle"> ¾ </div>
-                    <div class="desc">danke fürs zuhören<3</div>
+                    <div class="songtitle">¾</div>
+                    <div class="desc">danke fürs zuhören&lt;3</div>
                   </div>
                 </a>
-
+              </div>
 
               <div class="sub-group" id="acc-termine">
                 <button class="sub-toggle" type="button" aria-expanded="false" aria-controls="termine-content">
@@ -611,7 +610,6 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- ✅ Burger-Menü: exakt robust wie plattformen.html (capture + stopImmediatePropagation) -->
   <script>
   (function(){
     const btn = document.querySelector('.hamburger');
@@ -659,13 +657,11 @@
       btn.focus({ preventScroll: true });
     }
 
-    // initial sicher
     setMenuFocus(false);
     nav.setAttribute('aria-hidden','true');
     nav.setAttribute('inert','');
     overlay.hidden = true;
 
-    // capture + stopImmediatePropagation: gewinnt gegen evtl. script.js-handler
     btn.addEventListener('click', function(e){
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -690,7 +686,6 @@
   })();
   </script>
 
-  <!-- ✅ aktuell-title typewriter + accordions + Panelhöhe -->
   <script>
     (function(){
       const group  = document.querySelector('.page-group.current');
