@@ -1,459 +1,424 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>b3nn3t – kapitelende</title>
+  <meta name="description" content="b3nn3t – die drei letzten shows im kapitel." />
+  <meta name="robots" content="noindex" />
 
-  <meta name="robots" content="noindex,follow">
-  <title>TV-Intro – b3nn3t | Intro-Annimation &amp; Visuals</title>
-  <meta name="description" content="Das offizielle Intro von b3nn3t – Sound, Atmosphäre und visuelle Identität. Ein kurzer Einblick in die Welt hinter dem Intro.">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
 
   <style>
-    :root { --fade-ms: 1000ms; --bg:#930010; }
-
-    html,body{
-      margin:0;height:100%;
-      background:var(--bg);
-      overflow:hidden;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    canvas#c{
-      position:fixed; inset:0;
-      width:100vw; height:100vh;
-      display:block;
-      image-rendering:pixelated;
-      image-rendering:crisp-edges;
-      opacity:0;
-      transition:opacity var(--fade-ms) ease;
-      z-index:1;
-    }
-    body.ready canvas#c{opacity:1;}
-    body.fadeout canvas#c{opacity:0;}
-
-    .skip{
-      position:fixed; top:14px; right:14px; z-index:10;
-      background:#fff; color:#000; border:0; border-radius:999px;
-      padding:.45rem .8rem; font-weight:700; cursor:pointer;
-    }
-    .skip:focus-visible{outline:2px solid #fff; outline-offset:2px;}
-
-    .loaderWrap{
-      position:fixed; inset:0;
-      display:flex; align-items:center; justify-content:center;
-      opacity:0;
-      transition:opacity var(--fade-ms) ease;
-      z-index:5;
-      pointer-events:none;
-    }
-    body.ready .loaderWrap{opacity:1;}
-    body.fadeout .loaderWrap{opacity:0;}
-
-    .loader{
-      width:min(720px,78vw);
-      padding:18px 18px 16px;
-      box-sizing:border-box;
+    :root {
+      --bg: #f4f2ef;
+      --ink: #1a1a1a;
+      --ink-light: #5a5a5a;
+      --ink-faint: #a8a8a8;
+      --ink-blue: #2a5fc9;
     }
 
-    .barFrame{
-      width:100%; height:16px;
-      border:2px solid #fff;
-      border-radius:0;
-      padding:2px;
-      box-sizing:border-box;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.6),
-        inset 0 0 0 1px rgba(0,0,0,0.6);
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, sans-serif;
     }
 
-    .bar{
-      height:100%;
-      width:0%;
-      border-radius:0;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          #fff 0px,
-          #fff 6px,
-          rgba(255,255,255,0.65) 6px,
-          rgba(255,255,255,0.65) 8px
-        );
+    .layout {
+      display: flex;
+      flex-direction: column;
+      min-height: 100svh;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 0.1s forwards;
     }
 
-    .hint{
-      margin-top:10px;
-      color:rgba(255,255,255,.9);
-      font-size:14px;
-      letter-spacing:.2px;
-      text-align:center;
-      user-select:none;
-      text-shadow: 0 1px 0 rgba(0,0,0,0.35);
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
 
-    @media (prefers-reduced-motion: reduce){
-      body{animation:none !important;}
-      canvas#c,.loaderWrap{transition:none;}
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: saturate(0.9) contrast(0.96);
+    }
+
+    /* ── HEADER ── */
+
+    .top-header {
+      padding:
+        clamp(0.8rem, 2.5vh, 1.5rem)
+        clamp(1rem, 4vw, 2rem)
+        clamp(1.8rem, 4vh, 3rem);
+    }
+
+    .chapter-label {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1.1rem, 3.5vw, 1.65rem);
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .artist-name {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: clamp(1rem, 3vw, 1.55rem);
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      margin-top: clamp(0.5rem, 1.2vh, 0.9rem);
+    }
+
+    .year-tag {
+      font-size: clamp(0.55rem, 1.2vw, 0.7rem);
+      color: var(--ink-faint);
+      vertical-align: super;
+      margin-left: 0.2em;
+    }
+
+    /* ── SHOWS ── */
+
+    .shows-section {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(0.6rem, 2vw, 1.2rem);
+      padding:
+        0
+        clamp(1rem, 4vw, 2rem)
+        clamp(0.4rem, 1vh, 0.8rem);
+      margin-left: clamp(2rem, 7vw, 5rem);
+    }
+
+    .fig2 {
+      width: clamp(60px, 10vw, 120px);
+      flex-shrink: 0;
+      transform: rotate(1.5deg);
+    }
+
+    .shows-strip {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .shows-label {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(0.62rem, 1.3vw, 0.76rem);
+      color: var(--ink-faint);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.3rem;
+    }
+
+    .shows-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.1rem, 0.5vh, 0.32rem);
+    }
+
+    .shows-list li {
+      font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+      font-weight: 300;
+      color: var(--ink-blue);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── MITTE: GEDICHT + BILD 3 ── */
+
+    .middle-zone {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding:
+        clamp(1rem, 3vh, 2rem)
+        clamp(1rem, 4vw, 2rem);
+    }
+
+    .poem-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: clamp(0.8rem, 3vw, 2rem);
+      width: 100%;
+      max-width: 700px;
+    }
+
+    .poem-wrap {
+      flex: 0 0 auto;
+      width: clamp(190px, 50vw, 340px);
+      display: flex;
+      justify-content: center;
+    }
+
+    #poem-output {
+      width: 100%;
+      font-family: 'Caveat', cursive;
+      font-size: clamp(0.92rem, 2.55vw, 1.22rem);
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.82;
+      letter-spacing: 0.01em;
+      text-align: center;
+      transform: rotate(-1deg);
+    }
+
+    .poem-line {
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .poem-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(-2px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .poem-last {
+      color: var(--ink-light);
+    }
+
+    .fig3 {
+      flex: 0 0 clamp(80px, 14vw, 150px);
+      width: clamp(80px, 14vw, 150px);
+      transform: rotate(-1deg);
+    }
+
+    /* ── BILD 4 + FOOTER ── */
+
+    .bottom-fixed {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding:
+        clamp(0.4rem, 1.2vh, 1rem)
+        0
+        clamp(0.5rem, 1.2vh, 1rem);
+    }
+
+    .fig4 {
+      width: clamp(65px, 13vw, 115px);
+      margin-bottom: clamp(0.3rem, 0.8vh, 0.6rem);
+    }
+
+    footer p {
+      font-size: clamp(0.6rem, 1.3vw, 0.72rem);
+      color: var(--ink-faint);
+      letter-spacing: 0.04em;
+    }
+
+    footer a {
+      color: var(--ink-faint);
+      text-decoration: none;
+      border-bottom: 1px solid var(--ink-faint);
+    }
+
+    footer a:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    /* ── ÜBERSPRINGEN-BUTTON ── */
+
+    .skip-link {
+      position: fixed;
+      right: clamp(0.9rem, 4vw, 1.5rem);
+      bottom: calc(env(safe-area-inset-bottom) + clamp(0.9rem, 3vh, 1.4rem));
+      z-index: 20;
+
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: clamp(0.62rem, 1.5vw, 0.76rem);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+
+      color: var(--ink-faint);
+      text-decoration: none;
+
+      padding: 0.45rem 0.7rem;
+      border: 1px solid rgba(168, 168, 168, 0.45);
+      border-radius: 999px;
+      background: rgba(244, 242, 239, 0.78);
+      backdrop-filter: blur(4px);
+
+      opacity: 0;
+      animation: skipFadeIn 1.2s ease 1.8s forwards;
+      transition:
+        color 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        opacity 0.25s ease;
+    }
+
+    .skip-link:hover {
+      color: var(--ink);
+      border-color: rgba(26, 26, 26, 0.45);
+      background: rgba(244, 242, 239, 0.95);
+    }
+
+    @keyframes skipFadeIn {
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 430px) {
+      .poem-row {
+        gap: clamp(0.6rem, 2.5vw, 1rem);
+      }
+
+      .poem-wrap {
+        width: clamp(185px, 54vw, 240px);
+      }
+
+      #poem-output {
+        font-size: clamp(0.86rem, 3.15vw, 1rem);
+        line-height: 1.82;
+      }
+
+      .fig3 {
+        flex-basis: clamp(72px, 19vw, 92px);
+        width: clamp(72px, 19vw, 92px);
+      }
+
+      .skip-link {
+        right: clamp(0.8rem, 4vw, 1rem);
+        bottom: calc(env(safe-area-inset-bottom) + 0.8rem);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .poem-line,
+      .poem-word {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+
+      .skip-link {
+        opacity: 1 !important;
+        animation: none !important;
+      }
     }
   </style>
-
-  <noscript>
-    <meta http-equiv="refresh" content="0; url=index.html?nointro=1">
-    <style>
-      body{display:flex;align-items:center;justify-content:center;color:#fff;}
-      a{color:#fff;text-decoration:underline;}
-    </style>
-    <p>Weiter zur <a href="index.html?nointro=1">Startseite</a>…</p>
-  </noscript>
-
-<!--
-  Plausible Analytics (derzeit deaktiviert)
--->
-<!--
-<script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
--->
-
-
 </head>
+
 <body>
+<div class="layout">
 
-<main role="main">
-  <button class="skip" type="button" aria-label="Intro überspringen">Skip</button>
-  <canvas id="c" aria-hidden="true"></canvas>
+  <div class="top-header">
+    <div class="chapter-label">die drei letzten shows im kapitel </div>
+    <div class="artist-name">&nbsp;&nbsp;&nbsp;b3nn3t<span class="year-tag">2023–2026</span></div>
+  </div>
 
-  <div class="loaderWrap" aria-hidden="true">
-    <div class="loader">
-      <div class="barFrame"><div class="bar" id="bar"></div></div>
-      <div class="hint">Loading…</div>
+  <div class="shows-section">
+    <div class="fig2">
+      <img src="abschluss/2.jpg" alt="" />
+    </div>
+
+    <div class="shows-strip">
+      <p class="shows-label">live</p>
+      <ul class="shows-list">
+        <li>13. juni · jugendfestival (ZAK) · Jona</li>
+        <li>26. juni · oya! openairfestival (gleis19) · Wien</li>
+        <li>08. august · winterthurer musikfestwochen · Winterthur</li>
+      </ul>
     </div>
   </div>
 
-  <div aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
-    Intro läuft. Du kannst „Skip“ drücken, um direkt zur Startseite zu wechseln.
+  <div class="middle-zone">
+    <div class="poem-row">
+      <div class="poem-wrap">
+        <div id="poem-output"></div>
+      </div>
+
+      <div class="fig3">
+        <img src="abschluss/3.jpg" alt="" />
+      </div>
+    </div>
   </div>
-</main>
+
+  <div class="bottom-fixed" style="margin-top: auto;">
+    <div class="fig4">
+      <img src="abschluss/4.jpg" alt="" />
+    </div>
+
+    <footer>
+      <p>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></p>
+    </footer>
+  </div>
+
+</div>
+
+<a class="skip-link" href="https://www.b3nn3t.com/" aria-label="Intro überspringen und zur Hauptseite wechseln">
+  überspringen
+</a>
 
 <script>
-/* =========================================================
-   ✅ Speculation Rules (nur wenn sinnvoll)
-   - kein Save-Data
-   - kein reduced-motion
-   - kein Bot/Lighthouse
-   ========================================================= */
-(function setupSpeculationRules(){
-  try{
-    const ua = navigator.userAgent || "";
-    const isBot = /bot|crawl|slurp|spider|preview|Chrome-Lighthouse|Lighthouse|Google-InspectionTool|Google-PageRenderer|Google-StructuredDataTestingTool/i.test(ua);
-    const saveData = !!(navigator.connection && navigator.connection.saveData);
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if(isBot || saveData || reduceMotion) return;
-
-    const s = document.createElement('script');
-    s.type = 'speculationrules';
-    s.textContent = JSON.stringify({
-      prefetch:  [{ source: "document", urls: ["index.html"] }],
-      prerender: [{ source: "document", urls: ["index.html?nointro=1"] }]
-    });
-    document.head.appendChild(s);
-  }catch(e){}
-})();
-
-/* =========================================================
-   ✅ Return URL robust + garantiert nointro=1
-   ========================================================= */
-function buildIntroReturnUrl(){
-  try{
-    const raw = sessionStorage.getItem("introReturn") || "index.html";
-    const u = new URL(raw, location.href);
-    u.searchParams.set("nointro", "1");
-    return u.pathname + (u.search ? u.search : "") + (u.hash ? u.hash : "");
-  }catch(e){
-    return "index.html?nointro=1";
-  }
-}
-const INTRO_RETURN_URL = buildIntroReturnUrl();
-
-/* =========================================================
-   ✅ Skip & Reduced Motion (SOFORT aktiv)
-   ========================================================= */
-(function setupSkipAndA11y(){
-  const skipBtn = document.querySelector('.skip');
-
-  function goNow(){
-    try { sessionStorage.setItem("introPlayed","1"); } catch(e){}
-    document.body.classList.add('fadeout');
-    setTimeout(()=>location.replace(INTRO_RETURN_URL), 250);
-  }
-
-  if (skipBtn) skipBtn.addEventListener('click', goNow);
-
-  try {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      goNow();
-      return;
-    }
-  } catch(e){}
-})();
-
-/* =========================================================
-   ✅ PRELOAD: nur was du wirklich willst
-   - reel1.avif ... reel7.avif: entfernt (du hast jetzt -320/-640/-960)
-   - YouTube thumbs: optional (bleiben drin, aber NICHT zwingend)
-   - B3NN3T.mp4: bleibt & wird weiterhin vorab geladen
-   ========================================================= */
-
-/* Optional: YouTube Thumbs als Fallback-Warmup (kannst du auch leer lassen) */
-const preloadImages = [
-  "https://img.youtube.com/vi/ZSaj_FuqPN8/hqdefault.jpg",
-  "https://img.youtube.com/vi/DMNl40Tip1w/hqdefault.jpg",
-  "https://img.youtube.com/vi/K5pKG0Smdfc/hqdefault.jpg",
-  "https://img.youtube.com/vi/4I9vlcGvFGQ/hqdefault.jpg",
-  "https://img.youtube.com/vi/w0pNdnlb96M/hqdefault.jpg",
-  "https://img.youtube.com/vi/rV1U891RKLo/hqdefault.jpg",
-  "https://img.youtube.com/vi/fq8zhAQMam0/hqdefault.jpg"
+const poemLines = [
+  { text: "ein schatten steht im rahmen.", last: false },
+  { text: "das holz war ein paar monate stumm.", last: false },
+  { text: "jetzt reisst der wind eine fuge.", last: false },
+  { text: "da drinnen wird etwas abgelegt,", last: false },
+  { text: "das lange zu schwer war.", last: false },
+  { text: "drei letzte windstösse.", last: false },
+  { text: "dann drückt die kälte die tür auf.", last: false },
+  { text: "wer geht, hat ein neues gesicht.", last: true }
 ];
 
-/* ✅ Video Preload bleibt */
-const preloadVideos = [ "assets/gesehen/B3NN3T.mp4" ];
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-function preloadAllImages(urls){
-  urls.forEach(url=>{
-    const img = new Image();
-    img.referrerPolicy = "no-referrer";
-    img.src = url;
-  });
-}
-function preloadAllVideos(urls){
-  urls.forEach(url=>{
-    const v = document.createElement('video');
-    v.preload = 'auto';
-    v.muted = true;
-    v.playsInline = true;
-    v.src = url;
-    v.load();
-  });
-}
+async function writePoem() {
+  const out = document.getElementById('poem-output');
+  out.innerHTML = '';
 
-if(!window._preloaded){
-  window._preloaded = true;
-  preloadAllImages(preloadImages);
-  preloadAllVideos(preloadVideos);
-}
+  for (let li = 0; li < poemLines.length; li++) {
+    const { text, last } = poemLines[li];
 
-/* =========================================================
-   Canvas Setup
-   ========================================================= */
-const c = document.getElementById('c');
-const ctx = c && c.getContext ? c.getContext('2d') : null;
+    const line = document.createElement('div');
+    line.className = 'poem-line' + (last ? ' poem-last' : '');
 
-if(!ctx){
-  document.body.classList.add('ready');
-  console.warn("Canvas/2D context nicht verfügbar.");
-} else {
+    const words = text.split(' ');
+    const wordSpans = [];
 
-  let W=0,H=0,DPR=1;
+    words.forEach((wordText, index) => {
+      const word = document.createElement('span');
+      word.className = 'poem-word';
+      word.textContent = wordText;
 
-  function resize(){
-    DPR = Math.max(1, Math.floor(window.devicePixelRatio || 1));
-    W = c.width  = Math.floor(innerWidth * DPR);
-    H = c.height = Math.floor(innerHeight * DPR);
-    c.style.width  = innerWidth + 'px';
-    c.style.height = innerHeight + 'px';
-    ctx.imageSmoothingEnabled = false;
-  }
-  addEventListener('resize', resize);
-  resize();
+      line.appendChild(word);
+      wordSpans.push(word);
 
-  /* ================== Line Helpers (fein, stabil) ================== */
-  const snap = (v)=>Math.round(v);
-  const clamp01 = (t)=>Math.max(0,Math.min(1,t));
-  function hash01(n){ const x=Math.sin(n*127.1)*43758.5453123; return x-Math.floor(x); }
-  function smoothstep(t){ t=clamp01(t); return t*t*(3-2*t); }
-  function noise1D(seed, t){
-    const s=t*10, i=Math.floor(s), f=s-i;
-    const a=hash01(seed*1000+i*19.19), b=hash01(seed*1000+(i+1)*19.19);
-    const u=smoothstep(f);
-    return (a*(1-u)+b*u)*2-1;
-  }
-
-  /* ============== 80s Vector-Scope Drift ============== */
-  function scopeLine(x1,y1,x2,y2,seed,alpha,width){
-    const dx=x2-x1, dy=y2-y1;
-    const len=Math.hypot(dx,dy)||1;
-    const nx=-dy/len, ny=dx/len;
-
-    const segs=Math.max(16, Math.min(90, Math.floor(len/(10*DPR))));
-    const tNow = performance.now()*0.001;
-
-    const freq = 1.2 + (hash01(seed*3.3))*1.1;
-    const wob  = (0.7 + hash01(seed*7.7))*1.8;
-    const amp  = (0.55 + hash01(seed*11.1))*2.2 * DPR;
-    const phase = (hash01(seed*5.5))*Math.PI*2;
-
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.lineWidth = width;
-    ctx.lineCap='round';
-    ctx.lineJoin='round';
-
-    ctx.strokeStyle = 'rgba(255,255,255,0.58)';
-    ctx.beginPath();
-    for(let i=0;i<=segs;i++){
-      const t=i/segs;
-
-      let x=x1+dx*t;
-      let y=y1+dy*t;
-
-      const sin = Math.sin((t*freq*2*Math.PI) + phase + tNow*0.55*wob);
-      const n   = noise1D(seed, t + tNow*0.06);
-
-      const off = (sin*0.70 + n*0.30) * amp;
-
-      x = snap(x + nx*off);
-      y = snap(y + ny*off);
-
-      if(i===0) ctx.moveTo(x,y);
-      else ctx.lineTo(x,y);
-    }
-    ctx.stroke();
-
-    ctx.globalCompositeOperation='lighter';
-    ctx.strokeStyle = 'rgba(0,255,255,0.10)';
-    ctx.lineWidth = width + 0.8*DPR;
-    ctx.stroke();
-
-    ctx.strokeStyle = 'rgba(255,0,200,0.08)';
-    ctx.lineWidth = width + 1.3*DPR;
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  /* ================== Tunnel-Grid (Vector-Scope) ================== */
-  function drawTunnelGrid(now, reveal01){
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle = '#930010';
-    ctx.fillRect(0,0,W,H);
-
-    const outer = [
-      {x:0, y:0}, {x:W, y:0}, {x:W, y:H}, {x:0, y:H}
-    ];
-
-    const cx = W*0.5, cy = H*0.5;
-    const innerW = W*0.44;
-    const innerH = H*0.32;
-    const inner = [
-      {x:cx - innerW/2, y:cy - innerH/2},
-      {x:cx + innerW/2, y:cy - innerH/2},
-      {x:cx + innerW/2, y:cy + innerH/2},
-      {x:cx - innerW/2, y:cy + innerH/2}
-    ];
-
-    const RINGS = 34;
-    const RAD   = 26;
-
-    const ringCount = Math.max(1, Math.floor(reveal01 * RINGS));
-    const radCount  = Math.max(2, Math.floor(reveal01 * RAD));
-
-    const speed = 0.00038;
-    const phase = (now*speed) % 1;
-
-    const baseW = Math.max(0.75, 0.85*DPR);
-
-    for(let i=0;i<=radCount;i++){
-      const t = i/radCount;
-
-      const A = { x: outer[0].x + (outer[1].x-outer[0].x)*t, y: outer[0].y };
-      const B = { x: inner[0].x + (inner[1].x-inner[0].x)*t, y: inner[0].y };
-      scopeLine(A.x,A.y,B.x,B.y, 10+i*0.13, 0.62, baseW);
-
-      const C = { x: outer[3].x + (outer[2].x-outer[3].x)*t, y: outer[3].y };
-      const D = { x: inner[3].x + (inner[2].x-inner[3].x)*t, y: inner[3].y };
-      scopeLine(C.x,C.y,D.x,D.y, 20+i*0.13, 0.62, baseW);
-    }
-
-    for(let i=0;i<=radCount;i++){
-      const t = i/radCount;
-
-      const A = { x: outer[0].x, y: outer[0].y + (outer[3].y-outer[0].y)*t };
-      const B = { x: inner[0].x, y: inner[0].y + (inner[3].y-inner[0].y)*t };
-      scopeLine(A.x,A.y,B.x,B.y, 30+i*0.13, 0.62, baseW);
-
-      const C = { x: outer[1].x, y: outer[1].y + (outer[2].y-outer[1].y)*t };
-      const D = { x: inner[1].x, y: inner[1].y + (inner[2].y-inner[1].y)*t };
-      scopeLine(C.x,C.y,D.x,D.y, 40+i*0.13, 0.62, baseW);
-    }
-
-    for(let i=0;i<ringCount;i++){
-      const u = (i/(RINGS-1));
-      let z = u*u;
-      z = (z + phase*0.22) % 1;
-      z = z*z;
-
-      const q0 = { x: outer[0].x + (inner[0].x-outer[0].x)*z, y: outer[0].y + (inner[0].y-outer[0].y)*z };
-      const q1 = { x: outer[1].x + (inner[1].x-outer[1].x)*z, y: outer[1].y + (inner[1].y-outer[1].y)*z };
-      const q2 = { x: outer[2].x + (inner[2].x-outer[2].x)*z, y: outer[2].y + (inner[2].y-outer[2].y)*z };
-      const q3 = { x: outer[3].x + (inner[3].x-outer[3].x)*z, y: outer[3].y + (inner[3].y-outer[3].y)*z };
-
-      const front = (1 - z);
-      const alpha = 0.10 + 0.26*front;
-
-      scopeLine(q0.x,q0.y,q1.x,q1.y, 100+i*0.21, alpha, baseW);
-      scopeLine(q1.x,q1.y,q2.x,q2.y, 200+i*0.21, alpha, baseW);
-      scopeLine(q2.x,q2.y,q3.x,q3.y, 300+i*0.21, alpha, baseW);
-      scopeLine(q3.x,q3.y,q0.x,q0.y, 400+i*0.21, alpha, baseW);
-    }
-
-    scopeLine(inner[0].x,inner[0].y,inner[1].x,inner[1].y, 900, 0.78, baseW+0.2*DPR);
-    scopeLine(inner[1].x,inner[1].y,inner[2].x,inner[2].y, 901, 0.78, baseW+0.2*DPR);
-    scopeLine(inner[2].x,inner[2].y,inner[3].x,inner[3].y, 902, 0.78, baseW+0.2*DPR);
-    scopeLine(inner[3].x,inner[3].y,inner[0].x,inner[0].y, 903, 0.78, baseW+0.2*DPR);
-  }
-
-  /* ================== Loader Timing ================== */
-  const START_DELAY_MS = 1000;
-  const INTRO_MS = 3500;
-  const FADEOUT_MS = 1700;
-  const EXTRA_MS = 300;
-
-  function startTransition(){
-    try { sessionStorage.setItem("introPlayed","1"); } catch(e){}
-    document.body.classList.add('fadeout');
-    setTimeout(()=>{ window.location.replace(INTRO_RETURN_URL); }, FADEOUT_MS + EXTRA_MS);
-  }
-
-  function startProgressAndTunnel(){
-    const bar = document.getElementById('bar');
-    const start = performance.now();
-
-    function frame(now){
-      const t = (now - start) / INTRO_MS;
-      const clamped = Math.max(0, Math.min(1, t));
-      const reveal = Math.min(1, clamped * 1.20);
-
-      drawTunnelGrid(now, reveal);
-
-      const steps = 32;
-      const stepped = Math.floor(clamped * steps) / steps;
-      if(bar) bar.style.width = (stepped * 100).toFixed(2) + "%";
-
-      if(clamped >= 1){
-        if(bar) bar.style.width = "100%";
-        startTransition();
-        return;
+      if (index < words.length - 1) {
+        line.appendChild(document.createTextNode(' '));
       }
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }
+    });
 
-  /* ================== Start ================== */
-  setTimeout(() => {
-    document.body.classList.add('ready');
-    startProgressAndTunnel();
-  }, START_DELAY_MS);
+    out.appendChild(line);
+
+    for (let wi = 0; wi < wordSpans.length; wi++) {
+      const word = wordSpans[wi];
+
+      await delay(80);
+
+      word.style.opacity = '1';
+      word.style.transform = 'translateY(0)';
+
+      await delay(210 + Math.random() * 90);
+    }
+
+    await delay(360 + Math.random() * 130);
+  }
 }
+
+window.addEventListener('load', writePoem);
 </script>
+
 </body>
 </html>
