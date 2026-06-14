@@ -184,8 +184,8 @@
     }
 
     .poem-last {
-      color: var(--ink-light);
-    }
+  color: #7d7d7d;
+}
 
     .fig3 {
       flex: 0 0 clamp(80px, 14vw, 150px);
@@ -206,21 +206,32 @@
     }
 
     .fig4 {
-      width: clamp(65px, 13vw, 115px);
-      margin-bottom: clamp(0.3rem, 0.8vh, 0.6rem);
-    }
+  width: clamp(65px, 13vw, 115px);
+  margin-bottom: clamp(0.3rem, 0.8vh, 0.6rem);
 
+  opacity: 0;
+  animation: fadeDoor 4s ease forwards;
+  animation-delay: 15s;
+}
+@keyframes fadeDoor {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
     footer p {
-      font-size: clamp(0.6rem, 1.3vw, 0.72rem);
-      color: var(--ink-faint);
-      letter-spacing: 0.04em;
-    }
+  font-size: clamp(0.6rem, 1.3vw, 0.72rem);
+  color: #b8b8b8;
+  letter-spacing: 0.04em;
+}
 
     footer a {
-      color: var(--ink-faint);
-      text-decoration: none;
-      border-bottom: 1px solid var(--ink-faint);
-    }
+  color: #b8b8b8;
+  text-decoration: none;
+  border-bottom: 1px solid #b8b8b8;
+}
 
     footer a:hover {
       color: var(--ink);
