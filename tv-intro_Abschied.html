@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>b3nn3t – kapitelende</title>
+  <meta name="description" content="b3nn3t – die drei letzten shows im kapitel." />
+  <meta name="robots" content="noindex" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f4f2ef;
+      --ink: #1a1a1a;
+      --ink-light: #5a5a5a;
+      --ink-faint: #a8a8a8;
+      --ink-blue: #2a5fc9;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .layout {
+      display: flex;
+      flex-direction: column;
+      min-height: 100svh;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 0.1s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: saturate(0.9) contrast(0.96);
+    }
+
+    /* ── HEADER ── */
+
+    .top-header {
+      padding:
+        clamp(0.8rem, 2.5vh, 1.5rem)
+        clamp(1rem, 4vw, 2rem)
+        clamp(1.8rem, 4vh, 3rem);
+    }
+
+    .chapter-label {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1.1rem, 3.5vw, 1.65rem);
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .artist-name {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: clamp(1rem, 3vw, 1.55rem);
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      margin-top: clamp(0.5rem, 1.2vh, 0.9rem);
+    }
+
+    .year-tag {
+      font-size: clamp(0.55rem, 1.2vw, 0.7rem);
+      color: var(--ink-faint);
+      vertical-align: super;
+      margin-left: 0.2em;
+    }
+
+    /* ── SHOWS ── */
+
+    .shows-section {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(0.6rem, 2vw, 1.2rem);
+      padding:
+        0
+        clamp(1rem, 4vw, 2rem)
+        clamp(0.4rem, 1vh, 0.8rem);
+      margin-left: clamp(2rem, 7vw, 5rem);
+    }
+
+    .fig2 {
+      width: clamp(60px, 10vw, 120px);
+      flex-shrink: 0;
+      transform: rotate(1.5deg);
+    }
+
+    .shows-strip {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .shows-label {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(0.62rem, 1.3vw, 0.76rem);
+      color: var(--ink-faint);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.3rem;
+    }
+
+    .shows-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.1rem, 0.5vh, 0.32rem);
+    }
+
+    .shows-list li {
+      font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+      font-weight: 300;
+      color: var(--ink-blue);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── MITTE: GEDICHT + BILD 3 ── */
+
+    .middle-zone {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding:
+        clamp(1rem, 3vh, 2rem)
+        clamp(1rem, 4vw, 2rem);
+    }
+
+    .poem-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: clamp(0.8rem, 3vw, 2rem);
+      width: 100%;
+      max-width: 700px;
+    }
+
+    .poem-wrap {
+      flex: 0 0 auto;
+      width: clamp(190px, 50vw, 340px);
+      display: flex;
+      justify-content: center;
+    }
+
+    #poem-output {
+      width: 100%;
+      font-family: 'Caveat', cursive;
+      font-size: clamp(0.92rem, 2.55vw, 1.22rem);
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.82;
+      letter-spacing: 0.01em;
+      text-align: center;
+      transform: rotate(-1deg);
+    }
+
+    .poem-line {
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .poem-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(-2px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .poem-last {
+  color: #7d7d7d;
+}
+
+    .fig3 {
+      flex: 0 0 clamp(80px, 14vw, 150px);
+      width: clamp(80px, 14vw, 150px);
+      transform: rotate(-1deg);
+    }
+
+    /* ── BILD 4 + FOOTER ── */
+
+    .bottom-fixed {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding:
+        clamp(0.4rem, 1.2vh, 1rem)
+        0
+        clamp(0.5rem, 1.2vh, 1rem);
+    }
+
+    .fig4 {
+  width: clamp(65px, 13vw, 115px);
+  margin-bottom: clamp(0.3rem, 0.8vh, 0.6rem);
+
+  opacity: 0;
+  animation: fadeDoor 7s ease forwards;
+  animation-delay: 15s;
+}
+@keyframes fadeDoor {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+    footer p {
+  font-size: clamp(0.6rem, 1.3vw, 0.72rem);
+  color: #b8b8b8;
+  letter-spacing: 0.04em;
+}
+
+    footer a {
+  color: #b8b8b8;
+  text-decoration: none;
+  border-bottom: 1px solid #b8b8b8;
+}
+
+    footer a:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    /* ── ÜBERSPRINGEN-BUTTON ── */
+
+    .skip-link {
+      position: fixed;
+      right: clamp(0.9rem, 4vw, 1.5rem);
+      bottom: calc(env(safe-area-inset-bottom) + clamp(0.9rem, 3vh, 1.4rem));
+      z-index: 20;
+
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: clamp(0.62rem, 1.5vw, 0.76rem);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+
+      color: var(--ink-faint);
+      text-decoration: none;
+
+      padding: 0.45rem 0.7rem;
+      border: 1px solid rgba(168, 168, 168, 0.45);
+      border-radius: 999px;
+      background: rgba(244, 242, 239, 0.78);
+      backdrop-filter: blur(4px);
+
+      opacity: 0;
+      animation: skipFadeIn 1.2s ease 1.8s forwards;
+      transition:
+        color 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        opacity 0.25s ease;
+    }
+
+    .skip-link:hover {
+      color: var(--ink);
+      border-color: rgba(26, 26, 26, 0.45);
+      background: rgba(244, 242, 239, 0.95);
+    }
+
+    @keyframes skipFadeIn {
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 430px) {
+      .poem-row {
+        gap: clamp(0.6rem, 2.5vw, 1rem);
+      }
+
+      .poem-wrap {
+        width: clamp(185px, 54vw, 240px);
+      }
+
+      #poem-output {
+        font-size: clamp(0.86rem, 3.15vw, 1rem);
+        line-height: 1.82;
+      }
+
+      .fig3 {
+        flex-basis: clamp(72px, 19vw, 92px);
+        width: clamp(72px, 19vw, 92px);
+      }
+
+      .skip-link {
+        right: clamp(0.8rem, 4vw, 1rem);
+        bottom: calc(env(safe-area-inset-bottom) + 0.8rem);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .poem-line,
+      .poem-word {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+
+      .skip-link {
+        opacity: 1 !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="layout">
+
+  <div class="top-header">
+    <div class="chapter-label">die drei letzten shows im kapitel </div>
+    <div class="artist-name">&nbsp;&nbsp;&nbsp;b3nn3t<span class="year-tag">2023–2026</span></div>
+  </div>
+
+  <div class="shows-section">
+    <div class="fig2">
+      <img src="abschluss/2.jpg" alt="" />
+    </div>
+
+    <div class="shows-strip">
+      <p class="shows-label">live</p>
+      <ul class="shows-list">
+        <li>13. juni · jugendfestival (ZAK) · Jona</li>
+        <li>26. juni · oya! openairfestival (gleis19) · Wien</li>
+        <li>08. august · winterthurer musikfestwochen · Winterthur</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="middle-zone">
+    <div class="poem-row">
+      <div class="poem-wrap">
+        <div id="poem-output"></div>
+      </div>
+
+      <div class="fig3">
+        <img src="abschluss/3.jpg" alt="" />
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-fixed" style="margin-top: auto;">
+    <div class="fig4">
+      <img src="abschluss/4.jpg" alt="" />
+    </div>
+
+    <footer>
+      <p>© b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a></p>
+    </footer>
+  </div>
+
+</div>
+
+<a class="skip-link" href="https://www.b3nn3t.com/" aria-label="Intro überspringen und zur Hauptseite wechseln">
+  überspringen
+</a>
+
+<script>
+const poemLines = [
+  { text: "ein schatten steht im rahmen.", last: false },
+  { text: "das holz war ein paar monate stumm.", last: false },
+  { text: "jetzt reisst der wind eine fuge.", last: false },
+  { text: "da drinnen wird etwas abgelegt,", last: false },
+  { text: "das lange zu schwer war.", last: false },
+  { text: "drei letzte windstösse.", last: false },
+  { text: "dann drückt die kälte die tür auf.", last: false },
+  { text: "wer geht, hat ein neues gesicht.", last: true }
+];
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+async function writePoem() {
+  const out = document.getElementById('poem-output');
+  out.innerHTML = '';
+
+  for (let li = 0; li < poemLines.length; li++) {
+    const { text, last } = poemLines[li];
+
+    const line = document.createElement('div');
+    line.className = 'poem-line' + (last ? ' poem-last' : '');
+
+    const words = text.split(' ');
+    const wordSpans = [];
+
+    words.forEach((wordText, index) => {
+      const word = document.createElement('span');
+      word.className = 'poem-word';
+      word.textContent = wordText;
+
+      line.appendChild(word);
+      wordSpans.push(word);
+
+      if (index < words.length - 1) {
+        line.appendChild(document.createTextNode(' '));
+      }
+    });
+
+    out.appendChild(line);
+
+    for (let wi = 0; wi < wordSpans.length; wi++) {
+      const word = wordSpans[wi];
+
+      await delay(80);
+
+      word.style.opacity = '1';
+      word.style.transform = 'translateY(0)';
+
+      await delay(210 + Math.random() * 90);
+    }
+
+    await delay(360 + Math.random() * 130);
+  }
+}
+
+window.addEventListener('load', writePoem);
+</script>
+
+</body>
+</html>
