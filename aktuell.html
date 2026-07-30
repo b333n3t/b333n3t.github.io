@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -91,7 +92,7 @@
     .hamburger{
       position:fixed;top:14px;right:18px;width:20px;height:20px;
       border:0;background:transparent;display:grid;place-items:center;
-      cursor:pointer;z-index:2200;padding:0;
+      cursor:pointer;z-index:2200;padding:0; /* über allem */
       -webkit-tap-highlight-color: transparent;
     }
     .hamburger span{
@@ -141,7 +142,7 @@
     /* Scroll-Panel */
     .scroll-panel{
       max-width:min(1000px,94vw);
-      max-height:75vh;
+      max-height:75vh; /* wird per JS angepasst */
       margin:0;
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
@@ -207,7 +208,7 @@
     .page-group.open > .page-content{display:block;}
     .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
-    /* Unter-Akkordeons */
+    /* Unter-Akkordeons (nur noch für termine gebraucht) */
     .sub-toggle{
       display:flex;
       align-items:center;
@@ -238,28 +239,24 @@
     .sub-group.open > .sub-toggle .arrow{transform:rotate(90deg);}
     .sub-group + .sub-group{ margin-top:1.0rem; }
 
-    /* ✅ Neuigkeiten-Abstand oben/unten gleich */
-    #neuigkeiten-content{
-      margin-bottom: 2.2rem;
-    }
-    #neuigkeiten-content .release-card{
-      margin: 2.2rem 0 0;
-    }
-
-    /* Footer */
+    /* Footer (WICHTIG: über Menü + klickbar) */
     .footer-inline{
       position: fixed;
       right: var(--footer-right-desktop);
       top: var(--footer-top-desktop);
       bottom: auto;
       left: auto;
+
       z-index: 2100;
       pointer-events: auto;
+
       writing-mode: vertical-rl;
       text-orientation: mixed;
+
       color:#930010;
       font-size:.82rem;
       padding: 6px 4px;
+
       white-space: nowrap;
       max-height: calc(100vh - 16px);
     }
@@ -319,6 +316,7 @@
       display: flex;
       align-items: center;
       gap: 1.6rem;
+      margin: 2.2rem 0;
       padding: 1.6rem 1.6rem;
       width: 100%;
       max-width: 440px;
@@ -445,12 +443,9 @@
     .termine-list, .termin-row, .termin-row *{ color:#fff; }
   </style>
 
-  <!-- 
-    Plausible Analytics (derzeit deaktiviert)
-  -->
-  <!--
-  <script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
-  -->
+<!-- Plausible Analytics -->
+<script defer data-domain="www.b3nn3t.com" src="https://plausible.io/js/script.js"></script>
+
 </head>
 
 <body>
@@ -466,6 +461,7 @@
   </button>
   <div id="menu-overlay" class="menu-overlay" hidden></div>
 
+  <!-- ✅ wie plattformen.html: aria-hidden + inert + tabindex=-1 solange geschlossen -->
   <nav id="site-menu" class="site-menu" aria-hidden="true" inert>
     <ul>
       <li><a href="ueber-mich.html" tabindex="-1">über mich</a></li>
@@ -495,43 +491,12 @@
 
             <div class="page-content" id="page-aktuell-content">
               <h1></h1>
-                   <p></p>
-
-              <div class="sub-content" id="neuigkeiten-content">
-                <p>neu: „desigual“</p>
-
-                <!-- ✅ NEU: Release-Card "desigual" (Teaser) -->
-                <a class="release-card" href="https://www.b3nn3t.com/release-desigual.html" target="_blank" rel="noopener noreferrer">
-                  <img
-                    src="assets/release/desigual/desigual.webp"
-                    srcset="
-                      assets/release/desigual/desigual.webp 192w,
-                      assets/release/desigual/desigual.webp 384w,
-                      assets/release/desigual/desigual.webp 768w"
-                    sizes="(max-width: 600px) 75vw, 120px"
-                    alt="Cover: ¾"
-                    width="120"
-                    height="120"
-                    decoding="async"
-                    fetchpriority="high"
-                    loading="eager">
-
-                  <div class="release-info">
-                    <div class="subtitle"></div>
-                    <div class="songtitle"> desigual </div>
-                    <div class="desc">ab 31.07.2026, ohren offen halten++</div>
-                  </div>
-                </a>
-              
-              
-              
-              
               <p></p>
 
               <div class="sub-content" id="neuigkeiten-content">
-                <p> „¾“</p>
+                <p>neu: „¾“</p>
 
-                <!-- ✅ Release-Card "¾" (Teaser) -->
+                <!-- ✅ NEU: Release-Card "¾" (Teaser) -->
                 <a class="release-card" href="https://www.b3nn3t.com/release-drei-viertel.html" target="_blank" rel="noopener noreferrer">
                   <img
                     src="assets/release/3-4/drei-viertel-cover-192.webp"
@@ -550,9 +515,34 @@
                   <div class="release-info">
                     <div class="subtitle"></div>
                     <div class="songtitle"> ¾ </div>
-                    <div class="desc">++</div>
+                    <div class="desc">06.03.2026 ohren offen halten++</div>
                   </div>
                 </a>
+
+                <p>„drei“ kannst du jetzt überall hören</p>
+
+                <a class="release-card" href="https://www.b3nn3t.com/release-3.html" target="_blank" rel="noopener noreferrer">
+                  <img
+                    src="assets/release/drei-cover-192.webp"
+                    srcset="
+                      assets/release/drei-cover-192.webp 192w,
+                      assets/release/drei-cover-384.webp 384w,
+                      assets/release/drei-cover-768.webp 768w"
+                    sizes="(max-width: 600px) 75vw, 120px"
+                    alt="Cover: 3"
+                    width="120"
+                    height="120"
+                    decoding="async"
+                    fetchpriority="high"
+                    loading="eager">
+
+                  <div class="release-info">
+                    <div class="subtitle"></div>
+                    <div class="songtitle"> drei </div>
+                    <div class="desc">visualizer hier o.O</div>
+                  </div>
+                </a>
+              </div>
 
               <div class="sub-group" id="acc-termine">
                 <button class="sub-toggle" type="button" aria-expanded="false" aria-controls="termine-content">
@@ -608,18 +598,6 @@
                         <div class="ort" role="cell"> jona · ≈19:00 Uhr</div>
                       </div>
 
-                      <div class="termin-row" role="row">
-                        <div class="datum" role="cell"><time datetime="2026-06-26">26.06.2026</time></div>
-                        <div class="veranstaltung" role="cell">· OYA!OPEN AIR FESTIVAL (gleis19)</div>
-                        <div class="ort" role="cell"> wien · tbd Uhr</div>
-                      </div>
-                      
-                      <div class="termin-row" role="row">
-                        <div class="datum" role="cell"><time datetime="2026-08-08">08.08.2026</time></div>
-                        <div class="veranstaltung" role="cell">· Winterthurer Musikfestwochen 2026</div>
-                        <div class="ort" role="cell"> Winterthur - Ort 5 · 18:00 Uhr</div>
-                      </div>
-
                     </div>
                   </div>
                 </div>
@@ -647,6 +625,7 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
+  <!-- ✅ Burger-Menü: exakt robust wie plattformen.html (capture + stopImmediatePropagation) -->
   <script>
   (function(){
     const btn = document.querySelector('.hamburger');
@@ -694,11 +673,13 @@
       btn.focus({ preventScroll: true });
     }
 
+    // initial sicher
     setMenuFocus(false);
     nav.setAttribute('aria-hidden','true');
     nav.setAttribute('inert','');
     overlay.hidden = true;
 
+    // capture + stopImmediatePropagation: gewinnt gegen evtl. script.js-handler
     btn.addEventListener('click', function(e){
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -723,6 +704,7 @@
   })();
   </script>
 
+  <!-- ✅ aktuell-title typewriter + accordions + Panelhöhe -->
   <script>
     (function(){
       const group  = document.querySelector('.page-group.current');
