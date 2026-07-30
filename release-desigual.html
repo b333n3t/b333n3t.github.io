@@ -18,7 +18,7 @@
   <meta property="og:type" content="music.song">
   <meta property="og:site_name" content="b3nn3t">
   <meta property="og:title" content="„desigual“ – neues Release von b3nn3t">
-  <meta property="og:description" content="Das neue Release von b3nn3t. Cover, Story, Plattformen & mehr.">
+  <meta property="og:description" content="Das neue Release von b3nn3t. Cover, Video, Plattformen & mehr.">
   <meta property="og:image" content="https://www.b3nn3t.com/assets/release/desigual/desigual.webp">
   <meta property="og:url" content="https://www.b3nn3t.com/release-desigual.html">
 
@@ -170,62 +170,13 @@
         0 0 0 1px rgba(255,255,255,0.12);
     }
 
-    .release-cover {
+    .release-video {
       width: 100%;
       height: 100%;
       display: block;
       object-fit: cover;
       border-radius: inherit;
-    }
-
-    .audio-overlay {
-      position: absolute;
-      left: 1rem;
-      right: 1rem;
-      bottom: 1rem;
-      width: calc(100% - 2rem);
-      padding: 0;
-      box-sizing: border-box;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.86);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.25);
-    }
-
-    .presave-wrap {
-      margin-top: 0.2rem;
-    }
-
-    .presave-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.95rem 1.25rem;
-      border-radius: 999px;
-      background: #ffffff;
-      color: #171716;
-      text-decoration: none;
-      font-weight: 850;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-      border: 2px solid rgba(255,255,255,0.62);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.24);
-      transition: transform .18s ease, box-shadow .25s ease, opacity .2s ease;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .presave-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
-    }
-
-    .presave-btn:active {
-      transform: translateY(0px) scale(0.99);
-    }
-
-    .presave-btn:focus-visible {
-      outline: 3px solid rgba(255,255,255,0.85);
-      outline-offset: 4px;
+      background: #000;
     }
 
     section.block {
@@ -581,13 +532,6 @@
         border-radius: 24px;
       }
 
-      .audio-overlay {
-        left: 0.75rem;
-        right: 0.75rem;
-        bottom: 0.75rem;
-        width: calc(100% - 1.5rem);
-      }
-
       .world-map {
         height: 270px;
         border-radius: 24px;
@@ -635,7 +579,6 @@
         display: none;
       }
 
-      .presave-btn,
       .social-link,
       .map-tz {
         transition: none;
@@ -658,28 +601,19 @@
           <p class="eyebrow">new release</p>
           <h1>desigual</h1>
 
-          <div class="video-wrap" aria-label="Audio zum Song">
+          <div class="video-wrap" aria-label="Video zum Song">
             <div class="video-inner">
-              <img
-                src="assets/release/desigual/desigual.webp"
-                alt="Cover – desigual von b3nn3t"
-                class="release-cover">
-
-              <audio
-                id="release-audio"
-                class="audio-overlay"
+              <video
+                id="release-video"
+                class="release-video"
                 controls
-                preload="metadata">
-                <source src="assets/release/desigual/desigual.mp3" type="audio/mpeg">
-                Dein Browser unterstützt dieses Audioformat nicht.
-              </audio>
+                preload="metadata"
+                playsinline
+                poster="assets/release/desigual/desigual.webp">
+                <source src="https://www.b3nn3t.com/assets/release/desigual/desigual.mp4" type="video/mp4">
+                Dein Browser unterstützt dieses Videoformat nicht.
+              </video>
             </div>
-          </div>
-
-          <div class="presave-wrap">
-            <a class="presave-btn" href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A" target="_blank" rel="noopener">
-              "desigual" hören
-            </a>
           </div>
         </section>
 
@@ -694,18 +628,15 @@
             <div class="map-image" aria-hidden="true"></div>
 
             <div class="map-zone-wrap" aria-hidden="true">
-              <!-- West / Amerika -->
               <div class="map-tz" data-offset="-10" style="--x: 0%; --w: 7.72%;"></div>
               <div class="map-tz" data-offset="-7" style="--x: 7.72%; --w: 7.69%;"></div>
               <div class="map-tz" data-offset="-4" style="--x: 15.41%; --w: 7.69%;"></div>
 
-              <!-- Europa / Afrika -->
               <div class="map-tz" data-offset="1" style="--x: 23.1%; --w: 7.69%;"></div>
               <div class="map-tz" data-offset="2" style="--x: 30.79%; --w: 7.69%;"></div>
               <div class="map-tz" data-offset="4" style="--x: 38.48%; --w: 7.69%;"></div>
               <div class="map-tz" data-offset="5.5" style="--x: 46.17%; --w: 7.69%;"></div>
 
-              <!-- Asien / Ozeanien -->
               <div class="map-tz" data-offset="8" style="--x: 53.86%; --w: 7.69%;"></div>
               <div class="map-tz" data-offset="9" style="--x: 61.55%; --w: 7.69%;"></div>
               <div class="map-tz" data-offset="10" style="--x: 69.24%; --w: 7.69%;"></div>
@@ -724,9 +655,7 @@
 
           <hr class="timeline-divider">
 
-          <div class="timeline-list" id="timeline-list">
-            <!-- wird per JS befüllt -->
-          </div>
+          <div class="timeline-list" id="timeline-list"></div>
         </section>
 
         <section aria-label="Streaming" class="block tight-after">
