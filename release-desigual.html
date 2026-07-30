@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>b3nn3t „desigual“</title>
+  <meta name="description" content="„desigual“ – das neue Release von b3nn3t. Deutschrap & Indie-Pop aus der Schweiz." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+
+  <!-- Favicons -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="favicon-48.png" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <link rel="canonical" href="https://www.b3nn3t.com/release-desigual.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="music.song">
+  <meta property="og:site_name" content="b3nn3t">
+  <meta property="og:title" content="„desigual“ – neues Release von b3nn3t">
+  <meta property="og:description" content="Das neue Release von b3nn3t. Cover, Story, Plattformen & mehr.">
+  <meta property="og:image" content="https://www.b3nn3t.com/assets/release/desigual/desigual.webp">
+  <meta property="og:url" content="https://www.b3nn3t.com/release-desigual.html">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="„desigual“ – neues Release von b3nn3t">
+  <meta name="twitter:description" content="Deutschrap & Indie-Pop aus der Schweiz – das neue Release „desigual“ von b3nn3t.">
+  <meta name="twitter:image" content="https://www.b3nn3t.com/assets/release/desigual/desigual.webp">
+
+  <!-- Strukturierte Daten -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicRecording",
+    "name": "desigual",
+    "byArtist": {
+      "@type": "MusicGroup",
+      "name": "b3nn3t"
+    },
+    "inAlbum": {
+      "@type": "MusicAlbum",
+      "name": "desigual"
+    },
+    "datePublished": "2026-07-31",
+    "image": "https://www.b3nn3t.com/assets/release/desigual/desigual.webp",
+    "url": "https://www.b3nn3t.com/release-desigual.html"
+  }
+  </script>
+
+  <!-- Cover vorladen -->
+  <link rel="preload" as="image" href="assets/release/desigual/desigual.webp" fetchpriority="high">
+
+  <style>
+    :root {
+      --awb-text-main: #fdfdfd;
+      --page-max-width: 960px;
+
+      --awb-bg: #171716;
+      --awb-bg-soft: #2a2722;
+
+      --block-title-gap: 0.95rem;
+      --block-par-gap: 0.7rem;
+
+      --more-link-gap-top: 0.65rem;
+      --more-link-gap-bottom: 0.75rem;
+      --more-link-indent: 0.25rem;
+
+      --live-green: #3ddc84;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      color: var(--awb-text-main);
+      background: #171716;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url("assets/release/desigual/desigual.webp") center / cover no-repeat;
+      filter: blur(36px) brightness(0.52);
+      transform: scale(1.12);
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,0.08), transparent 28%),
+        linear-gradient(rgba(12,12,11,0.46), rgba(12,12,11,0.86));
+      z-index: -1;
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: clamp(2.8rem, 4vw, 4rem) 1.5rem clamp(3.5rem, 5vw, 4.5rem);
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+
+    .content {
+      width: 100%;
+      max-width: var(--page-max-width);
+      position: relative;
+    }
+
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.8rem, 2.6vw, 2.6rem);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: clamp(1.4rem, 2.4vw, 2rem);
+    }
+
+    .brand-link {
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .hero {
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.45rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.76;
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      margin: 0 0 clamp(1.5rem, 3vw, 2.2rem);
+      font-size: clamp(3.2rem, 10vw, 7.4rem);
+      line-height: 0.88;
+      letter-spacing: -0.075em;
+      text-transform: lowercase;
+      font-weight: 850;
+    }
+
+    .video-wrap {
+      margin: 0 auto clamp(1.35rem, 3vw, 2.1rem);
+      max-width: 680px;
+      width: 100%;
+    }
+
+    .video-inner {
+      border-radius: 30px;
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 1 / 1;
+      position: relative;
+      box-shadow:
+        0 26px 90px rgba(0,0,0,0.46),
+        0 0 0 1px rgba(255,255,255,0.12);
+    }
+
+    .release-cover {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: inherit;
+    }
+
+    .audio-overlay {
+      position: absolute;
+      left: 1rem;
+      right: 1rem;
+      bottom: 1rem;
+      width: calc(100% - 2rem);
+      padding: 0;
+      box-sizing: border-box;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.86);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+    }
+
+    .presave-wrap {
+      margin-top: 0.2rem;
+    }
+
+    .presave-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.95rem 1.25rem;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #171716;
+      text-decoration: none;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      border: 2px solid rgba(255,255,255,0.62);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.24);
+      transition: transform .18s ease, box-shadow .25s ease, opacity .2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .presave-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+
+    .presave-btn:active {
+      transform: translateY(0px) scale(0.99);
+    }
+
+    .presave-btn:focus-visible {
+      outline: 3px solid rgba(255,255,255,0.85);
+      outline-offset: 4px;
+    }
+
+    section.block {
+      margin-bottom: clamp(1.8rem, 2.6vw, 2.4rem);
+    }
+
+    section.block h2 {
+      margin: 0 0 var(--block-title-gap);
+      font-size: 1.06rem;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      font-weight: 700;
+    }
+
+    section.block p {
+      margin: 0;
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      max-width: 60rem;
+      font-size: 1rem;
+    }
+
+    section.block p + p {
+      margin-top: var(--block-par-gap);
+    }
+
+    .social-section {
+      margin: 0 0 0.8rem;
+    }
+
+    .social-icons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(1.1rem, 1.6vw, 1.6rem);
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .social-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .18s ease, opacity .2s ease;
+    }
+
+    .social-link:hover {
+      transform: translateY(-1px);
+      opacity: 0.86;
+    }
+
+    .social-icon-img {
+      width: clamp(1.6rem, 1.3vw + 1rem, 2.2rem);
+      height: auto;
+      display: block;
+    }
+
+    .more-link {
+      display: inline-block;
+      margin-top: var(--more-link-gap-top);
+      margin-bottom: var(--more-link-gap-bottom);
+      padding-left: var(--more-link-indent);
+    }
+
+    /* =========================================================
+       TIMELINE
+       ========================================================= */
+
+    .timeline-block {
+      padding-top: 0.4rem;
+    }
+
+    .timeline-block p.timeline-sub {
+      opacity: 0.9;
+      margin-bottom: 0.9rem;
+    }
+
+    .timeline-counter {
+      font-variant-numeric: tabular-nums;
+      font-weight: 850;
+      font-size: 1.3rem;
+      letter-spacing: 0.04em;
+      margin: 0 0 1rem !important;
+    }
+
+    .timeline-counter .slash {
+      opacity: 0.55;
+      font-weight: 500;
+      margin: 0 0.3rem;
+    }
+
+    .timeline-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.3);
+      margin: 0 0 1rem;
+    }
+
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 1.3rem 2rem minmax(9rem, 1.2fr) 6.4rem 4.3rem minmax(7rem, 1fr);
+      align-items: baseline;
+      gap: 0.55rem;
+      font-size: 0.98rem;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timeline-row .status-dot {
+      width: 1.3rem;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .timeline-row .country-code {
+      font-size: 0.78rem;
+      font-weight: 800;
+      opacity: 0.95;
+    }
+
+    .timeline-row .country-name {
+      min-width: 0;
+    }
+
+    .timeline-row .release-time {
+      font-weight: 700;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+
+    .timeline-row.is-live .country-name {
+      font-weight: 700;
+    }
+
+    .timeline-row.is-live .status-text {
+      color: var(--live-green);
+      font-weight: 850;
+      letter-spacing: 0.06em;
+    }
+
+    .timeline-row.is-live .online-since {
+      color: var(--live-green);
+      opacity: 0.92;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .timeline-row.is-next .status-text {
+      opacity: 0.95;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .timeline-row.is-upcoming {
+      opacity: 0.55;
+    }
+
+    /* =========================================================
+       CROSSHAIR
+       ========================================================= */
+
+    #crosshair {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    #crosshair .line-x {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100vw;
+      height: 1px;
+      background: #ffffff;
+      opacity: 0.72;
+      transform: translateY(-0.5px);
+    }
+
+    #crosshair .line-y {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100vh;
+      background: #ffffff;
+      opacity: 0.72;
+      transform: translateX(-0.5px);
+    }
+
+    @media (max-width: 768px) {
+      .page-wrap {
+        padding: 2.2rem 1.15rem 3rem;
+      }
+
+      .brand-row {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        text-align: left;
+      }
+
+      .hero h1 {
+        font-size: clamp(3rem, 18vw, 5.6rem);
+      }
+
+      .video-inner {
+        border-radius: 24px;
+      }
+
+      .audio-overlay {
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: 0.75rem;
+        width: calc(100% - 1.5rem);
+      }
+
+      .timeline-row {
+        grid-template-columns: 1.2rem 1.8rem minmax(6.5rem, 1fr) 5.2rem;
+        gap: 0.45rem;
+      }
+
+      .timeline-row .status-text {
+        grid-column: 4 / -1;
+      }
+
+      .timeline-row .online-since {
+        grid-column: 3 / -1;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (pointer: coarse) {
+      #crosshair {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #crosshair {
+        display: none;
+      }
+
+      .presave-btn,
+      .social-link {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrap">
+    <div class="content">
+      <main class="main">
+
+        <div class="brand-row">
+          <a class="brand-link" href="index.html">b3nn3t</a>
+        </div>
+
+        <section class="hero" aria-label="desigual Release">
+          <p class="eyebrow">new release</p>
+          <h1>desigual</h1>
+
+          <div class="video-wrap" aria-label="Audio zum Song">
+            <div class="video-inner">
+              <img
+                src="assets/release/desigual/desigual.webp"
+                alt="Cover – desigual von b3nn3t"
+                class="release-cover">
+
+              <audio
+                id="release-audio"
+                class="audio-overlay"
+                controls
+                preload="metadata">
+                <source src="assets/release/desigual/desigual.mp3" type="audio/mpeg">
+                Dein Browser unterstützt dieses Audioformat nicht.
+              </audio>
+            </div>
+          </div>
+
+          <div class="presave-wrap">
+            <a class="presave-btn" href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A" target="_blank" rel="noopener">
+              "desigual" hören
+            </a>
+          </div>
+        </section>
+
+        <section aria-label="Weltweiter Release" class="block timeline-block">
+          <h2>desigual is travelling around the world</h2>
+          <p class="timeline-sub">der song geht live – zeitzone für zeitzone, rund um den globus.</p>
+
+          <p class="timeline-counter">
+            Released in <span id="released-count">000</span><span class="slash">/</span>251 countries
+          </p>
+
+          <hr class="timeline-divider">
+
+          <div class="timeline-list" id="timeline-list">
+            <!-- wird per JS befüllt -->
+          </div>
+        </section>
+
+        <section aria-label="Streaming" class="block tight-after">
+          <h2>kuck hier</h2>
+
+          <div class="social-section" aria-label="Social Media Links">
+            <div class="social-icons">
+
+              <a href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A"
+                 class="social-link" aria-label="Spotify – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/spotify_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/spotify_128.png" alt="Spotify">
+                </picture>
+              </a>
+
+              <a href="https://music.apple.com/ch/artist/b3nn3t/1786857463?l=de-DE"
+                 class="social-link" aria-label="Apple Music – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/apple_music_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/apple_music_128.png" alt="Apple Music">
+                </picture>
+              </a>
+
+              <a href="https://www.instagram.com/b333nn3t?igsh=MWphMjcxdXZwZ2s1ZQ=="
+                 class="social-link" aria-label="Instagram – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/instagram_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/instagram_128.png" alt="Instagram">
+                </picture>
+              </a>
+
+              <a href="https://www.youtube.com/@b333nn3t"
+                 class="social-link" aria-label="YouTube – @b333nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/youtube_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/youtube_128.png" alt="YouTube">
+                </picture>
+              </a>
+
+              <a href="https://soundcloud.com/bennet-6942069420"
+                 class="social-link" aria-label="SoundCloud – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/soundcloud_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/soundcloud_128.png" alt="SoundCloud">
+                </picture>
+              </a>
+
+            </div>
+          </div>
+        </section>
+
+        <section aria-label="Mehr von b3nn3t" class="block">
+          <p>mehr auf meiner webseite :p</p>
+          <a class="brand-link more-link" href="https://www.b3nn3t.com/index.html">b3nn3t.com</a>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <div id="crosshair" aria-hidden="true">
+    <div class="line-x"></div>
+    <div class="line-y"></div>
+  </div>
+
+  <script>
+    /* =========================================================
+       WELTWEITE RELEASE-TIMELINE
+       Anzeige:
+       - Release-Datum/Uhrzeit in Schweizer Zeit vor LIVE
+       - Dauer seit Release hinter LIVE
+       ========================================================= */
+    (function () {
+      const RELEASE_YEAR = 2026;
+      const RELEASE_MONTH = 6;
+      const RELEASE_DAY = 31;
+
+      const COUNTRIES = [
+        { name: "Kiribati",        code: "KI", offset: 14 },
+        { name: "Tonga",           code: "TO", offset: 13 },
+        { name: "Samoa",           code: "WS", offset: 13 },
+        { name: "New Zealand",     code: "NZ", offset: 12 },
+        { name: "Australia",       code: "AU", offset: 10 },
+        { name: "Japan",           code: "JP", offset: 9 },
+        { name: "South Korea",     code: "KR", offset: 9 },
+        { name: "Singapore",       code: "SG", offset: 8 },
+        { name: "India",           code: "IN", offset: 5.5 },
+        { name: "UAE",             code: "AE", offset: 4 },
+        { name: "Germany",         code: "DE", offset: 2 },
+        { name: "Switzerland",     code: "CH", offset: 2 },
+        { name: "United Kingdom",  code: "GB", offset: 1 },
+        { name: "New York",        code: "US", offset: -4 },
+        { name: "Los Angeles",     code: "US", offset: -7 },
+        { name: "Hawaii",          code: "US", offset: -10 }
+      ];
+
+      const ZONE_WEIGHTS = {
+        "14": 1,
+        "13": 5,
+        "12": 8,
+        "11": 7,
+        "10": 6,
+        "9": 6,
+        "8": 12,
+        "7": 8,
+        "6.5": 1,
+        "6": 5,
+        "5.75": 1,
+        "5.5": 2,
+        "5": 7,
+        "4.5": 1,
+        "4": 9,
+        "3.5": 1,
+        "3": 24,
+        "2": 37,
+        "1": 30,
+        "0": 12,
+        "-1": 3,
+        "-2": 2,
+        "-3": 10,
+        "-3.5": 1,
+        "-4": 19,
+        "-5": 10,
+        "-6": 9,
+        "-7": 6,
+        "-8": 3,
+        "-9": 1,
+        "-9.5": 1,
+        "-10": 2,
+        "-11": 1
+      };
+
+      const TOTAL_COUNTRIES = 251;
+
+      function releaseInstant(offsetHours) {
+        return Date.UTC(RELEASE_YEAR, RELEASE_MONTH, RELEASE_DAY, 0, 0, 0) - offsetHours * 3600 * 1000;
+      }
+
+      const countEl = document.getElementById("released-count");
+      const listEl = document.getElementById("timeline-list");
+
+      if (!countEl || !listEl) return;
+
+      function formatCountdown(ms) {
+        const seconds = Math.max(0, Math.floor(ms / 1000));
+        const days = Math.floor(seconds / (3600 * 24));
+        const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        const hh = String(hours).padStart(2, "0");
+        const mm = String(mins).padStart(2, "0");
+        const ss = String(secs).padStart(2, "0");
+
+        return days > 0
+          ? days + "d " + hh + ":" + mm + ":" + ss
+          : hh + ":" + mm + ":" + ss;
+      }
+
+      function formatSwissTime(timestamp) {
+        const date = new Date(timestamp);
+
+        return new Intl.DateTimeFormat("de-CH", {
+          timeZone: "Europe/Zurich",
+          day: "2-digit",
+          month: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        }).format(date);
+      }
+
+      function formatOnlineSince(ms) {
+        const totalMinutes = Math.max(0, Math.floor(ms / 60000));
+        const days = Math.floor(totalMinutes / (60 * 24));
+        const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+        const minutes = totalMinutes % 60;
+
+        if (days > 0) {
+          return "seit " + days + "d " + hours + "h " + minutes + "min";
+        }
+
+        if (hours > 0) {
+          return "seit " + hours + "h " + minutes + "min";
+        }
+
+        return "seit " + minutes + "min";
+      }
+
+      function render() {
+        const now = Date.now();
+
+        let releasedTotal = 0;
+
+        for (const key in ZONE_WEIGHTS) {
+          if (releaseInstant(parseFloat(key)) <= now) {
+            releasedTotal += ZONE_WEIGHTS[key];
+          }
+        }
+
+        releasedTotal = Math.min(releasedTotal, TOTAL_COUNTRIES);
+        countEl.textContent = String(releasedTotal).padStart(3, "0");
+
+        const rows = COUNTRIES.map(c => ({
+          ...c,
+          instant: releaseInstant(c.offset),
+          isLive: releaseInstant(c.offset) <= now
+        }));
+
+        const nextIndex = rows.findIndex(r => !r.isLive);
+
+        listEl.innerHTML = "";
+
+        rows.forEach((r, i) => {
+          const row = document.createElement("div");
+          let statusHtml;
+          let rowClass;
+
+          const swissTime = formatSwissTime(r.instant);
+
+          if (r.isLive) {
+            statusHtml =
+              '<span class="status-dot">🟢</span>' +
+              '<span class="country-code">' + r.code + '</span>' +
+              '<span class="country-name">' + r.name + '</span>' +
+              '<span class="release-time">' + swissTime + '</span>' +
+              '<span class="status-text">LIVE</span>' +
+              '<span class="online-since">' + formatOnlineSince(now - r.instant) + '</span>';
+
+            rowClass = "is-live";
+          } else if (i === nextIndex) {
+            statusHtml =
+              '<span class="status-dot">▶</span>' +
+              '<span class="country-code">' + r.code + '</span>' +
+              '<span class="country-name">' + r.name + '</span>' +
+              '<span class="release-time">' + swissTime + '</span>' +
+              '<span class="status-text">in ' + formatCountdown(r.instant - now) + '</span>' +
+              '<span class="online-since"></span>';
+
+            rowClass = "is-next";
+          } else {
+            statusHtml =
+              '<span class="status-dot">○</span>' +
+              '<span class="country-code">' + r.code + '</span>' +
+              '<span class="country-name">' + r.name + '</span>' +
+              '<span class="release-time">' + swissTime + '</span>' +
+              '<span class="status-text"></span>' +
+              '<span class="online-since"></span>';
+
+            rowClass = "is-upcoming";
+          }
+
+          row.className = "timeline-row " + rowClass;
+          row.innerHTML = statusHtml;
+          listEl.appendChild(row);
+        });
+      }
+
+      render();
+      setInterval(render, 1000);
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const cross = document.getElementById("crosshair");
+      const lineX = cross?.querySelector(".line-x");
+      const lineY = cross?.querySelector(".line-y");
+
+      if (!cross || !lineX || !lineY) return;
+
+      if (!window.matchMedia("(pointer: fine)").matches) {
+        cross.style.display = "none";
+        return;
+      }
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        cross.style.display = "none";
+        return;
+      }
+
+      let x = -9999;
+      let y = -9999;
+      let raf = null;
+
+      function render() {
+        lineX.style.top = y + "px";
+        lineY.style.left = x + "px";
+        raf = null;
+      }
+
+      window.addEventListener("mousemove", function (e) {
+        x = e.clientX;
+        y = e.clientY;
+
+        if (!raf) {
+          raf = requestAnimationFrame(render);
+        }
+      }, { passive: true });
+
+      window.addEventListener("mouseleave", function () {
+        x = -9999;
+        y = -9999;
+        render();
+      });
+    })();
+  </script>
+</body>
+</html>
