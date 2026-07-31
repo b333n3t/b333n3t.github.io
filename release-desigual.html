@@ -875,9 +875,11 @@
         { name: "Germany",         code: "DE", offset: 2 },
         { name: "Switzerland",     code: "CH", offset: 2 },
         { name: "United Kingdom",  code: "GB", offset: 1 },
-        { name: "New York",        code: "US", offset: -4 },
-        { name: "Los Angeles",     code: "US", offset: -7 },
-        { name: "Hawaii",          code: "US", offset: -10 }
+        { name: "New York",        code: "US",  offset: -4 },
+{ name: "Los Angeles",           code: "US",  offset: -7 },
+{ name: "Hawaii",                code: "US",  offset: -10 },
+{ name: "American Samoa / Niue", code: "AS",  offset: -11 },
+{ name: "Baker Island",          code: "UTC", offset: -12 }
       ];
 
       const ZONE_WEIGHTS = {
@@ -913,11 +915,13 @@
         "-9": 1,
         "-9.5": 1,
         "-10": 2,
-        "-11": 1
+        "-11": 1,
+        "-12": 0
       };
 
       const TOTAL_COUNTRIES = 251;
 
+      
       function releaseInstant(offsetHours) {
         return Date.UTC(RELEASE_YEAR, RELEASE_MONTH, RELEASE_DAY, 0, 0, 0) - offsetHours * 3600 * 1000;
       }
