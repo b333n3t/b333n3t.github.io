@@ -179,6 +179,45 @@
       background: #000;
     }
 
+    .listen-wrap {
+      margin-top: 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .listen-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.95rem 1.35rem;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #171716;
+      text-decoration: none;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      border: 2px solid rgba(255,255,255,0.62);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.24);
+      transition: transform .18s ease, box-shadow .25s ease, opacity .2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .listen-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+
+    .listen-btn:active {
+      transform: translateY(0px) scale(0.99);
+    }
+
+    .listen-btn:focus-visible {
+      outline: 3px solid rgba(255,255,255,0.85);
+      outline-offset: 4px;
+    }
+
     section.block {
       margin-bottom: clamp(1.8rem, 2.6vw, 2.4rem);
     }
@@ -528,6 +567,10 @@
         font-size: clamp(3rem, 18vw, 5.6rem);
       }
 
+      .listen-wrap {
+        justify-content: flex-start;
+      }
+
       .video-inner {
         border-radius: 24px;
       }
@@ -579,6 +622,7 @@
         display: none;
       }
 
+      .listen-btn,
       .social-link,
       .map-tz {
         transition: none;
@@ -614,6 +658,16 @@
                 Dein Browser unterstützt dieses Videoformat nicht.
               </video>
             </div>
+          </div>
+
+          <div class="listen-wrap">
+            <a
+              class="listen-btn"
+              href="https://open.spotify.com/intl-de/album/4QAZWss3g5UjzKYUIp1hoo?si=SbTcszRQSbeEP6fSLD_btA"
+              target="_blank"
+              rel="noopener">
+              "desigual" hören
+            </a>
           </div>
         </section>
 
@@ -664,8 +718,8 @@
           <div class="social-section" aria-label="Social Media Links">
             <div class="social-icons">
 
-              <a href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A"
-                 class="social-link" aria-label="Spotify – b3nn3t" target="_blank" rel="noopener">
+              <a href="https://open.spotify.com/intl-de/album/4QAZWss3g5UjzKYUIp1hoo?si=SbTcszRQSbeEP6fSLD_btA"
+                 class="social-link" aria-label="Spotify – desigual" target="_blank" rel="noopener">
                 <picture>
                   <source srcset="assets/release/spotify_128.webp" type="image/webp">
                   <img class="social-icon-img" src="assets/release/spotify_128.png" alt="Spotify">
