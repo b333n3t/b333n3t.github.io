@@ -569,6 +569,12 @@
 
       .listen-wrap {
         justify-content: flex-start;
+        margin-top: 1.25rem;
+      }
+
+      .listen-btn {
+        padding: 0.85rem 1.15rem;
+        font-size: 0.92rem;
       }
 
       .video-inner {
@@ -576,18 +582,31 @@
       }
 
       .world-map {
-        height: 270px;
+        height: 245px;
         border-radius: 24px;
+        margin: 1rem 0 1.15rem;
       }
 
       .map-title,
       .map-label,
       .map-now {
-        font-size: 0.66rem;
+        font-size: 0.62rem;
+      }
+
+      .map-label {
+        left: 0.9rem;
+        bottom: 0.85rem;
       }
 
       .map-now {
+        right: 0.9rem;
+        bottom: 0.85rem;
         max-width: 48%;
+      }
+
+      .map-title {
+        left: 0.9rem;
+        top: 0.85rem;
       }
 
       .map-image,
@@ -596,18 +615,78 @@
         inset: 18% 4%;
       }
 
+      .timeline-counter {
+        font-size: 1.05rem;
+        margin-bottom: 0.8rem !important;
+      }
+
+      .timeline-block p.timeline-sub {
+        font-size: 0.92rem;
+        line-height: 1.55;
+      }
+
+      .timeline-list {
+        gap: 0;
+      }
+
       .timeline-row {
-        grid-template-columns: 1.2rem 1.8rem minmax(6.5rem, 1fr) 5.2rem;
-        gap: 0.45rem;
+        grid-template-columns: 1.25rem 2rem 1fr;
+        gap: 0.25rem 0.5rem;
+        padding: 0.62rem 0;
+        border-bottom: 1px solid rgba(255,255,255,0.09);
+        font-size: 0.92rem;
+        line-height: 1.25;
+      }
+
+      .timeline-row .status-dot {
+        grid-column: 1;
+        grid-row: 1 / span 3;
+        width: 1.25rem;
+      }
+
+      .timeline-row .country-code {
+        grid-column: 2;
+        grid-row: 1;
+        font-size: 0.72rem;
+        align-self: center;
+      }
+
+      .timeline-row .country-name {
+        grid-column: 3;
+        grid-row: 1;
+        min-width: 0;
+        font-size: 0.93rem;
+      }
+
+      .timeline-row .release-time {
+        grid-column: 2 / -1;
+        grid-row: 2;
+        font-size: 0.78rem;
+        opacity: 0.7;
+        white-space: normal;
       }
 
       .timeline-row .status-text {
-        grid-column: 4 / -1;
+        grid-column: 2 / -1;
+        grid-row: 3;
+        font-size: 0.82rem;
+        white-space: normal;
       }
 
       .timeline-row .online-since {
-        grid-column: 3 / -1;
-        font-size: 0.9rem;
+        grid-column: 2 / -1;
+        grid-row: 4;
+        font-size: 0.78rem;
+        opacity: 0.82;
+        white-space: normal;
+      }
+
+      .timeline-row.is-live .status-text {
+        font-size: 0.82rem;
+      }
+
+      .timeline-row.is-upcoming {
+        opacity: 0.42;
       }
     }
 
