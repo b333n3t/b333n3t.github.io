@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>b3nn3t „gespalten“</title>
+  <meta name="description" content="„gespalten“ – das neue Album von b3nn3t. 10 kurze Songs, 12 Minuten zwischen alt und neu." />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="favicon-48.png" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <link rel="canonical" href="https://www.b3nn3t.com/release-gespalten.html" />
+
+  <meta property="og:type" content="music.album">
+  <meta property="og:site_name" content="b3nn3t">
+  <meta property="og:title" content="„gespalten“ – neues Album von b3nn3t">
+  <meta property="og:description" content="10 Songs. 12 Minuten zwischen alt und neu..">
+  <meta property="og:image" content="https://www.b3nn3t.com/assets/gespalten/gespalten.jpg">
+  <meta property="og:url" content="https://www.b3nn3t.com/release-gespalten.html">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="„gespalten“ – neues Album von b3nn3t">
+  <meta name="twitter:description" content="10 Songs. 12 Minuten zwischen alt und neu.">
+  <meta name="twitter:image" content="https://www.b3nn3t.com/assets/gespalten/gespalten.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicAlbum",
+    "name": "gespalten",
+    "byArtist": {
+      "@type": "MusicGroup",
+      "name": "b3nn3t"
+    },
+    "numTracks": 10,
+    "datePublished": "2026-08-13T13:00:00+02:00",
+    "image": "https://www.b3nn3t.com/assets/gespalten/gespalten.jpg",
+    "url": "https://www.b3nn3t.com/release-gespalten.html"
+  }
+  </script>
+
+  <link rel="preload" as="image" href="/assets/gespalten/gespalten.jpg" fetchpriority="high">
+
+  <style>
+    :root {
+      --text-main: #fdfdfd;
+      --text-muted: rgba(255,255,255,0.68);
+      --text-soft: rgba(255,255,255,0.46);
+      --page-max-width: 960px;
+      --release-green: #3ddc84;
+
+      --split: 0;
+      --mx: 0;
+      --my: 0;
+
+      --gap: calc(var(--split) * 72px);
+      --lift-left: calc(var(--split) * -22px);
+      --lift-right: calc(var(--split) * 18px);
+      --tilt-left: calc(var(--split) * -0.45deg);
+      --tilt-right: calc(var(--split) * 0.4deg);
+
+      --mouse-x: calc(var(--mx) * 6px);
+      --mouse-y: calc(var(--my) * 5px);
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      color: var(--text-main);
+      background: #121313;
+      scroll-behavior: smooth;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: #121313;
+      z-index: -10;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 16%, rgba(255,255,255,0.12), transparent 28%),
+        radial-gradient(circle at 52% 62%, rgba(255,255,255,0.055), transparent 36%),
+        linear-gradient(rgba(10,10,10,0.22), rgba(10,10,10,0.95));
+      z-index: -8;
+      pointer-events: none;
+    }
+
+    .bg-ice {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: -9;
+      pointer-events: none;
+      background: #111;
+    }
+
+    .bg-half {
+      position: absolute;
+      inset: -8%;
+      background: url("/assets/gespalten/gespalten.jpg") center / cover no-repeat;
+      filter: blur(38px) brightness(0.44) saturate(0.9);
+      opacity: 0;
+      will-change: transform, opacity;
+      transition: opacity 0.25s ease;
+    }
+
+    .is-cracked .bg-half {
+      opacity: 0.96;
+    }
+
+    .bg-half.left {
+      clip-path: polygon(
+        0 0,
+        50% 0,
+        48% 8%,
+        52% 16%,
+        49% 26%,
+        55% 39%,
+        52% 51%,
+        60% 64%,
+        56% 78%,
+        68% 100%,
+        0 100%
+      );
+      transform:
+        translate3d(
+          calc(var(--gap) * -0.48 + var(--mouse-x) * -0.22),
+          calc(var(--lift-left) * 0.45 + var(--mouse-y) * -0.12),
+          0
+        )
+        rotate(calc(var(--tilt-left) * 0.45))
+        scale(1.12);
+    }
+
+    .bg-half.right {
+      clip-path: polygon(
+        50% 0,
+        100% 0,
+        100% 100%,
+        68% 100%,
+        56% 78%,
+        60% 64%,
+        52% 51%,
+        55% 39%,
+        49% 26%,
+        52% 16%,
+        48% 8%
+      );
+      transform:
+        translate3d(
+          calc(var(--gap) * 0.48 + var(--mouse-x) * 0.22),
+          calc(var(--lift-right) * 0.45 + var(--mouse-y) * 0.12),
+          0
+        )
+        rotate(calc(var(--tilt-right) * 0.45))
+        scale(1.12);
+    }
+
+    .bg-cold {
+      position: fixed;
+      inset: 0;
+      z-index: -7;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at calc(50% + var(--mouse-x)) calc(44% + var(--mouse-y)), rgba(255,255,255,0.10), transparent 18%),
+        linear-gradient(90deg, rgba(0,0,0,0.50), transparent 46%, rgba(255,255,255,0.025) 50%, transparent 54%, rgba(0,0,0,0.58));
+      opacity: 0.9;
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: clamp(2.8rem, 4vw, 4rem) 1.5rem clamp(3.5rem, 5vw, 4.5rem);
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+
+    .content-shell {
+      width: 100%;
+      max-width: var(--page-max-width);
+      position: relative;
+    }
+
+    .main-source {
+      opacity: 1;
+      transition: opacity 0.16s ease;
+    }
+
+    .is-cracked .main-source .split-me {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .is-cracked .main-source .no-split {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .ice-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      transform-style: preserve-3d;
+      transition: opacity 0.16s ease;
+    }
+
+    .is-cracked .ice-layer {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .ice-layer .no-split {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .ice-layer.left {
+      clip-path: polygon(
+        -8% -4%,
+        50% -4%,
+        48% 8%,
+        52% 16%,
+        49% 26%,
+        55% 39%,
+        52% 51%,
+        60% 64%,
+        56% 78%,
+        68% 104%,
+        -8% 104%
+      );
+      transform:
+        translate3d(
+          calc(var(--gap) * -1 + var(--mouse-x) * -0.32),
+          calc(var(--lift-left) + var(--mouse-y) * -0.16),
+          0
+        )
+        rotate(var(--tilt-left));
+      transform-origin: 34% 42%;
+      filter: drop-shadow(8px 12px 20px rgba(0,0,0,0.22));
+    }
+
+    .ice-layer.right {
+      clip-path: polygon(
+        50% -4%,
+        108% -4%,
+        108% 104%,
+        68% 104%,
+        56% 78%,
+        60% 64%,
+        52% 51%,
+        55% 39%,
+        49% 26%,
+        52% 16%,
+        48% 8%
+      );
+      transform:
+        translate3d(
+          calc(var(--gap) * 1 + var(--mouse-x) * 0.32),
+          calc(var(--lift-right) + var(--mouse-y) * 0.16),
+          0
+        )
+        rotate(var(--tilt-right));
+      transform-origin: 66% 44%;
+      filter: drop-shadow(-8px 12px 20px rgba(0,0,0,0.24));
+    }
+
+    main.main {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.55rem, 2.2vw, 2.25rem);
+      position: relative;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: clamp(1.2rem, 2vw, 1.8rem);
+    }
+
+    .brand-link {
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .hero {
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.45rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.76;
+      font-weight: 750;
+    }
+
+    .hero h1 {
+      margin: 0 0 0.65rem;
+      font-size: clamp(3.2rem, 10vw, 7.6rem);
+      line-height: 0.88;
+      letter-spacing: -0.078em;
+      text-transform: lowercase;
+      font-weight: 880;
+    }
+
+    .hero-sub {
+      margin: 0 auto clamp(1.45rem, 2.7vw, 2.05rem);
+      color: var(--text-muted);
+      font-size: clamp(0.95rem, 1.5vw, 1.08rem);
+      letter-spacing: 0.045em;
+      line-height: 1.55;
+      max-width: 42rem;
+    }
+
+    .hero-sub strong {
+      color: #ffffff;
+      font-weight: 850;
+    }
+
+    .cover-wrap {
+      margin: 0 auto clamp(1.2rem, 2.6vw, 1.9rem);
+      max-width: 680px;
+      width: 100%;
+      transform:
+        translateY(calc(var(--split) * 4px))
+        translateX(calc(var(--mx) * 1.2px));
+    }
+
+    .cover-inner {
+      border-radius: 30px;
+      overflow: visible;
+      background: #000;
+      aspect-ratio: 1 / 1;
+      position: relative;
+      box-shadow: 0 26px 90px rgba(0,0,0,0.48);
+      isolation: isolate;
+    }
+
+    .album-video {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: inherit;
+      background: #000;
+      filter: contrast(1.04) saturate(0.97);
+      box-shadow: none !important;
+      outline: none !important;
+      border: 0 !important;
+    }
+
+    .mobile-video-split {
+      display: none;
+    }
+
+    .mobile-play-button {
+      display: none;
+    }
+
+    .listen-wrap {
+      margin-top: 1.45rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .listen-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.95rem 1.35rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      transition: transform .18s ease, box-shadow .25s ease, opacity .2s ease, background .2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      background: #ffffff;
+      color: #171716;
+      border: 2px solid rgba(255,255,255,0.68);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.24);
+    }
+
+    .listen-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+
+    section.block {
+      margin-bottom: clamp(1.55rem, 2.2vw, 2.15rem);
+    }
+
+    section.block h2 {
+      margin: 0 0 0.95rem;
+      font-size: 1.06rem;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      font-weight: 720;
+    }
+
+    section.block p {
+      margin: 0;
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      max-width: 60rem;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.9);
+    }
+
+    section.block p + p {
+      margin-top: 0.75rem;
+    }
+
+    .countdown-plain {
+      margin-top: clamp(1.6rem, 3vw, 2.4rem);
+    }
+
+    .countdown-label {
+      margin: 0 0 0.45rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 850;
+      color: var(--text-muted);
+    }
+
+    .countdown-time {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 4.6rem);
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-note {
+      margin-top: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      line-height: 1.55;
+    }
+
+    .song-list-section {
+      margin-top: clamp(1.7rem, 3vw, 2.5rem);
+      text-align: center;
+    }
+
+    .song-list-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: baseline;
+      margin-bottom: 1.15rem;
+      text-align: left;
+    }
+
+    .song-list-head strong {
+      font-size: clamp(1.35rem, 3.5vw, 2.35rem);
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .song-list-head span {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .song-lines {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.78rem;
+      margin: 0 auto;
+      max-width: 60rem;
+    }
+
+    .song-line {
+      margin: 0;
+      color: rgba(255,255,255,0.92);
+      font-size: clamp(1.18rem, 2vw, 1.55rem);
+      line-height: 1.65;
+      letter-spacing: 0.045em;
+      text-transform: lowercase;
+      text-align: center;
+      font-weight: 760;
+    }
+
+    .song-line span {
+      display: inline-block;
+      white-space: nowrap;
+      margin: 0 0.22rem;
+      transform-origin: center;
+    }
+
+    .song-line span::before {
+      content: "· ";
+      color: rgba(255,255,255,0.62);
+    }
+
+    .song-line span:nth-child(1) {
+      transform: rotate(-2.2deg) translateY(0.02rem);
+    }
+
+    .song-line span:nth-child(2) {
+      transform: rotate(1.4deg) translateY(-0.04rem);
+    }
+
+    .song-line span:nth-child(3) {
+      transform: rotate(-1.1deg) translateY(0.05rem);
+    }
+
+    .song-line span:nth-child(4) {
+      transform: rotate(2deg) translateY(-0.02rem);
+    }
+
+    .about-section {
+      margin-top: clamp(1.7rem, 3vw, 2.5rem);
+    }
+
+    .quote-block {
+      border-left: 2px solid rgba(255,255,255,0.55);
+      padding-left: 1rem;
+      margin-top: 1rem;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-combined {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.4rem;
+      padding-top: 0.4rem;
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 400px;
+    }
+
+    .social-icons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(1.1rem, 1.6vw, 1.6rem);
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .social-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .18s ease, opacity .2s ease;
+    }
+
+    .social-link:hover {
+      transform: translateY(-1px);
+      opacity: 0.86;
+    }
+
+    .social-icon-img {
+      width: clamp(1.6rem, 1.3vw + 1rem, 2.2rem);
+      height: auto;
+      display: block;
+    }
+
+    .more-link {
+      display: inline-block;
+      margin-top: 0.65rem;
+      margin-bottom: 0.75rem;
+      padding-left: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --gap: calc((var(--split) + 0.035) * 92px);
+        --lift-left: calc((var(--split) + 0.035) * -14px);
+        --lift-right: calc((var(--split) + 0.035) * 12px);
+        --tilt-left: calc((var(--split) + 0.035) * -0.3deg);
+        --tilt-right: calc((var(--split) + 0.035) * 0.28deg);
+        --mouse-x: 0px;
+        --mouse-y: 0px;
+      }
+
+      .page-wrap {
+        padding: 2.1rem 1.05rem 3rem;
+      }
+
+      main.main {
+        gap: 1.35rem;
+      }
+
+      .brand-row {
+        justify-content: flex-start;
+        margin-bottom: 1.05rem;
+      }
+
+      .hero {
+        text-align: left;
+      }
+
+      .hero h1 {
+        font-size: clamp(3rem, 17vw, 5.6rem);
+      }
+
+      .hero-sub {
+        margin-left: 0;
+        margin-right: 0;
+        font-size: 0.92rem;
+        line-height: 1.48;
+      }
+
+      .cover-inner {
+        border-radius: 22px;
+      }
+
+      .listen-wrap {
+        justify-content: center;
+        margin-top: 0.35rem;
+      }
+
+      .listen-btn {
+        padding: 0.82rem 1.08rem;
+        font-size: 0.9rem;
+      }
+
+      .countdown-plain {
+        margin-top: 1rem;
+      }
+
+      .countdown-label {
+        font-size: 0.66rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .countdown-time {
+        font-size: clamp(2rem, 11vw, 3.25rem);
+      }
+
+      .countdown-note {
+        font-size: 0.86rem;
+        line-height: 1.45;
+      }
+
+      .song-list-section {
+        margin-top: 1.15rem;
+        text-align: left;
+      }
+
+      .song-list-head {
+        flex-direction: column;
+        gap: 0.2rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .song-list-head strong {
+        font-size: 1.25rem;
+        letter-spacing: -0.035em;
+      }
+
+      .song-list-head span {
+        font-size: 0.66rem;
+      }
+
+      .song-lines {
+        align-items: center;
+        gap: 0.58rem;
+        max-width: 100%;
+      }
+
+      .song-line {
+        font-size: clamp(1rem, 4.4vw, 1.22rem);
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      .song-line span {
+        margin: 0 0.14rem;
+      }
+
+      .about-section {
+        margin-top: 1.15rem;
+      }
+
+      section.block p {
+        font-size: 0.92rem;
+        line-height: 1.58;
+      }
+
+      .ice-layer.left,
+      .ice-layer.right {
+        filter: none;
+      }
+    }
+
+    .mobile-precrack .bg-half {
+      opacity: 0.96;
+    }
+
+    .mobile-precrack .ice-layer {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-precrack .ice-layer .no-split {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .mobile-precrack .ice-layer .cover-wrap {
+      visibility: hidden;
+    }
+
+    .mobile-precrack .ice-layer video,
+    .mobile-precrack .ice-layer .mobile-video-split,
+    .mobile-precrack .ice-layer .mobile-play-button {
+      display: none !important;
+    }
+
+    .mobile-precrack .ice-layer .listen-wrap {
+      justify-content: center;
+    }
+
+    .mobile-precrack .main-source .split-me > * {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .mobile-precrack .main-source .split-me > .hero {
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    .mobile-precrack .main-source .split-me > .hero > * {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .mobile-precrack .main-source .split-me > .hero > .cover-wrap {
+      opacity: 1;
+      pointer-events: auto;
+      position: relative;
+      z-index: 8;
+    }
+
+    .mobile-precrack .main-source .cover-wrap {
+      position: relative;
+      z-index: 8;
+    }
+
+    .mobile-precrack .main-source .cover-inner {
+      position: relative;
+    }
+
+    .mobile-video-split {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      opacity: 0;
+      overflow: visible;
+    }
+
+    .mobile-precrack .mobile-video-split {
+      display: block;
+      opacity: 1;
+    }
+
+    .mobile-precrack .album-video.mobile-base-video {
+      position: relative;
+      z-index: 6;
+      opacity: 0.01;
+    }
+
+    .mobile-video-half {
+      position: absolute;
+      inset: 0;
+      overflow: visible;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+
+    .mobile-video-half.left {
+      clip-path: polygon(
+        0 0,
+        50% 0,
+        48% 8%,
+        52% 16%,
+        49% 26%,
+        55% 39%,
+        52% 51%,
+        60% 64%,
+        56% 78%,
+        68% 100%,
+        0 100%
+      );
+      transform:
+        translate3d(
+          calc((var(--split) + 0.035) * -92px),
+          calc((var(--split) + 0.035) * -7px),
+          0
+        )
+        rotate(calc((var(--split) + 0.035) * -0.42deg));
+      transform-origin: 35% 45%;
+    }
+
+    .mobile-video-half.right {
+      clip-path: polygon(
+        50% 0,
+        100% 0,
+        100% 100%,
+        68% 100%,
+        56% 78%,
+        60% 64%,
+        52% 51%,
+        55% 39%,
+        49% 26%,
+        52% 16%,
+        48% 8%
+      );
+      transform:
+        translate3d(
+          calc((var(--split) + 0.035) * 92px),
+          calc((var(--split) + 0.035) * 7px),
+          0
+        )
+        rotate(calc((var(--split) + 0.035) * 0.38deg));
+      transform-origin: 65% 45%;
+    }
+
+    .mobile-split-video {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      background: #000;
+      box-shadow: none !important;
+      outline: none !important;
+      border: 0 !important;
+    }
+
+    .mobile-precrack .mobile-play-button {
+      display: flex;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 12;
+      width: 3.7rem;
+      height: 3.7rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.58);
+      background: rgba(0,0,0,0.32);
+      color: #ffffff;
+      font-size: 1.35rem;
+      line-height: 1;
+      transform: translate(-50%, -50%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity: 1;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .mobile-precrack .mobile-play-button.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .mobile-rift-connector {
+      display: none;
+      position: relative;
+      height: 2.6rem;
+      margin: -0.35rem auto -0.55rem;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .mobile-precrack .mobile-rift-connector {
+      display: block;
+    }
+
+    .mobile-rift-connector::before,
+    .mobile-rift-connector::after {
+      content: "";
+      position: absolute;
+      top: -0.15rem;
+      bottom: -0.15rem;
+      width: 54%;
+      background: rgba(255,255,255,0.012);
+      opacity: calc(0.18 + var(--split) * 0.22);
+    }
+
+    .mobile-rift-connector::before {
+      left: -2%;
+      clip-path: polygon(
+        0 0,
+        68% 0,
+        58% 28%,
+        64% 52%,
+        55% 75%,
+        62% 100%,
+        0 100%
+      );
+      transform:
+        translate3d(
+          calc((var(--split) + 0.035) * -92px),
+          calc((var(--split) + 0.035) * -3px),
+          0
+        )
+        rotate(calc((var(--split) + 0.035) * -0.18deg));
+    }
+
+    .mobile-rift-connector::after {
+      right: -2%;
+      clip-path: polygon(
+        32% 0,
+        100% 0,
+        100% 100%,
+        38% 100%,
+        45% 75%,
+        36% 52%,
+        42% 28%
+      );
+      transform:
+        translate3d(
+          calc((var(--split) + 0.035) * 92px),
+          calc((var(--split) + 0.035) * 3px),
+          0
+        )
+        rotate(calc((var(--split) + 0.035) * 0.18deg));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      :root {
+        --split: 0;
+        --mx: 0;
+        --my: 0;
+      }
+
+      .listen-btn,
+      .social-link {
+        transition: none;
+      }
+
+      .mobile-video-split,
+      .mobile-play-button,
+      .mobile-rift-connector {
+        display: none !important;
+      }
+
+      .mobile-precrack .album-video.mobile-base-video {
+        opacity: 1;
+      }
+    }
+    /* Mobile: Button leicht nach rechts verschieben, damit er besser mit dem Riss fluchtet */
+@media (max-width: 768px) {
+  .mobile-precrack .main-source .listen-wrap {
+    transform: translateX(1.15rem);
+  }
+
+  .mobile-precrack .ice-layer .listen-wrap {
+    transform: translateX(1.15rem);
+  }
+}
+  </style>
+</head>
+
+<body>
+  <div class="bg-ice" aria-hidden="true">
+    <div class="bg-half left"></div>
+    <div class="bg-half right"></div>
+  </div>
+
+  <div class="bg-cold" aria-hidden="true"></div>
+
+  <div class="page-wrap">
+    <div class="content-shell" id="content-shell">
+
+      <div class="ice-layer left" aria-hidden="true">
+        <div class="ice-layer-inner"></div>
+      </div>
+
+      <div class="ice-layer right" aria-hidden="true">
+        <div class="ice-layer-inner"></div>
+      </div>
+
+      <main class="main main-source" aria-label="gespalten Albumseite">
+
+        <div class="split-me">
+          <div class="brand-row">
+            <a class="brand-link" href="index.html">b3nn3t</a>
+          </div>
+
+          <section class="hero" aria-label="gespalten Album">
+            <p class="eyebrow"></p>
+            <h1>gespalten</h1>
+
+            <p class="hero-sub">
+              <strong></strong><br>
+              übergang zwischen alt und neu
+            </p>
+
+            <div class="cover-wrap" aria-label="Albumvideo gespalten">
+              <div class="cover-inner">
+                <video
+                  id="mobile-video-base"
+                  class="album-video mobile-base-video"
+                  controls
+                  preload="metadata"
+                  playsinline
+                  poster="/assets/gespalten/gespalten.jpg">
+                  <source src="/assets/gespalten/gespalten.mp4" type="video/mp4">
+                  Dein Browser unterstützt dieses Videoformat nicht.
+                </video>
+
+                <div class="mobile-video-split" aria-hidden="true">
+                  <div class="mobile-video-half left">
+                    <video
+                      id="mobile-video-left"
+                      class="mobile-split-video"
+                      muted
+                      preload="metadata"
+                      playsinline
+                      poster="/assets/gespalten/gespalten.jpg">
+                      <source src="/assets/gespalten/gespalten.mp4" type="video/mp4">
+                    </video>
+                  </div>
+
+                  <div class="mobile-video-half right">
+                    <video
+                      id="mobile-video-right"
+                      class="mobile-split-video"
+                      muted
+                      preload="metadata"
+                      playsinline
+                      poster="/assets/gespalten/gespalten.jpg">
+                      <source src="/assets/gespalten/gespalten.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+
+                <button class="mobile-play-button" type="button" aria-label="Video abspielen">
+                  ▶
+                </button>
+              </div>
+            </div>
+
+            <div class="mobile-rift-connector" aria-hidden="true"></div>
+
+            <div class="listen-wrap">
+              <a
+                class="listen-btn main-cta"
+                href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A"
+                target="_blank"
+                rel="noopener">
+                album vormerken
+              </a>
+            </div>
+          </section>
+
+          <section aria-label="Album Countdown" class="block countdown-plain">
+            <p class="countdown-label">album unlocks in</p>
+            <p class="countdown-time album-countdown">--d --:--:--</p>
+            <p class="countdown-note release-note">
+              Release: 13. August 2026 · 24:00 Uhr
+            </p>
+          </section>
+
+          <section aria-label="Songs auf gespalten" class="block song-list-section">
+            <div class="song-list-head">
+              <strong>10 fragments </strong>
+              <br>
+              <br>
+            </div>
+<span></span>
+            <span></span>
+            <div class="song-lines">
+              <p class="song-line">
+                <span>desigual</span>
+                <span>aergerlich</span>
+                <span>3</span>
+                <span>(fenster scherben)</span>
+              </p>
+
+              <p class="song-line">
+                <span>5r</span>
+                <span>6</span>
+                <span>7</span>
+              </p>
+
+              <p class="song-line">
+                <span>8?</span>
+                <span>wegwerfkamera</span>
+                <span>2011</span>
+              </p>
+            </div>
+          </section>
+
+          <section aria-label="über das Album" class="block about-section">
+            <h2>über das Album</h2>
+
+            <p>
+              „gespalten“ ist ein kurzes album aus 10 fragmenten. 12 minuten im übergang zwischen alt mit deutschsprachigen skizzen.
+            </p>
+
+            <p>
+              die songs sind eher gedanken und gefühle als klassische tracks 
+              kurz, direkt, unfertig im besten sinn.
+            </p>
+
+            <div class="quote-block">
+
+            </div>
+          </section>
+        </div>
+
+        <div class="no-split footer-combined">
+          <section aria-label="Streaming" class="block">
+            <h2>kuck hier</h2>
+
+            <div class="social-icons">
+              <a href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A"
+                 class="social-link" aria-label="Spotify – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/spotify_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/spotify_128.png" alt="Spotify">
+                </picture>
+              </a>
+
+              <a href="https://music.apple.com/ch/artist/b3nn3t/1786857463?l=de-DE"
+                 class="social-link" aria-label="Apple Music – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/apple_music_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/apple_music_128.png" alt="Apple Music">
+                </picture>
+              </a>
+
+              <a href="https://www.instagram.com/b333nn3t?igsh=MWphMjcxdXZwZ2s1ZQ=="
+                 class="social-link" aria-label="Instagram – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/instagram_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/instagram_128.png" alt="Instagram">
+                </picture>
+              </a>
+
+              <a href="https://www.youtube.com/@b333nn3t"
+                 class="social-link" aria-label="YouTube – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/youtube_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/youtube_128.png" alt="YouTube">
+                </picture>
+              </a>
+
+              <a href="https://soundcloud.com/bennet-6942069420"
+                 class="social-link" aria-label="SoundCloud – b3nn3t" target="_blank" rel="noopener">
+                <picture>
+                  <source srcset="assets/release/soundcloud_128.webp" type="image/webp">
+                  <img class="social-icon-img" src="assets/release/soundcloud_128.png" alt="SoundCloud">
+                </picture>
+              </a>
+            </div>
+          </section>
+
+          <section aria-label="Mehr von b3nn3t" class="block">
+            <p>mehr auf meiner webseite :p</p>
+            <a class="brand-link more-link" href="https://www.b3nn3t.com/index.html">b3nn3t.com</a>
+          </section>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+
+      const isMobile =
+        window.matchMedia("(pointer: coarse)").matches ||
+        window.matchMedia("(max-width: 768px)").matches;
+
+      if (isMobile) {
+        root.classList.add("mobile-precrack");
+        root.style.setProperty("--mx", "0");
+        root.style.setProperty("--my", "0");
+
+        const shell = document.getElementById("content-shell");
+        const source = document.querySelector(".main-source");
+        const targets = document.querySelectorAll(".ice-layer-inner");
+
+        if (shell && source && targets.length) {
+          targets.forEach(function (target) {
+            const clone = source.cloneNode(true);
+            clone.classList.remove("main-source");
+            clone.classList.add("main-clone");
+
+            clone.querySelectorAll("video").forEach(function (video) {
+              video.remove();
+            });
+
+            clone.querySelectorAll(".mobile-video-split").forEach(function (layer) {
+              layer.remove();
+            });
+
+            clone.querySelectorAll(".mobile-play-button").forEach(function (button) {
+              button.remove();
+            });
+
+            clone.querySelectorAll(".cover-inner").forEach(function (inner) {
+              inner.innerHTML = "";
+            });
+
+            clone.querySelectorAll("a").forEach(function (link) {
+              link.setAttribute("tabindex", "-1");
+            });
+
+            target.appendChild(clone);
+          });
+        }
+
+        let mobileTicking = false;
+
+        function updateMobileSplit() {
+          const raw = Math.min(Math.max(window.scrollY / 720, 0), 1);
+          const split = Math.pow(raw, 0.92);
+
+          root.style.setProperty("--split", split.toFixed(4));
+          mobileTicking = false;
+        }
+
+        function requestMobileUpdate() {
+          if (!mobileTicking) {
+            mobileTicking = true;
+            requestAnimationFrame(updateMobileSplit);
+          }
+        }
+
+        function bindMobileVideoSplit() {
+          const base = document.getElementById("mobile-video-base");
+          const left = document.getElementById("mobile-video-left");
+          const right = document.getElementById("mobile-video-right");
+          const playButton = document.querySelector(".mobile-play-button");
+
+          if (!base || !left || !right) return;
+
+          const mirrors = [left, right];
+          let syncing = false;
+
+          function showPlayButton(show) {
+            if (!playButton) return;
+
+            if (show) {
+              playButton.classList.remove("is-hidden");
+            } else {
+              playButton.classList.add("is-hidden");
+            }
+          }
+
+          function resetToPoster() {
+            [base, left, right].forEach(function (video) {
+              try {
+                video.pause();
+                video.currentTime = 0;
+              } catch (e) {}
+            });
+
+            setTimeout(function () {
+              [base, left, right].forEach(function (video) {
+                try {
+                  video.load();
+                } catch (e) {}
+              });
+
+              showPlayButton(true);
+            }, 80);
+          }
+
+          function syncMirrors(eventName) {
+            if (syncing) return;
+            syncing = true;
+
+            mirrors.forEach(function (video) {
+              if (Math.abs(video.currentTime - base.currentTime) > 0.12) {
+                try {
+                  video.currentTime = base.currentTime;
+                } catch (e) {}
+              }
+
+              video.playbackRate = base.playbackRate;
+
+              if (eventName === "play" && video.paused) {
+                video.play().catch(function () {});
+              }
+
+              if ((eventName === "pause" || eventName === "ended") && !video.paused) {
+                video.pause();
+              }
+            });
+
+            syncing = false;
+          }
+
+          function keepClose() {
+            mirrors.forEach(function (video) {
+              if (!base.paused && Math.abs(video.currentTime - base.currentTime) > 0.18) {
+                try {
+                  video.currentTime = base.currentTime;
+                } catch (e) {}
+              }
+            });
+          }
+
+          function startVideo() {
+            if (base.ended) {
+              try {
+                base.currentTime = 0;
+              } catch (e) {}
+            }
+
+            syncMirrors("seeked");
+
+            base.play().then(function () {
+              showPlayButton(false);
+              syncMirrors("play");
+            }).catch(function () {
+              showPlayButton(true);
+            });
+          }
+
+          base.addEventListener("play", function () {
+            showPlayButton(false);
+            syncMirrors("play");
+          });
+
+          base.addEventListener("pause", function () {
+            if (!base.ended) {
+              showPlayButton(true);
+            }
+            syncMirrors("pause");
+          });
+
+          base.addEventListener("ended", function () {
+            resetToPoster();
+          });
+
+          base.addEventListener("seeked", function () {
+            syncMirrors("seeked");
+          });
+
+          base.addEventListener("ratechange", function () {
+            syncMirrors("ratechange");
+          });
+
+          base.addEventListener("loadedmetadata", function () {
+            syncMirrors("loadedmetadata");
+            showPlayButton(base.paused);
+          });
+
+          base.addEventListener("timeupdate", keepClose);
+
+          mirrors.forEach(function (video) {
+            video.muted = true;
+            video.controls = false;
+            video.playsInline = true;
+          });
+
+          if (playButton) {
+            playButton.addEventListener("click", function (event) {
+              event.preventDefault();
+              event.stopPropagation();
+              startVideo();
+            });
+          }
+
+          showPlayButton(true);
+        }
+
+        window.addEventListener("scroll", requestMobileUpdate, { passive: true });
+        window.addEventListener("resize", requestMobileUpdate);
+
+        bindMobileVideoSplit();
+        updateMobileSplit();
+
+        return;
+      }
+
+      const shell = document.getElementById("content-shell");
+      const source = document.querySelector(".main-source");
+      const targets = document.querySelectorAll(".ice-layer-inner");
+
+      let clonesCreated = false;
+      let activated = false;
+      let readyForMouseActivation = false;
+      let ticking = false;
+
+      let mouseTargetX = 0;
+      let mouseTargetY = 0;
+      let mouseX = 0;
+      let mouseY = 0;
+      let mouseSplit = 0;
+      let scrollSplit = 0;
+      let mouseRaf = null;
+
+      const boundVideos = new WeakSet();
+
+      const POSTER_URL = "/assets/gespalten/gespalten.jpg";
+      const VIDEO_URL = "/assets/gespalten/gespalten.mp4";
+
+      setTimeout(function () {
+        readyForMouseActivation = true;
+      }, 650);
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
+
+      function getVideos() {
+        return Array.from(document.querySelectorAll(".album-video"));
+      }
+
+      function createClones() {
+        if (clonesCreated || !shell || !source || !targets.length) return;
+
+        targets.forEach(function (target) {
+          const clone = source.cloneNode(true);
+          clone.classList.remove("main-source");
+          clone.classList.add("main-clone");
+
+          clone.querySelectorAll(".mobile-video-split").forEach(function (layer) {
+            layer.remove();
+          });
+
+          clone.querySelectorAll(".mobile-play-button").forEach(function (button) {
+            button.remove();
+          });
+
+          clone.querySelectorAll("video").forEach(function (video) {
+            video.setAttribute("poster", POSTER_URL);
+            video.setAttribute("preload", "metadata");
+
+            const sourceEl = video.querySelector("source");
+            if (sourceEl) {
+              sourceEl.setAttribute("src", VIDEO_URL);
+              sourceEl.setAttribute("type", "video/mp4");
+            }
+
+            try {
+              video.load();
+            } catch (e) {}
+          });
+
+          target.appendChild(clone);
+        });
+
+        clonesCreated = true;
+        bindVideos();
+      }
+
+      function activate() {
+        if (activated) return;
+
+        createClones();
+
+        activated = true;
+        document.body.classList.add("is-cracked");
+
+        syncAllVideos();
+        applySplit();
+      }
+
+      function applySplit() {
+        const split = activated ? Math.max(scrollSplit, mouseSplit) : 0;
+        root.style.setProperty("--split", split.toFixed(4));
+      }
+
+      function updateScrollSplit() {
+        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const raw = clamp(window.scrollY / maxScroll, 0, 1);
+
+        if (window.scrollY > 8) {
+          activate();
+        }
+
+        scrollSplit = activated
+          ? 1 - Math.pow(1 - raw, 1.85)
+          : 0;
+
+        applySplit();
+        ticking = false;
+      }
+
+      function requestScrollUpdate() {
+        if (!ticking) {
+          requestAnimationFrame(updateScrollSplit);
+          ticking = true;
+        }
+      }
+
+      function animateMouse() {
+        const dx = mouseTargetX - mouseX;
+        const dy = mouseTargetY - mouseY;
+
+        mouseX += dx * 0.16;
+        mouseY += dy * 0.16;
+
+        root.style.setProperty("--mx", mouseX.toFixed(4));
+        root.style.setProperty("--my", mouseY.toFixed(4));
+
+        applySplit();
+
+        const settled = Math.abs(dx) < 0.001 && Math.abs(dy) < 0.001;
+
+        if (!settled) {
+          mouseRaf = requestAnimationFrame(animateMouse);
+        } else {
+          mouseRaf = null;
+        }
+      }
+
+      function updateMouse(e) {
+        const movedEnough =
+          Math.abs(e.movementX || 0) + Math.abs(e.movementY || 0) > 1;
+
+        if (readyForMouseActivation && movedEnough) {
+          activate();
+        }
+
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+        mouseTargetX = clamp(x, -1, 1);
+        mouseTargetY = clamp(y, -1, 1);
+
+        const distance = Math.sqrt(mouseTargetX * mouseTargetX + mouseTargetY * mouseTargetY);
+        mouseSplit = activated ? clamp(0.08 + distance * 0.12, 0.08, 0.22) : 0;
+
+        if (!mouseRaf) {
+          mouseRaf = requestAnimationFrame(animateMouse);
+        }
+      }
+
+      let videoSyncing = false;
+
+      function syncFrom(sourceVideo, eventName) {
+        if (videoSyncing) return;
+        videoSyncing = true;
+
+        getVideos().forEach(function (video) {
+          if (video === sourceVideo) return;
+
+          if (Math.abs(video.currentTime - sourceVideo.currentTime) > 0.12) {
+            try {
+              video.currentTime = sourceVideo.currentTime;
+            } catch (e) {}
+          }
+
+          video.volume = sourceVideo.volume;
+          video.muted = sourceVideo.muted;
+          video.playbackRate = sourceVideo.playbackRate;
+
+          if (eventName === "play" && video.paused) {
+            video.play().catch(function () {});
+          }
+
+          if (eventName === "pause" && !video.paused) {
+            video.pause();
+          }
+        });
+
+        videoSyncing = false;
+      }
+
+      function resetDesktopVideosToPoster() {
+        getVideos().forEach(function (video) {
+          try {
+            video.pause();
+            video.currentTime = 0;
+          } catch (e) {}
+        });
+
+        setTimeout(function () {
+          getVideos().forEach(function (video) {
+            try {
+              video.load();
+            } catch (e) {}
+          });
+        }, 80);
+      }
+
+      function bindVideos() {
+        getVideos().forEach(function (video) {
+          if (boundVideos.has(video)) return;
+          boundVideos.add(video);
+
+          ["play", "pause", "seeked", "volumechange", "ratechange"].forEach(function (eventName) {
+            video.addEventListener(eventName, function () {
+              syncFrom(video, eventName);
+            });
+          });
+
+          video.addEventListener("timeupdate", function () {
+            syncFrom(video, "timeupdate");
+          });
+
+          video.addEventListener("ended", function () {
+            resetDesktopVideosToPoster();
+          });
+        });
+      }
+
+      function syncAllVideos() {
+        const videos = getVideos();
+        if (!videos.length) return;
+
+        const sourceVideo = videos.find(function (video) {
+          return !video.closest(".ice-layer");
+        }) || videos[0];
+
+        videos.forEach(function (video) {
+          if (video === sourceVideo) return;
+
+          try {
+            video.currentTime = sourceVideo.currentTime;
+          } catch (e) {}
+
+          video.volume = sourceVideo.volume;
+          video.muted = sourceVideo.muted;
+          video.playbackRate = sourceVideo.playbackRate;
+
+          if (!sourceVideo.paused) {
+            video.play().catch(function () {});
+          }
+        });
+      }
+
+      window.addEventListener("scroll", requestScrollUpdate, { passive: true });
+      window.addEventListener("resize", requestScrollUpdate);
+      window.addEventListener("mousemove", updateMouse, { passive: true });
+
+      root.style.setProperty("--split", "0");
+      root.style.setProperty("--mx", "0");
+      root.style.setProperty("--my", "0");
+
+      bindVideos();
+      updateScrollSplit();
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const RELEASE_DATE = new Date("2026-08-13T13:00:00+02:00").getTime();
+      const ALBUM_LINK = "https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A";
+
+      function pad(value) {
+        return String(value).padStart(2, "0");
+      }
+
+      function renderCountdown() {
+        const now = Date.now();
+        const diff = RELEASE_DATE - now;
+
+        document.querySelectorAll(".album-countdown").forEach(function (countdownEl) {
+          if (diff <= 0) {
+            countdownEl.textContent = "out now";
+            return;
+          }
+
+          const totalSeconds = Math.floor(diff / 1000);
+          const days = Math.floor(totalSeconds / (3600 * 24));
+          const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+
+          countdownEl.textContent =
+            pad(days) + "d " + pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
+        });
+
+        document.querySelectorAll(".release-note").forEach(function (noteEl) {
+          noteEl.textContent = diff <= 0
+            ? "„gespalten“ ist jetzt draussen."
+            : "Release: 13. August 2026 · 24:00 Uhr";
+        });
+
+        document.querySelectorAll(".main-cta").forEach(function (ctaEl) {
+          ctaEl.href = ALBUM_LINK;
+          ctaEl.textContent = diff <= 0 ? "gespalten hören" : "album vormerken";
+        });
+      }
+
+      renderCountdown();
+      setInterval(renderCountdown, 1000);
+    })();
+  </script>
+</body>
+</html>
