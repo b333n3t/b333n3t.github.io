@@ -140,59 +140,91 @@
       pointer-events:none !important;
     }
 
-    /* ===== Hamburger-Menü ===== */
-    .hamburger{
-      position:fixed;top:14px;right:18px;width:20px;height:20px;
-      border:0;background:transparent;display:grid;place-items:center;
-      cursor:pointer;z-index:1200;padding:0
+    /* ===== Neues Burger-Menü (identisch zu gespalten.html) ===== */
+    .burger-menu{
+      position:fixed;
+      top:22px;
+      right:22px;
+      z-index:2000;
     }
-    .hamburger span{
-      display:block;width:12px;height:1.4px;margin:1.5px 0;
-      background:#000;border-radius:2px;
-      transition:transform .2s,opacity .2s
+    .burger-btn{
+      width:46px;
+      height:46px;
+      border:none;
+      border-radius:50%;
+      background:white;
+      color:#111;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:5px;
+      cursor:pointer;
+      box-shadow:0 2px 10px rgba(0,0,0,.25);
     }
-    body.menu-open .hamburger span:nth-child(1){
-      transform:translateY(3.5px) rotate(45deg)
-    }
-    body.menu-open .hamburger span:nth-child(2){ opacity:0 }
-    body.menu-open .hamburger span:nth-child(3){
-      transform:translateY(-3.5px) rotate(-45deg)
-    }
-
-    .menu-overlay{
-      position:fixed;inset:0;background:rgba(0,0,0,.08);
-      backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
-      z-index:1099
-    }
-    body.menu-open #menu-overlay{display:block}
-    #menu-overlay[hidden]{display:none}
-
-    .site-menu{
-      position:fixed;top:0;right:0;height:auto;max-height:90vh;
-      width:min(40vw,150px);
-      background:rgba(255,255,255,.32);
-      backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
-      box-shadow:0 20px 50px rgba(0,0,0,.08);
-      transform:translateX(100%);transition:transform .25s;
-      z-index:1101;padding:46px 10px 14px
-    }
-    body.menu-open .site-menu{transform:translateX(0)}
-    .site-menu ul{list-style:none;margin:0;padding:0}
-    .site-menu li{margin:0 0 10px}
-    .site-menu li.sep{
-      margin-top:18px;padding-top:8px;
-      border-top:1px solid rgba(0,0,0,.08)
-    }
-    .site-menu a{
+    .burger-btn span{
       display:block;
-      padding:8px 6px;
-      border-radius:10px;
-      color:#000;
-      text-decoration:none;
-      font-size:1rem;
-      font-weight:500;
+      width:18px;
+      height:2px;
+      background:#111;
+      transition:transform .25s ease, opacity .25s ease;
     }
-    .site-menu a:hover{background:rgba(0,0,0,.05)}
+    .burger-menu.open .burger-btn span:nth-child(1){
+      transform:translateY(7px) rotate(45deg);
+    }
+    .burger-menu.open .burger-btn span:nth-child(2){ opacity:0; }
+    .burger-menu.open .burger-btn span:nth-child(3){
+      transform:translateY(-7px) rotate(-45deg);
+    }
+    .burger-dropdown{
+      position:absolute;
+      top:58px;
+      right:0;
+      min-width:220px;
+      background:#111;
+      color:white;
+      padding:10px 0;
+      opacity:0;
+      transform:translateY(-8px);
+      pointer-events:none;
+      transition:opacity .2s ease, transform .2s ease;
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+    }
+    .burger-menu.open .burger-dropdown{
+      opacity:1;
+      transform:translateY(0);
+      pointer-events:auto;
+    }
+    .burger-link{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:13px 22px;
+      color:white !important;
+      text-decoration:none;
+      font-size:13px !important;
+      letter-spacing:.1em !important;
+      text-transform:lowercase;
+      font-family:Arial, sans-serif !important;
+      background:none;
+      border:none;
+      width:100%;
+      text-align:left;
+      cursor:pointer;
+      transition:background .2s ease;
+    }
+    .burger-link:hover{ background:rgba(255,255,255,.1); }
+    .burger-link.current{
+      background:rgba(255,255,255,.08);
+      color:rgba(255,255,255,.6) !important;
+      cursor:default;
+    }
+    .burger-link .num{ opacity:.5; font-size:11px; }
+
+    @media (max-width:800px){
+      .burger-menu{ top:16px; right:16px; }
+      .burger-btn{ width:42px; height:42px; }
+    }
 
     /* ===== Scroll-Panel ===== */
     .scroll-panel{
@@ -223,85 +255,70 @@
       gap:1rem;
     }
 
-    .page-link{
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size:1.1rem;
-      text-decoration:none;
-      color:inherit;
-    }
-    .page-link:visited{ color:inherit; }
-    .page-link .arrow{
-      display:inline-block;
-      transition:transform .2s ease;
-    }
-    .page-link:active .arrow{
-      transform:rotate(90deg);
-    }
+    /*
+        Statischer "kontakt"-Titel ohne
+        Aufklapp-Funktion – ersetzt den
+        früheren .page-toggle-Button.
+    */
 
     .page-toggle{
       display:flex;
       align-items:center;
       gap:6px;
       font-size:1.1rem;
-      background:transparent;
-      border:none;
-      padding:0;
       color:inherit;
-      cursor:pointer;
 
       font-family: inherit;
       font-weight: inherit;
       letter-spacing: inherit;
       line-height: inherit;
-
-      appearance:none;
-      -webkit-appearance:none;
-    }
-    .page-toggle .arrow{
-      display:inline-block;
-      transition:transform .2s ease;
     }
 
     .page-group > .page-content{
       display:none;
-      margin-left:18px;
       margin-top:.75rem;
     }
     .page-group.open > .page-content{display:block;}
-    .page-group.open > .page-toggle .arrow{transform:rotate(90deg);}
 
     /* ===== Kontaktformular ===== */
     form{ margin:0; display:grid; gap:.8rem; max-width:650px; }
     form label{ font-weight:600; }
 
-    /* ✅ Felder transparent + Text weiss */
+    /* ✅ Formularfelder passend zum hellen SoundCloud-Hintergrund:
+       Rahmen, Text und Placeholder dunkel/grau statt weiss. */
     form input:not([type="checkbox"]),
     form textarea{
       width:100%;
-      border:1px solid rgba(255,255,255,0.45);
+      border:1px solid rgba(17,17,17,0.46);
       border-radius:8px;
       padding:.6rem;
 
-      background: transparent;
-      color:#fff;
+      background: rgba(255,255,255,0.10);
+      color:#111;
 
       font:inherit;
       outline:none;
     }
     form textarea{ min-height:120px; overflow:auto; }
 
-    /* Placeholder etwas heller */
     form input::placeholder,
     form textarea::placeholder{
-      color: rgba(255,255,255,0.65);
+      color: rgba(17,17,17,0.52);
     }
 
-    /* Optional: Fokus etwas sichtbarer */
     form input:focus,
     form textarea:focus{
-      border-color: rgba(255,255,255,0.8);
+      border-color: rgba(17,17,17,0.85);
+      background: rgba(255,255,255,0.18);
+    }
+
+    /* Browser-Autofill ebenfalls dunkel halten */
+    form input:-webkit-autofill,
+    form input:-webkit-autofill:hover,
+    form input:-webkit-autofill:focus{
+      -webkit-text-fill-color:#111;
+      box-shadow:0 0 0 1000px rgba(255,255,255,0.18) inset;
+      transition:background-color 9999s ease-in-out 0s;
     }
 
     form input[type="checkbox"]{
@@ -325,7 +342,7 @@
     }
     form button[disabled]{ opacity:0.6; cursor:default; }
 
-    /* ===== Custom Checkbox (weiss + roter Haken) ===== */
+    /* ===== Custom Checkbox: dunkel/grau statt weiss ===== */
     form input[type="checkbox"]{
       appearance: none;
       -webkit-appearance: none;
@@ -335,9 +352,9 @@
       height: 16px;
       margin: .3rem .6rem 0 0;
 
-      border: 1.5px solid #ffffff;
+      border: 1.5px solid rgba(17,17,17,0.7);
       border-radius: 3px;
-      background: #ffffff;
+      background: transparent;
 
       display: inline-grid;
       place-content: center;
@@ -345,13 +362,13 @@
       cursor: pointer;
     }
 
-    /* roter Haken */
+    /* dunkler Haken */
     form input[type="checkbox"]::before{
       content: "";
       width: 9px;
       height: 5px;
-      border-left: 2px solid #930010;
-      border-bottom: 2px solid #930010;
+      border-left: 2px solid #111;
+      border-bottom: 2px solid #111;
       transform: rotate(-45deg) scale(0);
       transition: transform .12s ease-in-out;
     }
@@ -364,7 +381,7 @@
     /* Fokus (optional, dezent) */
     form input[type="checkbox"]:focus{
       outline: none;
-      box-shadow: 0 0 0 2px rgba(147,0,16,0.25);
+      box-shadow: 0 0 0 2px rgba(17,17,17,0.18);
     }
 
     /* ===== Privacy-consent layout (neu) ===== */
@@ -409,7 +426,7 @@
     .sending-indicator.active{ display:flex; }
     .sending-indicator .spinner{
       width:14px;height:14px;border-radius:50%;
-      border:2px solid #111;
+      border:2px solid rgba(17,17,17,.7);
       border-top-color:transparent;
       animation:spin .7s linear infinite;
     }
@@ -499,11 +516,20 @@
       .edge-swipe.right{ pointer-events: none !important; }
     }
 
-    /* White Text */
-    body{ color:#fff; }
-    a{ color:#fff; }
-    .brand{ color:#fff !important; }
-    form, form label, form p{ color:#fff; }
+    /* Seiten-Hintergrund (übernommen von der ehemaligen SoundCloud-Seite) */
+    html,
+    html body,
+    body {
+        background-image: none !important;
+        background-color: #e7e1d5 !important;
+        background: #e7e1d5 !important;
+    }
+
+    /* Text passend zum hellen Hintergrund schwarz statt weiß */
+    body{ color:#111; }
+    a{ color:#111; }
+    .brand{ color:#111 !important; }
+    form, form label, form p{ color:#111; }
 
     /* ✅ Formular-Titel exakt wie Menüpunkt */
     .page-content h1.form-title{
@@ -513,6 +539,61 @@
       letter-spacing: 0 !important;
       line-height: 1.2 !important;
     }
+
+    /* =========================================================
+       MOBILE BACKGROUND FIX
+       Auf dem Handy denselben SoundCloud-Hintergrund wie Desktop erzwingen.
+       Externe mobile Hintergrundbilder aus styles.css / swipe-helper.css
+       werden hier zuverlässig überschrieben.
+       ========================================================= */
+
+    html,
+    html body,
+    body,
+    main.main {
+        background-image: none !important;
+        background-color: #e7e1d5 !important;
+        background: #e7e1d5 !important;
+    }
+
+    body::before,
+    body::after,
+    main.main::before,
+    main.main::after,
+    .main::before,
+    .main::after {
+        content: none !important;
+        display: none !important;
+        background-image: none !important;
+    }
+
+    @media (max-width: 767px) {
+        html,
+        html body,
+        body,
+        main.main,
+        .main,
+        .scroll-panel,
+        .content-offset {
+            background-image: none !important;
+            background-color: #e7e1d5 !important;
+            background: #e7e1d5 !important;
+        }
+
+        body::before,
+        body::after,
+        main.main::before,
+        main.main::after,
+        .main::before,
+        .main::after,
+        .content-offset::before,
+        .content-offset::after {
+            content: none !important;
+            display: none !important;
+            background-image: none !important;
+        }
+    }
+
   </style>
 
   <!-- Plausible Analytics -->
@@ -527,46 +608,42 @@
     </a>
   </header>
 
-  <!-- Burger-Menü -->
-  <button class="hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="site-menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div id="menu-overlay" class="menu-overlay" hidden></div>
-
-  <!-- ✅ ARIA FIX: aria-hidden + inert + tabindex=-1 solange geschlossen -->
-  <nav id="site-menu" class="site-menu" aria-hidden="true" inert>
-    <ul>
-      <li><a href="ueber-mich.html" tabindex="-1">über mich</a></li>
-      <li><a href="diskografie.html" tabindex="-1">diskografie</a></li>
-      <li><a href="kontakt.html" tabindex="-1">kontakt</a></li>
-      <li><a href="aktuell.html" tabindex="-1">aktuell</a></li>
-      <li><a href="gesehen.html" tabindex="-1">gesehen</a></li>
-      <li><a href="plattformen.html" tabindex="-1">links</a></li>
-      <li class="sep"><a href="impressum.html" tabindex="-1">Impressum / Datenschutz</a></li>
-    </ul>
+  <!-- Burger-Menü (identisch zu gespalten.html) -->
+  <nav class="burger-menu" id="burger-menu" aria-label="Seitennavigation">
+    <button
+        class="burger-btn"
+        id="burger-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="burger-dropdown"
+        aria-label="Menü öffnen"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="burger-dropdown" id="burger-dropdown">
+        <a class="burger-link" href="gespalten.html#page=0"><span class="num">01</span> gespalten</a>
+        <a class="burger-link" href="gespalten.html#page=1"><span class="num">02</span> die andere</a>
+        <a class="burger-link" href="gespalten.html#page=2"><span class="num">03</span> spotify</a>
+        <a class="burger-link" href="gespalten.html#page=3"><span class="num">04</span> youtube</a>
+        <a class="burger-link" href="gespalten.html#page=4"><span class="num">05</span> drei</a>
+        <a class="burger-link" href="gespalten.html#page=5"><span class="num">06</span> connect</a>
+        <span class="burger-link current"><span class="num">07</span> kontakt</span>
+        <a class="burger-link" href="impressum.html"><span class="num">08</span> impressum</a>
+    </div>
   </nav>
 
   <main class="main">
     <div class="scroll-panel">
       <div class="content-offset">
-        <section class="grid" aria-label="Seitenübersicht">
+        <section class="grid" aria-label="Kontakt">
 
-          <a class="page-link" href="ueber-mich.html">
-            <span class="arrow" aria-hidden="true">►</span>
-            <span>über mich</span>
-          </a>
-
-          <a class="page-link" href="diskografie.html">
-            <span class="arrow" aria-hidden="true">►</span>
-            <span>diskografie</span>
-          </a>
-
-          <!-- kontakt – aktuell geöffnet -->
+          <!-- kontakt – kein Aufklapp-Button mehr, immer offen -->
           <div class="page-group current open">
-            <button class="page-toggle" type="button" aria-expanded="true">
-              <span class="arrow" aria-hidden="true">►</span>
+            <div class="page-toggle">
               <span>kontakt</span>
-            </button>
+            </div>
 
             <div class="page-content">
               <h1 class="form-title">formular</h1>
@@ -619,28 +696,13 @@
             </div>
           </div>
 
-          <a class="page-link" href="aktuell.html">
-            <span class="arrow" aria-hidden="true">►</span>
-            <span>aktuell</span>
-          </a>
-
-          <a class="page-link" href="gesehen.html">
-            <span class="arrow" aria-hidden="true">►</span>
-            <span>gesehen</span>
-          </a>
-
-          <a class="page-link" href="plattformen.html">
-            <span class="arrow" aria-hidden="true">►</span>
-            <span>links</span>
-          </a>
-
         </section>
       </div>
     </div>
   </main>
 
   <div class="footer-inline">
-    © b3nn3t · <a href="impressum.html">Impressum / Datenschutz</a>
+    
   </div>
 
   <div class="edge-swipe left"  aria-hidden="true"></div>
@@ -649,82 +711,61 @@
   <script src="script.js"></script>
   <script src="swipe-nav.js?v=12" defer></script>
 
-  <!-- ✅ ARIA/WCAG FIX: Menü-Fokus sauber steuern -->
+  <!-- Burger-Menü (identisch zu gespalten.html) -->
   <script>
   (function(){
-    const btn = document.querySelector('.hamburger');
-    const nav = document.getElementById('site-menu');
-    const overlay = document.getElementById('menu-overlay');
-    if(!btn || !nav || !overlay) return;
-
-    const focusablesSelector = 'a, button, input, select, textarea, [tabindex]';
-
-    function setMenuFocus(enabled){
-      const items = nav.querySelectorAll(focusablesSelector);
-      items.forEach(el => {
-        el.tabIndex = enabled ? 0 : -1;
-      });
-    }
+    const menu = document.getElementById('burger-menu');
+    const btn = document.getElementById('burger-btn');
+    const dropdown = document.getElementById('burger-dropdown');
+    if (!menu || !btn) return;
 
     function openMenu(){
-      document.body.classList.add('menu-open');
-      btn.setAttribute('aria-expanded','true');
-      btn.setAttribute('aria-label','Menü schließen');
-
-      nav.setAttribute('aria-hidden','false');
-      nav.removeAttribute('inert');
-
-      overlay.hidden = false;
-
-      setMenuFocus(true);
-
-      const firstLink = nav.querySelector('a');
-      if(firstLink) firstLink.focus({ preventScroll: true });
+      menu.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
     }
-
     function closeMenu(){
-      document.body.classList.remove('menu-open');
-      btn.setAttribute('aria-expanded','false');
-      btn.setAttribute('aria-label','Menü öffnen');
-
-      nav.setAttribute('aria-hidden','true');
-      nav.setAttribute('inert','');
-
-      overlay.hidden = true;
-
-      setMenuFocus(false);
-
-      btn.focus({ preventScroll: true });
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
     }
 
-    // initial sicher
-    setMenuFocus(false);
-    nav.setAttribute('aria-hidden','true');
-    nav.setAttribute('inert','');
-    overlay.hidden = true;
-
-    // capture + stopImmediatePropagation: gewinnt gegen evtl. script.js-handler
     btn.addEventListener('click', function(e){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      const isOpen = document.body.classList.contains('menu-open');
-      if(isOpen) closeMenu();
-      else openMenu();
-    }, true);
-
-    overlay.addEventListener('click', function(e){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      closeMenu();
-    }, true);
-
-    document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape' && document.body.classList.contains('menu-open')) closeMenu();
+      e.stopPropagation();
+      if (menu.classList.contains('open')) { closeMenu(); }
+      else { openMenu(); }
     });
 
-    // Klick auf Menü-Link -> schließen
-    nav.querySelectorAll('a').forEach(a=>{
-      a.addEventListener('click', closeMenu);
+    /*
+      Verlässt die Maus das Menü, schließt es
+      sich – aber erst mit kurzer Verzögerung,
+      damit die Lücke zwischen Button und der
+      aufgeklappten Liste darunter nicht sofort
+      zum Schließen führt, bevor man einen
+      Punkt anklicken kann.
+    */
+    let closeTimer = null;
+    function scheduleClose(){
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(closeMenu, 300);
+    }
+    function cancelClose(){
+      clearTimeout(closeTimer);
+    }
+
+    menu.addEventListener('mouseleave', scheduleClose);
+    btn.addEventListener('mouseenter', cancelClose);
+    if (dropdown) {
+      dropdown.addEventListener('mouseenter', cancelClose);
+    }
+
+    /* Klick außerhalb schließt es ebenfalls. */
+    document.addEventListener('click', function(e){
+      if (menu.classList.contains('open') && !menu.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && menu.classList.contains('open')) closeMenu();
     });
   })();
   </script>
@@ -732,8 +773,6 @@
   <!-- Panelhöhe dynamisch + Accordion toggle -->
   <script>
     (function(){
-      const group  = document.querySelector('.page-group.current');
-      const toggle = group?.querySelector('.page-toggle');
       const panel  = document.querySelector('.scroll-panel');
 
       function resizePanel(){
@@ -755,14 +794,6 @@
         let max = vh - hh - pt - pb - gap;
         if(max < 260) max = 260;
         panel.style.maxHeight = max + 'px';
-      }
-
-      if(toggle && group){
-        toggle.addEventListener('click', () => {
-          const isOpen = group.classList.contains('open');
-          group.classList.toggle('open', !isOpen);
-          toggle.setAttribute('aria-expanded', String(!isOpen));
-        });
       }
 
       window.addEventListener('load', resizePanel);

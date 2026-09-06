@@ -105,11 +105,17 @@
 <!-- ===== Globales Panel-Stylesheet ===== -->
 <style>
   /* ✅ Schriftfarbe & Schriftart wie bei den anderen Seiten */
+  html {
+    background: #350404 !important;
+  }
+
   body{
     color:#fff !important;
     font-family: 'Press Start 2P', Arial, sans-serif !important;
     letter-spacing: 0.03em !important;
     line-height: 1.6 !important;
+
+    background: #350404 !important;
   }
 
   /* b3nn3t im Header weiß */
@@ -177,90 +183,154 @@
 
 
   
-<!-- ===== Burger Navigation Styles (angepasst: schwarzes Menü-Icon, Menülinks bleiben schwarz) ===== -->
+<!-- ===== Neues Burger-Menü (identisch zu gespalten.html) ===== -->
 <style>
-  .menu-toggle {
-    appearance: none;
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
-  }
-  .menu-toggle .bar {
-    display: block;
-    width: 16px;
-    height: 2px;
-    background: #000; /* ✅ Burger schwarz */
-    position: relative;
-  }
-  .menu-toggle .bar::before,
-  .menu-toggle .bar::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 16px;
-    height: 2px;
-    background: #000; /* ✅ Burger schwarz */
-  }
-  .menu-toggle .bar::before { top: -5px; }
-  .menu-toggle .bar::after  { top:  5px; }
-
-  .site-nav {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: auto;
-    max-height: 90vh;
-    width: min(35vw, 130px);
-    background: rgba(255,255,255,0.78);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-    transform: translateX(100%);
-    transition: transform .25s ease;
-    z-index: 1101;
-    padding: 46px 10px 14px;
-  }
-  .site-nav.open { transform: translateX(0); }
-
-  .site-nav a {
-    display: block;
-    padding: 10px 0;
-    font-size: 1.05rem;
-    color: #111 !important;   /* ✅ Menütexte schwarz */
-    text-decoration: none;
-    font-family: Arial, sans-serif !important; /* Menü wie bei deinen anderen Seiten */
-    letter-spacing: 0 !important;
-    line-height: 1.2 !important;
-  }
-  .site-nav a:hover { text-decoration: underline; }
-
-  .backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.25);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 180ms ease;
-    z-index: 900;
-  }
-  .backdrop.show {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  /* Header Layout: Logo links, Burger rechts */
+  /* Header Layout: nur noch Logo */
   .header {
     display: flex;
     align-items: center;
     gap: 12px;
   }
-  .header .brand { margin-right: auto; }
+
+  .burger-menu {
+    position: fixed;
+
+    top: 22px;
+    right: 22px;
+
+    z-index: 2000;
+  }
+
+  .burger-btn {
+    width: 46px;
+    height: 46px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: white;
+    color: #111;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    cursor: pointer;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,.25);
+  }
+
+  .burger-btn span {
+    display: block;
+
+    width: 18px;
+    height: 2px;
+
+    background: #111;
+
+    transition: transform .25s ease, opacity .25s ease;
+  }
+
+  .burger-menu.open .burger-btn span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .burger-menu.open .burger-btn span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .burger-menu.open .burger-btn span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .burger-dropdown {
+    position: absolute;
+
+    top: 58px;
+    right: 0;
+
+    min-width: 220px;
+
+    background: #111;
+    color: white;
+
+    padding: 10px 0;
+
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+
+    transition: opacity .2s ease, transform .2s ease;
+
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  .burger-menu.open .burger-dropdown {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .burger-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 13px 22px;
+
+    color: white !important;
+    text-decoration: none;
+
+    font-size: 13px !important;
+    letter-spacing: .1em !important;
+    text-transform: lowercase;
+    font-family: Arial, sans-serif !important;
+
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+
+    transition: background .2s ease;
+  }
+
+  .burger-link:hover {
+    background: rgba(255,255,255,.1);
+  }
+
+  /*
+      Die aktuelle Seite ist kein Link
+      mehr, nur noch Text – zur
+      Orientierung leicht hervorgehoben.
+  */
+
+  .burger-link.current {
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.6) !important;
+    cursor: default;
+  }
+
+  .burger-link .num {
+    opacity: .5;
+    font-size: 11px;
+  }
+
+  @media (max-width: 800px) {
+
+    .burger-menu {
+      top: 16px;
+      right: 16px;
+    }
+
+    .burger-btn {
+      width: 42px;
+      height: 42px;
+    }
+
+  }
 </style>
 
 <!-- ✅ Footer wie bei den anderen Seiten, aber weiß -->
@@ -301,23 +371,31 @@
   <img src="favicon.svg" alt="b3nn3t Logo">
   <strong>b3nn3t</strong>
 </a>
-
-  <button class="menu-toggle" aria-label="Menü öffnen" aria-controls="site-nav" aria-expanded="false">
-    <span class="bar"></span>
-  </button>
 </header>
 
-<nav id="site-nav" class="site-nav" aria-hidden="true">
-  <a href="ueber-mich.html">über mich</a>
-  <a href="diskografie.html">diskografie</a>
-  <a href="kontakt.html">kontakt</a>
-  <a href="aktuell.html">aktuell</a>
-  <a href="gesehen.html">gesehen</a>
-  <a href="plattformen.html">plattformen</a>
-  <a href="impressum.html">Impressum / Datenschutz</a>
+<nav class="burger-menu" id="burger-menu" aria-label="Seitennavigation">
+    <button
+        class="burger-btn"
+        id="burger-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="burger-dropdown"
+        aria-label="Menü öffnen"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="burger-dropdown" id="burger-dropdown">
+        <a class="burger-link" href="gespalten.html#page=0"><span class="num">01</span> gespalten</a>
+        <a class="burger-link" href="gespalten.html#page=1"><span class="num">02</span> die andere</a>
+        <a class="burger-link" href="gespalten.html#page=2"><span class="num">03</span> spotify</a>
+        <a class="burger-link" href="gespalten.html#page=3"><span class="num">04</span> youtube</a>
+        <a class="burger-link" href="gespalten.html#page=4"><span class="num">05</span> soundcloud</a>
+        <a class="burger-link" href="kontakt.html"><span class="num">06</span> kontakt</a>
+        <span class="burger-link current"><span class="num">07</span> impressum</span>
+    </div>
 </nav>
-
-<div class="backdrop" data-backdrop="nav"></div>
 
 <main class="main">
   <h1>Impressum & Datenschutzerklärung</h1>
@@ -477,35 +555,60 @@ target="_blank" rel="noopener noreferrer">
 </div>
 
 <script>
-/* Navigation Burger Menü */
+/* Burger-Menü (identisch zu gespalten.html) */
 (function(){
-  var btn = document.querySelector('.menu-toggle');
-  var nav = document.getElementById('site-nav');
-  var backdrop = document.querySelector('[data-backdrop="nav"]');
-  if(!btn || !nav) return;
+  var menu = document.getElementById('burger-menu');
+  var btn = document.getElementById('burger-btn');
+  var dropdown = document.getElementById('burger-dropdown');
+  if (!menu || !btn) return;
 
-  function openNav(){
-    nav.classList.add('open');
-    nav.setAttribute('aria-hidden', 'false');
+  function openMenu(){
+    menu.classList.add('open');
     btn.setAttribute('aria-expanded', 'true');
-    if (backdrop){ backdrop.classList.add('show'); }
-    document.documentElement.style.overflow = 'hidden';
   }
-  function closeNav(){
-    nav.classList.remove('open');
-    nav.setAttribute('aria-hidden', 'true');
+  function closeMenu(){
+    menu.classList.remove('open');
     btn.setAttribute('aria-expanded', 'false');
-    if (backdrop){ backdrop.classList.remove('show'); }
-    document.documentElement.style.overflow = '';
   }
 
-  btn.addEventListener('click', function(){
-    if(nav.classList.contains('open')) closeNav();
-    else openNav();
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (menu.classList.contains('open')) { closeMenu(); }
+    else { openMenu(); }
   });
-  if (backdrop){ backdrop.addEventListener('click', closeNav); }
+
+  /*
+    Verlässt die Maus das Menü, schließt es
+    sich – aber erst mit kurzer Verzögerung,
+    damit die Lücke zwischen Button und der
+    aufgeklappten Liste darunter nicht sofort
+    zum Schließen führt, bevor man einen
+    Punkt anklicken kann.
+  */
+  var closeTimer = null;
+  function scheduleClose(){
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(closeMenu, 300);
+  }
+  function cancelClose(){
+    clearTimeout(closeTimer);
+  }
+
+  menu.addEventListener('mouseleave', scheduleClose);
+  btn.addEventListener('mouseenter', cancelClose);
+  if (dropdown) {
+    dropdown.addEventListener('mouseenter', cancelClose);
+  }
+
+  /* Klick außerhalb schließt es ebenfalls. */
+  document.addEventListener('click', function(e){
+    if (menu.classList.contains('open') && !menu.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && nav.classList.contains('open')) closeNav();
+    if (e.key === 'Escape' && menu.classList.contains('open')) closeMenu();
   });
 })();
 </script>
