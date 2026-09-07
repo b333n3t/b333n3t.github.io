@@ -2376,6 +2376,62 @@ body {
     }
 }
 
+
+
+/* =========================================================
+   MOBILE PORTRAIT FEINSCHLIFF (2026-09-07)
+   Nur Hochformat auf Mobiltelefonen: Connect, YouTube,
+   vertikaler Hinweis auf "gespalten".
+   ========================================================= */
+@media (max-width: 800px) and (orientation: portrait) {
+    /* Connect: zwei Kacheln sauber innerhalb der sichtbaren Breite halten,
+       damit obere/rechte Rahmen nicht abgeschnitten werden. */
+    .platforms-grid {
+        gap: 12px;
+        padding-top: 2px;
+        padding-right: 2px;
+        padding-bottom: 10px;
+    }
+
+    .platform-tile {
+        width: calc((100% - 12px) / 2);
+        min-width: calc((100% - 12px) / 2);
+        height: 34dvh;
+        padding: 12px;
+        overflow: hidden;
+    }
+
+    /* Auf kleinen Displays darf die Link-Karte nicht durch ihre bisherige
+       Mindesthöhe über den unteren Kachelrahmen hinausdrücken. */
+    .platform-link-card {
+        min-height: 0;
+    }
+
+    .platform-action {
+        flex-shrink: 0;
+        margin-top: 4px;
+        margin-bottom: 4px;
+        line-height: 1.1;
+    }
+
+    /* YouTube: Pfeil-Buttons rechts bündig zum rechten Abschluss
+       von "kanal ansehen →" positionieren. */
+    .youtube-heading-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .youtube-nav {
+        margin-left: auto;
+    }
+
+    /* Seite "gespalten": vertikalen Text etwas tiefer setzen,
+       damit er optisch mittiger zum Videofenster steht. */
+    .page-1 .side-label {
+        top: calc(50% + 26px);
+    }
+}
+
 </style>
 </head>
 
