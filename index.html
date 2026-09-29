@@ -1379,7 +1379,11 @@ body {
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x;
     align-items: stretch;
-    padding-bottom: 6px;
+
+    /* Etwas Luft fuer den Hover-Versatz der Kacheln:
+       verhindert abgeschnittene obere/rechte Rahmen. */
+    padding: 4px 4px 6px 0;
+
     cursor: grab;
 }
 
@@ -3873,6 +3877,10 @@ function changePage() {
     pages[currentPage]
         .style.maskImage = "none";
 
+    /* Sichtbare Seite in der URL merken, damit Browser
+       Zurueck/Vorwaerts zwischen den internen Seiten funktioniert. */
+    updatePageHash(currentPage);
+
 }
 
 
@@ -5578,6 +5586,8 @@ function jumpToPage(index) {
         startAboutTypewriter();
     }
 
+    updatePageHash(currentPage);
+
 }
 
 document.querySelectorAll(".burger-link").forEach((link) => {
@@ -5620,28 +5630,60 @@ document.querySelectorAll(".burger-link").forEach((link) => {
    gespalten.html#page=1 für "die andere".
    ========================================================= */
 
+function updatePageHash(index) {
+
+    const nextHash = `#page=${index}`;
+
+    if (location.hash === nextHash) {
+        return;
+    }
+
+    /* pushState erzeugt einen echten Browser-Verlauf, ohne
+       die laufende Spalt-Animation durch hashchange zu stoeren. */
+    history.pushState(
+        { page: index },
+        "",
+        nextHash
+    );
+
+}
+
+
 function applyPageFromHash() {
 
     const match =
         location.hash.match(/page=(\d+)/);
 
-    if (!match) {
+    /* Ohne #page-Hash ist die Startseite (0) gemeint.
+       So fuehrt Browser-Zurueck von #page=1 wieder korrekt
+       auf die urspruengliche Start-URL. */
+    const index = match ? Number(match[1]) : 0;
+
+    if (!pages[index]) {
         return;
     }
 
-    const index = Number(match[1]);
+    currentPage = index;
+    progress = 0;
 
-    if (pages[index]) {
+    setupLayers(direction);
 
-        currentPage = index;
+    pages.forEach((page) => {
+        page.style.webkitMaskImage = "none";
+        page.style.maskImage = "none";
+    });
 
-        if (currentPage === 1) {
-            startAboutTypewriter();
-        }
-
+    if (currentPage === 1) {
+        startAboutTypewriter();
     }
 
 }
+
+
+/* Direkte #page=N-Aenderungen sowie Browser Zurueck/Vorwaerts. */
+window.addEventListener("hashchange", applyPageFromHash);
+window.addEventListener("popstate", applyPageFromHash);
+
 
 applyPageFromHash();
 
