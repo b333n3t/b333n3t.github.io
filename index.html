@@ -484,7 +484,7 @@ body {
 
 /*
     Eigener Block für Icon + Text, damit
-    "06 / kontakt" oben auf gleicher Höhe
+    "07 / kontakt" oben auf gleicher Höhe
     wie bei den anderen Kacheln bleibt und
     nur der Rest darunter zentriert wird.
 */
@@ -598,6 +598,8 @@ body {
     min-height: 150px;
 }
 
+
+
 .radio-card {
     width: 100%;
 
@@ -632,6 +634,38 @@ body {
 .card-article:hover .thumb {
     transform: scale(1.04);
 
+    filter: brightness(.75);
+}
+
+
+/* Stadtkonzerte-Kachel: komplettes Logo sichtbar auf weißer Fläche. */
+.card-article.stadtkonzerte-card {
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-article.stadtkonzerte-card .stadtkonzerte-thumb {
+    width: 82%;
+    height: 82%;
+
+    max-width: 82%;
+    max-height: 82%;
+
+    object-fit: contain;
+    object-position: center;
+
+    background: white;
+
+    display: block;
+
+    transform: none;
+    filter: none;
+}
+
+.stadtkonzerte-card:hover .stadtkonzerte-thumb {
+    transform: scale(1.04);
     filter: brightness(.75);
 }
 
@@ -2772,12 +2806,54 @@ body {
             </div>
 
 
-            <!-- KACHEL 05 – TERMINE -->
+            <!-- KACHEL 05 – PRESSE: STADTKONZERTE -->
+
+            <div class="andere-tile tile-press">
+
+                <span class="tile-label">
+                    05 / presse – stadtkonzerte
+                </span>
+
+                <a
+                    class="card card-article stadtkonzerte-card"
+                    id="article3"
+                    href="https://stadtkonzerte.ch/artists/b3nn3t"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Stadtkonzerte – b3nn3t"
+                >
+
+                    <img
+                        class="thumb stadtkonzerte-thumb"
+                        src="/assets/presse/stadtkonzerte.webp"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        sizes="(max-width: 820px) 100vw, 350px"
+                    >
+
+                    <div class="article-overlay">
+                        <span class="article-label"></span>
+                        <small class="article-meta"></small>
+                    </div>
+
+                    <span class="play-label"></span>
+
+                    <small>
+                        STADTKONZERTE.CH
+                    </small>
+
+                </a>
+
+            </div>
+
+
+            <!-- KACHEL 06 – TERMINE -->
 
             <div class="andere-tile tile-termine">
 
                 <span class="tile-label">
-                    05 / termine
+                    06 / termine
                 </span>
 
                 <div class="sub-group" id="acc-termine">
@@ -2855,7 +2931,7 @@ body {
             </div>
 
 
-            <!-- KACHEL 06 – KONTAKT -->
+            <!-- KACHEL 07 – KONTAKT -->
 
             <a
                 class="andere-tile tile-contact"
