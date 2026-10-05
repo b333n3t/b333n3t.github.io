@@ -1159,34 +1159,43 @@ body {
     transform:
         translate(-50%, -50%);
 
-    width: 58px;
-    height: 58px;
+    width: 30px;
+    height: 30px;
 
+    border: 1px solid rgba(255,255,255,.78);
     border-radius: 50%;
 
-    background: white;
+    background: rgba(0,0,0,.20);
 
-    color: #111;
+    color: white;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
 
-    font-size: 21px;
+    font-size: 12px;
+    line-height: 1;
 
-    padding-left: 3px;
+    padding-left: 2px;
 
     z-index: 3;
 
+    opacity: .82;
+
     transition:
-        transform .3s ease;
+        transform .3s ease,
+        opacity .3s ease,
+        background .3s ease;
 }
 
 .youtube-card:hover .youtube-play {
     transform:
         translate(-50%, -50%)
-        scale(1.12);
+        scale(1.08);
+
+    opacity: 1;
+    background: rgba(0,0,0,.30);
 }
 
 
@@ -1215,28 +1224,7 @@ body {
    ========================================================= */
 
 .youtube-bottom {
-    position: absolute;
-
-    left: 15px;
-    right: 15px;
-
-    bottom: 13px;
-
-    color: white;
-
-    z-index: 4;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    font-size: 12px;
-
-    letter-spacing: .08em;
-
-    text-transform: uppercase;
+    display: none;
 }
 
 
@@ -1466,7 +1454,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    gap: 14px;
+    gap: 8px;
     min-height: 200px;
     text-decoration: none;
     color: inherit;
@@ -1520,12 +1508,6 @@ body {
     object-fit: contain;
 }
 
-.platform-name {
-    font-size: 22px;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    text-transform: lowercase;
-}
 
 .platform-action {
     font-size: 12px;
@@ -1606,10 +1588,6 @@ body {
     .platform-logo img {
         width: 34px;
         height: 34px;
-    }
-
-    .platform-name {
-        font-size: 15px;
     }
 
     .page-1 .side-label {
@@ -3487,7 +3465,6 @@ body {
                             <img src="assets/plattformen/spotify_128.png" alt="Spotify Logo" width="64" height="64" loading="lazy" decoding="async">
                         </picture>
                     </div>
-                    <span class="platform-name">spotify</span>
                     <span class="platform-action">öffnen →</span>
                 </a>
             </div>
@@ -3507,7 +3484,6 @@ body {
                             <img src="assets/plattformen/apple_music_128.png" alt="Apple Music Logo" width="64" height="64" loading="lazy" decoding="async">
                         </picture>
                     </div>
-                    <span class="platform-name">apple music</span>
                     <span class="platform-action">öffnen →</span>
                 </a>
             </div>
@@ -3527,7 +3503,6 @@ body {
                             <img src="assets/plattformen/instagram_128.png" alt="Instagram Logo" width="64" height="64" loading="lazy" decoding="async">
                         </picture>
                     </div>
-                    <span class="platform-name">instagram</span>
                     <span class="platform-action">öffnen →</span>
                 </a>
             </div>
@@ -3547,7 +3522,6 @@ body {
                             <img src="assets/plattformen/youtube_128.png" alt="YouTube Logo" width="64" height="64" loading="lazy" decoding="async">
                         </picture>
                     </div>
-                    <span class="platform-name">youtube</span>
                     <span class="platform-action">öffnen →</span>
                 </a>
             </div>
@@ -3567,7 +3541,6 @@ body {
                             <img src="assets/plattformen/soundcloud_128.png" alt="SoundCloud Logo" width="64" height="64" loading="lazy" decoding="async">
                         </picture>
                     </div>
-                    <span class="platform-name">soundcloud</span>
                     <span class="platform-action">öffnen →</span>
                 </a>
             </div>
@@ -3589,7 +3562,6 @@ body {
                             <img src="assets/plattformen/mx3_128.png" alt="MX3 Logo" width="64" height="64" loading="lazy" decoding="async">
                         </picture>
                     </div>
-                    <span class="platform-name">mx3</span>
                     <span class="platform-action">öffnen →</span>
                 </a>
             </div>
@@ -3609,7 +3581,6 @@ body {
                             <img src="assets/plattformen/genius_128.png" alt="Genius Logo" width="64" height="64" loading="lazy" decoding="async">
                         </picture>
                     </div>
-                    <span class="platform-name">genius</span>
                     <span class="platform-action">öffnen →</span>
                 </a>
             </div>
