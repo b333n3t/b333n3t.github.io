@@ -1174,10 +1174,10 @@ body {
     align-items: center;
     justify-content: center;
 
-    font-size: 12px;
+    font-size: 0;
     line-height: 1;
 
-    padding-left: 2px;
+    padding: 0;
 
     z-index: 3;
 
@@ -1187,6 +1187,17 @@ body {
         transform .3s ease,
         opacity .3s ease,
         background .3s ease;
+}
+
+.youtube-play::before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid rgba(255,255,255,.92);
+    margin-left: 2px;
 }
 
 .youtube-card:hover .youtube-play {
@@ -3049,9 +3060,7 @@ body {
                     08
                 </span>
 
-                <span class="youtube-play">
-                    ▶
-                </span>
+                <span class="youtube-play" aria-hidden="true"></span>
 
                 <span class="youtube-bottom">
                     <span>neu</span>
@@ -3090,9 +3099,7 @@ body {
                     07
                 </span>
 
-                <span class="youtube-play">
-                    ▶
-                </span>
+                <span class="youtube-play" aria-hidden="true"></span>
 
                 <span class="youtube-bottom">
                     <span>video</span>
@@ -3131,9 +3138,7 @@ body {
                     06
                 </span>
 
-                <span class="youtube-play">
-                    ▶
-                </span>
+                <span class="youtube-play" aria-hidden="true"></span>
 
                 <span class="youtube-bottom">
                     <span>video</span>
@@ -3172,9 +3177,7 @@ body {
                     05
                 </span>
 
-                <span class="youtube-play">
-                    ▶
-                </span>
+                <span class="youtube-play" aria-hidden="true"></span>
 
                 <span class="youtube-bottom">
                     <span>video</span>
@@ -3213,9 +3216,7 @@ body {
                     04
                 </span>
 
-                <span class="youtube-play">
-                    ▶
-                </span>
+                <span class="youtube-play" aria-hidden="true"></span>
 
                 <span class="youtube-bottom">
                     <span>video</span>
@@ -3254,9 +3255,7 @@ body {
                     03
                 </span>
 
-                <span class="youtube-play">
-                    ▶
-                </span>
+                <span class="youtube-play" aria-hidden="true"></span>
 
                 <span class="youtube-bottom">
                     <span>video</span>
@@ -3295,9 +3294,7 @@ body {
                     02
                 </span>
 
-                <span class="youtube-play">
-                    ▶
-                </span>
+                <span class="youtube-play" aria-hidden="true"></span>
 
                 <span class="youtube-bottom">
                     <span>video</span>
@@ -3337,9 +3334,7 @@ body {
                     01
                 </span>
 
-                <span class="youtube-play">
-                    ▶
-                </span>
+                <span class="youtube-play" aria-hidden="true"></span>
 
                 <span class="youtube-bottom">
                     <span>älter</span>
