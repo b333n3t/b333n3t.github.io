@@ -1427,6 +1427,7 @@ body {
 }
 
 .platform-tile {
+    min-height: 0;
     flex: 0 0 auto;
     width: min(230px, 58vw);
     height: 42vh;
@@ -1466,7 +1467,7 @@ body {
     align-items: center;
     justify-content: flex-end;
     gap: 8px;
-    min-height: 200px;
+    min-height: 0;
     text-decoration: none;
     color: inherit;
     border: none;
@@ -2863,6 +2864,12 @@ body {
                         <div class="termine-responsive">
 
                             <div class="termine-list" role="table" aria-label="Termine">
+
+                                <div class="termin-row" role="row">
+                                    <div class="datum" role="cell"><time datetime="2027-02-19">19.02.2027</time></div>
+                                    <div class="veranstaltung" role="cell">· Jahrgängerfeier 18ni</div>
+                                    <div class="ort" role="cell">Rapperswil - ZAK · 21:00 Uhr</div>
+                                </div>
 
                                 <div class="termin-row" role="row">
                                     <div class="datum" role="cell"><time datetime="2026-08-08">08.08.2026</time></div>
@@ -4826,16 +4833,14 @@ document.querySelectorAll(".platforms-nav-btn").forEach((button) => {
         const arenaRect =
             b.arena.getBoundingClientRect();
 
-        /* offsetWidth/Height sind unabhängig von der aktuellen
-           translate3d-Position des fliegenden Icons. */
-        const ballWidth = b.ball.offsetWidth;
-        const ballHeight = b.ball.offsetHeight;
+        const ballRect =
+            b.ball.getBoundingClientRect();
 
         const maxX =
-            Math.max(0, b.arena.clientWidth - ballWidth);
+            Math.max(0, arenaRect.width - ballRect.width);
 
         const maxY =
-            Math.max(0, b.arena.clientHeight - ballHeight);
+            Math.max(0, arenaRect.height - ballRect.height);
 
         b.maxX = maxX;
         b.maxY = maxY;
@@ -4857,8 +4862,8 @@ document.querySelectorAll(".platforms-nav-btn").forEach((button) => {
 
         } else {
 
-            b.x = Math.max(0, Math.min(b.x, maxX));
-            b.y = Math.max(0, Math.min(b.y, maxY));
+            b.x = Math.min(b.x, maxX);
+            b.y = Math.min(b.y, maxY);
 
         }
 
@@ -4866,28 +4871,9 @@ document.querySelectorAll(".platforms-nav-btn").forEach((button) => {
 
     balls.forEach(initBall);
 
-    /* Bei Rotation und wechselnden Browserleisten die Arena-Grenzen
-       nach dem Layout-Update neu berechnen. */
-    let boundsRefreshFrame = 0;
-
-    function refreshBallBounds() {
-        cancelAnimationFrame(boundsRefreshFrame);
-        boundsRefreshFrame = requestAnimationFrame(() => {
-            balls.forEach(initBall);
-        });
-    }
-
-    window.addEventListener("resize", refreshBallBounds);
-    window.addEventListener("orientationchange", refreshBallBounds);
-
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", refreshBallBounds);
-    }
-
-    if ("ResizeObserver" in window) {
-        const arenaObserver = new ResizeObserver(refreshBallBounds);
-        arenas.forEach((arena) => arenaObserver.observe(arena));
-    }
+    window.addEventListener("resize", () => {
+        balls.forEach(initBall);
+    });
 
     function isPlatformsPageVisible() {
 
