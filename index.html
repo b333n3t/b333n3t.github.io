@@ -4826,14 +4826,16 @@ document.querySelectorAll(".platforms-nav-btn").forEach((button) => {
         const arenaRect =
             b.arena.getBoundingClientRect();
 
-        const ballRect =
-            b.ball.getBoundingClientRect();
+        /* offsetWidth/Height sind unabhängig von der aktuellen
+           translate3d-Position des fliegenden Icons. */
+        const ballWidth = b.ball.offsetWidth;
+        const ballHeight = b.ball.offsetHeight;
 
         const maxX =
-            Math.max(0, arenaRect.width - ballRect.width);
+            Math.max(0, b.arena.clientWidth - ballWidth);
 
         const maxY =
-            Math.max(0, arenaRect.height - ballRect.height);
+            Math.max(0, b.arena.clientHeight - ballHeight);
 
         b.maxX = maxX;
         b.maxY = maxY;
@@ -4855,8 +4857,8 @@ document.querySelectorAll(".platforms-nav-btn").forEach((button) => {
 
         } else {
 
-            b.x = Math.min(b.x, maxX);
-            b.y = Math.min(b.y, maxY);
+            b.x = Math.max(0, Math.min(b.x, maxX));
+            b.y = Math.max(0, Math.min(b.y, maxY));
 
         }
 
@@ -4864,9 +4866,28 @@ document.querySelectorAll(".platforms-nav-btn").forEach((button) => {
 
     balls.forEach(initBall);
 
-    window.addEventListener("resize", () => {
-        balls.forEach(initBall);
-    });
+    /* Bei Rotation und wechselnden Browserleisten die Arena-Grenzen
+       nach dem Layout-Update neu berechnen. */
+    let boundsRefreshFrame = 0;
+
+    function refreshBallBounds() {
+        cancelAnimationFrame(boundsRefreshFrame);
+        boundsRefreshFrame = requestAnimationFrame(() => {
+            balls.forEach(initBall);
+        });
+    }
+
+    window.addEventListener("resize", refreshBallBounds);
+    window.addEventListener("orientationchange", refreshBallBounds);
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", refreshBallBounds);
+    }
+
+    if ("ResizeObserver" in window) {
+        const arenaObserver = new ResizeObserver(refreshBallBounds);
+        arenas.forEach((arena) => arenaObserver.observe(arena));
+    }
 
     function isPlatformsPageVisible() {
 
