@@ -529,7 +529,7 @@ body {
    ========================================================= */
 
 .page-2 {
-    background: #788044;
+    background: #8B668B;
     color: #111;
 }
 
@@ -1033,7 +1033,7 @@ body {
    ========================================================= */
 
 .page-3 {
-    background: #151515;
+    background: #66aa22;
     color: white;
 }
 
@@ -3602,12 +3602,15 @@ body {
             drei
         </h2>
 
-        <div class="page-drei-video video-launcher">
+        <div
+            class="page-drei-video video-launcher"
+            style="aspect-ratio: 4 / 3;"
+        >
 
             <button
                 class="video-play-trigger"
                 type="button"
-                aria-label="Video abspielen"
+                aria-label="video abspielen"
             >
                 ▶
             </button>
@@ -3617,6 +3620,7 @@ body {
                 preload="metadata"
                 playsinline
                 poster="/assets/release/drei-cover-384.webp"
+                style="width: 100%; height: 100%; object-fit: cover;"
             >
 
                 <source
@@ -3639,7 +3643,6 @@ body {
 </section>
 
 
-
 <!-- =======================================================
      SEITE 6 – PLATTFORMEN
      ======================================================= -->
@@ -3647,13 +3650,14 @@ body {
 <section
     class="page page-platforms"
     data-page="6"
+    style="background: #6F4E37;"
 >
 
     <div class="platforms-content">
 
         <div class="platforms-header">
 
-            <h2>
+            <h2 style="color: #000000;">
                 connect
             </h2>
 
@@ -3673,7 +3677,7 @@ body {
                     href="https://open.spotify.com/intl-de/artist/7pajHvUWNCnOPhDPyH4M6x?si=08HMnGtNR-SaKSFFgxCz2A"
                     target="_blank"
                     rel="noopener"
-                    aria-label="b3nn3t auf Spotify öffnen"
+                    aria-label="b3nn3t auf spotify öffnen"
                 >
                     <div class="platform-arena">
                         <picture class="platform-logo">
@@ -3812,9 +3816,8 @@ body {
 </section>
 
 
-
-<script>
-
+  <script>
+    
 /* =========================================================
    GESPALTEN
    BIDIREKTIONALE NAVIGATION
