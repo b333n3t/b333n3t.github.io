@@ -202,6 +202,80 @@ body {
 
 
 /* =========================================================
+   SEITE 0 – CAMOU
+   ========================================================= */
+
+.page-camou {
+    background:
+        radial-gradient(ellipse at 38% 52%, #62e6c2 0%, #5bd9b0 30%, transparent 68%),
+        radial-gradient(ellipse at 100% 100%, #03121c 0%, #0a2f3d 24%, transparent 58%),
+        radial-gradient(ellipse at 100% 45%, #2c8f8f 0%, transparent 52%),
+        linear-gradient(180deg, #3e9a63 0%, #4fbf8a 38%, #4db89a 100%);
+    color: #05222b;
+}
+
+.page-camou-content {
+    width: min(1100px, 90vw);
+}
+
+.camou-link {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 14px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.camou-kicker {
+    font-size: clamp(14px, 2vw, 20px);
+    letter-spacing: .18em;
+    text-transform: lowercase;
+}
+
+.camou-name {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .12em;
+    font-size: clamp(60px, 10vw, 150px);
+    font-weight: 700;
+    line-height: .85;
+    letter-spacing: -0.08em;
+}
+
+.camou-name-text {
+    border-bottom: 3px solid currentColor;
+}
+
+.camou-arrow {
+    font-size: .38em;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
+.page-camou .side-label {
+    color: #e8fff6;
+}
+
+@media (max-width: 800px) and (orientation: portrait),
+       (max-width: 950px) and (orientation: landscape) and (max-height: 600px) {
+    .page-camou .side-label {
+        left: calc(100% - max(18px, env(safe-area-inset-right)));
+        right: auto;
+        top: 50%;
+        bottom: auto;
+        transform-origin: center;
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
+}
+
+@media (max-width: 950px) and (orientation: landscape) and (max-height: 600px) {
+    .camou-name {
+        font-size: clamp(42px, 11vh, 72px);
+    }
+}
+
+
+/* =========================================================
    SEITE 1
    ========================================================= */
 
@@ -1920,6 +1994,11 @@ body {
     font-size: 11px;
 }
 
+/* Eigenschreibweise des Projektnamens im Burger-Menü beibehalten. */
+.burger-dropdown .burger-link:first-child {
+    text-transform: none;
+}
+
 @media (max-width: 800px) {
 
     .burger-menu {
@@ -2485,14 +2564,15 @@ body {
         <span></span>
     </button>
     <div class="burger-dropdown" id="burger-dropdown">
-        <button class="burger-link" type="button" data-page="0"><span class="num">01</span> gespalten</button>
-        <button class="burger-link" type="button" data-page="1"><span class="num">02</span> die andere</button>
-        <button class="burger-link" type="button" data-page="2"><span class="num">03</span> spotify</button>
-        <button class="burger-link" type="button" data-page="3"><span class="num">04</span> youtube</button>
-        <button class="burger-link" type="button" data-page="4"><span class="num">05</span> drei</button>
-        <button class="burger-link" type="button" data-page="5"><span class="num">06</span> connect</button>
-        <a class="burger-link" href="kontakt.html"><span class="num">07</span> kontakt</a>
-        <a class="burger-link" href="impressum.html"><span class="num">08</span> impressum</a>
+        <button class="burger-link" type="button" data-page="0"><span class="num">01</span> camOu</button>
+        <button class="burger-link" type="button" data-page="1"><span class="num">02</span> gespalten</button>
+        <button class="burger-link" type="button" data-page="2"><span class="num">03</span> die andere</button>
+        <button class="burger-link" type="button" data-page="3"><span class="num">04</span> spotify</button>
+        <button class="burger-link" type="button" data-page="4"><span class="num">05</span> youtube</button>
+        <button class="burger-link" type="button" data-page="5"><span class="num">06</span> drei</button>
+        <button class="burger-link" type="button" data-page="6"><span class="num">07</span> connect</button>
+        <a class="burger-link" href="kontakt.html"><span class="num">08</span> kontakt</a>
+        <a class="burger-link" href="impressum.html"><span class="num">09</span> impressum</a>
     </div>
 </nav>
 
@@ -2554,12 +2634,43 @@ body {
 
 
 <!-- =======================================================
+     SEITE 0 – CAMOU (neues Projekt)
+     ======================================================= -->
+
+<section
+    class="page page-camou active"
+    data-page="0"
+>
+
+    <div class="page-camou-content">
+
+        <a
+            class="camou-link"
+            href="https://camou.ch"
+            target="_blank"
+            rel="noopener"
+        >
+            <span class="camou-kicker"> projekt –</span>
+            <span class="camou-name"><span class="camou-name-text">camOu</span><span class="camou-arrow" aria-hidden="true">↗</span></span>
+        </a>
+
+    </div>
+
+    <div class="side-label">
+        Release - 27. November `26
+    </div>
+
+</section>
+
+
+
+<!-- =======================================================
      SEITE 1
      ======================================================= -->
 
 <section
-    class="page page-1 active"
-    data-page="0"
+    class="page page-1"
+    data-page="1"
 >
 
     <div class="page-1-content">
@@ -2611,7 +2722,7 @@ body {
 
 <section
     class="page page-2"
-    data-page="1"
+    data-page="2"
 >
 
     <div class="page-2-content">
@@ -2971,7 +3082,7 @@ body {
 
 <section
     class="page page-3"
-    data-page="2"
+    data-page="3"
 >
 
     <div class="page-3-content">
@@ -3005,7 +3116,7 @@ body {
 
 <section
     class="page page-4"
-    data-page="3"
+    data-page="4"
 >
 
     <div class="page-4-content">
@@ -3379,7 +3490,7 @@ body {
 
 <section
     class="page page-drei"
-    data-page="4"
+    data-page="5"
 >
 
     <div class="page-drei-content">
@@ -3432,7 +3543,7 @@ body {
 
 <section
     class="page page-platforms"
-    data-page="5"
+    data-page="6"
 >
 
     <div class="platforms-content">
@@ -3619,12 +3730,13 @@ const pages = Array.from(
 /*
     Aktuelle Seite
 
-    0 = gespalten
-    1 = die andere
-    2 = Spotify
-    3 = YouTube
-    4 = Drei
-    5 = Connect
+    0 = camOu
+    1 = gespalten
+    2 = die andere
+    3 = Spotify
+    4 = YouTube
+    5 = Drei
+    6 = Connect
 */
 
 let currentPage = 0;
@@ -3900,7 +4012,7 @@ function changePage() {
         ersten Erscheinen den Typewriter-Text.
     */
 
-    if (currentPage === 1) {
+    if (currentPage === 2) {
 
         startAboutTypewriter();
 
@@ -5632,7 +5744,7 @@ function jumpToPage(index) {
         page.style.maskImage = "none";
     });
 
-    if (currentPage === 1) {
+    if (currentPage === 2) {
         startAboutTypewriter();
     }
 
@@ -5677,7 +5789,7 @@ document.querySelectorAll(".burger-link").forEach((link) => {
    Erlaubt externen Seiten wie kontakt.html
    oder impressum.html, gezielt auf eine
    Unterseite zu verlinken, z. B.
-   gespalten.html#page=1 für "die andere".
+   gespalten.html#page=2 für "die andere".
    ========================================================= */
 
 function updatePageHash(index) {
@@ -5723,7 +5835,7 @@ function applyPageFromHash() {
         page.style.maskImage = "none";
     });
 
-    if (currentPage === 1) {
+    if (currentPage === 2) {
         startAboutTypewriter();
     }
 
