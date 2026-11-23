@@ -283,10 +283,9 @@
     color: white !important;
     text-decoration: none;
 
-    font-size: 13px !important;
-    letter-spacing: .1em !important;
+    font-size: 13px;
+    letter-spacing: .1em;
     text-transform: lowercase;
-    font-family: Arial, sans-serif !important;
 
     background: none;
     border: none;
@@ -387,14 +386,15 @@
         <span></span>
     </button>
     <div class="burger-dropdown" id="burger-dropdown">
-        <a class="burger-link" href="index.html#page=0"><span class="num">01</span> gespalten</a>
-        <a class="burger-link" href="index.html#page=1"><span class="num">02</span> die andere</a>
-        <a class="burger-link" href="index.html#page=2"><span class="num">03</span> spotify</a>
-        <a class="burger-link" href="index.html#page=3"><span class="num">04</span> youtube</a>
-        <a class="burger-link" href="index.html#page=4"><span class="num">05</span> drei</a>
-        <a class="burger-link" href="index.html#page=5"><span class="num">06</span> connect</a>
-        <a class="burger-link" href="kontakt.html"><span class="num">07</span> kontakt</a>
-        <span class="burger-link current"><span class="num">08</span> impressum</span>
+        <a class="burger-link" href="index.html#page=0"><span class="num">01</span> camOu</a>
+        <a class="burger-link" href="index.html#page=1"><span class="num">02</span> gespalten</a>
+        <a class="burger-link" href="index.html#page=2"><span class="num">03</span> die andere</a>
+        <a class="burger-link" href="index.html#page=3"><span class="num">04</span> spotify</a>
+        <a class="burger-link" href="index.html#page=4"><span class="num">05</span> youtube</a>
+        <a class="burger-link" href="index.html#page=5"><span class="num">06</span> drei</a>
+        <a class="burger-link" href="index.html#page=6"><span class="num">07</span> connect</a>
+        <a class="burger-link" href="kontakt.html"><span class="num">08</span> kontakt</a>
+        <span class="burger-link current" aria-current="page"><span class="num">09</span> impressum</span>
     </div>
 </nav>
 
@@ -556,7 +556,7 @@ target="_blank" rel="noopener noreferrer">
 </div>
 
 <script>
-/* Burger-Menü (identisch zu gespalten.html) */
+/* Burger-Menü: gleiche Bedienung wie auf der b3nn3t-Hauptseite */
 (function(){
   var menu = document.getElementById('burger-menu');
   var btn = document.getElementById('burger-btn');
@@ -566,51 +566,62 @@ target="_blank" rel="noopener noreferrer">
   function openMenu(){
     menu.classList.add('open');
     btn.setAttribute('aria-expanded', 'true');
+    btn.setAttribute('aria-label', 'Menü schliessen');
   }
+
   function closeMenu(){
     menu.classList.remove('open');
     btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-label', 'Menü öffnen');
   }
 
   btn.addEventListener('click', function(e){
     e.stopPropagation();
-    if (menu.classList.contains('open')) { closeMenu(); }
-    else { openMenu(); }
+    if (menu.classList.contains('open')) closeMenu();
+    else openMenu();
   });
 
-  /*
-    Verlässt die Maus das Menü, schließt es
-    sich – aber erst mit kurzer Verzögerung,
-    damit die Lücke zwischen Button und der
-    aufgeklappten Liste darunter nicht sofort
-    zum Schließen führt, bevor man einen
-    Punkt anklicken kann.
-  */
+  /* Wie auf der Hauptseite: Maus verlässt das Menü, es schliesst
+     nach kurzer Verzögerung. So bleibt die Lücke zwischen Button
+     und Dropdown problemlos überfahrbar. */
   var closeTimer = null;
+
   function scheduleClose(){
     clearTimeout(closeTimer);
     closeTimer = setTimeout(closeMenu, 300);
   }
+
   function cancelClose(){
     clearTimeout(closeTimer);
   }
 
   menu.addEventListener('mouseleave', scheduleClose);
   btn.addEventListener('mouseenter', cancelClose);
-  if (dropdown) {
-    dropdown.addEventListener('mouseenter', cancelClose);
-  }
+  if (dropdown) dropdown.addEventListener('mouseenter', cancelClose);
 
-  /* Klick außerhalb schließt es ebenfalls. */
+  /* Klick ausserhalb schliesst das Menü, auch auf Touch-Geräten. */
   document.addEventListener('click', function(e){
     if (menu.classList.contains('open') && !menu.contains(e.target)) {
       closeMenu();
     }
   });
 
+  /* Escape schliesst das Menü. */
   document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && menu.classList.contains('open')) closeMenu();
+    if (e.key === 'Escape' && menu.classList.contains('open')) {
+      closeMenu();
+      btn.focus();
+    }
   });
+
+  /* Bei Auswahl eines Menüpunktes Dropdown sofort schliessen.
+     Die Links führen dann per index.html#page=N direkt zur
+     entsprechenden Hauptseiten-Sektion. */
+  if (dropdown) {
+    dropdown.addEventListener('click', function(e){
+      if (e.target.closest('a.burger-link')) closeMenu();
+    });
+  }
 })();
 </script>
 
